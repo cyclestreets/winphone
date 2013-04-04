@@ -38,7 +38,7 @@ namespace Cyclestreets
 			this.StartTracking();
 
 			string plan = "balanced";
-			string itinerarypoints = "0.117950,52.205302,City+Centre|0.131402,52.221046,Mulberry+Close|0.147324,52.199650,Thoday+Street";
+			string itinerarypoints = "-1.2487100362777,53.00143068427369,NG16+1HH|-1.1430546045303,52.95200365149319,NG1+1LL";
 			int speed = 20;		//16 = 10mph 20 = 12mph 24 = 15mph
 			int useDom = 0;		// 0=xml 1=gml
 
@@ -143,7 +143,7 @@ namespace Cyclestreets
 
 			SmartDispatcher.BeginInvoke( () =>
 			{
-				MyMap.Center = new GeoCoordinate( min.Latitude + ( ( max.Latitude - min.Latitude ) / 2f ), min.Longitude + (( max.Longitude - min.Longitude ) / 2f) );
+				MyMap.Center = new GeoCoordinate( min.Latitude + ( ( max.Latitude - min.Latitude ) / 2f ), min.Longitude + ( ( max.Longitude - min.Longitude ) / 2f ) );
 				MyMap.ZoomLevel = 10;
 				int count = geometryCoords.Count;
 				for( int i = 0; i < count; i++ )
@@ -151,7 +151,6 @@ namespace Cyclestreets
 					List<GeoCoordinate> coords = geometryCoords[i];
 					DrawMapMarker( coords.ToArray(), geometryColor[i] );
 				}
-
 			} );
 		}
 
