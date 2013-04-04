@@ -6,6 +6,7 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:maps="clr-namespace:Microsoft.Phone.Maps.Controls;assembly=Microsoft.Phone.Maps"
+	xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
 	x:Class="Cyclestreets.MainPage"
 	mc:Ignorable="d"
 	d:DataContext="{d:DesignData SampleData/MainViewModelSampleData.xaml}"
@@ -46,6 +47,15 @@
 			<!--Panorama item one-->
 			<phone:PanoramaItem Header="first item">
 				<maps:Map x:Name="MyMap" HorizontalAlignment="Left" Height="483" VerticalAlignment="Top" Width="420" ZoomLevelChanged="MyMap_ZoomLevelChanged" PedestrianFeaturesEnabled="True"/>
+			</phone:PanoramaItem>
+			<phone:PanoramaItem Header="item2">
+				<StackPanel>
+					<TextBlock Text="SET START POINT"/>
+					<toolkit:AutoCompleteBox InputScope="PostalCode"/>
+					<TextBlock Text="SET DESTINATION"/>
+					<toolkit:AutoCompleteBox/>
+					<Button Content="GET DIRECTIONS"/>
+				</StackPanel>
 			</phone:PanoramaItem>
 
 		</phone:Panorama>
