@@ -51,9 +51,18 @@
 			<phone:PanoramaItem Header="item2">
 				<StackPanel>
 					<TextBlock Text="SET START POINT"/>
-					<toolkit:AutoCompleteBox InputScope="PostalCode"/>
+					<toolkit:AutoCompleteBox x:Name="startPoint" InputScope="Default" IsTextCompletionEnabled="True" MinimumPrefixLength="3">
+						<toolkit:AutoCompleteBox.ItemTemplate>
+							<DataTemplate>
+								<StackPanel>
+									<TextBlock Text="{Binding name}" FontSize="26" Foreground="Black"/>
+									<TextBlock Text="{Binding near}" FontSize="20" Foreground="#FF8B8B8B"/>
+								</StackPanel>
+							</DataTemplate>
+						</toolkit:AutoCompleteBox.ItemTemplate>
+					</toolkit:AutoCompleteBox>
 					<TextBlock Text="SET DESTINATION"/>
-					<toolkit:AutoCompleteBox/>
+					<toolkit:AutoCompleteBox x:Name="destinationPoint"/>
 					<Button Content="GET DIRECTIONS"/>
 				</StackPanel>
 			</phone:PanoramaItem>

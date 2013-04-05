@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Device.Location;
 using System.Linq;
+using System.Net;
 using System.Text;
-using System.Windows;
 using System.Windows.Media;
 using System.Xml.Linq;
 using Microsoft.Phone.Controls;
@@ -13,10 +13,37 @@ using Windows.Devices.Geolocation;
 
 namespace Cyclestreets
 {
+	public class SearchResult
+	{
+		public double longitude
+		{
+			get;
+			set;
+		}
+		public double latitude
+		{
+			get;
+			set;
+		}
+		public string name
+		{
+			get;
+			set;
+		}
+		public string near
+		{
+			get;
+			set;
+		}
+
+		public override string ToString()
+		{
+			return name + ", " + near;
+		}
+	}
+
 	public partial class MainPage : PhoneApplicationPage
 	{
-		List<GeoCoordinate> MyCoordinates = new List<GeoCoordinate>();
-
 		List<List<GeoCoordinate>> geometryCoords = new List<List<GeoCoordinate>>();
 		List<Color> geometryColor = new List<Color>();
 
@@ -26,10 +53,11 @@ namespace Cyclestreets
 		Geoposition MyGeoPosition = null;
 		private bool runOnce = false;
 
-		private string apiKey = "63356ae9c48793e1";
+		private string apiKey = "d2ff10bbbded8e86";
 
 		private GeoCoordinate max = new GeoCoordinate( -90, -180 );
 		private GeoCoordinate min = new GeoCoordinate( 90, 180 );
+		private bool locationFound = false;
 
 		// Constructor
 		public MainPage()
@@ -44,6 +72,8 @@ namespace Cyclestreets
 
 			AsyncWebRequest _request = new AsyncWebRequest( "http://www.cyclestreets.net/api/journey.xml?key=" + apiKey + "&plan=" + plan + "&itinerarypoints=" + itinerarypoints + "&speed=" + speed + "&useDom=" + useDom, RouteFound );
 			_request.Start();
+
+
 		}
 
 		public void StartTracking()
@@ -58,23 +88,59 @@ namespace Cyclestreets
 
 			// this implicitly starts the tracking operation
 			this.trackingGeolocator.PositionChanged += positionChangedHandler;
+
+			startPoint.Populating += ( s, args ) =>
+			{
+				args.Cancel = true;
+				WebClient wc = new WebClient();
+				string prefix = HttpUtility.UrlEncode( args.Parameter );
+
+				string myLocation = "";
+				if( locationFound )
+				{
+					myLocation = "&w=" + MyGeoPosition.Coordinate.Longitude + "&s=" + MyGeoPosition.Coordinate.Latitude + "&e=" + MyGeoPosition.Coordinate.Longitude + "&n=" + MyGeoPosition.Coordinate.Latitude + "&zoom=16";
+				}
+
+				Uri service = new Uri( "http://cambridge.cyclestreets.net/api/geocoder.xml?key=" + apiKey + myLocation + "&street=" + prefix );
+				wc.DownloadStringCompleted += DownloadStringCompleted;
+				wc.DownloadStringAsync( service, s );
+			};
+		}
+
+		private void DownloadStringCompleted( object sender, DownloadStringCompletedEventArgs e )
+		{
+			AutoCompleteBox acb = e.UserState as AutoCompleteBox;
+			if( acb != null && e.Error == null && !e.Cancelled && !string.IsNullOrEmpty( e.Result ) )
+			{
+				List<SearchResult> suggestions = new List<SearchResult>();
+
+				XDocument xml = XDocument.Parse( e.Result.Trim() );
+
+				var results = xml.Descendants( "result" )
+										.Where( ev => (string)ev.Parent.Name.LocalName == "results" );
+
+				foreach( XElement p in results )
+				{
+					SearchResult result = new SearchResult();
+					result.longitude = float.Parse( p.Element( "longitude" ).Value );
+					result.latitude = float.Parse( p.Element( "latitude" ).Value );
+					result.name = p.Element( "name" ).Value;
+					result.near = p.Element( "near" ).Value;
+					suggestions.Add( result );
+				}
+
+				if( suggestions.Count > 0 )
+				{
+					acb.ItemsSource = suggestions;
+					acb.PopulateComplete();
+				}
+			}
 		}
 
 		private void positionChangedHandler( Geolocator sender, PositionChangedEventArgs args )
 		{
-			if( !runOnce )
-			{
-				runOnce = true;
-
-				MyGeoPosition = args.Position;
-				SmartDispatcher.BeginInvoke( () =>
-				{
-					//this.GetCoordinates();
-
-
-
-				} );
-			}
+			MyGeoPosition = args.Position;
+			locationFound = true;
 
 		}
 
@@ -88,7 +154,7 @@ namespace Cyclestreets
 
 			XDocument xml = XDocument.Parse( str.Trim() );
 
-			var fixtures = xml.Descendants( "waypoint" )
+			/*var fixtures = xml.Descendants( "waypoint" )
 									.Where( e => (string)e.Parent.Name.LocalName == "markers" );
 
 			foreach( XElement p in fixtures )
@@ -97,7 +163,7 @@ namespace Cyclestreets
 				float latitude = float.Parse( p.Attribute( "latitude" ).Value );
 
 				MyCoordinates.Add( new GeoCoordinate( latitude, longitude ) );
-			}
+			}*/
 
 			// 			MyQuery = new RouteQuery();
 			// 			MyQuery.Waypoints = MyCoordinates;
@@ -190,7 +256,7 @@ namespace Cyclestreets
 			MyMap.MapElements.Add( polygon );
 		}
 
-		private void GetCoordinates()
+		/*private void GetCoordinates()
 		{
 			// Get the phone's current location.
 			Geolocator MyGeolocator = new Geolocator();
@@ -217,9 +283,9 @@ namespace Cyclestreets
 				// Something else happened while acquiring the location.
 				MessageBox.Show( ex.Message );
 			}
-		}
+		}*/
 
-		void Mygeocodequery_QueryCompleted( object sender, QueryCompletedEventArgs<IList<MapLocation>> e )
+		/*void Mygeocodequery_QueryCompleted( object sender, QueryCompletedEventArgs<IList<MapLocation>> e )
 		{
 			if( e.Error == null )
 			{
@@ -230,7 +296,7 @@ namespace Cyclestreets
 				MyQuery.QueryAsync();
 				Mygeocodequery.Dispose();
 			}
-		}
+		}*/
 
 		void MyQuery_QueryCompleted( object sender, QueryCompletedEventArgs<Route> e )
 		{
