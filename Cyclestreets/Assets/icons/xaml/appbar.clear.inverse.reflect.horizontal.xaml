@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Canvas xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Name="appbar_clear_inverse_reflect_horizontal" Width="76" Height="76" Clip="F1 M 0,0L 76,0L 76,76L 0,76L 0,0">
+	<Path Width="40.9275" Height="28" Canvas.Left="16.0725" Canvas.Top="24" Stretch="Fill" Fill="#FF000000" Data="F1 M 54,24L 29,24L 17,36C 15.7633,37.2367 15.7633,38.7633 17,40L 29,52L 54,52C 55.7489,52 57,50.7489 57,49L 57,27C 57,25.2511 55.7489,24 54,24 Z M 35.5686,45.8369L 33.3294,43.5978L 38.9274,37.9998L 33.3295,32.4019L 35.5686,30.1628L 41.1665,35.7606L 46.7644,30.1627L 49.0036,32.4019L 43.4057,37.9998L 49.0037,43.5977L 46.7645,45.8369L 41.1665,40.239L 35.5686,45.8369 Z "/>
+</Canvas>

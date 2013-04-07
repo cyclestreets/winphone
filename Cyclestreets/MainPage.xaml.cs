@@ -1,14 +1,17 @@
-﻿using System;
+﻿using Microsoft.Expression.Interactivity.Core;
+using Microsoft.Phone.Controls;
+using Microsoft.Phone.Maps.Controls;
+using Microsoft.Phone.Maps.Services;
+using Microsoft.Phone.Shell;
+using System;
 using System.Collections.Generic;
 using System.Device.Location;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Windows;
 using System.Windows.Media;
 using System.Xml.Linq;
-using Microsoft.Phone.Controls;
-using Microsoft.Phone.Maps.Controls;
-using Microsoft.Phone.Maps.Services;
 using Windows.Devices.Geolocation;
 
 namespace Cyclestreets
@@ -55,9 +58,15 @@ namespace Cyclestreets
 
 		private string apiKey = "d2ff10bbbded8e86";
 
-		private GeoCoordinate max = new GeoCoordinate( -90, -180 );
-		private GeoCoordinate min = new GeoCoordinate( 90, 180 );
+		private GeoCoordinate max = new GeoCoordinate(-90, -180);
+		private GeoCoordinate min = new GeoCoordinate(90, 180);
 		private bool locationFound = false;
+		private bool trackMe = false;
+
+		private SearchResult start;
+		private SearchResult finish;
+
+		GeocodeQuery geoQ = null;
 
 		// Constructor
 		public MainPage()
@@ -70,66 +79,130 @@ namespace Cyclestreets
 			int speed = 20;		//16 = 10mph 20 = 12mph 24 = 15mph
 			int useDom = 0;		// 0=xml 1=gml
 
-			AsyncWebRequest _request = new AsyncWebRequest( "http://www.cyclestreets.net/api/journey.xml?key=" + apiKey + "&plan=" + plan + "&itinerarypoints=" + itinerarypoints + "&speed=" + speed + "&useDom=" + useDom, RouteFound );
+			AsyncWebRequest _request = new AsyncWebRequest("http://www.cyclestreets.net/api/journey.xml?key=" + apiKey + "&plan=" + plan + "&itinerarypoints=" + itinerarypoints + "&speed=" + speed + "&useDom=" + useDom, RouteFound);
 			_request.Start();
 
+			geoQ = new GeocodeQuery();
+			geoQ.QueryCompleted += geoQ_QueryCompleted;
 
+			var sgs = ExtendedVisualStateManager.GetVisualStateGroups(LayoutRoot);
+			var sg = sgs[0] as VisualStateGroup;
+			ExtendedVisualStateManager.GoToElementState(LayoutRoot, ((VisualState)sg.States[0]).Name, true);
 		}
 
 		public void StartTracking()
 		{
-			if( this.trackingGeolocator != null )
+			if (this.trackingGeolocator != null)
 			{
 				return;
 			}
 
 			this.trackingGeolocator = new Geolocator();
-			this.trackingGeolocator.ReportInterval = (uint)TimeSpan.FromSeconds( 30 ).TotalMilliseconds;
+			this.trackingGeolocator.ReportInterval = (uint)TimeSpan.FromSeconds(30).TotalMilliseconds;
 
 			// this implicitly starts the tracking operation
 			this.trackingGeolocator.PositionChanged += positionChangedHandler;
 
-			startPoint.Populating += ( s, args ) =>
+			startPoint.Populating += (s, args) =>
 			{
 				args.Cancel = true;
 				WebClient wc = new WebClient();
-				string prefix = HttpUtility.UrlEncode( args.Parameter );
+				string prefix = HttpUtility.UrlEncode(args.Parameter);
 
 				string myLocation = "";
-				if( locationFound )
+				if (locationFound)
 				{
 					myLocation = "&w=" + MyGeoPosition.Coordinate.Longitude + "&s=" + MyGeoPosition.Coordinate.Latitude + "&e=" + MyGeoPosition.Coordinate.Longitude + "&n=" + MyGeoPosition.Coordinate.Latitude + "&zoom=16";
 				}
 
-				Uri service = new Uri( "http://cambridge.cyclestreets.net/api/geocoder.xml?key=" + apiKey + myLocation + "&street=" + prefix );
+				Uri service = new Uri("http://cambridge.cyclestreets.net/api/geocoder.xml?key=" + apiKey + myLocation + "&street=" + prefix);
 				wc.DownloadStringCompleted += DownloadStringCompleted;
-				wc.DownloadStringAsync( service, s );
+				wc.DownloadStringAsync(service, s);
+
+				/*if (geoQ.IsBusy == true)
+				{
+					geoQ.CancelAsync();
+				}
+
+				if (locationFound)
+				{
+					geoQ.GeoCoordinate = CoordinateConverter.ConvertGeocoordinate(MyGeoPosition.Coordinate);
+				}
+				else
+				{
+					GeoCoordinate setMe = new GeoCoordinate(MyMap.Center.Latitude, MyMap.Center.Longitude);
+					setMe.HorizontalAccuracy = 1000000;
+				}
+				geoQ.SearchTerm = args.Parameter;
+				geoQ.MaxResultCount = 20;
+
+				geoQ.QueryAsync();*/
+			};
+
+			destinationPoint.Populating += (s, args) =>
+			{
+				args.Cancel = true;
+				WebClient wc = new WebClient();
+				string prefix = HttpUtility.UrlEncode(args.Parameter);
+
+				string myLocation = "";
+				if (locationFound)
+				{
+					myLocation = "&w=" + MyGeoPosition.Coordinate.Longitude + "&s=" + MyGeoPosition.Coordinate.Latitude + "&e=" + MyGeoPosition.Coordinate.Longitude + "&n=" + MyGeoPosition.Coordinate.Latitude + "&zoom=16";
+				}
+
+				Uri service = new Uri("http://cambridge.cyclestreets.net/api/geocoder.xml?key=" + apiKey + myLocation + "&street=" + prefix);
+				wc.DownloadStringCompleted += DownloadStringCompleted;
+				wc.DownloadStringAsync(service, s);
 			};
 		}
 
-		private void DownloadStringCompleted( object sender, DownloadStringCompletedEventArgs e )
+		private void geoQ_QueryCompleted(object sender, QueryCompletedEventArgs<IList<MapLocation>> e)
+		{
+			//			throw new NotImplementedException();
+			AutoCompleteBox acb = startPoint as AutoCompleteBox;
+			List<SearchResult> suggestions = new List<SearchResult>();
+			for (int i = 0; i < e.Result.Count; i++)
+			{
+				SearchResult result = new SearchResult();
+				MapLocation loc = e.Result[i];
+				result.longitude = loc.GeoCoordinate.Longitude;
+				result.latitude = loc.GeoCoordinate.Latitude;
+				result.name = loc.Information.Address.ToString();
+				result.near = loc.Information.Address.City;
+				suggestions.Add(result);
+
+			}
+			if (suggestions.Count > 0)
+			{
+				acb.ItemsSource = suggestions;
+				acb.PopulateComplete();
+			}
+		}
+
+		private void DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
 		{
 			AutoCompleteBox acb = e.UserState as AutoCompleteBox;
-			if( acb != null && e.Error == null && !e.Cancelled && !string.IsNullOrEmpty( e.Result ) )
+			if (acb != null && e.Error == null && !e.Cancelled && !string.IsNullOrEmpty(e.Result))
 			{
 				List<SearchResult> suggestions = new List<SearchResult>();
 
-				XDocument xml = XDocument.Parse( e.Result.Trim() );
+				XDocument xml = XDocument.Parse(e.Result.Trim());
 
-				var results = xml.Descendants( "result" )
-										.Where( ev => (string)ev.Parent.Name.LocalName == "results" );
+				var results = xml.Descendants("result")
+										.Where(ev => (string)ev.Parent.Name.LocalName == "results");
 
-				foreach( XElement p in results )
+				foreach (XElement p in results)
 				{
 					SearchResult result = new SearchResult();
-					result.longitude = float.Parse( p.Element( "longitude" ).Value );
-					result.latitude = float.Parse( p.Element( "latitude" ).Value );
-					result.name = p.Element( "name" ).Value;
-					result.near = p.Element( "near" ).Value;
-					suggestions.Add( result );
+					result.longitude = float.Parse(p.Element("longitude").Value);
+					result.latitude = float.Parse(p.Element("latitude").Value);
+					result.name = p.Element("name").Value;
+					result.near = p.Element("near").Value;
+					suggestions.Add(result);
 				}
 
-				if( suggestions.Count > 0 )
+				if (suggestions.Count > 0)
 				{
 					acb.ItemsSource = suggestions;
 					acb.PopulateComplete();
@@ -137,22 +210,25 @@ namespace Cyclestreets
 			}
 		}
 
-		private void positionChangedHandler( Geolocator sender, PositionChangedEventArgs args )
+		private void positionChangedHandler(Geolocator sender, PositionChangedEventArgs args)
 		{
 			MyGeoPosition = args.Position;
 			locationFound = true;
-
+			if (trackMe)
+			{
+				MyMap.Center = CoordinateConverter.ConvertGeocoordinate(MyGeoPosition.Coordinate);
+			}
 		}
 
-		private void RouteFound( byte[] data )
+		private void RouteFound(byte[] data)
 		{
-			if( data == null )
+			if (data == null)
 				return;
 
 			UTF8Encoding enc = new UTF8Encoding();
-			string str = enc.GetString( data, 0, data.Length );
+			string str = enc.GetString(data, 0, data.Length);
 
-			XDocument xml = XDocument.Parse( str.Trim() );
+			XDocument xml = XDocument.Parse(str.Trim());
 
 			/*var fixtures = xml.Descendants( "waypoint" )
 									.Where( e => (string)e.Parent.Name.LocalName == "markers" );
@@ -174,86 +250,86 @@ namespace Cyclestreets
 
 
 			List<RouteManeuver> manouvers = new List<RouteManeuver>();
-			var steps = xml.Descendants( "marker" )
-									.Where( e => (string)e.Parent.Name.LocalName == "markers" );
+			var steps = xml.Descendants("marker")
+									.Where(e => (string)e.Parent.Name.LocalName == "markers");
 
-			foreach( XElement p in steps )
+			foreach (XElement p in steps)
 			{
-				string markerType = p.Attribute( "type" ).Value;
-				if( markerType == "segment" )
+				string markerType = p.Attribute("type").Value;
+				if (markerType == "segment")
 				{
-					string pointsText = p.Attribute( "points" ).Value;
-					string[] points = pointsText.Split( ' ' );
+					string pointsText = p.Attribute("points").Value;
+					string[] points = pointsText.Split(' ');
 					List<GeoCoordinate> coords = new List<GeoCoordinate>();
-					for( int i = 0; i < points.Length; i++ )
+					for (int i = 0; i < points.Length; i++)
 					{
-						string[] xy = points[i].Split( ',' );
+						string[] xy = points[i].Split(',');
 
-						double longitude = double.Parse( xy[0] );
-						double latitude = double.Parse( xy[1] );
-						coords.Add( new GeoCoordinate( latitude, longitude ) );
+						double longitude = double.Parse(xy[0]);
+						double latitude = double.Parse(xy[1]);
+						coords.Add(new GeoCoordinate(latitude, longitude));
 
-						if( max.Latitude < latitude )
+						if (max.Latitude < latitude)
 							max.Latitude = latitude;
-						if( min.Latitude > latitude )
+						if (min.Latitude > latitude)
 							min.Latitude = latitude;
-						if( max.Longitude < longitude )
+						if (max.Longitude < longitude)
 							max.Longitude = longitude;
-						if( min.Longitude > longitude )
+						if (min.Longitude > longitude)
 							min.Longitude = longitude;
 					}
-					geometryCoords.Add( coords );
-					geometryColor.Add( ConvertHexStringToColour( p.Attribute( "color" ).Value ) );
+					geometryCoords.Add(coords);
+					geometryColor.Add(ConvertHexStringToColour(p.Attribute("color").Value));
 				}
 			}
 
-			SmartDispatcher.BeginInvoke( () =>
+			SmartDispatcher.BeginInvoke(() =>
 			{
-				MyMap.Center = new GeoCoordinate( min.Latitude + ( ( max.Latitude - min.Latitude ) / 2f ), min.Longitude + ( ( max.Longitude - min.Longitude ) / 2f ) );
+				MyMap.Center = new GeoCoordinate(min.Latitude + ((max.Latitude - min.Latitude) / 2f), min.Longitude + ((max.Longitude - min.Longitude) / 2f));
 				MyMap.ZoomLevel = 10;
 				int count = geometryCoords.Count;
-				for( int i = 0; i < count; i++ )
+				for (int i = 0; i < count; i++)
 				{
 					List<GeoCoordinate> coords = geometryCoords[i];
-					DrawMapMarker( coords.ToArray(), geometryColor[i] );
+					DrawMapMarker(coords.ToArray(), geometryColor[i]);
 				}
-			} );
+			});
 		}
 
-		private Color ConvertHexStringToColour( string hexString )
+		private Color ConvertHexStringToColour(string hexString)
 		{
 			byte a = 0;
 			byte r = 0;
 			byte g = 0;
 			byte b = 0;
-			if( hexString.StartsWith( "#" ) )
+			if (hexString.StartsWith("#"))
 			{
-				hexString = hexString.Substring( 1, 6 );
+				hexString = hexString.Substring(1, 6);
 			}
 			//a = Convert.ToByte(Int32.Parse(hexString.Substring(0, 2),
 			//	System.Globalization.NumberStyles.AllowHexSpecifier));
-			r = Convert.ToByte( Int32.Parse( hexString.Substring( 0, 2 ),
-				System.Globalization.NumberStyles.AllowHexSpecifier ) );
-			g = Convert.ToByte( Int32.Parse( hexString.Substring( 2, 2 ),
-				System.Globalization.NumberStyles.AllowHexSpecifier ) );
-			b = Convert.ToByte( Int32.Parse( hexString.Substring( 4, 2 ), System.Globalization.NumberStyles.AllowHexSpecifier ) );
-			return Color.FromArgb( 255, r, g, b );
+			r = Convert.ToByte(Int32.Parse(hexString.Substring(0, 2),
+				System.Globalization.NumberStyles.AllowHexSpecifier));
+			g = Convert.ToByte(Int32.Parse(hexString.Substring(2, 2),
+				System.Globalization.NumberStyles.AllowHexSpecifier));
+			b = Convert.ToByte(Int32.Parse(hexString.Substring(4, 2), System.Globalization.NumberStyles.AllowHexSpecifier));
+			return Color.FromArgb(255, r, g, b);
 		}
 
-		private void DrawMapMarker( GeoCoordinate[] coordinate, Color color )
+		private void DrawMapMarker(GeoCoordinate[] coordinate, Color color)
 		{
 			// Create a map marker
 			MapPolyline polygon = new MapPolyline();
 			polygon.StrokeColor = color;
 			polygon.StrokeThickness = 3;
 			polygon.Path = new GeoCoordinateCollection();
-			for( int i = 0; i < coordinate.Length; i++ )
+			for (int i = 0; i < coordinate.Length; i++)
 			{
 				//Point p = MyMap.ConvertGeoCoordinateToViewportPoint( coordinate[i] );
-				polygon.Path.Add( coordinate[i] );
+				polygon.Path.Add(coordinate[i]);
 			}
 
-			MyMap.MapElements.Add( polygon );
+			MyMap.MapElements.Add(polygon);
 		}
 
 		/*private void GetCoordinates()
@@ -298,22 +374,74 @@ namespace Cyclestreets
 			}
 		}*/
 
-		void MyQuery_QueryCompleted( object sender, QueryCompletedEventArgs<Route> e )
+		void MyQuery_QueryCompleted(object sender, QueryCompletedEventArgs<Route> e)
 		{
-			if( e.Error == null )
+			if (e.Error == null)
 			{
 				Route MyRoute = e.Result;
-				MapRoute MyMapRoute = new MapRoute( MyRoute );
-				MyMap.AddRoute( MyMapRoute );
+				MapRoute MyMapRoute = new MapRoute(MyRoute);
+				MyMap.AddRoute(MyMapRoute);
 				MyQuery.Dispose();
 			}
 		}
 
-		private void MyMap_ZoomLevelChanged( object sender, MapZoomLevelChangedEventArgs e )
+		private void MyMap_ZoomLevelChanged(object sender, MapZoomLevelChangedEventArgs e)
 		{
 
 
 
+		}
+
+		private void Button_Click_1(object sender, System.Windows.RoutedEventArgs e)
+		{
+			var sgs = ExtendedVisualStateManager.GetVisualStateGroups(LayoutRoot);
+			var sg = sgs[0] as VisualStateGroup;
+			ExtendedVisualStateManager.GoToElementState(LayoutRoot, ((VisualState)sg.States[0]).Name, true);
+		}
+
+		private void startPoint_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+		{
+			start = startPoint.SelectedItem as SearchResult;
+			if (start != null && finish != null)
+				getDirections.IsEnabled = true;
+			else
+				getDirections.IsEnabled = false;
+		}
+
+		private void finishPoint_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+		{
+			finish = destinationPoint.SelectedItem as SearchResult;
+			if (start != null && finish != null)
+				getDirections.IsEnabled = true;
+			else
+				getDirections.IsEnabled = false;
+		}
+
+		private void ApplicationBarMenuItem_ToggleAerialView(object sender, EventArgs e)
+		{
+			ApplicationBarMenuItem item = sender as ApplicationBarMenuItem;
+			if (MyMap.CartographicMode == MapCartographicMode.Aerial)
+			{
+				item.Text = "Enable aerial view";
+				MyMap.CartographicMode = MapCartographicMode.Road;
+			}
+			else
+			{
+				item.Text = "Disable aerial view";
+				MyMap.CartographicMode = MapCartographicMode.Aerial;
+			}
+		}
+
+		private void ApplicationBarIconButton_Directions(object sender, EventArgs e)
+		{
+			var sgs = ExtendedVisualStateManager.GetVisualStateGroups(LayoutRoot);
+			var sg = sgs[0] as VisualStateGroup;
+			ExtendedVisualStateManager.GoToElementState(LayoutRoot, ((VisualState)sg.States[sg.CurrentState == sg.States[0] ? 1 : 0]).Name, true);
+		}
+
+		private void ApplicationBarIconButton_TrackMe(object sender, EventArgs e)
+		{
+			trackMe = !trackMe;
 		}
 	}
 }

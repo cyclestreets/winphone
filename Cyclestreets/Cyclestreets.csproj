@@ -25,6 +25,7 @@
     <ValidateXaml>true</ValidateXaml>
     <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
     <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
+    <ExpressionBlendVersion>5.0.31017.0</ExpressionBlendVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -94,6 +95,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="AsyncWebRequest.cs" />
+    <Compile Include="CoordinateConverter.cs" />
     <Compile Include="LocalizedStrings.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -130,6 +132,24 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\icons\dark\appbar.directions.png" />
+    <Content Include="Assets\icons\dark\appbar.location.add.png" />
+    <Content Include="Assets\icons\dark\appbar.location.circle.png" />
+    <Content Include="Assets\icons\dark\appbar.location.delete.png" />
+    <Content Include="Assets\icons\dark\appbar.location.foursquare.png" />
+    <Content Include="Assets\icons\dark\appbar.location.minus.png" />
+    <Content Include="Assets\icons\dark\appbar.location.png" />
+    <Content Include="Assets\icons\dark\appbar.location.round.png" />
+    <Content Include="Assets\icons\dark\appbar.magnify.png" />
+    <Content Include="Assets\icons\dark\appbar.map.aerial.highway.png" />
+    <Content Include="Assets\icons\dark\appbar.map.aerial.png" />
+    <Content Include="Assets\icons\dark\appbar.map.folds.png" />
+    <Content Include="Assets\icons\dark\appbar.map.gps.png" />
+    <Content Include="Assets\icons\dark\appbar.map.location.add.png" />
+    <Content Include="Assets\icons\dark\appbar.map.location.png" />
+    <Content Include="Assets\icons\dark\appbar.map.png" />
+    <Content Include="Assets\icons\dark\appbar.map.satellite.png" />
+    <Content Include="Assets\icons\dark\appbar.map.treasure.png" />
     <Content Include="README_FIRST.txt" />
     <Content Include="Toolkit.Content\ApplicationBar.Cancel.png" />
     <Content Include="Toolkit.Content\ApplicationBar.Check.png" />
@@ -163,9 +183,11 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Expression.Interactions" />
     <Reference Include="Microsoft.Phone.Controls.Toolkit">
       <HintPath>packages\WPtoolkit.4.2012.10.30\lib\wp8\Microsoft.Phone.Controls.Toolkit.dll</HintPath>
     </Reference>
+    <Reference Include="System.Windows.Interactivity" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />
