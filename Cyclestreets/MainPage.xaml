@@ -21,7 +21,7 @@
 			<shell:ApplicationBar.MenuItems>
 				<shell:ApplicationBarMenuItem IsEnabled="True" Text="Enable aerial view" Click="ApplicationBarMenuItem_ToggleAerialView"/>
 			</shell:ApplicationBar.MenuItems>
-			<shell:ApplicationBarIconButton IconUri="/Assets/icons/dark/appbar.location.circle.png" IsEnabled="True" Text="My Location" Click="ApplicationBarIconButton_TrackMe"/>
+			<shell:ApplicationBarIconButton IconUri="/Assets/icons/dark/appbar.location.circle.png" IsEnabled="True" Text="Track Me" Click="ApplicationBarIconButton_TrackMe"/>
 			<shell:ApplicationBarIconButton IconUri="/Assets/icons/dark/appbar.magnify.png" IsEnabled="True" Text="Find"/>
 			<shell:ApplicationBarIconButton IconUri="/Assets/icons/dark/appbar.directions.png" IsEnabled="True" Text="Directions" Click="ApplicationBarIconButton_Directions"/>
 		</shell:ApplicationBar>
@@ -109,8 +109,12 @@
 				<CompositeTransform TranslateY="-270"/>
 			</StackPanel.RenderTransform>
 			<TextBlock Text="SET START POINT" Padding="10,0,0,0"/>
-			<StackPanel Orientation="Horizontal" VerticalAlignment="Top">
-				<toolkit:AutoCompleteBox x:Name="startPoint" InputScope="Default" IsTextCompletionEnabled="True" MinimumPrefixLength="3" SelectionChanged="startPoint_SelectionChanged" Margin="0,0,100,0" VerticalAlignment="Top" Width="308">
+			<Grid VerticalAlignment="Top" Height="72">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="33*"/>
+					<ColumnDefinition Width="7*"/>
+				</Grid.ColumnDefinitions>
+				<toolkit:AutoCompleteBox x:Name="startPoint" InputScope="Default" IsTextCompletionEnabled="True" MinimumPrefixLength="3" SelectionChanged="startPoint_SelectionChanged" VerticalAlignment="Top" Margin="0" Height="72">
 					<toolkit:AutoCompleteBox.ItemTemplate>
 						<DataTemplate>
 							<StackPanel>
@@ -120,8 +124,8 @@
 						</DataTemplate>
 					</toolkit:AutoCompleteBox.ItemTemplate>
 				</toolkit:AutoCompleteBox>
-				<Image Height="72" Source="/Assets/icons/dark/appbar.location.circle.png" HorizontalAlignment="Center" Width="72" VerticalAlignment="Center"/>
-			</StackPanel>
+				<Image x:Name="startMyLocation" Height="72" Source="/Assets/icons/dark/appbar.location.circle.png" HorizontalAlignment="Center" Width="72" VerticalAlignment="Center" Margin="0" Grid.Column="1" Tap="startMyLocation_Tap"/>
+			</Grid>
 			<TextBlock Text="SET DESTINATION" Padding="10,0,0,0"/>
 			<toolkit:AutoCompleteBox x:Name="destinationPoint" InputScope="Default" IsTextCompletionEnabled="True" MinimumPrefixLength="3" SelectionChanged="finishPoint_SelectionChanged">
 				<toolkit:AutoCompleteBox.ItemTemplate>

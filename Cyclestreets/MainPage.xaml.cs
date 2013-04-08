@@ -56,6 +56,7 @@ namespace Cyclestreets
 		Geoposition MyGeoPosition = null;
 		private bool runOnce = false;
 
+
 		private string apiKey = "d2ff10bbbded8e86";
 
 		private GeoCoordinate max = new GeoCoordinate(90, -180);
@@ -216,7 +217,11 @@ namespace Cyclestreets
 			locationFound = true;
 			if (trackMe)
 			{
-				MyMap.Center = CoordinateConverter.ConvertGeocoordinate(MyGeoPosition.Coordinate);
+				SmartDispatcher.BeginInvoke(() =>
+				{
+					MyMap.SetView(CoordinateConverter.ConvertGeocoordinate(MyGeoPosition.Coordinate), MyMap.ZoomLevel);
+					//MyMap.Center = CoordinateConverter.ConvertGeocoordinate(MyGeoPosition.Coordinate);
+				});
 			}
 		}
 
@@ -285,8 +290,8 @@ namespace Cyclestreets
 
 			SmartDispatcher.BeginInvoke(() =>
 			{
-				LocationRectangle rect = new LocationRectangle(min,max);
-				MyMap.SetView( rect );
+				LocationRectangle rect = new LocationRectangle(min, max);
+				MyMap.SetView(rect);
 				//MyMap.Center = new GeoCoordinate(min.Latitude + ((max.Latitude - min.Latitude) / 2f), min.Longitude + ((max.Longitude - min.Longitude) / 2f));
 				//MyMap.ZoomLevel = 10;
 				int count = geometryCoords.Count;
@@ -296,6 +301,14 @@ namespace Cyclestreets
 					DrawMapMarker(coords.ToArray(), geometryColor[i]);
 				}
 			});
+		}
+
+		private LocationRectangle GetMapBounds()
+		{
+			GeoCoordinate topLeft = MyMap.ConvertViewportPointToGeoCoordinate(new Point(0, 0));
+			GeoCoordinate bottomRight = MyMap.ConvertViewportPointToGeoCoordinate(new Point(MyMap.Width, MyMap.Height));
+
+			return LocationRectangle.CreateBoundingRectangle(new[] { topLeft, bottomRight });
 		}
 
 		private Color ConvertHexStringToColour(string hexString)
@@ -422,7 +435,7 @@ namespace Cyclestreets
 		private void ApplicationBarMenuItem_ToggleAerialView(object sender, EventArgs e)
 		{
 			ApplicationBarMenuItem item = sender as ApplicationBarMenuItem;
-			if (MyMap.CartographicMode == MapCartographicMode.Aerial)
+			if (MyMap.CartographicMode == MapCartographicMode.Hybrid)
 			{
 				item.Text = "Enable aerial view";
 				MyMap.CartographicMode = MapCartographicMode.Road;
@@ -430,7 +443,7 @@ namespace Cyclestreets
 			else
 			{
 				item.Text = "Disable aerial view";
-				MyMap.CartographicMode = MapCartographicMode.Aerial;
+				MyMap.CartographicMode = MapCartographicMode.Hybrid;
 			}
 		}
 
@@ -444,6 +457,17 @@ namespace Cyclestreets
 		private void ApplicationBarIconButton_TrackMe(object sender, EventArgs e)
 		{
 			trackMe = !trackMe;
+		}
+
+		private void startMyLocation_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+		{
+			MyMap.SetView(CoordinateConverter.ConvertGeocoordinate(MyGeoPosition.Coordinate), 17);
+
+			start = new SearchResult();
+			start.latitude = MyGeoPosition.Coordinate.Latitude;
+			start.longitude = MyGeoPosition.Coordinate.Longitude;
+
+
 		}
 	}
 }
