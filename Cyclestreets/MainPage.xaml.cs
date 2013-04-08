@@ -58,8 +58,8 @@ namespace Cyclestreets
 
 		private string apiKey = "d2ff10bbbded8e86";
 
-		private GeoCoordinate max = new GeoCoordinate(-90, -180);
-		private GeoCoordinate min = new GeoCoordinate(90, 180);
+		private GeoCoordinate max = new GeoCoordinate(90, -180);
+		private GeoCoordinate min = new GeoCoordinate(-90, 180);
 		private bool locationFound = false;
 		private bool trackMe = false;
 
@@ -269,9 +269,9 @@ namespace Cyclestreets
 						double latitude = double.Parse(xy[1]);
 						coords.Add(new GeoCoordinate(latitude, longitude));
 
-						if (max.Latitude < latitude)
+						if (max.Latitude > latitude)
 							max.Latitude = latitude;
-						if (min.Latitude > latitude)
+						if (min.Latitude < latitude)
 							min.Latitude = latitude;
 						if (max.Longitude < longitude)
 							max.Longitude = longitude;
@@ -285,8 +285,10 @@ namespace Cyclestreets
 
 			SmartDispatcher.BeginInvoke(() =>
 			{
-				MyMap.Center = new GeoCoordinate(min.Latitude + ((max.Latitude - min.Latitude) / 2f), min.Longitude + ((max.Longitude - min.Longitude) / 2f));
-				MyMap.ZoomLevel = 10;
+				LocationRectangle rect = new LocationRectangle(min,max);
+				MyMap.SetView( rect );
+				//MyMap.Center = new GeoCoordinate(min.Latitude + ((max.Latitude - min.Latitude) / 2f), min.Longitude + ((max.Longitude - min.Longitude) / 2f));
+				//MyMap.ZoomLevel = 10;
 				int count = geometryCoords.Count;
 				for (int i = 0; i < count; i++)
 				{
