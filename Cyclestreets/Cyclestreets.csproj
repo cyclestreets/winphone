@@ -96,6 +96,9 @@
     </Compile>
     <Compile Include="AsyncWebRequest.cs" />
     <Compile Include="CoordinateConverter.cs" />
+    <Compile Include="Directions.xaml.cs">
+      <DependentUpon>Directions.xaml</DependentUpon>
+    </Compile>
     <Compile Include="LocalizedStrings.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -115,6 +118,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Page Include="Directions.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -132,6 +139,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\icons\dark\appbar.add.png" />
     <Content Include="Assets\icons\dark\appbar.directions.png" />
     <Content Include="Assets\icons\dark\appbar.location.add.png" />
     <Content Include="Assets\icons\dark\appbar.location.circle.png" />

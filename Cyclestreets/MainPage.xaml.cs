@@ -49,11 +49,12 @@ namespace Cyclestreets
 	{
 		List<List<GeoCoordinate>> geometryCoords = new List<List<GeoCoordinate>>();
 		List<Color> geometryColor = new List<Color>();
+		List<GeoCoordinate> waypoints = new List<GeoCoordinate>();
 
 		RouteQuery MyQuery = null;
 		GeocodeQuery Mygeocodequery = null;
 		private Geolocator trackingGeolocator;
-		Geoposition MyGeoPosition = null;
+		public static Geoposition MyGeoPosition = null;
 		private bool runOnce = false;
 
 
@@ -67,7 +68,7 @@ namespace Cyclestreets
 		private SearchResult start;
 		private SearchResult finish;
 
-		GeocodeQuery geoQ = null;
+		ReverseGeocodeQuery geoQ = null;
 
 		// Constructor
 		public MainPage()
@@ -83,7 +84,7 @@ namespace Cyclestreets
 			AsyncWebRequest _request = new AsyncWebRequest("http://www.cyclestreets.net/api/journey.xml?key=" + apiKey + "&plan=" + plan + "&itinerarypoints=" + itinerarypoints + "&speed=" + speed + "&useDom=" + useDom, RouteFound);
 			_request.Start();
 
-			geoQ = new GeocodeQuery();
+			geoQ = new ReverseGeocodeQuery();
 			geoQ.QueryCompleted += geoQ_QueryCompleted;
 
 			var sgs = ExtendedVisualStateManager.GetVisualStateGroups(LayoutRoot);
@@ -139,28 +140,21 @@ namespace Cyclestreets
 
 				geoQ.QueryAsync();*/
 			};
-
-			destinationPoint.Populating += (s, args) =>
-			{
-				args.Cancel = true;
-				WebClient wc = new WebClient();
-				string prefix = HttpUtility.UrlEncode(args.Parameter);
-
-				string myLocation = "";
-				if (locationFound)
-				{
-					myLocation = "&w=" + MyGeoPosition.Coordinate.Longitude + "&s=" + MyGeoPosition.Coordinate.Latitude + "&e=" + MyGeoPosition.Coordinate.Longitude + "&n=" + MyGeoPosition.Coordinate.Latitude + "&zoom=16";
-				}
-
-				Uri service = new Uri("http://cambridge.cyclestreets.net/api/geocoder.xml?key=" + apiKey + myLocation + "&street=" + prefix);
-				wc.DownloadStringCompleted += DownloadStringCompleted;
-				wc.DownloadStringAsync(service, s);
-			};
 		}
 
 		private void geoQ_QueryCompleted(object sender, QueryCompletedEventArgs<IList<MapLocation>> e)
 		{
-			//			throw new NotImplementedException();
+			MapLocation loc = e.Result[0];
+			startPoint.Text = loc.Information.Address.Street + ", " + loc.Information.Address.City + ", " + loc.Information.Address.PostalCode;
+			usePos.IsEnabled = true;
+			start = new SearchResult();
+			start.longitude = loc.GeoCoordinate.Longitude;
+			start.latitude = loc.GeoCoordinate.Latitude;
+			start.name = loc.Information.Address.ToString();
+			start.near = loc.Information.Address.City;
+
+
+			/*//			throw new NotImplementedException();
 			AutoCompleteBox acb = startPoint as AutoCompleteBox;
 			List<SearchResult> suggestions = new List<SearchResult>();
 			for (int i = 0; i < e.Result.Count; i++)
@@ -178,7 +172,7 @@ namespace Cyclestreets
 			{
 				acb.ItemsSource = suggestions;
 				acb.PopulateComplete();
-			}
+			}*/
 		}
 
 		private void DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
@@ -417,19 +411,6 @@ namespace Cyclestreets
 		private void startPoint_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
 		{
 			start = startPoint.SelectedItem as SearchResult;
-			if (start != null && finish != null)
-				getDirections.IsEnabled = true;
-			else
-				getDirections.IsEnabled = false;
-		}
-
-		private void finishPoint_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-		{
-			finish = destinationPoint.SelectedItem as SearchResult;
-			if (start != null && finish != null)
-				getDirections.IsEnabled = true;
-			else
-				getDirections.IsEnabled = false;
 		}
 
 		private void ApplicationBarMenuItem_ToggleAerialView(object sender, EventArgs e)
@@ -449,9 +430,11 @@ namespace Cyclestreets
 
 		private void ApplicationBarIconButton_Directions(object sender, EventArgs e)
 		{
-			var sgs = ExtendedVisualStateManager.GetVisualStateGroups(LayoutRoot);
-			var sg = sgs[0] as VisualStateGroup;
-			ExtendedVisualStateManager.GoToElementState(LayoutRoot, ((VisualState)sg.States[sg.CurrentState == sg.States[0] ? 1 : 0]).Name, true);
+			//var sgs = ExtendedVisualStateManager.GetVisualStateGroups(LayoutRoot);
+			//var sg = sgs[0] as VisualStateGroup;
+			//ExtendedVisualStateManager.GoToElementState(LayoutRoot, ((VisualState)sg.States[sg.CurrentState == sg.States[0] ? 1 : 0]).Name, true);
+			// Navigate to the new page
+			NavigationService.Navigate(new Uri("/Directions.xaml", UriKind.Relative));
 		}
 
 		private void ApplicationBarIconButton_TrackMe(object sender, EventArgs e)
@@ -468,6 +451,39 @@ namespace Cyclestreets
 			start.longitude = MyGeoPosition.Coordinate.Longitude;
 
 
+		}
+
+		private void cursorPos_click(object sender, RoutedEventArgs e)
+		{
+			GeoCoordinate coord = MyMap.Center;
+			geoQ.GeoCoordinate = coord;
+			geoQ.QueryAsync();
+
+			SmartDispatcher.BeginInvoke(() =>
+			{
+				MyMap.SetView(coord, 16);
+				//MyMap.Center = CoordinateConverter.ConvertGeocoordinate(MyGeoPosition.Coordinate);
+			});
+		}
+
+		private void gpsPos_click(object sender, RoutedEventArgs e)
+		{
+			geoQ.GeoCoordinate = CoordinateConverter.ConvertGeocoordinate(MyGeoPosition.Coordinate);
+			geoQ.QueryAsync();
+
+			SmartDispatcher.BeginInvoke(() =>
+			{
+				MyMap.SetView(geoQ.GeoCoordinate, 16);
+				//MyMap.Center = CoordinateConverter.ConvertGeocoordinate(MyGeoPosition.Coordinate);
+			});
+		}
+
+		private void usePos_Click(object sender, RoutedEventArgs e)
+		{
+			waypoints.Add(new GeoCoordinate(start.latitude, start.longitude));
+			findLabel.Text = "Select finish point or waypoint";
+			startPoint.Text = "";
+			usePos.IsEnabled = false;
 		}
 	}
 }

@@ -43,7 +43,7 @@
 						</VisualTransition.GeneratedEasingFunction>
 						<Storyboard>
 							<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="stackPanel">
-								<EasingDoubleKeyFrame KeyTime="0" Value="-270"/>
+								<EasingDoubleKeyFrame KeyTime="0" Value="-164"/>
 								<EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
 							</DoubleAnimationUsingKeyFrames>
 						</Storyboard>
@@ -55,7 +55,7 @@
 						<Storyboard>
 							<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="stackPanel">
 								<EasingDoubleKeyFrame KeyTime="0" Value="0"/>
-								<EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="-270"/>
+								<EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="-164"/>
 							</DoubleAnimationUsingKeyFrames>
 						</Storyboard>
 					</VisualTransition>
@@ -104,11 +104,11 @@
 		</VisualStateManager.CustomVisualStateManager>
 <!--Panorama control-->
 		<maps:Map x:Name="MyMap" ZoomLevelChanged="MyMap_ZoomLevelChanged" PedestrianFeaturesEnabled="True" Margin="0"/>
-		<StackPanel x:Name="stackPanel" Background="#CC444444" Height="270" VerticalAlignment="Top" Margin="0" RenderTransformOrigin="0.5,0.5">
+		<StackPanel x:Name="stackPanel" Background="#CC444444" Height="164" VerticalAlignment="Top" Margin="0" RenderTransformOrigin="0.5,0.5">
 			<StackPanel.RenderTransform>
-				<CompositeTransform TranslateY="-270"/>
+				<CompositeTransform TranslateY="-164"/>
 			</StackPanel.RenderTransform>
-			<TextBlock Text="SET START POINT" Padding="10,0,0,0"/>
+			<TextBlock x:Name="findLabel" Text="SET START POINT" Padding="10,0,0,0"/>
 			<Grid VerticalAlignment="Top" Height="72">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="33*"/>
@@ -124,20 +124,16 @@
 						</DataTemplate>
 					</toolkit:AutoCompleteBox.ItemTemplate>
 				</toolkit:AutoCompleteBox>
-				<Image x:Name="startMyLocation" Height="72" Source="/Assets/icons/dark/appbar.location.circle.png" HorizontalAlignment="Center" Width="72" VerticalAlignment="Center" Margin="0" Grid.Column="1" Tap="startMyLocation_Tap"/>
+				<Button x:Name="usePos" Content="&gt;" Grid.Column="1" Margin="0" VerticalAlignment="Top" IsEnabled="False" Click="usePos_Click"/>
 			</Grid>
-			<TextBlock Text="SET DESTINATION" Padding="10,0,0,0"/>
-			<toolkit:AutoCompleteBox x:Name="destinationPoint" InputScope="Default" IsTextCompletionEnabled="True" MinimumPrefixLength="3" SelectionChanged="finishPoint_SelectionChanged">
-				<toolkit:AutoCompleteBox.ItemTemplate>
-					<DataTemplate>
-						<StackPanel>
-							<TextBlock Text="{Binding name}" FontSize="26" Foreground="Black"/>
-							<TextBlock Text="{Binding near}" FontSize="20" Foreground="#FF8B8B8B"/>
-						</StackPanel>
-					</DataTemplate>
-				</toolkit:AutoCompleteBox.ItemTemplate>
-			</toolkit:AutoCompleteBox>
-			<Button x:Name="getDirections" Content="GET DIRECTIONS" Click="Button_Click_1" IsEnabled="False"/>
+			<Grid Height="63">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition/>
+					<ColumnDefinition/>
+				</Grid.ColumnDefinitions>
+				<Button x:Name="cursorPos" Content="GET CURSOR POSITION" Click="cursorPos_click" Margin="0" FontSize="16"/>
+				<Button x:Name="gpsPos" Content="GET CURRENT LOCATION" Click="gpsPos_click" Margin="0" Grid.Column="1" FontSize="16"/>
+			</Grid>
 		</StackPanel>
 
 	</Grid>
