@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:maps="clr-namespace:Microsoft.Phone.Maps.Controls;assembly=Microsoft.Phone.Maps" xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    xmlns:Toolkit="clr-namespace:Microsoft.Phone.Maps.Toolkit;assembly=Microsoft.Phone.Controls.Toolkit"
     x:Class="Cyclestreets.Directions"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
@@ -13,11 +14,33 @@
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d"
     shell:SystemTray.IsVisible="True">
+		<phone:PhoneApplicationPage.Resources>
+		<Style x:Key="Start" TargetType="Toolkit:Pushpin">
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="Toolkit:Pushpin">
+						<Grid x:Name="ContentGrid" FlowDirection="LeftToRight">
+							<StackPanel Orientation="Vertical">
+								<!--<Grid Background="{Binding Background, RelativeSource={RelativeSource TemplatedParent}}" HorizontalAlignment="Left" MinWidth="29" MinHeight="31">
+									<ContentPresenter x:Name="Presenter" Content="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}" FlowDirection="{Binding FlowDirection, RelativeSource={RelativeSource TemplatedParent}}" Margin="4"/>
+								</Grid>-->
+								<Image Height="75" Source="/Assets/start_wisp.png"/>
+							</StackPanel>
+						</Grid>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+			<Setter Property="PositionOrigin" Value="0,1"/>
+			<Setter Property="Background" Value="Black"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="FontSize" Value="18"/>
+		</Style>
+	</phone:PhoneApplicationPage.Resources>
 	<phone:PhoneApplicationPage.ApplicationBar>
 		<shell:ApplicationBar>
 			<shell:ApplicationBarIconButton x:Name="myPosition" IconUri="/Assets/icons/dark/appbar.location.circle.png" IsEnabled="True" Text="My Position" Click="myPosition_Click"/>
 			<shell:ApplicationBarIconButton x:Name="cursorPos" IconUri="/Assets/icons/dark/appbar.add.png" IsEnabled="True" Text="Cursor"/>
-			<shell:ApplicationBarIconButton x:Name="confirmWaypoint" IconUri="/Assets/icons/dark/appbar.location.add.png" IsEnabled="True" Text="confirm"/>
+			<shell:ApplicationBarIconButton x:Name="confirmWaypoint" IconUri="/Assets/icons/dark/appbar.location.add.png" IsEnabled="True" Text="confirm" Click="confirmWaypoint_Click"/>
 			<shell:ApplicationBarIconButton x:Name="findRoute" IconUri="/Assets/icons/dark/appbar.directions.png" IsEnabled="False" Text="Find Route"/>
 		</shell:ApplicationBar>
 	</phone:PhoneApplicationPage.ApplicationBar>
@@ -28,7 +51,7 @@
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
 		<maps:Map x:Name="MyMap" Margin="0" Grid.Row="1"/>
-
+		<Image HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" Source="/Assets/icons/dark/appbar.add.png" Height="76" Width="76"/>
 		<StackPanel x:Name="stackPanel" Background="#FF444444" Height="109" VerticalAlignment="Top" Margin="0" RenderTransformOrigin="0.5,0.5">
 			<TextBlock x:Name="findLabel" Text="TYPE LOCATION OR USE APP BAR" Padding="10,0,0,0" Foreground="White"/>
 			<toolkit:AutoCompleteBox x:Name="startPoint" InputScope="Default" IsTextCompletionEnabled="True" MinimumPrefixLength="3" SelectionChanged="startPoint_SelectionChanged" VerticalAlignment="Top" Margin="0" Height="72">

@@ -139,6 +139,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\AppIcon\appstore-icon-512.png" />
+    <Content Include="Assets\finish_wisp.png" />
     <Content Include="Assets\icons\dark\appbar.add.png" />
     <Content Include="Assets\icons\dark\appbar.directions.png" />
     <Content Include="Assets\icons\dark\appbar.location.add.png" />
@@ -158,6 +160,10 @@
     <Content Include="Assets\icons\dark\appbar.map.png" />
     <Content Include="Assets\icons\dark\appbar.map.satellite.png" />
     <Content Include="Assets\icons\dark\appbar.map.treasure.png" />
+    <Content Include="Assets\intermediate_wisp.png" />
+    <Content Include="Assets\start_wisp.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="README_FIRST.txt" />
     <Content Include="Toolkit.Content\ApplicationBar.Cancel.png" />
     <Content Include="Toolkit.Content\ApplicationBar.Check.png" />
