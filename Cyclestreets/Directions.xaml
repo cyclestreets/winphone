@@ -35,13 +35,53 @@
 			<Setter Property="Foreground" Value="White"/>
 			<Setter Property="FontSize" Value="18"/>
 		</Style>
+		<Style x:Key="Finish" TargetType="Toolkit:Pushpin">
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="Toolkit:Pushpin">
+						<Grid x:Name="ContentGrid" FlowDirection="LeftToRight">
+							<StackPanel Orientation="Vertical">
+								<!--<Grid Background="{Binding Background, RelativeSource={RelativeSource TemplatedParent}}" HorizontalAlignment="Left" MinWidth="29" MinHeight="31">
+									<ContentPresenter x:Name="Presenter" Content="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}" FlowDirection="{Binding FlowDirection, RelativeSource={RelativeSource TemplatedParent}}" Margin="4"/>
+								</Grid>-->
+								<Image Height="75" Source="/Assets/finish_wisp.png"/>
+							</StackPanel>
+						</Grid>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+			<Setter Property="PositionOrigin" Value="0,1"/>
+			<Setter Property="Background" Value="Black"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="FontSize" Value="18"/>
+		</Style>
+		<Style x:Key="Intermediate" TargetType="Toolkit:Pushpin">
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="Toolkit:Pushpin">
+						<Grid x:Name="ContentGrid" FlowDirection="LeftToRight">
+							<StackPanel Orientation="Vertical">
+								<!--<Grid Background="{Binding Background, RelativeSource={RelativeSource TemplatedParent}}" HorizontalAlignment="Left" MinWidth="29" MinHeight="31">
+									<ContentPresenter x:Name="Presenter" Content="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}" FlowDirection="{Binding FlowDirection, RelativeSource={RelativeSource TemplatedParent}}" Margin="4"/>
+								</Grid>-->
+								<Image Height="75" Source="/Assets/intermediate_wisp.png"/>
+							</StackPanel>
+						</Grid>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+			<Setter Property="PositionOrigin" Value="0,1"/>
+			<Setter Property="Background" Value="Black"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="FontSize" Value="18"/>
+		</Style>
 	</phone:PhoneApplicationPage.Resources>
 	<phone:PhoneApplicationPage.ApplicationBar>
 		<shell:ApplicationBar>
 			<shell:ApplicationBarIconButton x:Name="myPosition" IconUri="/Assets/icons/dark/appbar.location.circle.png" IsEnabled="True" Text="My Position" Click="myPosition_Click"/>
-			<shell:ApplicationBarIconButton x:Name="cursorPos" IconUri="/Assets/icons/dark/appbar.add.png" IsEnabled="True" Text="Cursor"/>
+			<shell:ApplicationBarIconButton x:Name="cursorPos" IconUri="/Assets/icons/dark/appbar.add.png" IsEnabled="True" Text="Cursor" Click="cursorPos_Click"/>
 			<shell:ApplicationBarIconButton x:Name="confirmWaypoint" IconUri="/Assets/icons/dark/appbar.location.add.png" IsEnabled="True" Text="confirm" Click="confirmWaypoint_Click"/>
-			<shell:ApplicationBarIconButton x:Name="findRoute" IconUri="/Assets/icons/dark/appbar.directions.png" IsEnabled="False" Text="Find Route"/>
+			<shell:ApplicationBarIconButton x:Name="findRoute" IconUri="/Assets/icons/dark/appbar.directions.png" IsEnabled="False" Text="Find Route" Click="findRoute_Click"/>
 		</shell:ApplicationBar>
 	</phone:PhoneApplicationPage.ApplicationBar>
 	<!--LayoutRoot is the root grid where all page content is placed-->

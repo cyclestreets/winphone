@@ -58,7 +58,7 @@ namespace Cyclestreets
 		private bool runOnce = false;
 
 
-		private string apiKey = "d2ff10bbbded8e86";
+		public static string apiKey = "d2ff10bbbded8e86";
 
 		private GeoCoordinate max = new GeoCoordinate(90, -180);
 		private GeoCoordinate min = new GeoCoordinate(-90, 180);
