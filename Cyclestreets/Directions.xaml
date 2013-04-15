@@ -87,14 +87,14 @@
 	<!--LayoutRoot is the root grid where all page content is placed-->
 	<Grid x:Name="LayoutRoot" Background="Transparent">
 		<Grid.RowDefinitions>
+			<RowDefinition/>
 			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
-		<maps:Map x:Name="MyMap" Margin="0" Grid.Row="1"/>
-		<Image HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" Source="/Assets/icons/dark/appbar.add.png" Height="76" Width="76"/>
-		<StackPanel x:Name="stackPanel" Background="#FF444444" Height="109" VerticalAlignment="Top" Margin="0" RenderTransformOrigin="0.5,0.5">
+		<maps:Map x:Name="MyMap" Margin="0"/>
+		<Image HorizontalAlignment="Center" VerticalAlignment="Center" Source="/Assets/icons/dark/appbar.add.png" Height="76" Width="76"/>
+		<StackPanel x:Name="stackPanel" Background="#FF212021" VerticalAlignment="Top" Margin="0" RenderTransformOrigin="0.5,0.5" Grid.Row="1">
 			<TextBlock x:Name="findLabel" Text="TYPE LOCATION OR USE APP BAR" Padding="10,0,0,0" Foreground="White"/>
-			<toolkit:AutoCompleteBox x:Name="startPoint" InputScope="Default" IsTextCompletionEnabled="True" MinimumPrefixLength="3" SelectionChanged="startPoint_SelectionChanged" VerticalAlignment="Top" Margin="0" Height="72">
+			<toolkit:AutoCompleteBox x:Name="startPoint" InputScope="Default" IsTextCompletionEnabled="True" MinimumPrefixLength="3" SelectionChanged="startPoint_SelectionChanged" VerticalAlignment="Top" Margin="0" FontSize="20" Height="65">
 				<toolkit:AutoCompleteBox.ItemTemplate>
 					<DataTemplate>
 						<StackPanel>

@@ -99,6 +99,9 @@
     <Compile Include="Directions.xaml.cs">
       <DependentUpon>Directions.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DirectionsResults.xaml.cs">
+      <DependentUpon>DirectionsResults.xaml</DependentUpon>
+    </Compile>
     <Compile Include="LocalizedStrings.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -122,6 +125,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="DirectionsResults.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -140,7 +147,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\AppIcon\appstore-icon-512.png" />
+    <Content Include="Assets\bike_white.png" />
+    <Content Include="Assets\cyclestreets19586.jpg" />
     <Content Include="Assets\finish_wisp.png" />
+    <Content Include="Assets\footprints.png" />
     <Content Include="Assets\icons\dark\appbar.add.png" />
     <Content Include="Assets\icons\dark\appbar.directions.png" />
     <Content Include="Assets\icons\dark\appbar.location.add.png" />
@@ -198,6 +208,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Expression.Interactions" />
+    <Reference Include="Microsoft.Phone.Controls, Version=8.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Phone.Controls.Toolkit">
       <HintPath>packages\WPtoolkit.4.2012.10.30\lib\wp8\Microsoft.Phone.Controls.Toolkit.dll</HintPath>
     </Reference>
