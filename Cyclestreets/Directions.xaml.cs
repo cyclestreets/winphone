@@ -112,9 +112,12 @@ namespace Cyclestreets
 
 				string myLocation = "";
 				LocationRectangle rect = GetMapBounds();
-				myLocation = "&w=" + rect.West + "&s=" + rect.South + "&e=" + rect.East + "&n=" + rect.North + "&zoom=" + MyMap.ZoomLevel;
+				//myLocation = "&w=" + rect.West + "&s=" + rect.South + "&e=" + rect.East + "&n=" + rect.North + "&zoom=" + MyMap.ZoomLevel;
+				myLocation = MyMap.Center.Latitude + "," + MyMap.Center.Longitude;
+				myLocation = HttpUtility.UrlEncode(myLocation);
 
-				Uri service = new Uri("http://cambridge.cyclestreets.net/api/geocoder.xml?key=" + MainPage.apiKey + myLocation + "&street=" + prefix);
+				//Uri service = new Uri("http://cambridge.cyclestreets.net/api/geocoder.xml?key=" + MainPage.apiKey + myLocation + "&street=" + prefix);
+				Uri service = new Uri( "http://demo.places.nlp.nokia.com/places/v1/suggest?at=" + myLocation + "&q=" + prefix + "&app_id=" + MainPage.hereAppID + "&app_code=" + MainPage.hereAppToken + "&accept=application/json" );
 				wc.DownloadStringCompleted += DownloadStringCompleted;
 				wc.DownloadStringAsync(service, s);
 			};
@@ -122,7 +125,8 @@ namespace Cyclestreets
 
 		private void DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
 		{
-			AutoCompleteBox acb = e.UserState as AutoCompleteBox;
+			Console.WriteLine( e.Result );
+			/*AutoCompleteBox acb = e.UserState as AutoCompleteBox;
 			if (acb != null && e.Error == null && !e.Cancelled && !string.IsNullOrEmpty(e.Result))
 			{
 				List<SearchResult> suggestions = new List<SearchResult>();
@@ -147,7 +151,7 @@ namespace Cyclestreets
 					acb.ItemsSource = suggestions;
 					acb.PopulateComplete();
 				}
-			}
+			}*/
 		}
 
 		private LocationRectangle GetMapBounds()
