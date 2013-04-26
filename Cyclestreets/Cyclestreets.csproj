@@ -96,6 +96,12 @@
     </Compile>
     <Compile Include="AsyncWebRequest.cs" />
     <Compile Include="CoordinateConverter.cs" />
+    <Compile Include="POIResults.xaml.cs">
+      <DependentUpon>POIResults.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="POIResultsMap.xaml.cs">
+      <DependentUpon>POIResultsMap.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Directions.xaml.cs">
       <DependentUpon>Directions.xaml</DependentUpon>
     </Compile>
@@ -105,6 +111,9 @@
     <Compile Include="LocalizedStrings.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="POIList.xaml.cs">
+      <DependentUpon>POIList.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\AppResources.Designer.cs">
@@ -121,6 +130,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Page Include="POIResults.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="POIResultsMap.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Directions.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -137,10 +154,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </DesignData>
+    <Page Include="POIList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Properties\AppManifest.xml" />
+    <None Include="Properties\AppManifest.xml">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\WMAppManifest.xml">
       <SubType>Designer</SubType>
     </None>
@@ -148,11 +171,15 @@
   <ItemGroup>
     <Content Include="Assets\AppIcon\appstore-icon-512.png" />
     <Content Include="Assets\bike_white.png" />
+    <Content Include="Assets\bullet_go.png" />
+    <Content Include="Assets\clock.png" />
     <Content Include="Assets\cyclestreets19586.jpg" />
     <Content Include="Assets\finish_wisp.png" />
     <Content Include="Assets\footprints.png" />
+    <Content Include="Assets\heart.png" />
     <Content Include="Assets\icons\dark\appbar.add.png" />
     <Content Include="Assets\icons\dark\appbar.directions.png" />
+    <Content Include="Assets\icons\dark\appbar.information.circle.png" />
     <Content Include="Assets\icons\dark\appbar.location.add.png" />
     <Content Include="Assets\icons\dark\appbar.location.circle.png" />
     <Content Include="Assets\icons\dark\appbar.location.delete.png" />
@@ -171,9 +198,12 @@
     <Content Include="Assets\icons\dark\appbar.map.satellite.png" />
     <Content Include="Assets\icons\dark\appbar.map.treasure.png" />
     <Content Include="Assets\intermediate_wisp.png" />
+    <Content Include="Assets\picture.png" />
     <Content Include="Assets\start_wisp.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\traffic_signals.png" />
+    <Content Include="Assets\world.png" />
     <Content Include="README_FIRST.txt" />
     <Content Include="Toolkit.Content\ApplicationBar.Cancel.png" />
     <Content Include="Toolkit.Content\ApplicationBar.Check.png" />

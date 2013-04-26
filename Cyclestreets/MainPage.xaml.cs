@@ -16,6 +16,13 @@ using Windows.Devices.Geolocation;
 
 namespace Cyclestreets
 {
+	public class POIItem
+	{
+		public string POILabel { get; set; }
+		public bool POIEnabled { get; set; }
+		public string POIName { get; set; }
+	}
+
 	public class SearchResult
 	{
 		public double longitude
@@ -90,8 +97,8 @@ namespace Cyclestreets
 			geoQ.QueryCompleted += geoQ_QueryCompleted;
 
 			var sgs = ExtendedVisualStateManager.GetVisualStateGroups( LayoutRoot );
-			var sg = sgs[0] as VisualStateGroup;
-			ExtendedVisualStateManager.GoToElementState( LayoutRoot, ( (VisualState)sg.States[0] ).Name, true );
+			var sg = sgs[ 0 ] as VisualStateGroup;
+			ExtendedVisualStateManager.GoToElementState( LayoutRoot, ( (VisualState)sg.States[ 0 ] ).Name, true );
 		}
 
 		public void StartTracking()
@@ -146,7 +153,7 @@ namespace Cyclestreets
 
 		private void geoQ_QueryCompleted( object sender, QueryCompletedEventArgs<IList<MapLocation>> e )
 		{
-			MapLocation loc = e.Result[0];
+			MapLocation loc = e.Result[ 0 ];
 			startPoint.Text = loc.Information.Address.Street + ", " + loc.Information.Address.City + ", " + loc.Information.Address.PostalCode;
 			usePos.IsEnabled = true;
 			start = new SearchResult();
@@ -264,10 +271,10 @@ namespace Cyclestreets
 					List<GeoCoordinate> coords = new List<GeoCoordinate>();
 					for( int i = 0; i < points.Length; i++ )
 					{
-						string[] xy = points[i].Split( ',' );
+						string[] xy = points[ i ].Split( ',' );
 
-						double longitude = double.Parse( xy[0] );
-						double latitude = double.Parse( xy[1] );
+						double longitude = double.Parse( xy[ 0 ] );
+						double latitude = double.Parse( xy[ 1 ] );
 						coords.Add( new GeoCoordinate( latitude, longitude ) );
 
 						if( max.Latitude > latitude )
@@ -293,8 +300,8 @@ namespace Cyclestreets
 				int count = geometryCoords.Count;
 				for( int i = 0; i < count; i++ )
 				{
-					List<GeoCoordinate> coords = geometryCoords[i];
-					DrawMapMarker( coords.ToArray(), geometryColor[i] );
+					List<GeoCoordinate> coords = geometryCoords[ i ];
+					DrawMapMarker( coords.ToArray(), geometryColor[ i ] );
 				}
 			} );
 		}
@@ -337,7 +344,7 @@ namespace Cyclestreets
 			for( int i = 0; i < coordinate.Length; i++ )
 			{
 				//Point p = MyMap.ConvertGeoCoordinateToViewportPoint( coordinate[i] );
-				polygon.Path.Add( coordinate[i] );
+				polygon.Path.Add( coordinate[ i ] );
 			}
 
 			MyMap.MapElements.Add( polygon );
@@ -406,8 +413,8 @@ namespace Cyclestreets
 		private void Button_Click_1( object sender, System.Windows.RoutedEventArgs e )
 		{
 			var sgs = ExtendedVisualStateManager.GetVisualStateGroups( LayoutRoot );
-			var sg = sgs[0] as VisualStateGroup;
-			ExtendedVisualStateManager.GoToElementState( LayoutRoot, ( (VisualState)sg.States[0] ).Name, true );
+			var sg = sgs[ 0 ] as VisualStateGroup;
+			ExtendedVisualStateManager.GoToElementState( LayoutRoot, ( (VisualState)sg.States[ 0 ] ).Name, true );
 		}
 
 		private void startPoint_SelectionChanged( object sender, System.Windows.Controls.SelectionChangedEventArgs e )
@@ -486,6 +493,11 @@ namespace Cyclestreets
 			findLabel.Text = "Select finish point or waypoint";
 			startPoint.Text = "";
 			usePos.IsEnabled = false;
+		}
+
+		private void poiList_Click( object sender, System.EventArgs e )
+		{
+			NavigationService.Navigate( new Uri( "/POIList.xaml?longitude="+MyMap.Center.Longitude+"&latitude="+MyMap.Center.Latitude, UriKind.Relative ) );
 		}
 	}
 }

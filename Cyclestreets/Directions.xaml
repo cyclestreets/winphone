@@ -87,12 +87,119 @@
 	<!--LayoutRoot is the root grid where all page content is placed-->
 	<Grid x:Name="LayoutRoot" Background="Transparent">
 		<Grid.RowDefinitions>
-			<RowDefinition/>
 			<RowDefinition Height="Auto"/>
+			<RowDefinition/>
 		</Grid.RowDefinitions>
-		<maps:Map x:Name="MyMap" Margin="0"/>
-		<Image HorizontalAlignment="Center" VerticalAlignment="Center" Source="/Assets/icons/dark/appbar.add.png" Height="76" Width="76"/>
-		<StackPanel x:Name="stackPanel" Background="#FF212021" VerticalAlignment="Top" Margin="0" RenderTransformOrigin="0.5,0.5" Grid.Row="1">
+		<VisualStateManager.VisualStateGroups>
+			<VisualStateGroup x:Name="VisualStateGroup">
+				<VisualStateGroup.Transitions>
+					<VisualTransition GeneratedDuration="0" To="RouteFoundState">
+						<VisualTransition.GeneratedEasingFunction>
+							<CircleEase EasingMode="EaseOut"/>
+						</VisualTransition.GeneratedEasingFunction>
+						<Storyboard>
+							<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="routeType">
+								<EasingDoubleKeyFrame KeyTime="0" Value="-100"/>
+								<EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
+							</DoubleAnimationUsingKeyFrames>
+							<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="locationEntry">
+								<EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+								<EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="180"/>
+							</DoubleAnimationUsingKeyFrames>
+						</Storyboard>
+					</VisualTransition>
+					<VisualTransition From="RoutePlanner" GeneratedDuration="0" To="RouteFoundState">
+						<VisualTransition.GeneratedEasingFunction>
+							<CircleEase EasingMode="EaseOut"/>
+						</VisualTransition.GeneratedEasingFunction>
+						<Storyboard>
+							<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="routeType">
+								<EasingDoubleKeyFrame KeyTime="0" Value="-100"/>
+								<EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
+							</DoubleAnimationUsingKeyFrames>
+							<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="locationEntry">
+								<EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+								<EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="180"/>
+							</DoubleAnimationUsingKeyFrames>
+						</Storyboard>
+					</VisualTransition>
+					<VisualTransition GeneratedDuration="0">
+						<Storyboard>
+							<DoubleAnimation Duration="0" To="180" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="locationEntry" d:IsOptimized="True"/>
+						</Storyboard>
+					</VisualTransition>
+					<VisualTransition GeneratedDuration="0" To="RoutePlanner">
+						<VisualTransition.GeneratedEasingFunction>
+							<CubicEase EasingMode="EaseOut"/>
+						</VisualTransition.GeneratedEasingFunction>
+						<Storyboard>
+							<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="locationEntry">
+								<EasingDoubleKeyFrame KeyTime="0" Value="180"/>
+								<EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
+							</DoubleAnimationUsingKeyFrames>
+						</Storyboard>
+					</VisualTransition>
+					<VisualTransition From="RoutePlanner" GeneratedDuration="0">
+						<VisualTransition.GeneratedEasingFunction>
+							<CircleEase EasingMode="EaseOut"/>
+						</VisualTransition.GeneratedEasingFunction>
+						<Storyboard>
+							<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="locationEntry">
+								<EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+								<EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="180"/>
+							</DoubleAnimationUsingKeyFrames>
+						</Storyboard>
+					</VisualTransition>
+					<VisualTransition From="RouteFoundState" GeneratedDuration="0" To="RoutePlanner">
+						<VisualTransition.GeneratedEasingFunction>
+							<CircleEase EasingMode="EaseOut"/>
+						</VisualTransition.GeneratedEasingFunction>
+						<Storyboard>
+							<DoubleAnimation Duration="0:0:0.2" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="locationEntry">
+								<DoubleAnimation.EasingFunction>
+									<CircleEase EasingMode="EaseOut"/>
+								</DoubleAnimation.EasingFunction>
+							</DoubleAnimation>
+							<DoubleAnimation Duration="0:0:0.2" To="-155" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="routeType">
+								<DoubleAnimation.EasingFunction>
+									<CircleEase EasingMode="EaseOut"/>
+								</DoubleAnimation.EasingFunction>
+							</DoubleAnimation>
+						</Storyboard>
+					</VisualTransition>
+					<VisualTransition From="RouteFoundState" GeneratedDuration="0">
+						<VisualTransition.GeneratedEasingFunction>
+							<CircleEase EasingMode="EaseOut"/>
+						</VisualTransition.GeneratedEasingFunction>
+						<Storyboard>
+							<DoubleAnimation Duration="0" To="180" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="locationEntry">
+								<DoubleAnimation.EasingFunction>
+									<CircleEase EasingMode="EaseOut"/>
+								</DoubleAnimation.EasingFunction>
+							</DoubleAnimation>
+							<DoubleAnimation Duration="0:0:0.2" To="-155" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="routeType">
+								<DoubleAnimation.EasingFunction>
+									<CircleEase EasingMode="EaseOut"/>
+								</DoubleAnimation.EasingFunction>
+							</DoubleAnimation>
+						</Storyboard>
+					</VisualTransition>
+				</VisualStateGroup.Transitions>
+				<VisualState x:Name="RoutePlanner"/>
+				<VisualState x:Name="RouteFoundState">
+					<Storyboard>
+						<DoubleAnimation Duration="0" To="180" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="locationEntry" d:IsOptimized="True"/>
+						<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="routeType" d:IsOptimized="True"/>
+					</Storyboard>
+				</VisualState>
+			</VisualStateGroup>
+		</VisualStateManager.VisualStateGroups>
+		<maps:Map x:Name="MyMap" Margin="0" Grid.Row="1"/>
+		<Image HorizontalAlignment="Center" VerticalAlignment="Center" Source="/Assets/icons/dark/appbar.add.png" Height="76" Width="76" Grid.Row="1"/>
+		<StackPanel x:Name="locationEntry" Background="#FF212021" VerticalAlignment="Bottom" Margin="0" RenderTransformOrigin="0.5,0.5" Grid.Row="1">
+			<StackPanel.RenderTransform>
+				<CompositeTransform/>
+			</StackPanel.RenderTransform>
 			<TextBlock x:Name="findLabel" Text="TYPE LOCATION OR USE APP BAR" Padding="10,0,0,0" Foreground="White"/>
 			<toolkit:AutoCompleteBox x:Name="startPoint" InputScope="Default" IsTextCompletionEnabled="True" MinimumPrefixLength="3" SelectionChanged="startPoint_SelectionChanged" VerticalAlignment="Top" Margin="0" FontSize="20" Height="65">
 				<toolkit:AutoCompleteBox.ItemTemplate>
@@ -105,6 +212,18 @@
 				</toolkit:AutoCompleteBox.ItemTemplate>
 			</toolkit:AutoCompleteBox>
 		</StackPanel>
+		<Grid x:Name="routeType" VerticalAlignment="Top" Background="#FF212021" RenderTransformOrigin="0.5,0.5" Grid.Row="1">
+			<Grid.RenderTransform>
+				<CompositeTransform TranslateY="-100"/>
+			</Grid.RenderTransform>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="131*"/>
+				<ColumnDefinition Width="29*"/>
+			</Grid.ColumnDefinitions>
+			<toolkit:ListPicker x:Name="routeTypePicker" SelectionChanged="routeTypePicker_SelectionChanged" Margin="10,5,0,10" Padding="0"/>
+			<Image Source="/Assets/icons/dark/appbar.information.circle.png" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="None" Margin="0" Grid.Column="1" Tap="Image_Tap_1"/>
+		</Grid>
+		<ProgressBar x:Name="progress" Margin="0" VerticalAlignment="Top" IsIndeterminate="True" Foreground="White" Opacity="0"/>
 		<!--TitlePanel contains the name of the application and page title-->
 		<!--ContentPanel - place additional content here-->
 	</Grid>

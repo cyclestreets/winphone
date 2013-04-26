@@ -20,6 +20,7 @@
 		<shell:ApplicationBar>
 			<shell:ApplicationBar.MenuItems>
 				<shell:ApplicationBarMenuItem IsEnabled="True" Text="Enable aerial view" Click="ApplicationBarMenuItem_ToggleAerialView"/>
+				<shell:ApplicationBarMenuItem x:Name="poiList" IsEnabled="True" Text="Points of interest" Click="poiList_Click"/>
 			</shell:ApplicationBar.MenuItems>
 			<shell:ApplicationBarIconButton IconUri="/Assets/icons/dark/appbar.location.circle.png" IsEnabled="True" Text="Track Me" Click="ApplicationBarIconButton_TrackMe"/>
 			<shell:ApplicationBarIconButton IconUri="/Assets/icons/dark/appbar.magnify.png" IsEnabled="True" Text="Find"/>
