@@ -23,25 +23,25 @@
 
             <!--Panorama item one-->
             <phone:PanoramaItem Header="nearest poi">
-				<StackPanel>
-            		<phone:LongListSelector x:Name="poiList" HorizontalContentAlignment="Stretch">
-            			<phone:LongListSelector.ItemTemplate>
-            				<DataTemplate>
-            					<Grid Margin="0" Background="{Binding BGColour}">
-            						<Grid.RowDefinitions>
-            							<RowDefinition/>
+				<ScrollViewer>
+					<phone:LongListSelector x:Name="poiList" HorizontalContentAlignment="Stretch" Width="420">
+						<phone:LongListSelector.ItemTemplate>
+							<DataTemplate>
+								<Grid Margin="0" Background="{Binding BGColour}">
+									<Grid.RowDefinitions>
+										<RowDefinition/>
 										<RowDefinition/>
 										<RowDefinition/>
 									</Grid.RowDefinitions>
-									<TextBlock x:Name="title" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Name}" VerticalAlignment="Top" Margin="5" FontSize="22"/>
-            						<TextBlock x:Name="location" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Location}" VerticalAlignment="Top" Margin="5" Grid.Row="1"/>
+									<TextBlock x:Name="title" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Name}" VerticalAlignment="Top" Margin="5" FontSize="28"/>
+									<TextBlock x:Name="location" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Location}" VerticalAlignment="Top" Margin="5" Grid.Row="1"/>
 									<TextBlock x:Name="distance" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Distance}" VerticalAlignment="Top" Margin="5" Grid.Row="2"/>
 									<!-- Main List Item Template Here -->
-            					</Grid>
-            				</DataTemplate>
-            			</phone:LongListSelector.ItemTemplate>
-            		</phone:LongListSelector>
-            	</StackPanel>
+								</Grid>
+							</DataTemplate>
+						</phone:LongListSelector.ItemTemplate>
+					</phone:LongListSelector>
+				</ScrollViewer>
 			</phone:PanoramaItem>
 
             <!--Panorama item two-->

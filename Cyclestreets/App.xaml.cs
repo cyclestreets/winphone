@@ -76,6 +76,8 @@ namespace Cyclestreets
 				PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;
 			}
 
+
+			ReverseGeocodeQueryManager mgr = new ReverseGeocodeQueryManager();
 		}
 
 		// Code to execute when the application is launching (eg, from Start)

@@ -3,39 +3,50 @@ using System.Device.Location;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
+using Cyclestreets.Common;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Maps.Services;
 
 namespace Cyclestreets
 {
-	public class POI
+	public class POI : BindableBase, ReverseGeocodeHandler
 	{
 		private ReverseGeocodeQuery geoQ = null;
 
 		public string Name { get; set; }
-		private GeoCoordinate _position;
-		public GeoCoordinate Position 
+
+		GeoCoordinate _position;
+		public GeoCoordinate Position
 		{
 			get { return _position; }
-			set 
+			set
 			{
-				geoQ = new ReverseGeocodeQuery();
-				geoQ.QueryCompleted += geoQ_QueryCompleted;
-				geoQ.GeoCoordinate = value;
-				geoQ.QueryAsync();
+				_position = value;
 
-				_position = value; 
+				ReverseGeocodeQueryManager.Instance.Add( this );
 			}
 		}
 
-		private void geoQ_QueryCompleted( object sender, QueryCompletedEventArgs<System.Collections.Generic.IList<MapLocation>> e )
+		public GeoCoordinate GetGeoCoordinate()
+		{
+			return _position;
+		}
+
+		public void geoQ_QueryCompleted( object sender, QueryCompletedEventArgs<System.Collections.Generic.IList<MapLocation>> e )
 		{
 			MapLocation loc = e.Result[ 0 ];
 			Location = loc.Information.Address.Street + ", " + loc.Information.Address.PostalCode;
 		}
 
 		public string Distance { get; set; }
-		public string Location { get; set; }
+		private string _location = "...";
+		public string Location
+		{
+			get
+			{ return _location; }
+
+			set { this.SetProperty( ref this._location, value ); }
+		}
 	}
 
 	public partial class POIResults : PhoneApplicationPage
@@ -83,7 +94,7 @@ namespace Cyclestreets
 				g.Latitude = float.Parse( p.Element( "latitude" ).Value );
 				item.Position = g;
 				double dist = center.GetDistanceTo( item.Position ) * 0.000621371192;
-				item.Distance =  dist.ToString( "0.00" ) + "m";
+				item.Distance = dist.ToString( "0.00" ) + "m";
 
 				pois.Add( item );
 			}

@@ -14,6 +14,8 @@ using Microsoft.Phone.Maps.Controls;
 using Microsoft.Phone.Maps.Services;
 using Microsoft.Phone.Maps.Toolkit;
 using Microsoft.Phone.Shell;
+using Newtonsoft;
+using Newtonsoft.Json.Linq;
 
 namespace Cyclestreets
 {
@@ -108,7 +110,8 @@ namespace Cyclestreets
 	public partial class Directions : PhoneApplicationPage
 	{
 		bool routeFound = false;
-		ReverseGeocodeQuery geoQ = null;
+		ReverseGeocodeQuery revGeoQ = null;
+		GeocodeQuery geoQ = null;
 		//List<GeoCoordinate> waypoints = new List<GeoCoordinate>();
 		MapLayer wayPointLayer = null;
 		Stack<Pushpin> waypoints = new Stack<Pushpin>();
@@ -141,7 +144,10 @@ namespace Cyclestreets
 			routeTypePicker.ItemsSource = RouteType;
 			routeTypePicker.SelectedItem = RouteType[ 0 ];
 
-			geoQ = new ReverseGeocodeQuery();
+			revGeoQ = new ReverseGeocodeQuery();
+			revGeoQ.QueryCompleted += revGeoQ_QueryCompleted;
+
+			geoQ = new GeocodeQuery();
 			geoQ.QueryCompleted += geoQ_QueryCompleted;
 
 			findRoute.IsEnabled = false;
@@ -180,25 +186,16 @@ namespace Cyclestreets
 
 		private void DownloadStringCompleted( object sender, DownloadStringCompletedEventArgs e )
 		{
-			Console.WriteLine( e.Result );
-			/*AutoCompleteBox acb = e.UserState as AutoCompleteBox;
+			AutoCompleteBox acb = e.UserState as AutoCompleteBox;
 			if( acb != null && e.Error == null && !e.Cancelled && !string.IsNullOrEmpty( e.Result ) )
 			{
-				List<SearchResult> suggestions = new List<SearchResult>();
-
-				XDocument xml = XDocument.Parse( e.Result.Trim() );
-
-				var results = xml.Descendants( "result" )
-										.Where( ev => (string)ev.Parent.Name.LocalName == "results" );
-
-				foreach( XElement p in results )
+				Console.WriteLine( e.Result );
+				JObject o = JObject.Parse( e.Result );
+				JArray suggestions = (JArray)o[ "suggestions" ];
+				List<string> names = new List<string>();
+				foreach( string s in suggestions )
 				{
-					SearchResult result = new SearchResult();
-					result.longitude = float.Parse( p.Element( "longitude" ).Value );
-					result.latitude = float.Parse( p.Element( "latitude" ).Value );
-					result.name = p.Element( "name" ).Value;
-					result.near = p.Element( "near" ).Value;
-					suggestions.Add( result );
+					names.Add( s );
 				}
 
 				if( suggestions.Count > 0 )
@@ -206,8 +203,7 @@ namespace Cyclestreets
 					acb.ItemsSource = suggestions;
 					acb.PopulateComplete();
 				}
-			}*/
-
+			}
 			progress.Opacity = 0;
 		}
 
@@ -219,7 +215,7 @@ namespace Cyclestreets
 			return LocationRectangle.CreateBoundingRectangle( new[] { topLeft, bottomRight } );
 		}
 
-		private void geoQ_QueryCompleted( object sender, QueryCompletedEventArgs<IList<MapLocation>> e )
+		private void revGeoQ_QueryCompleted( object sender, QueryCompletedEventArgs<IList<MapLocation>> e )
 		{
 			MapLocation loc = e.Result[ 0 ];
 			startPoint.Text = loc.Information.Address.Street + ", " + loc.Information.Address.PostalCode;
@@ -227,7 +223,7 @@ namespace Cyclestreets
 
 		private void startPoint_SelectionChanged( object sender, System.Windows.Controls.SelectionChangedEventArgs e )
 		{
-			SearchResult start = startPoint.SelectedItem as SearchResult;
+			/*SearchResult start = startPoint.SelectedItem as SearchResult;
 			if( start != null )
 			{
 				if( !geoQ.IsBusy )
@@ -243,21 +239,47 @@ namespace Cyclestreets
 						//MyMap.Center = CoordinateConverter.ConvertGeocoordinate(MyGeoPosition.Coordinate);
 					} );
 				}
+			}*/
+			if ( startPoint.SelectedItem != null )
+			{
+				string start = ( (JValue)startPoint.SelectedItem ).Value as string;
+
+				if( !geoQ.IsBusy && !string.IsNullOrWhiteSpace( start ) )
+				{
+					geoQ.SearchTerm = start;
+					geoQ.GeoCoordinate = MyMap.Center;
+					geoQ.QueryAsync();
+				}
+			}
+		}
+
+		private void geoQ_QueryCompleted( object sender, QueryCompletedEventArgs<IList<MapLocation>> e )
+		{
+			if( e.Result.Count > 0 )
+			{
+				GeoCoordinate g = e.Result[0].GeoCoordinate;
+				setCurrentPosition( g );
+
+				SmartDispatcher.BeginInvoke( () =>
+				{
+					MyMap.SetView( g, 16 );
+					//MyMap.Center = CoordinateConverter.ConvertGeocoordinate(MyGeoPosition.Coordinate);
+				} );
 			}
 		}
 
 		private void myPosition_Click( object sender, EventArgs e )
 		{
-			if( !geoQ.IsBusy )
+			if( !revGeoQ.IsBusy )
 			{
-				geoQ.GeoCoordinate = CoordinateConverter.ConvertGeocoordinate( MainPage.MyGeoPosition.Coordinate );
-				geoQ.QueryAsync();
+				revGeoQ.GeoCoordinate = CoordinateConverter.ConvertGeocoordinate( MainPage.MyGeoPosition.Coordinate );
+				revGeoQ.QueryAsync();
 
-				setCurrentPosition( geoQ.GeoCoordinate );
+				setCurrentPosition( revGeoQ.GeoCoordinate );
 
 				SmartDispatcher.BeginInvoke( () =>
 				{
-					MyMap.SetView( geoQ.GeoCoordinate, 16 );
+					MyMap.SetView( revGeoQ.GeoCoordinate, 16 );
 					//MyMap.Center = CoordinateConverter.ConvertGeocoordinate(MyGeoPosition.Coordinate);
 				} );
 			}
@@ -265,16 +287,16 @@ namespace Cyclestreets
 
 		private void cursorPos_Click( object sender, EventArgs e )
 		{
-			if( !geoQ.IsBusy )
+			if( !revGeoQ.IsBusy )
 			{
-				geoQ.GeoCoordinate = MyMap.Center;
-				geoQ.QueryAsync();
+				revGeoQ.GeoCoordinate = MyMap.Center;
+				revGeoQ.QueryAsync();
 
-				setCurrentPosition( geoQ.GeoCoordinate );
+				setCurrentPosition( revGeoQ.GeoCoordinate );
 
 				SmartDispatcher.BeginInvoke( () =>
 				{
-					MyMap.SetView( geoQ.GeoCoordinate, 16 );
+					MyMap.SetView( revGeoQ.GeoCoordinate, 16 );
 					//MyMap.Center = CoordinateConverter.ConvertGeocoordinate(MyGeoPosition.Coordinate);
 				} );
 			}
@@ -508,6 +530,10 @@ namespace Cyclestreets
 				routeFound = true;
 
 				progress.Opacity = 0;
+
+				float f = (float)route.distance * 0.000621371192f;
+				findLabel1.Text = f.ToString( "0.00" ) + "m\n" + ( route.timeInSeconds / 60 ) + " minutes";
+
 			} );
 
 
@@ -599,6 +625,7 @@ namespace Cyclestreets
 			if( currentStep < 0 )
 			{
 				arrowLeft.Opacity = 50;
+				currentStep++;
 
 				LocationRectangle rect = new LocationRectangle( min, max );
 				MyMap.SetView( rect );
@@ -629,9 +656,10 @@ namespace Cyclestreets
 			if( currentStep >= route.segments.Count )
 			{
 				arrowRight.Opacity = 50;
-// 				LocationRectangle rect = new LocationRectangle( min, max );
-// 				MyMap.SetView( rect );
-// 				MyMap.Pitch = 0;
+				currentStep--;
+				// 				LocationRectangle rect = new LocationRectangle( min, max );
+				// 				MyMap.SetView( rect );
+				// 				MyMap.Pitch = 0;
 			}
 			else
 			{
