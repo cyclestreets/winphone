@@ -23,8 +23,8 @@
 
             <!--Panorama item one-->
             <phone:PanoramaItem Header="directions">
-				<StackPanel>
-            		<phone:LongListSelector x:Name="directionList" HorizontalContentAlignment="Stretch">
+				<ScrollViewer>
+            		<phone:LongListSelector x:Name="directionList" HorizontalContentAlignment="Stretch" Width="420">
             			<phone:LongListSelector.ItemTemplate>
             				<DataTemplate>
             					<Grid Margin="0" Background="{Binding BGColour}">
@@ -37,9 +37,9 @@
             							<ColumnDefinition/>
             							<ColumnDefinition/>
             						</Grid.ColumnDefinitions>
-            						<TextBlock x:Name="time" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Time}" VerticalAlignment="Top" Margin="5"/>
-            						<TextBlock x:Name="distance" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Distance}" VerticalAlignment="Top" Grid.Row="1" Margin="5"/>
-            						<TextBlock x:Name="turn" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Turn}" VerticalAlignment="Center" Grid.Column="1" Margin="5"/>
+            						<TextBlock x:Name="time" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Time}" VerticalAlignment="Top" Margin="5" FontSize="27" FontWeight="Bold"/>
+            						<TextBlock x:Name="distance" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Distance}" VerticalAlignment="Top" Margin="5" Grid.Column="1" FontSize="27" FontWeight="Bold"/>
+            						<TextBlock x:Name="turn" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Turn}" VerticalAlignment="Center" Margin="5" Grid.Row="1"/>
             						<TextBlock x:Name="streets" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Name}" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Padding="0" Margin="5"/>
             						<StackPanel Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal" Grid.Row="2" Margin="5">
             							<Image x:Name="type" HorizontalAlignment="Center" VerticalAlignment="Center" Source="/Assets/bike_white.png" Margin="0,0,10,0"/>
@@ -50,7 +50,7 @@
             				</DataTemplate>
             			</phone:LongListSelector.ItemTemplate>
             		</phone:LongListSelector>
-            	</StackPanel>
+            	</ScrollViewer>
 			</phone:PanoramaItem>
 
             <!--Panorama item two-->

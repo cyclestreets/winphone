@@ -49,11 +49,27 @@ namespace Cyclestreets
 				_distance = int.Parse( value );
 			}
 		}
+
+		private int _distanceShort;
+		public int DistanceMetres
+		{
+			set
+			{
+				_distanceShort = value;
+			}
+			get
+			{
+				return _distanceShort;
+			}
+		}
 		public string Turn { get; set; }
 		public bool Walk { get; set; }
 		public string ProvisionName { get; set; }
 		public string Name { get; set; }
 		public string BGColour { get; set; }
+
+		public GeoCoordinate location { get; set; }
+		public double Bearing { get; set; }
 	}
 
 	public class RouteDetails
@@ -108,6 +124,8 @@ namespace Cyclestreets
 
 		GeoCoordinate current = null;
 
+		private int currentStep = -1;
+
 		String[] RouteType = { "balanced", "fastest", "quietest" };
 
 		public Directions()
@@ -131,7 +149,7 @@ namespace Cyclestreets
 
 			startPoint.Populating += ( s, args ) =>
 			{
-				if ( progress != null )
+				if( progress != null )
 					progress.Opacity = 100;
 
 				args.Cancel = true;
@@ -327,7 +345,7 @@ namespace Cyclestreets
 
 			foreach( Pushpin p in waypoints )
 			{
-				itinerarypoints += p.GeoCoordinate.Longitude + "," + p.GeoCoordinate.Latitude + "|";
+				itinerarypoints = p.GeoCoordinate.Longitude + "," + p.GeoCoordinate.Latitude + "|" + itinerarypoints;
 			}
 			itinerarypoints = itinerarypoints.TrimEnd( '|' );
 
@@ -348,6 +366,10 @@ namespace Cyclestreets
 			XDocument xml = XDocument.Parse( str.Trim() );
 
 			geometryCoords.Clear();
+			currentStep = -1;
+
+			arrowLeft.Opacity = 50;
+			arrowRight.Opacity = 100;
 
 			/*var fixtures = xml.Descendants( "waypoint" )
 									.Where( e => (string)e.Parent.Name.LocalName == "markers" );
@@ -438,8 +460,11 @@ namespace Cyclestreets
 					geometryColor.Add( ConvertHexStringToColour( p.Attribute( "color" ).Value ) );
 
 					RouteSegment s = new RouteSegment();
-					s.Distance = p.Attribute( "distance" ).Value;
+					s.location = coords[ 0 ];
+					s.Bearing = Geodesy.Bearing( coords[ 0 ].Latitude, coords[ 0 ].Longitude, coords[ coords.Count - 1 ].Latitude, coords[ coords.Count - 1 ].Longitude );
 					route.distance += (int)float.Parse( p.Attribute( "distance" ).Value );
+					s.Distance = "" + route.distance;// p.Attribute( "distance" ).Value;
+					s.DistanceMetres = (int)float.Parse( p.Attribute( "distance" ).Value );
 					s.Name = p.Attribute( "name" ).Value;
 					s.ProvisionName = p.Attribute( "provisionName" ).Value;
 					int theLegOfTime = int.Parse( p.Attribute( "time" ).Value );
@@ -550,7 +575,7 @@ namespace Cyclestreets
 
 				foreach( Pushpin p in waypoints )
 				{
-					itinerarypoints += p.GeoCoordinate.Longitude + "," + p.GeoCoordinate.Latitude + "|";
+					itinerarypoints = p.GeoCoordinate.Longitude + "," + p.GeoCoordinate.Latitude + "|" + itinerarypoints;
 				}
 				itinerarypoints = itinerarypoints.TrimEnd( '|' );
 
@@ -566,6 +591,55 @@ namespace Cyclestreets
 		private void Image_Tap_1( object sender, System.Windows.Input.GestureEventArgs e )
 		{
 			NavigationService.Navigate( new Uri( "/DirectionsResults.xaml", UriKind.Relative ) );
+		}
+
+		private void arrowLeft_Tap( object sender, System.Windows.Input.GestureEventArgs e )
+		{
+			currentStep--;
+			if( currentStep < 0 )
+			{
+				arrowLeft.Opacity = 50;
+
+				LocationRectangle rect = new LocationRectangle( min, max );
+				MyMap.SetView( rect );
+				MyMap.Pitch = 0;
+				MyMap.Heading = 0;
+			}
+			else
+			{
+				arrowLeft.Opacity = 100;
+
+				MyMap.SetView( route.segments[ currentStep ].location, 20, route.segments[ currentStep ].Bearing, 75 );
+			}
+			if( currentStep >= route.segments.Count )
+				arrowRight.Opacity = 50;
+			else
+				arrowRight.Opacity = 100;
+
+
+		}
+
+		private void arrowRight_Tap( object sender, System.Windows.Input.GestureEventArgs e )
+		{
+			currentStep++;
+			if( currentStep < 0 )
+				arrowLeft.Opacity = 50;
+			else
+				arrowLeft.Opacity = 100;
+			if( currentStep >= route.segments.Count )
+			{
+				arrowRight.Opacity = 50;
+// 				LocationRectangle rect = new LocationRectangle( min, max );
+// 				MyMap.SetView( rect );
+// 				MyMap.Pitch = 0;
+			}
+			else
+			{
+				arrowRight.Opacity = 100;
+				MyMap.SetView( route.segments[ currentStep ].location, 20, route.segments[ currentStep ].Bearing, 75 );
+
+				findLabel1.Text = route.segments[ currentStep ].Turn + " at " + route.segments[ currentStep ].Name + "\n Continue for " + route.segments[ currentStep ].DistanceMetres + "m";
+			}
 		}
 	}
 }
