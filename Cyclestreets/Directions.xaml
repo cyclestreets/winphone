@@ -8,6 +8,7 @@
     xmlns:maps="clr-namespace:Microsoft.Phone.Maps.Controls;assembly=Microsoft.Phone.Maps" xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
     xmlns:Toolkit="clr-namespace:Microsoft.Phone.Maps.Toolkit;assembly=Microsoft.Phone.Controls.Toolkit"
     xmlns:ec="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
+    xmlns:edc="clr-namespace:Microsoft.Expression.Controls;assembly=Microsoft.Expression.Drawing" xmlns:em="clr-namespace:Microsoft.Expression.Media;assembly=Microsoft.Expression.Drawing"
     x:Class="Cyclestreets.Directions"
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d"
@@ -234,11 +235,11 @@
 				</VisualState>
 			</VisualStateGroup>
 		</VisualStateManager.VisualStateGroups>
-		<!--TitlePanel contains the name of the application and page title-->
-		<!--ContentPanel - place additional content here-->
+		<!--TitlePanel contains the name of the application and page title--><!--ContentPanel - place additional content here-->
 		<VisualStateManager.CustomVisualStateManager>
 			<ec:ExtendedVisualStateManager/>
 		</VisualStateManager.CustomVisualStateManager>
+		<ProgressBar x:Name="progress" Margin="0" VerticalAlignment="Top" IsIndeterminate="True" Foreground="White" Opacity="{Binding Opacity}"/>
 		<maps:Map x:Name="MyMap" Margin="0" Grid.Row="1"/>
 		<Image HorizontalAlignment="Center" VerticalAlignment="Center" Source="/Assets/icons/dark/appbar.add.png" Height="76" Width="76" Grid.Row="1"/>
 		<StackPanel x:Name="locationEntry" Background="#FF212021" VerticalAlignment="Bottom" Margin="0" RenderTransformOrigin="0.5,0.5" Grid.Row="1">
@@ -268,7 +269,6 @@
 			<toolkit:ListPicker x:Name="routeTypePicker" SelectionChanged="routeTypePicker_SelectionChanged" Margin="10,5,0,10" Padding="0"/>
 			<Image Source="/Assets/icons/dark/appbar.information.circle.png" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="None" Margin="0" Grid.Column="1" Tap="Image_Tap_1"/>
 		</Grid>
-		<ProgressBar x:Name="progress" Margin="0" VerticalAlignment="Top" IsIndeterminate="True" Foreground="White" Opacity="0"/>
 		<Grid x:Name="routeDetails" Background="#FF212021" VerticalAlignment="Bottom" Margin="0" RenderTransformOrigin="0.5,0.5" Grid.Row="1">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="72*"/>
@@ -282,6 +282,11 @@
 			<Image x:Name="arrowLeft" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Center" Source="/Assets/icons/dark/appbar.arrow.left.png" Stretch="None" Height="76" Width="76" Grid.ColumnSpan="2" Tap="arrowLeft_Tap"/>
 			<Image x:Name="arrowRight" HorizontalAlignment="Right" Margin="0" VerticalAlignment="Center" Source="/Assets/icons/dark/appbar.arrow.right.png" Grid.Column="1" Stretch="None" Grid.ColumnSpan="2" Height="76" Width="76" Tap="arrowRight_Tap"/>
 		</Grid>
+		<edc:Callout x:Name="routeTutorial1" AnchorPoint="0,1.2" CalloutStyle="Rectangle" Content="You can start, finish and add waypoints to your route in three ways. You can type in this box..." FontSize="14.666999816894531" HorizontalAlignment="Left" Height="100" Margin="137,0,0,50" Grid.Row="1" VerticalAlignment="Bottom" Width="248" Fill="Black" Cursor="Arrow" Padding="10,0" Tap="routeTutorial1_Tap" Visibility="Collapsed"/>
+		<edc:Callout x:Name="routeTutorial2" AnchorPoint="0.149,1.21" CalloutStyle="Rectangle" Content="... tap this option to select your current position..." FontSize="14.666999816894531" HorizontalAlignment="Left" Height="100" Margin="86,0,0,20" Grid.Row="1" VerticalAlignment="Bottom" Width="248" Fill="Black" Cursor="Arrow" Padding="10,0" Tap="routeTutorial2_Tap" Visibility="Collapsed"/>
+		<edc:Callout x:Name="routeTutorial3" AnchorPoint="0.149,1.21" CalloutStyle="Rectangle" Content="... or tap this option to select the point on the map directly under the &quot;+&quot; cursor. You can drag the map around and pinch zoom to refine the position." FontSize="14.666999816894531" HorizontalAlignment="Left" Height="128" Margin="165,0,0,25" Grid.Row="1" VerticalAlignment="Bottom" Width="248" Fill="Black" Cursor="Arrow" Padding="10" Tap="routeTutorial3_Tap" Visibility="Collapsed"/>
+		<edc:Callout x:Name="routeTutorial4" AnchorPoint="0.5,1.211" CalloutStyle="Rectangle" Content="To confirm the point tap this button and a marker will be placed on the map. The first tap will add the start point. Subsequent taps add waypoints. The last tap becomes the end point." FontSize="14.666999816894531" HorizontalAlignment="Left" Height="128" Margin="98,0,0,25" Grid.Row="1" VerticalAlignment="Bottom" Width="352" Fill="Black" Cursor="Arrow" Padding="10" Tap="routeTutorial4_Tap" Visibility="Collapsed"/>
+		<edc:Callout x:Name="routeTutorial5" AnchorPoint="0.597,1.231" CalloutStyle="Rectangle" Content="Once there are at least two markers on the map you can tap this button to find your route." FontSize="14.666999816894531" HorizontalAlignment="Left" Height="108" Margin="224,0,0,25" Grid.Row="1" VerticalAlignment="Bottom" Width="226" Fill="Black" Cursor="Arrow" Padding="10" Tap="routeTutorial5_Tap" Visibility="Collapsed"/>
 	</Grid>
 
 </phone:PhoneApplicationPage>

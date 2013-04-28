@@ -1,21 +1,53 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Diagnostics;
-using System.Resources;
 using System.Windows;
 using System.Windows.Markup;
 using System.Windows.Navigation;
-using Microsoft.Phone.Controls;
-using Microsoft.Phone.Shell;
+using Cyclestreets.Common;
 using Cyclestreets.Resources;
 using Cyclestreets.ViewModels;
+using Microsoft.Phone.Controls;
+using Microsoft.Phone.Shell;
 
 namespace Cyclestreets
 {
+	public class NetworkBusy : BindableBase
+	{
+		private bool _networkIsBusy = false;
+		public bool networkIsBusy
+		{
+			get
+			{
+				return _networkIsBusy;
+			}
+			set
+			{
+				this._networkIsBusy = value;
+				this.OnPropertyChanged( "Opacity" );
+			}
+		}
+		public float Opacity
+		{
+			get
+			{
+				if( networkIsBusy )
+					return 100;
+				else
+					return 0;
+			}
+		}
+	}
+
 	public partial class App : Application
 	{
 		private static MainViewModel viewModel = null;
+
+		public static string hereAppID = "zgcciiZ696xHUiuoyJZi";
+		public static string hereAppToken = "tH8mLbASkG9oz6j8DuXn7A";
+
+		public static string apiKey = "d2ff10bbbded8e86";
+
+		public static NetworkBusy networkStatus = new NetworkBusy();
 
 		/// <summary>
 		/// A static ViewModel used by the views to bind against.
@@ -26,7 +58,7 @@ namespace Cyclestreets
 			get
 			{
 				// Delay creation of the view model until necessary
-				if (viewModel == null)
+				if( viewModel == null )
 					viewModel = new MainViewModel();
 
 				return viewModel;
@@ -57,7 +89,7 @@ namespace Cyclestreets
 			InitializeLanguage();
 
 			// Show graphics profiling information while debugging.
-			if (Debugger.IsAttached)
+			if( Debugger.IsAttached )
 			{
 				// Display the current frame rate counters.
 				Application.Current.Host.Settings.EnableFrameRateCounter = true;
@@ -82,16 +114,16 @@ namespace Cyclestreets
 
 		// Code to execute when the application is launching (eg, from Start)
 		// This code will not execute when the application is reactivated
-		private void Application_Launching(object sender, LaunchingEventArgs e)
+		private void Application_Launching( object sender, LaunchingEventArgs e )
 		{
 		}
 
 		// Code to execute when the application is activated (brought to foreground)
 		// This code will not execute when the application is first launched
-		private void Application_Activated(object sender, ActivatedEventArgs e)
+		private void Application_Activated( object sender, ActivatedEventArgs e )
 		{
 			// Ensure that application state is restored appropriately
-			if (!App.ViewModel.IsDataLoaded)
+			if( !App.ViewModel.IsDataLoaded )
 			{
 				App.ViewModel.LoadData();
 			}
@@ -99,21 +131,21 @@ namespace Cyclestreets
 
 		// Code to execute when the application is deactivated (sent to background)
 		// This code will not execute when the application is closing
-		private void Application_Deactivated(object sender, DeactivatedEventArgs e)
+		private void Application_Deactivated( object sender, DeactivatedEventArgs e )
 		{
 			// Ensure that required application state is persisted here.
 		}
 
 		// Code to execute when the application is closing (eg, user hit Back)
 		// This code will not execute when the application is deactivated
-		private void Application_Closing(object sender, ClosingEventArgs e)
+		private void Application_Closing( object sender, ClosingEventArgs e )
 		{
 		}
 
 		// Code to execute if a navigation fails
-		private void RootFrame_NavigationFailed(object sender, NavigationFailedEventArgs e)
+		private void RootFrame_NavigationFailed( object sender, NavigationFailedEventArgs e )
 		{
-			if (Debugger.IsAttached)
+			if( Debugger.IsAttached )
 			{
 				// A navigation has failed; break into the debugger
 				Debugger.Break();
@@ -121,9 +153,9 @@ namespace Cyclestreets
 		}
 
 		// Code to execute on Unhandled Exceptions
-		private void Application_UnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
+		private void Application_UnhandledException( object sender, ApplicationUnhandledExceptionEventArgs e )
 		{
-			if (Debugger.IsAttached)
+			if( Debugger.IsAttached )
 			{
 				// An unhandled exception has occurred; break into the debugger
 				Debugger.Break();
@@ -138,7 +170,7 @@ namespace Cyclestreets
 		// Do not add any additional code to this method
 		private void InitializePhoneApplication()
 		{
-			if (phoneApplicationInitialized)
+			if( phoneApplicationInitialized )
 				return;
 
 			// Create the frame but don't set it as RootVisual yet; this allows the splash
@@ -157,35 +189,35 @@ namespace Cyclestreets
 		}
 
 		// Do not add any additional code to this method
-		private void CompleteInitializePhoneApplication(object sender, NavigationEventArgs e)
+		private void CompleteInitializePhoneApplication( object sender, NavigationEventArgs e )
 		{
 			// Set the root visual to allow the application to render
-			if (RootVisual != RootFrame)
+			if( RootVisual != RootFrame )
 				RootVisual = RootFrame;
 
 			// Remove this handler since it is no longer needed
 			RootFrame.Navigated -= CompleteInitializePhoneApplication;
 		}
 
-		private void CheckForResetNavigation(object sender, NavigationEventArgs e)
+		private void CheckForResetNavigation( object sender, NavigationEventArgs e )
 		{
 			// If the app has received a 'reset' navigation, then we need to check
 			// on the next navigation to see if the page stack should be reset
-			if (e.NavigationMode == NavigationMode.Reset)
+			if( e.NavigationMode == NavigationMode.Reset )
 				RootFrame.Navigated += ClearBackStackAfterReset;
 		}
 
-		private void ClearBackStackAfterReset(object sender, NavigationEventArgs e)
+		private void ClearBackStackAfterReset( object sender, NavigationEventArgs e )
 		{
 			// Unregister the event so it doesn't get called again
 			RootFrame.Navigated -= ClearBackStackAfterReset;
 
 			// Only clear the stack for 'new' (forward) and 'refresh' navigations
-			if (e.NavigationMode != NavigationMode.New && e.NavigationMode != NavigationMode.Refresh)
+			if( e.NavigationMode != NavigationMode.New && e.NavigationMode != NavigationMode.Refresh )
 				return;
 
 			// For UI consistency, clear the entire page stack
-			while (RootFrame.RemoveBackEntry() != null)
+			while( RootFrame.RemoveBackEntry() != null )
 			{
 				; // do nothing
 			}
@@ -222,7 +254,7 @@ namespace Cyclestreets
 				//
 				// If a compiler error is hit then ResourceLanguage is missing from
 				// the resource file.
-				RootFrame.Language = XmlLanguage.GetLanguage(AppResources.ResourceLanguage);
+				RootFrame.Language = XmlLanguage.GetLanguage( AppResources.ResourceLanguage );
 
 				// Set the FlowDirection of all elements under the root frame based
 				// on the ResourceFlowDirection resource string for each
@@ -230,7 +262,7 @@ namespace Cyclestreets
 				//
 				// If a compiler error is hit then ResourceFlowDirection is missing from
 				// the resource file.
-				FlowDirection flow = (FlowDirection)Enum.Parse(typeof(FlowDirection), AppResources.ResourceFlowDirection);
+				FlowDirection flow = (FlowDirection)Enum.Parse( typeof( FlowDirection ), AppResources.ResourceFlowDirection );
 				RootFrame.FlowDirection = flow;
 			}
 			catch
@@ -240,7 +272,7 @@ namespace Cyclestreets
 				// code or ResourceFlowDirection is set to a value other than LeftToRight
 				// or RightToLeft.
 
-				if (Debugger.IsAttached)
+				if( Debugger.IsAttached )
 				{
 					Debugger.Break();
 				}

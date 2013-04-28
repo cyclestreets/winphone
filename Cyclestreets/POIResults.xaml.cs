@@ -11,8 +11,6 @@ namespace Cyclestreets
 {
 	public class POI : BindableBase, ReverseGeocodeHandler
 	{
-		private ReverseGeocodeQuery geoQ = null;
-
 		public string Name { get; set; }
 
 		GeoCoordinate _position;
@@ -57,6 +55,8 @@ namespace Cyclestreets
 		public POIResults()
 		{
 			InitializeComponent();
+
+			progress.DataContext = App.networkStatus;
 		}
 
 		protected override void OnNavigatedTo( System.Windows.Navigation.NavigationEventArgs e )
@@ -68,8 +68,10 @@ namespace Cyclestreets
 
 			string poiName = NavigationContext.QueryString[ "POIName" ];
 
-			AsyncWebRequest _request = new AsyncWebRequest( "http://www.cyclestreets.net/api/pois.xml?key=" + MainPage.apiKey + "&type=" + poiName + "&longitude=" + center.Longitude + "&latitude=" + center.Latitude + "&radius=5", POIResultsFound );
+			AsyncWebRequest _request = new AsyncWebRequest( "http://www.cyclestreets.net/api/pois.xml?key=" + App.apiKey + "&type=" + poiName + "&longitude=" + center.Longitude + "&latitude=" + center.Latitude + "&radius=25", POIResultsFound );
 			_request.Start();
+
+			App.networkStatus.networkIsBusy = true;
 		}
 
 		private void POIResultsFound( byte[] data )
@@ -99,7 +101,14 @@ namespace Cyclestreets
 				pois.Add( item );
 			}
 
+			if( pois.Count == 0 )
+			{
+				POI item = new POI();
+				item.Name = "No results in nearby area";
+			}
 			poiList.ItemsSource = pois;
+
+			App.networkStatus.networkIsBusy = true;
 		}
 	}
 }

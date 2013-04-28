@@ -15,14 +15,15 @@
 	</phone:PhoneApplicationPage.Background>
 
 	<!--LayoutRoot contains the root grid where all other page content is placed-->
-    <Grid x:Name="LayoutRoot">
+	<Grid x:Name="LayoutRoot">
 		<Grid.Background>
 			<ImageBrush Stretch="UniformToFill" ImageSource="/Assets/cyclestreets19586.jpg"/>
 		</Grid.Background>
+		<ProgressBar x:Name="progress" VerticalAlignment="Top" Padding="0" IsIndeterminate="True" Foreground="White" Opacity="{Binding Opacity}"/>
 		<phone:Panorama Title="journey information">
 
-            <!--Panorama item one-->
-            <phone:PanoramaItem Header="nearest poi">
+			<!--Panorama item one-->
+			<phone:PanoramaItem Header="nearest poi">
 				<ScrollViewer>
 					<phone:LongListSelector x:Name="poiList" HorizontalContentAlignment="Stretch" Width="420">
 						<phone:LongListSelector.ItemTemplate>
@@ -44,8 +45,8 @@
 				</ScrollViewer>
 			</phone:PanoramaItem>
 
-            <!--Panorama item two-->
+			<!--Panorama item two-->
 		</phone:Panorama>
-    </Grid>
+	</Grid>
 
 </phone:PhoneApplicationPage>

@@ -41,6 +41,7 @@ namespace Cyclestreets
 			if( !handlers[ 0 ].query.IsBusy )
 			{
 				handlers[ 0 ].query.QueryAsync();
+				App.networkStatus.networkIsBusy = true;
 			}
 		}
 
@@ -51,6 +52,11 @@ namespace Cyclestreets
 			if( handlers.Count > 0 && !handlers[ 0 ].query.IsBusy )
 			{
 				handlers[ 0 ].query.QueryAsync();
+				App.networkStatus.networkIsBusy = true;
+			}
+			else
+			{
+				App.networkStatus.networkIsBusy = false;
 			}
 
 			obj.handler.geoQ_QueryCompleted( sender, e );

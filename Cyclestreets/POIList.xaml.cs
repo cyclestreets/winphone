@@ -20,8 +20,12 @@ namespace Cyclestreets
 		{
 			InitializeComponent();
 
-			AsyncWebRequest _request = new AsyncWebRequest( "http://www.cyclestreets.net/api/poitypes.xml?key=" + MainPage.apiKey + "&icons=32", POIFound );
+			progress.DataContext = App.networkStatus;
+
+			AsyncWebRequest _request = new AsyncWebRequest( "http://www.cyclestreets.net/api/poitypes.xml?key=" + App.apiKey + "&icons=32", POIFound );
 			_request.Start();
+
+			App.networkStatus.networkIsBusy = true;
 		}
 
 		private void POIFound( byte[] data )
@@ -48,6 +52,8 @@ namespace Cyclestreets
 			}
 
 			poiList.ItemsSource = items;
+
+			App.networkStatus.networkIsBusy = false;
 		}
 
 		protected override void OnNavigatedTo( System.Windows.Navigation.NavigationEventArgs e )

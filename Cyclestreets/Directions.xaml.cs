@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Device.Location;
+using System.IO.IsolatedStorage;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -14,7 +15,6 @@ using Microsoft.Phone.Maps.Controls;
 using Microsoft.Phone.Maps.Services;
 using Microsoft.Phone.Maps.Toolkit;
 using Microsoft.Phone.Shell;
-using Newtonsoft;
 using Newtonsoft.Json.Linq;
 
 namespace Cyclestreets
@@ -135,6 +135,15 @@ namespace Cyclestreets
 		{
 			InitializeComponent();
 
+			progress.DataContext = App.networkStatus;
+
+			bool shownTutorial = false;
+			if( IsolatedStorageSettings.ApplicationSettings.Contains( "shownTutorial" ) )
+				shownTutorial = (bool)IsolatedStorageSettings.ApplicationSettings[ "shownTutorial" ];
+
+			if( !shownTutorial )
+				routeTutorial1.Visibility = Visibility.Visible;
+
 			// hack. See here http://stackoverflow.com/questions/5334574/applicationbariconbutton-is-null/5334703#5334703
 			myPosition = ApplicationBar.Buttons[ 0 ] as Microsoft.Phone.Shell.ApplicationBarIconButton;
 			cursorPos = ApplicationBar.Buttons[ 1 ] as Microsoft.Phone.Shell.ApplicationBarIconButton;
@@ -155,8 +164,7 @@ namespace Cyclestreets
 
 			startPoint.Populating += ( s, args ) =>
 			{
-				if( progress != null )
-					progress.Opacity = 100;
+				App.networkStatus.networkIsBusy = true;
 
 				args.Cancel = true;
 				WebClient wc = new WebClient();
@@ -170,7 +178,7 @@ namespace Cyclestreets
 
 				//Uri service = new Uri( "http://cambridge.cyclestreets.net/api/geocoder.xml?key=" + MainPage.apiKey + myLocation + "&street=" + prefix );
 #if DEBUG
-				Uri service = new Uri( "http://demo.places.nlp.nokia.com/places/v1/suggest?at=" + myLocation + "&q=" + prefix + "&app_id=" + MainPage.hereAppID + "&app_code=" + MainPage.hereAppToken + "&accept=application/json" );
+				Uri service = new Uri( "http://demo.places.nlp.nokia.com/places/v1/suggest?at=" + myLocation + "&q=" + prefix + "&app_id=" + App.hereAppID + "&app_code=" + App.hereAppToken + "&accept=application/json" );
 #else
 				Uri service = new Uri( "http://places.nlp.nokia.com/places/v1/suggest?at=" + myLocation + "&q=" + prefix + "&app_id=" + MainPage.hereAppID + "&app_code=" + MainPage.hereAppToken + "&accept=application/json" );
 #endif
@@ -204,7 +212,7 @@ namespace Cyclestreets
 					acb.PopulateComplete();
 				}
 			}
-			progress.Opacity = 0;
+			App.networkStatus.networkIsBusy = false;
 		}
 
 		private LocationRectangle GetMapBounds()
@@ -240,7 +248,7 @@ namespace Cyclestreets
 					} );
 				}
 			}*/
-			if ( startPoint.SelectedItem != null )
+			if( startPoint.SelectedItem != null )
 			{
 				string start = ( (JValue)startPoint.SelectedItem ).Value as string;
 
@@ -257,7 +265,7 @@ namespace Cyclestreets
 		{
 			if( e.Result.Count > 0 )
 			{
-				GeoCoordinate g = e.Result[0].GeoCoordinate;
+				GeoCoordinate g = e.Result[ 0 ].GeoCoordinate;
 				setCurrentPosition( g );
 
 				SmartDispatcher.BeginInvoke( () =>
@@ -371,10 +379,10 @@ namespace Cyclestreets
 			}
 			itinerarypoints = itinerarypoints.TrimEnd( '|' );
 
-			AsyncWebRequest _request = new AsyncWebRequest( "http://www.cyclestreets.net/api/journey.xml?key=" + MainPage.apiKey + "&plan=" + plan + "&itinerarypoints=" + itinerarypoints + "&speed=" + speed + "&useDom=" + useDom, RouteFound );
+			AsyncWebRequest _request = new AsyncWebRequest( "http://www.cyclestreets.net/api/journey.xml?key=" + App.apiKey + "&plan=" + plan + "&itinerarypoints=" + itinerarypoints + "&speed=" + speed + "&useDom=" + useDom, RouteFound );
 			_request.Start();
 
-			progress.Opacity = 100;
+			App.networkStatus.networkIsBusy = true;
 		}
 
 		private void RouteFound( byte[] data )
@@ -529,7 +537,7 @@ namespace Cyclestreets
 
 				routeFound = true;
 
-				progress.Opacity = 0;
+				App.networkStatus.networkIsBusy = false;
 
 				float f = (float)route.distance * 0.000621371192f;
 				findLabel1.Text = f.ToString( "0.00" ) + "m\n" + ( route.timeInSeconds / 60 ) + " minutes";
@@ -571,7 +579,7 @@ namespace Cyclestreets
 
 		private Color ConvertHexStringToColour( string hexString )
 		{
-			byte a = 0;
+			//byte a = 0;
 			byte r = 0;
 			byte g = 0;
 			byte b = 0;
@@ -607,10 +615,10 @@ namespace Cyclestreets
 
 				MyMap.MapElements.Clear();
 
-				AsyncWebRequest _request = new AsyncWebRequest( "http://www.cyclestreets.net/api/journey.xml?key=" + MainPage.apiKey + "&plan=" + plan + "&itinerarypoints=" + itinerarypoints + "&speed=" + speed + "&useDom=" + useDom, RouteFound );
+				AsyncWebRequest _request = new AsyncWebRequest( "http://www.cyclestreets.net/api/journey.xml?key=" + App.apiKey + "&plan=" + plan + "&itinerarypoints=" + itinerarypoints + "&speed=" + speed + "&useDom=" + useDom, RouteFound );
 				_request.Start();
 
-				progress.Opacity = 100;
+				App.networkStatus.networkIsBusy = true;
 			}
 		}
 
@@ -668,6 +676,35 @@ namespace Cyclestreets
 
 				findLabel1.Text = route.segments[ currentStep ].Turn + " at " + route.segments[ currentStep ].Name + "\n Continue for " + route.segments[ currentStep ].DistanceMetres + "m";
 			}
+		}
+
+		private void routeTutorial1_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+		{
+			routeTutorial2.Visibility = Visibility.Visible;
+			routeTutorial1.Visibility = Visibility.Collapsed;
+		}
+
+		private void routeTutorial2_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+		{
+			routeTutorial3.Visibility = Visibility.Visible;
+			routeTutorial2.Visibility = Visibility.Collapsed;
+		}
+
+		private void routeTutorial3_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+		{
+			routeTutorial4.Visibility = Visibility.Visible;
+			routeTutorial3.Visibility = Visibility.Collapsed;
+		}
+
+		private void routeTutorial4_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+		{
+			routeTutorial5.Visibility = Visibility.Visible;
+			routeTutorial4.Visibility = Visibility.Collapsed;
+		}
+
+		private void routeTutorial5_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+		{
+			routeTutorial5.Visibility = Visibility.Collapsed;
 		}
 	}
 }

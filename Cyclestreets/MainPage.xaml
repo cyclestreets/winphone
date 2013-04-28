@@ -19,10 +19,8 @@
 	<phone:PhoneApplicationPage.ApplicationBar>
 		<shell:ApplicationBar>
 			<shell:ApplicationBar.MenuItems>
-				<shell:ApplicationBarMenuItem IsEnabled="True" Text="Enable aerial view" Click="ApplicationBarMenuItem_ToggleAerialView"/>
 				<shell:ApplicationBarMenuItem x:Name="poiList" IsEnabled="True" Text="Points of interest" Click="poiList_Click"/>
 			</shell:ApplicationBar.MenuItems>
-			<shell:ApplicationBarIconButton IconUri="/Assets/icons/dark/appbar.location.circle.png" IsEnabled="True" Text="Track Me" Click="ApplicationBarIconButton_TrackMe"/>
 			<shell:ApplicationBarIconButton IconUri="/Assets/icons/dark/appbar.magnify.png" IsEnabled="True" Text="Find"/>
 			<shell:ApplicationBarIconButton IconUri="/Assets/icons/dark/appbar.directions.png" IsEnabled="True" Text="Directions" Click="ApplicationBarIconButton_Directions"/>
 		</shell:ApplicationBar>
@@ -42,38 +40,15 @@
 						<VisualTransition.GeneratedEasingFunction>
 							<QuadraticEase EasingMode="EaseInOut"/>
 						</VisualTransition.GeneratedEasingFunction>
-						<Storyboard>
-							<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="stackPanel">
-								<EasingDoubleKeyFrame KeyTime="0" Value="-164"/>
-								<EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
-							</DoubleAnimationUsingKeyFrames>
-						</Storyboard>
 					</VisualTransition>
 					<VisualTransition From="Directions" GeneratedDuration="0" To="Standard">
 						<VisualTransition.GeneratedEasingFunction>
 							<QuadraticEase EasingMode="EaseInOut"/>
 						</VisualTransition.GeneratedEasingFunction>
-						<Storyboard>
-							<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="stackPanel">
-								<EasingDoubleKeyFrame KeyTime="0" Value="0"/>
-								<EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="-164"/>
-							</DoubleAnimationUsingKeyFrames>
-						</Storyboard>
 					</VisualTransition>
 				</VisualStateGroup.Transitions>
 				<VisualState x:Name="Standard"/>
-				<VisualState x:Name="Directions">
-					<Storyboard>
-						<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="stackPanel" d:IsOptimized="True"/>
-						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="stackPanel">
-							<DiscreteObjectKeyFrame KeyTime="0">
-								<DiscreteObjectKeyFrame.Value>
-									<Thickness>0</Thickness>
-								</DiscreteObjectKeyFrame.Value>
-							</DiscreteObjectKeyFrame>
-						</ObjectAnimationUsingKeyFrames>
-					</Storyboard>
-				</VisualState>
+				<VisualState x:Name="Directions"/>
 			</VisualStateGroup>
 		</VisualStateManager.VisualStateGroups>
 
@@ -94,49 +69,21 @@
 			UI strings. The binding in these examples will cause the value of the
 			attributes to be drawn from the .resx file that matches the
 			CurrentUICulture of the app at run time.
-		 --><!--Panorama control--><!--Uncomment to see an alignment grid to help ensure your controls are
+		 -->
+		<!--Panorama control-->
+		<!--Uncomment to see an alignment grid to help ensure your controls are
 			aligned on common boundaries.  The image has a top margin of -32px to
 			account for the System Tray. Set this to 0 (or remove the margin altogether)
 			if the System Tray is hidden.
 
-			Before shipping remove this XAML and the image itself.--><!--<Image Source="/Assets/AlignmentGrid.png" VerticalAlignment="Top" Height="800" Width="480" Margin="0" Grid.Row="0" Grid.RowSpan="2" IsHitTestVisible="False" />-->
+			Before shipping remove this XAML and the image itself.-->
+		<!--<Image Source="/Assets/AlignmentGrid.png" VerticalAlignment="Top" Height="800" Width="480" Margin="0" Grid.Row="0" Grid.RowSpan="2" IsHitTestVisible="False" />-->
 		<VisualStateManager.CustomVisualStateManager>
 			<ec:ExtendedVisualStateManager/>
 		</VisualStateManager.CustomVisualStateManager>
-<!--Panorama control-->
-		<maps:Map x:Name="MyMap" ZoomLevelChanged="MyMap_ZoomLevelChanged" PedestrianFeaturesEnabled="True" Margin="0"/>
-		<StackPanel x:Name="stackPanel" Background="#CC444444" Height="164" VerticalAlignment="Top" Margin="0" RenderTransformOrigin="0.5,0.5">
-			<StackPanel.RenderTransform>
-				<CompositeTransform TranslateY="-164"/>
-			</StackPanel.RenderTransform>
-			<TextBlock x:Name="findLabel" Text="SET START POINT" Padding="10,0,0,0"/>
-			<Grid VerticalAlignment="Top" Height="72">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="33*"/>
-					<ColumnDefinition Width="7*"/>
-				</Grid.ColumnDefinitions>
-				<toolkit:AutoCompleteBox x:Name="startPoint" InputScope="Default" IsTextCompletionEnabled="True" MinimumPrefixLength="3" SelectionChanged="startPoint_SelectionChanged" VerticalAlignment="Top" Margin="0" Height="72">
-					<toolkit:AutoCompleteBox.ItemTemplate>
-						<DataTemplate>
-							<StackPanel>
-								<TextBlock Text="{Binding name}" FontSize="26" Foreground="Black"/>
-								<TextBlock Text="{Binding near}" FontSize="20" Foreground="#FF8B8B8B"/>
-							</StackPanel>
-						</DataTemplate>
-					</toolkit:AutoCompleteBox.ItemTemplate>
-				</toolkit:AutoCompleteBox>
-				<Button x:Name="usePos" Content="&gt;" Grid.Column="1" Margin="0" VerticalAlignment="Top" IsEnabled="False" Click="usePos_Click"/>
-			</Grid>
-			<Grid Height="63">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition/>
-					<ColumnDefinition/>
-				</Grid.ColumnDefinitions>
-				<Button x:Name="cursorPos" Content="GET CURSOR POSITION" Click="cursorPos_click" Margin="0" FontSize="16"/>
-				<Button x:Name="gpsPos" Content="GET CURRENT LOCATION" Click="gpsPos_click" Margin="0" Grid.Column="1" FontSize="16"/>
-			</Grid>
-		</StackPanel>
+		<!--Panorama control-->
+		<maps:Map x:Name="MyMap" PedestrianFeaturesEnabled="True" Margin="0"/>
 
 	</Grid>
-	
+
 </phone:PhoneApplicationPage>

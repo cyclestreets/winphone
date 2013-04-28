@@ -28,8 +28,11 @@
         </Grid.RowDefinitions>
 
         <!--TitlePanel contains the name of the application and page title-->
-        <StackPanel Grid.Row="0" Margin="12,17,0,28">
-            <TextBlock Text="POINTS OF INTEREST" Style="{StaticResource PhoneTextNormalStyle}"/>
+		<ProgressBar x:Name="progress" VerticalAlignment="Top" Padding="0" IsIndeterminate="True" Foreground="White" Opacity="{Binding Opacity}"/>
+
+		<!--TitlePanel contains the name of the application and page title-->
+		<StackPanel Grid.Row="0" Margin="12,17,0,28">
+			<TextBlock Text="POINTS OF INTEREST" Style="{StaticResource PhoneTextNormalStyle}"/>
 		</StackPanel>
 		<ScrollViewer x:Name="ContentPanel" Margin="12,0,12,0" Grid.Row="1" >
 			<phone:LongListSelector x:Name="poiList" ItemTemplate="{StaticResource POIItem}" Width="456"/>
