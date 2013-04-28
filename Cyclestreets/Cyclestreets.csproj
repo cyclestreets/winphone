@@ -125,7 +125,8 @@
     <Compile Include="ReverseGeocodeHandler.cs" />
     <Compile Include="ReverseGeocodeQueryManager.cs" />
     <Compile Include="SmartDispatcher.cs" />
-    <Compile Include="Utils.cs" />
+    <Compile Include="Utils\Geodesy.cs" />
+    <Compile Include="Utils\Stackish.cs" />
     <Compile Include="ViewModels\ItemViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
   </ItemGroup>

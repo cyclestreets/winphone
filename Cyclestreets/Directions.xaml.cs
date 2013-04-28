@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Xml.Linq;
+using Cyclestreets.Utils;
 using Microsoft.Expression.Interactivity.Core;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Maps.Controls;
@@ -114,7 +115,7 @@ namespace Cyclestreets
 		GeocodeQuery geoQ = null;
 		//List<GeoCoordinate> waypoints = new List<GeoCoordinate>();
 		MapLayer wayPointLayer = null;
-		Stack<Pushpin> waypoints = new Stack<Pushpin>();
+		Stackish<Pushpin> waypoints = new Stackish<Pushpin>();
 
 		List<List<GeoCoordinate>> geometryCoords = new List<List<GeoCoordinate>>();
 		List<Color> geometryColor = new List<Color>();
@@ -332,6 +333,8 @@ namespace Cyclestreets
 			else
 				pp.Style = Resources[ "Finish" ] as Style;
 
+			pp.Tap += pinTapped;
+
 			MapOverlay overlay = new MapOverlay();
 			overlay.Content = pp;
 			pp.GeoCoordinate = current;
@@ -341,12 +344,52 @@ namespace Cyclestreets
 
 			addWaypoint( pp );
 
+			bool shownTutorial = false;
+			if( IsolatedStorageSettings.ApplicationSettings.Contains( "shownTutorialPin" ) )
+				shownTutorial = (bool)IsolatedStorageSettings.ApplicationSettings[ "shownTutorialPin" ];
+			if( !shownTutorial )
+				routeTutorialPin.Visibility = Visibility.Visible;
+
 			clearCurrentPosition();
+		}
+
+		private void pinTapped( object sender, System.Windows.Input.GestureEventArgs e )
+		{
+			removeWaypoint( sender as Pushpin );
+
+			wayPointLayer.Clear();
+
+			for( int i = 0; i < waypoints.Count; i++ )
+			{
+				MapOverlay overlay = new MapOverlay();
+				overlay.Content = waypoints[ i ];
+				overlay.GeoCoordinate = waypoints[ i ].GeoCoordinate;
+				overlay.PositionOrigin = new Point( 0.3, 1.0 );
+				wayPointLayer.Add( overlay );
+
+				// Set pin styles
+				Pushpin pp = waypoints[ i ];
+				if( i == 0 )
+					pp.Style = Resources[ "Start" ] as Style;
+				else if( i == waypoints.Count - 1 )
+					pp.Style = Resources[ "Finish" ] as Style;
+				else
+					pp.Style = Resources[ "Intermediate" ] as Style;
+			}
 		}
 
 		private void addWaypoint( Pushpin pp )
 		{
 			waypoints.Push( pp );
+			if( waypoints.Count >= 2 )
+				findRoute.IsEnabled = true;
+			else
+				findRoute.IsEnabled = false;
+		}
+
+		private void removeWaypoint( Pushpin pp )
+		{
+			waypoints.Remove( pp );
 			if( waypoints.Count >= 2 )
 				findRoute.IsEnabled = true;
 			else
@@ -542,6 +585,11 @@ namespace Cyclestreets
 				float f = (float)route.distance * 0.000621371192f;
 				findLabel1.Text = f.ToString( "0.00" ) + "m\n" + ( route.timeInSeconds / 60 ) + " minutes";
 
+				bool shownTutorial = false;
+				if( IsolatedStorageSettings.ApplicationSettings.Contains( "shownTutorialRouteType" ) )
+					shownTutorial = (bool)IsolatedStorageSettings.ApplicationSettings[ "shownTutorialRouteType" ];
+				if( !shownTutorial )
+					routeTutorialRouteType.Visibility = Visibility.Visible;
 			} );
 
 
@@ -678,33 +726,61 @@ namespace Cyclestreets
 			}
 		}
 
-		private void routeTutorial1_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+		private void routeTutorial1_Tap( object sender, System.Windows.Input.GestureEventArgs e )
 		{
 			routeTutorial2.Visibility = Visibility.Visible;
 			routeTutorial1.Visibility = Visibility.Collapsed;
 		}
 
-		private void routeTutorial2_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+		private void routeTutorial2_Tap( object sender, System.Windows.Input.GestureEventArgs e )
 		{
 			routeTutorial3.Visibility = Visibility.Visible;
 			routeTutorial2.Visibility = Visibility.Collapsed;
 		}
 
-		private void routeTutorial3_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+		private void routeTutorial3_Tap( object sender, System.Windows.Input.GestureEventArgs e )
 		{
 			routeTutorial4.Visibility = Visibility.Visible;
 			routeTutorial3.Visibility = Visibility.Collapsed;
 		}
 
-		private void routeTutorial4_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+		private void routeTutorial4_Tap( object sender, System.Windows.Input.GestureEventArgs e )
 		{
 			routeTutorial5.Visibility = Visibility.Visible;
 			routeTutorial4.Visibility = Visibility.Collapsed;
 		}
 
-		private void routeTutorial5_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+		private void routeTutorial5_Tap( object sender, System.Windows.Input.GestureEventArgs e )
 		{
 			routeTutorial5.Visibility = Visibility.Collapsed;
+			if( IsolatedStorageSettings.ApplicationSettings.Contains( "shownTutorial" ) )
+				IsolatedStorageSettings.ApplicationSettings[ "shownTutorial" ] = true;
+			else
+				IsolatedStorageSettings.ApplicationSettings.Add( "shownTutorial", true );
+		}
+
+		private void routeTutorialPin_Tap( object sender, System.Windows.Input.GestureEventArgs e )
+		{
+			routeTutorialPin.Visibility = Visibility.Collapsed;
+			if( IsolatedStorageSettings.ApplicationSettings.Contains( "shownTutorialPin" ) )
+				IsolatedStorageSettings.ApplicationSettings[ "shownTutorialPin" ] = true;
+			else
+				IsolatedStorageSettings.ApplicationSettings.Add( "shownTutorialPin", true );
+		}
+
+		private void routeTutorialRouteType_Tap( object sender, System.Windows.Input.GestureEventArgs e )
+		{
+			routeTutorialRouteInfo.Visibility = Visibility.Visible;
+			routeTutorialRouteType.Visibility = Visibility.Collapsed;
+		}
+
+		private void routeTutorialRouteInfo_Tap( object sender, System.Windows.Input.GestureEventArgs e )
+		{
+			routeTutorialRouteInfo.Visibility = Visibility.Collapsed;
+			if( IsolatedStorageSettings.ApplicationSettings.Contains( "shownTutorialRouteType" ) )
+				IsolatedStorageSettings.ApplicationSettings[ "shownTutorialRouteType" ] = true;
+			else
+				IsolatedStorageSettings.ApplicationSettings.Add( "shownTutorialRouteType", true );
 		}
 	}
 }

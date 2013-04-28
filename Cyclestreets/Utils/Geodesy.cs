@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Cyclestreets
+namespace Cyclestreets.Utils
 {
 	public class Geodesy
 	{
@@ -35,9 +35,5 @@ namespace Cyclestreets
 		{
 			return ( deg + 360 ) % 360;
 		}
-	}
-
-	class Utils
-	{
 	}
 }
