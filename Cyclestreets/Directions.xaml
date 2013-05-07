@@ -9,6 +9,7 @@
     xmlns:Toolkit="clr-namespace:Microsoft.Phone.Maps.Toolkit;assembly=Microsoft.Phone.Controls.Toolkit"
     xmlns:ec="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
     xmlns:edc="clr-namespace:Microsoft.Expression.Controls;assembly=Microsoft.Expression.Drawing" xmlns:em="clr-namespace:Microsoft.Expression.Media;assembly=Microsoft.Expression.Drawing"
+    xmlns:Location="clr-namespace:System.Device.Location;assembly=System.Device"
     x:Class="Cyclestreets.Directions"
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d"
@@ -85,7 +86,11 @@
 		<StaticResource ResourceKey="PhoneForegroundBrush"/>
 	</phone:PhoneApplicationPage.Foreground>
 	<phone:PhoneApplicationPage.ApplicationBar>
+
 		<shell:ApplicationBar>
+			<shell:ApplicationBar.MenuItems>
+				<shell:ApplicationBarMenuItem x:Name="settings" IsEnabled="True" Text="Settings" Click="settings_Click"/>
+			</shell:ApplicationBar.MenuItems>
 			<shell:ApplicationBarIconButton x:Name="myPosition" IconUri="/Assets/icons/dark/appbar.location.circle.png" IsEnabled="True" Text="My Position" Click="myPosition_Click"/>
 			<shell:ApplicationBarIconButton x:Name="cursorPos" IconUri="/Assets/icons/dark/appbar.add.png" IsEnabled="True" Text="Cursor" Click="cursorPos_Click"/>
 			<shell:ApplicationBarIconButton x:Name="confirmWaypoint" IconUri="/Assets/icons/dark/appbar.location.add.png" IsEnabled="True" Text="confirm" Click="confirmWaypoint_Click"/>
@@ -235,12 +240,17 @@
 				</VisualState>
 			</VisualStateGroup>
 		</VisualStateManager.VisualStateGroups>
-		<!--TitlePanel contains the name of the application and page title--><!--ContentPanel - place additional content here-->
+		<!--TitlePanel contains the name of the application and page title-->
+		<!--ContentPanel - place additional content here-->
 		<VisualStateManager.CustomVisualStateManager>
 			<ec:ExtendedVisualStateManager/>
 		</VisualStateManager.CustomVisualStateManager>
 		<ProgressBar x:Name="progress" Margin="0" VerticalAlignment="Top" IsIndeterminate="True" Foreground="White" Opacity="{Binding Opacity}"/>
-		<maps:Map x:Name="MyMap" Margin="0" Grid.Row="1"/>
+		<maps:Map x:Name="MyMap" Margin="0" Grid.Row="1" ZoomLevel="5.684" Loaded="MyMap_Loaded">
+			<maps:Map.Center>
+				<Location:GeoCoordinate Altitude="NaN" Course="NaN" HorizontalAccuracy="NaN" Longitude="-4.367" Latitude="55.551" Speed="NaN" VerticalAccuracy="NaN"/>
+			</maps:Map.Center>
+		</maps:Map>
 		<Image HorizontalAlignment="Center" VerticalAlignment="Center" Source="/Assets/icons/dark/appbar.add.png" Height="76" Width="76" Grid.Row="1"/>
 		<StackPanel x:Name="locationEntry" Background="#FF212021" VerticalAlignment="Bottom" Margin="0" RenderTransformOrigin="0.5,0.5" Grid.Row="1">
 			<StackPanel.RenderTransform>

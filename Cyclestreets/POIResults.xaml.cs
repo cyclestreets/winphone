@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Device.Location;
 using System.Linq;
 using System.Text;
@@ -43,14 +44,21 @@ namespace Cyclestreets
 			get
 			{ return _location; }
 
-			set { this.SetProperty( ref this._location, value ); }
+			set
+			{
+				this.SetProperty( ref this._location, value.TrimStart( new char[] { ',', ' ' } ) );
+			}
 		}
+
+		public string PinID { get; set; }
+
+		public string BGColour { get; set; }
 	}
 
 	public partial class POIResults : PhoneApplicationPage
 	{
 		GeoCoordinate center;
-		ObservableCollection<POI> pois;
+		public static ObservableCollection<POI> pois = null;
 
 		public POIResults()
 		{
@@ -87,6 +95,10 @@ namespace Cyclestreets
 			var poi = xml.Descendants( "poi" )
 									.Where( e => (string)e.Parent.Name.LocalName == "pois" );
 			pois = new ObservableCollection<POI>();
+			int id = 1;
+			string col1 = "#7F000000";
+			string col2 = "#3F000000";
+			bool swap = true;
 			foreach( XElement p in poi )
 			{
 				POI item = new POI();
@@ -97,7 +109,12 @@ namespace Cyclestreets
 				item.Position = g;
 				double dist = center.GetDistanceTo( item.Position ) * 0.000621371192;
 				item.Distance = dist.ToString( "0.00" ) + "m";
-
+				item.PinID = "" + ( id++ );
+				if( swap )
+					item.BGColour = col1;
+				else
+					item.BGColour = col2;
+				swap = !swap;
 				pois.Add( item );
 			}
 
@@ -109,6 +126,14 @@ namespace Cyclestreets
 			poiList.ItemsSource = pois;
 
 			App.networkStatus.networkIsBusy = true;
+		}
+
+		private void poiList_SelectionChanged( object sender, System.Windows.Controls.SelectionChangedEventArgs e )
+		{
+			NavigationService.RemoveBackEntry();
+			NavigationService.RemoveBackEntry();
+			POI p = (POI)e.AddedItems[ 0 ];
+			NavigationService.Navigate( new Uri( "/MainPage.xaml?longitude=" + p.Position.Longitude + "&latitude=" + p.Position.Latitude, UriKind.Relative ) );
 		}
 	}
 }

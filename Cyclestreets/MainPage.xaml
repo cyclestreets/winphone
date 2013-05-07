@@ -8,6 +8,7 @@
 	xmlns:maps="clr-namespace:Microsoft.Phone.Maps.Controls;assembly=Microsoft.Phone.Maps"
 	xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
 	xmlns:ec="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
+	xmlns:Location="clr-namespace:System.Device.Location;assembly=System.Device"
 	x:Class="Cyclestreets.MainPage"
 	mc:Ignorable="d"
 	d:DataContext="{d:DesignData SampleData/MainViewModelSampleData.xaml}"
@@ -20,9 +21,11 @@
 		<shell:ApplicationBar>
 			<shell:ApplicationBar.MenuItems>
 				<shell:ApplicationBarMenuItem x:Name="poiList" IsEnabled="True" Text="Points of interest" Click="poiList_Click"/>
+				<shell:ApplicationBarMenuItem x:Name="settings" IsEnabled="True" Text="Settings" Click="settings_Click"/>
 			</shell:ApplicationBar.MenuItems>
-			<shell:ApplicationBarIconButton IconUri="/Assets/icons/dark/appbar.magnify.png" IsEnabled="True" Text="Find"/>
-			<shell:ApplicationBarIconButton IconUri="/Assets/icons/dark/appbar.directions.png" IsEnabled="True" Text="Directions" Click="ApplicationBarIconButton_Directions"/>
+			<!-- <shell:ApplicationBarIconButton x:Name="findAppBar" IconUri="/Assets/icons/dark/appbar.magnify.png" IsEnabled="True" Text="Find"/> -->
+			<shell:ApplicationBarIconButton x:Name="directionsAppBar" IconUri="/Assets/icons/dark/appbar.directions.png" IsEnabled="True" Text="Directions" Click="ApplicationBarIconButton_Directions"/>
+			<shell:ApplicationBarIconButton x:Name="navigateToAppBar" IconUri="/Assets/icons/dark/appbar.location.png" IsEnabled="False" Text="Navigate To" Click="ApplicationBarIconButton_NavigateTo"/>
 		</shell:ApplicationBar>
 	</phone:PhoneApplicationPage.ApplicationBar>
 
@@ -82,7 +85,11 @@
 			<ec:ExtendedVisualStateManager/>
 		</VisualStateManager.CustomVisualStateManager>
 		<!--Panorama control-->
-		<maps:Map x:Name="MyMap" PedestrianFeaturesEnabled="True" Margin="0"/>
+		<maps:Map x:Name="MyMap" PedestrianFeaturesEnabled="True" Margin="0" ZoomLevel="5.684" Loaded="MyMap_Loaded">
+			<maps:Map.Center>
+				<Location:GeoCoordinate Altitude="NaN" Course="NaN" HorizontalAccuracy="NaN" Longitude="-4.367" Latitude="55.551" Speed="NaN" VerticalAccuracy="NaN"/>
+			</maps:Map.Center>
+		</maps:Map>
 
 	</Grid>
 

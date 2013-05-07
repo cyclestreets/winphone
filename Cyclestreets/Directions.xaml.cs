@@ -130,7 +130,8 @@ namespace Cyclestreets
 
 		private int currentStep = -1;
 
-		String[] RouteType = { "balanced", "fastest", "quietest" };
+		public static String[] RouteType = { "balanced", "fastest", "quietest" };
+		public static String[] CycleSpeed = { "10mph", "12mph", "15mph" };
 
 		public Directions()
 		{
@@ -151,8 +152,12 @@ namespace Cyclestreets
 			confirmWaypoint = ApplicationBar.Buttons[ 2 ] as Microsoft.Phone.Shell.ApplicationBarIconButton;
 			findRoute = ApplicationBar.Buttons[ 3 ] as Microsoft.Phone.Shell.ApplicationBarIconButton;
 
+			string plan = "balanced";
+			if( IsolatedStorageSettings.ApplicationSettings.Contains( "defaultRouteType" ) )
+				plan = (string)IsolatedStorageSettings.ApplicationSettings[ "defaultRouteType" ];
+
 			routeTypePicker.ItemsSource = RouteType;
-			routeTypePicker.SelectedItem = RouteType[ 0 ];
+			routeTypePicker.SelectedItem = plan;
 
 			revGeoQ = new ReverseGeocodeQuery();
 			revGeoQ.QueryCompleted += revGeoQ_QueryCompleted;
@@ -181,7 +186,7 @@ namespace Cyclestreets
 #if DEBUG
 				Uri service = new Uri( "http://demo.places.nlp.nokia.com/places/v1/suggest?at=" + myLocation + "&q=" + prefix + "&app_id=" + App.hereAppID + "&app_code=" + App.hereAppToken + "&accept=application/json" );
 #else
-				Uri service = new Uri( "http://places.nlp.nokia.com/places/v1/suggest?at=" + myLocation + "&q=" + prefix + "&app_id=" + MainPage.hereAppID + "&app_code=" + MainPage.hereAppToken + "&accept=application/json" );
+				Uri service = new Uri( "http://places.nlp.nokia.com/places/v1/suggest?at=" + myLocation + "&q=" + prefix + "&app_id=" + App.hereAppID + "&app_code=" + App.hereAppToken + "&accept=application/json" );
 #endif
 
 				wc.DownloadStringCompleted += DownloadStringCompleted;
@@ -191,6 +196,56 @@ namespace Cyclestreets
 			var sgs = ExtendedVisualStateManager.GetVisualStateGroups( LayoutRoot );
 			var sg = sgs[ 0 ] as VisualStateGroup;
 			ExtendedVisualStateManager.GoToElementState( LayoutRoot, "RoutePlanner", false );
+		}
+
+		private int getSpeedFromString( string speedVal )
+		{
+			switch( speedVal )
+			{
+				case "10mph":
+					return 16;
+				case "12mph":
+					return 20;
+				case "15mph":
+					return 24;
+			}
+			return 20;
+		}
+
+		protected override void OnNavigatedTo( System.Windows.Navigation.NavigationEventArgs e )
+		{
+			base.OnNavigatedTo( e );
+
+			if( NavigationContext.QueryString.ContainsKey( "longitude" ) )
+			{
+				GeoCoordinate center = new GeoCoordinate();
+				center.Longitude = float.Parse( NavigationContext.QueryString[ "longitude" ] );
+				center.Latitude = float.Parse( NavigationContext.QueryString[ "latitude" ] );
+
+				string plan = "balanced";
+				if( IsolatedStorageSettings.ApplicationSettings.Contains( "defaultRouteType" ) )
+					plan = (string)IsolatedStorageSettings.ApplicationSettings[ "defaultRouteType" ];
+
+				string speedSetting = "12mph";
+				if( IsolatedStorageSettings.ApplicationSettings.Contains( "cycleSpeed" ) )
+					speedSetting = (string)IsolatedStorageSettings.ApplicationSettings[ "cycleSpeed" ];
+
+				string itinerarypoints = MainPage.MyGeoPosition.Coordinate.Longitude + "," + MainPage.MyGeoPosition.Coordinate.Latitude + "|" + center.Longitude + "," + center.Latitude;// = "-1.2487100362777,53.00143068427369,NG16+1HH|-1.1430546045303,52.95200365149319,NG1+1LL";
+				int speed = getSpeedFromString( speedSetting );
+				int useDom = 0;		// 0=xml 1=gml
+
+				AsyncWebRequest _request = new AsyncWebRequest( "http://www.cyclestreets.net/api/journey.xml?key=" + App.apiKey + "&plan=" + plan + "&itinerarypoints=" + itinerarypoints + "&speed=" + speed + "&useDom=" + useDom, RouteFound );
+				_request.Start();
+
+				Pushpin start = new Pushpin();
+				start.GeoCoordinate = CoordinateConverter.ConvertGeocoordinate( MainPage.MyGeoPosition.Coordinate );
+				Pushpin end = new Pushpin();
+				end.GeoCoordinate = center;
+				waypoints.Add( start );
+				waypoints.Add( end );
+
+				App.networkStatus.networkIsBusy = true;
+			}
 		}
 
 		private void DownloadStringCompleted( object sender, DownloadStringCompletedEventArgs e )
@@ -232,23 +287,6 @@ namespace Cyclestreets
 
 		private void startPoint_SelectionChanged( object sender, System.Windows.Controls.SelectionChangedEventArgs e )
 		{
-			/*SearchResult start = startPoint.SelectedItem as SearchResult;
-			if( start != null )
-			{
-				if( !geoQ.IsBusy )
-				{
-					geoQ.GeoCoordinate = new GeoCoordinate( start.latitude, start.longitude );
-					geoQ.QueryAsync();
-
-					setCurrentPosition( geoQ.GeoCoordinate );
-
-					SmartDispatcher.BeginInvoke( () =>
-					{
-						MyMap.SetView( geoQ.GeoCoordinate, 16 );
-						//MyMap.Center = CoordinateConverter.ConvertGeocoordinate(MyGeoPosition.Coordinate);
-					} );
-				}
-			}*/
 			if( startPoint.SelectedItem != null )
 			{
 				string start = ( (JValue)startPoint.SelectedItem ).Value as string;
@@ -258,6 +296,7 @@ namespace Cyclestreets
 					geoQ.SearchTerm = start;
 					geoQ.GeoCoordinate = MyMap.Center;
 					geoQ.QueryAsync();
+					App.networkStatus.networkIsBusy = true;
 				}
 			}
 		}
@@ -274,7 +313,52 @@ namespace Cyclestreets
 					MyMap.SetView( g, 16 );
 					//MyMap.Center = CoordinateConverter.ConvertGeocoordinate(MyGeoPosition.Coordinate);
 				} );
+				App.networkStatus.networkIsBusy = false;
 			}
+			else
+			{
+				GeocodeQuery geo = sender as GeocodeQuery;
+				string searchString = geo.SearchTerm;
+
+				WebClient wc = new WebClient();
+				string myLocation = "";
+				myLocation = geo.GeoCoordinate.Latitude + "," + geo.GeoCoordinate.Longitude;
+				myLocation = HttpUtility.UrlEncode( myLocation );
+
+#if DEBUG
+				Uri service = new Uri( "http://demo.places.nlp.nokia.com/places/v1/discover/search?at=" + myLocation + "&q=" + searchString + "&app_id=" + App.hereAppID + "&app_code=" + App.hereAppToken + "&accept=application%2Fjson" );
+#else
+				Uri service = new Uri( "http://places.nlp.nokia.com/places/v1/discover/search?at=" + myLocation + "&q=" + searchString + "&app_id=" + App.hereAppID + "&app_code=" + App.hereAppToken + "&accept=application%2Fjson");
+#endif
+
+				wc.DownloadStringCompleted += DiscoverStringCompleted;
+				wc.DownloadStringAsync( service );
+				//
+			}
+		}
+
+		private void DiscoverStringCompleted( object sender, DownloadStringCompletedEventArgs e )
+		{
+			if( e.Error == null && !e.Cancelled && !string.IsNullOrEmpty( e.Result ) )
+			{
+				Console.WriteLine( e.Result );
+				JObject o = JObject.Parse( e.Result );
+				JArray suggestions = (JArray)o[ "results" ]["items"];
+				if( suggestions.Count > 0 )
+				{
+					JArray pos = (JArray)suggestions[ 0 ][ "position" ];
+					GeoCoordinate g = new GeoCoordinate( (double)pos[ 0 ], (double)pos[ 1 ] );
+					setCurrentPosition( g );
+
+					SmartDispatcher.BeginInvoke( () =>
+					{
+						MyMap.SetView( g, 16 );
+						//MyMap.Center = CoordinateConverter.ConvertGeocoordinate(MyGeoPosition.Coordinate);
+					} );
+					App.networkStatus.networkIsBusy = false;
+				}
+			}
+			App.networkStatus.networkIsBusy = false;
 		}
 
 		private void myPosition_Click( object sender, EventArgs e )
@@ -412,13 +496,20 @@ namespace Cyclestreets
 		private void findRoute_Click( object sender, EventArgs e )
 		{
 			string plan = "balanced";
+			if( IsolatedStorageSettings.ApplicationSettings.Contains( "defaultRouteType" ) )
+				plan = (string)IsolatedStorageSettings.ApplicationSettings[ "defaultRouteType" ];
+
+			string speedSetting = "12mph";
+			if( IsolatedStorageSettings.ApplicationSettings.Contains( "cycleSpeed" ) )
+				speedSetting = (string)IsolatedStorageSettings.ApplicationSettings[ "cycleSpeed" ];
+
 			string itinerarypoints = "";// = "-1.2487100362777,53.00143068427369,NG16+1HH|-1.1430546045303,52.95200365149319,NG1+1LL";
-			int speed = 20;		//16 = 10mph 20 = 12mph 24 = 15mph
+			int speed = getSpeedFromString( speedSetting );
 			int useDom = 0;		// 0=xml 1=gml
 
 			foreach( Pushpin p in waypoints )
 			{
-				itinerarypoints = p.GeoCoordinate.Longitude + "," + p.GeoCoordinate.Latitude + "|" + itinerarypoints;
+				itinerarypoints = itinerarypoints + p.GeoCoordinate.Longitude + "," + p.GeoCoordinate.Latitude + "|";
 			}
 			itinerarypoints = itinerarypoints.TrimEnd( '|' );
 
@@ -781,6 +872,17 @@ namespace Cyclestreets
 				IsolatedStorageSettings.ApplicationSettings[ "shownTutorialRouteType" ] = true;
 			else
 				IsolatedStorageSettings.ApplicationSettings.Add( "shownTutorialRouteType", true );
+		}
+
+		private void settings_Click( object sender, System.EventArgs e )
+		{
+			NavigationService.Navigate( new Uri( "/Settings.xaml", UriKind.Relative ) );
+		}
+
+		private void MyMap_Loaded( object sender, RoutedEventArgs e )
+		{
+			Microsoft.Phone.Maps.MapsSettings.ApplicationContext.ApplicationId = "4165a41b-8248-4a1f-b57c-fb1161f56bf5";
+			Microsoft.Phone.Maps.MapsSettings.ApplicationContext.AuthenticationToken = "Mq2yqDBcrqUwKyrlDdHk6g";
 		}
 	}
 }

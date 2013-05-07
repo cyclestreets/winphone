@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Device.Location;
-using System.Linq;
-using System.Net;
-using System.Text;
 using System.Windows;
 using System.Windows.Media;
-using System.Xml.Linq;
 using Microsoft.Expression.Interactivity.Core;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Maps.Controls;
 using Microsoft.Phone.Maps.Services;
+using Microsoft.Phone.Maps.Toolkit;
 using Microsoft.Phone.Shell;
 using Windows.Devices.Geolocation;
 
@@ -23,40 +20,12 @@ namespace Cyclestreets
 		public string POIName { get; set; }
 	}
 
-	/*public class SearchResult
-	{
-		public double longitude
-		{
-			get;
-			set;
-		}
-		public double latitude
-		{
-			get;
-			set;
-		}
-		public string name
-		{
-			get;
-			set;
-		}
-		public string near
-		{
-			get;
-			set;
-		}
-
-		public override string ToString()
-		{
-			return name + ", " + near;
-		}
-	}*/
-
 	public partial class MainPage : PhoneApplicationPage
 	{
 		List<List<GeoCoordinate>> geometryCoords = new List<List<GeoCoordinate>>();
 		List<Color> geometryColor = new List<Color>();
 		List<GeoCoordinate> waypoints = new List<GeoCoordinate>();
+		Dictionary<Pushpin, POI> pinItems = new Dictionary<Pushpin, POI>();
 
 		private Geolocator trackingGeolocator;
 		public static Geoposition MyGeoPosition = null;
@@ -64,7 +33,23 @@ namespace Cyclestreets
 		private GeoCoordinate max = new GeoCoordinate( 90, -180 );
 		private GeoCoordinate min = new GeoCoordinate( -90, 180 );
 
+		private GeoCoordinate _selected;
+		public GeoCoordinate selected
+		{
+			get { return _selected; }
+			set
+			{
+				if( value == null )
+					navigateToAppBar.IsEnabled = false;
+				else
+					navigateToAppBar.IsEnabled = true;
+				_selected = value;
+			}
+		}
+
 		ReverseGeocodeQuery geoQ = null;
+		private MapLayer poiLayer;
+		private bool lockToMyPos = false;
 
 		// Constructor
 		public MainPage()
@@ -72,12 +57,88 @@ namespace Cyclestreets
 			InitializeComponent();
 			this.StartTracking();
 
+			// hack. See here http://stackoverflow.com/questions/5334574/applicationbariconbutton-is-null/5334703#5334703
+			/*findAppBar = ApplicationBar.Buttons[ 0 ] as Microsoft.Phone.Shell.ApplicationBarIconButton;*/
+			directionsAppBar = ApplicationBar.Buttons[ 0 ] as Microsoft.Phone.Shell.ApplicationBarIconButton;
+			navigateToAppBar = ApplicationBar.Buttons[ 1 ] as Microsoft.Phone.Shell.ApplicationBarIconButton;
+
 			geoQ = new ReverseGeocodeQuery();
 			geoQ.QueryCompleted += geoQ_QueryCompleted;
 
 			var sgs = ExtendedVisualStateManager.GetVisualStateGroups( LayoutRoot );
 			var sg = sgs[ 0 ] as VisualStateGroup;
 			ExtendedVisualStateManager.GoToElementState( LayoutRoot, ( (VisualState)sg.States[ 0 ] ).Name, true );
+		}
+
+		protected override void OnNavigatedTo( System.Windows.Navigation.NavigationEventArgs e )
+		{
+			base.OnNavigatedTo( e );
+
+			if( poiLayer == null )
+			{
+				poiLayer = new MapLayer();
+
+				MyMap.Layers.Add( poiLayer );
+			}
+			else
+			{
+				poiLayer.Clear();
+			}
+			if( NavigationContext.QueryString.ContainsKey( "longitude" ) )
+			{
+				GeoCoordinate center = new GeoCoordinate();
+				center.Longitude = float.Parse( NavigationContext.QueryString[ "longitude" ] );
+				center.Latitude = float.Parse( NavigationContext.QueryString[ "latitude" ] );
+				MyMap.Center = center;
+				MyMap.ZoomLevel = 16;
+				lockToMyPos = false;
+
+				selected = center;
+			}
+			else
+			{
+				lockToMyPos = true;
+				if( MyGeoPosition != null )
+					MyMap.SetView( CoordinateConverter.ConvertGeocoordinate( MyGeoPosition.Coordinate ), 14 );
+			}
+
+			if( POIResults.pois != null && POIResults.pois.Count > 0 )
+			{
+				pinItems.Clear();
+				foreach( POI p in POIResults.pois )
+				{
+					Pushpin pp = new Pushpin();
+					pinItems.Add( pp, p );
+					pp.Content = p.PinID;
+					pp.Tap += poiTapped;
+
+					ContextMenu ctxt = new ContextMenu();
+
+
+					MapOverlay overlay = new MapOverlay();
+					overlay.Content = pp;
+					pp.GeoCoordinate = p.GetGeoCoordinate();
+					overlay.GeoCoordinate = p.GetGeoCoordinate();
+					overlay.PositionOrigin = new Point( 0, 1.0 );
+					poiLayer.Add( overlay );
+				}
+
+			}
+		}
+
+		private void poiTapped( object sender, System.Windows.Input.GestureEventArgs e )
+		{
+			Pushpin pp = sender as Pushpin;
+			POI p = pinItems[ pp ];
+			foreach( KeyValuePair<Pushpin, POI> pair in pinItems )
+			{
+				Pushpin ppItem = pair.Key;
+				POI pItem = pair.Value;
+				ppItem.Content = pItem.PinID;
+			}
+			pp.Content = p.Name;
+
+			selected = p.GetGeoCoordinate();
 		}
 
 		public void StartTracking()
@@ -102,10 +163,13 @@ namespace Cyclestreets
 		private void positionChangedHandler( Geolocator sender, PositionChangedEventArgs args )
 		{
 			MyGeoPosition = args.Position;
-			SmartDispatcher.BeginInvoke( () =>
+			if( lockToMyPos )
 			{
-				MyMap.SetView( CoordinateConverter.ConvertGeocoordinate( MyGeoPosition.Coordinate ), 14 );
-			} );
+				SmartDispatcher.BeginInvoke( () =>
+				{
+					MyMap.SetView( CoordinateConverter.ConvertGeocoordinate( MyGeoPosition.Coordinate ), 14 );
+				} );
+			}
 		}
 
 		private LocationRectangle GetMapBounds()
@@ -134,11 +198,29 @@ namespace Cyclestreets
 		private void ApplicationBarIconButton_Directions( object sender, EventArgs e )
 		{
 			NavigationService.Navigate( new Uri( "/Directions.xaml", UriKind.Relative ) );
+
+		}
+
+		private void ApplicationBarIconButton_NavigateTo( object sender, EventArgs e )
+		{
+			if( selected != null )
+				NavigationService.Navigate( new Uri( "/Directions.xaml?longitude=" + selected.Longitude + "&latitude=" + selected.Latitude, UriKind.Relative ) );
 		}
 
 		private void poiList_Click( object sender, System.EventArgs e )
 		{
-			NavigationService.Navigate( new Uri( "/POIList.xaml?longitude="+MyMap.Center.Longitude+"&latitude="+MyMap.Center.Latitude, UriKind.Relative ) );
+			NavigationService.Navigate( new Uri( "/POIList.xaml?longitude=" + MyMap.Center.Longitude + "&latitude=" + MyMap.Center.Latitude, UriKind.Relative ) );
+		}
+
+		private void settings_Click( object sender, System.EventArgs e )
+		{
+			NavigationService.Navigate( new Uri( "/Settings.xaml", UriKind.Relative ) );
+		}
+
+		private void MyMap_Loaded( object sender, RoutedEventArgs e )
+		{
+			Microsoft.Phone.Maps.MapsSettings.ApplicationContext.ApplicationId = "4165a41b-8248-4a1f-b57c-fb1161f56bf5";
+			Microsoft.Phone.Maps.MapsSettings.ApplicationContext.AuthenticationToken = "Mq2yqDBcrqUwKyrlDdHk6g";
 		}
 	}
 }

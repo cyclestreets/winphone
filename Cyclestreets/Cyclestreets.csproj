@@ -124,6 +124,9 @@
     </Compile>
     <Compile Include="ReverseGeocodeHandler.cs" />
     <Compile Include="ReverseGeocodeQueryManager.cs" />
+    <Compile Include="Settings.xaml.cs">
+      <DependentUpon>Settings.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SmartDispatcher.cs" />
     <Compile Include="Utils\Geodesy.cs" />
     <Compile Include="Utils\Stackish.cs" />
@@ -163,8 +166,13 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Settings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Cyclestreets_2013_05_06_08_40_51.sap" />
     <None Include="packages.config" />
     <None Include="Properties\AppManifest.xml">
       <SubType>Designer</SubType>
