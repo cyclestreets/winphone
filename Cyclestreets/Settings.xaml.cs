@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
+using Microsoft.Phone.Tasks;
 
 namespace Cyclestreets
 {
@@ -54,6 +55,27 @@ namespace Cyclestreets
 				IsolatedStorageSettings.ApplicationSettings.Add( "cycleSpeed", plan );
 
 			NavigationService.GoBack();
+		}
+
+		private void Hyperlink_Click( object sender, RoutedEventArgs e )
+		{
+			WebBrowserTask url = new WebBrowserTask();
+			url.Uri = new System.Uri( "http://www.cyclestreets.net/" );
+			url.Show();
+		}
+
+		private void Hyperlink_Click_1( object sender, RoutedEventArgs e )
+		{
+			WebBrowserTask url = new WebBrowserTask();
+			url.Uri = new System.Uri( "http://www.rwscripts.com/" );
+			url.Show();
+		}
+
+		private void Hyperlink_Click_2( object sender, RoutedEventArgs e )
+		{
+			WebBrowserTask url = new WebBrowserTask();
+			url.Uri = new System.Uri( "http://forum.rwscripts.com/" );
+			url.Show();
 		}
 	}
 }

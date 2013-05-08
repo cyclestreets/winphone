@@ -49,6 +49,18 @@
 					<toolkit:ListPicker x:Name="cycleSpeed" Margin="0" Grid.Column="1" SelectionChanged="cycleSpeed_SelectionChanged"/>
 				</Grid>
 				<Button Content="Save" Click="Button_Click"/>
+				<TextBlock TextWrapping="Wrap" Foreground="#FF919191" FontSize="16" Text="Route data: © OpenStreetMap contributors."/>
+				<RichTextBox TextWrapping="Wrap" Foreground="#FF919191" FontSize="16">
+					<Paragraph>
+						<Run Text="Read more about CycleStreets, or give feedback, at " />
+						<Hyperlink Click="Hyperlink_Click">http://www.cyclestreets.net/</Hyperlink>
+						<LineBreak/>
+						<Run Text="App developed by " />
+						<Hyperlink Click="Hyperlink_Click_1" >RW::Software</Hyperlink>
+						<Run Text=". Please post any issues on our " />
+						<Hyperlink Click="Hyperlink_Click_2" >forum</Hyperlink>
+					</Paragraph>
+				</RichTextBox>
 			</StackPanel>
 
 		</Grid>
