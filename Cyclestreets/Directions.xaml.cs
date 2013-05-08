@@ -215,20 +215,20 @@ namespace Cyclestreets
 
 			bool shownTutorial = false;
 			if( IsolatedStorageSettings.ApplicationSettings.Contains( "shownTutorial" ) )
-				shownTutorial = (bool)IsolatedStorageSettings.ApplicationSettings["shownTutorial"];
+				shownTutorial = (bool)IsolatedStorageSettings.ApplicationSettings[ "shownTutorial" ];
 
 			if( !shownTutorial )
 				routeTutorial1.Visibility = Visibility.Visible;
 
 			// hack. See here http://stackoverflow.com/questions/5334574/applicationbariconbutton-is-null/5334703#5334703
-			myPosition = ApplicationBar.Buttons[0] as Microsoft.Phone.Shell.ApplicationBarIconButton;
-			cursorPos = ApplicationBar.Buttons[1] as Microsoft.Phone.Shell.ApplicationBarIconButton;
-			confirmWaypoint = ApplicationBar.Buttons[2] as Microsoft.Phone.Shell.ApplicationBarIconButton;
-			findRoute = ApplicationBar.Buttons[3] as Microsoft.Phone.Shell.ApplicationBarIconButton;
+			myPosition = ApplicationBar.Buttons[ 0 ] as Microsoft.Phone.Shell.ApplicationBarIconButton;
+			cursorPos = ApplicationBar.Buttons[ 1 ] as Microsoft.Phone.Shell.ApplicationBarIconButton;
+			confirmWaypoint = ApplicationBar.Buttons[ 2 ] as Microsoft.Phone.Shell.ApplicationBarIconButton;
+			findRoute = ApplicationBar.Buttons[ 3 ] as Microsoft.Phone.Shell.ApplicationBarIconButton;
 
 			string plan = "balanced route";
 			if( IsolatedStorageSettings.ApplicationSettings.Contains( "defaultRouteType" ) )
-				plan = (string)IsolatedStorageSettings.ApplicationSettings["defaultRouteType"];
+				plan = (string)IsolatedStorageSettings.ApplicationSettings[ "defaultRouteType" ];
 
 			routeTypePicker.ItemsSource = RouteType;
 			routeTypePicker.SelectedItem = plan;
@@ -268,7 +268,7 @@ namespace Cyclestreets
 			};
 
 			var sgs = ExtendedVisualStateManager.GetVisualStateGroups( LayoutRoot );
-			var sg = sgs[0] as VisualStateGroup;
+			var sg = sgs[ 0 ] as VisualStateGroup;
 			ExtendedVisualStateManager.GoToElementState( LayoutRoot, "RoutePlanner", false );
 		}
 
@@ -293,17 +293,17 @@ namespace Cyclestreets
 			if( NavigationContext.QueryString.ContainsKey( "longitude" ) )
 			{
 				GeoCoordinate center = new GeoCoordinate();
-				center.Longitude = float.Parse( NavigationContext.QueryString["longitude"] );
-				center.Latitude = float.Parse( NavigationContext.QueryString["latitude"] );
+				center.Longitude = float.Parse( NavigationContext.QueryString[ "longitude" ] );
+				center.Latitude = float.Parse( NavigationContext.QueryString[ "latitude" ] );
 
 				string plan = "balanced route";
 				if( IsolatedStorageSettings.ApplicationSettings.Contains( "defaultRouteType" ) )
-					plan = (string)IsolatedStorageSettings.ApplicationSettings["defaultRouteType"];
+					plan = (string)IsolatedStorageSettings.ApplicationSettings[ "defaultRouteType" ];
 				plan = plan.Replace( " route", "" );
 
 				string speedSetting = "12mph";
 				if( IsolatedStorageSettings.ApplicationSettings.Contains( "cycleSpeed" ) )
-					speedSetting = (string)IsolatedStorageSettings.ApplicationSettings["cycleSpeed"];
+					speedSetting = (string)IsolatedStorageSettings.ApplicationSettings[ "cycleSpeed" ];
 
 				string itinerarypoints = MainPage.MyGeoPosition.Coordinate.Longitude + "," + MainPage.MyGeoPosition.Coordinate.Latitude + "|" + center.Longitude + "," + center.Latitude;// = "-1.2487100362777,53.00143068427369,NG16+1HH|-1.1430546045303,52.95200365149319,NG1+1LL";
 				int speed = getSpeedFromString( speedSetting );
@@ -330,7 +330,7 @@ namespace Cyclestreets
 			{
 				Console.WriteLine( e.Result );
 				JObject o = JObject.Parse( e.Result );
-				JArray suggestions = (JArray)o["suggestions"];
+				JArray suggestions = (JArray)o[ "suggestions" ];
 				List<string> names = new List<string>();
 				foreach( string s in suggestions )
 				{
@@ -356,7 +356,7 @@ namespace Cyclestreets
 
 		private void revGeoQ_QueryCompleted( object sender, QueryCompletedEventArgs<IList<MapLocation>> e )
 		{
-			MapLocation loc = e.Result[0];
+			MapLocation loc = e.Result[ 0 ];
 			startPoint.Text = loc.Information.Address.Street + ", " + loc.Information.Address.PostalCode;
 		}
 
@@ -380,7 +380,7 @@ namespace Cyclestreets
 		{
 			if( e.Result.Count > 0 )
 			{
-				GeoCoordinate g = e.Result[0].GeoCoordinate;
+				GeoCoordinate g = e.Result[ 0 ].GeoCoordinate;
 				setCurrentPosition( g );
 
 				SmartDispatcher.BeginInvoke( () =>
@@ -418,11 +418,11 @@ namespace Cyclestreets
 			{
 				Console.WriteLine( e.Result );
 				JObject o = JObject.Parse( e.Result );
-				JArray suggestions = (JArray)o["results"]["items"];
+				JArray suggestions = (JArray)o[ "results" ][ "items" ];
 				if( suggestions.Count > 0 )
 				{
-					JArray pos = (JArray)suggestions[0]["position"];
-					GeoCoordinate g = new GeoCoordinate( (double)pos[0], (double)pos[1] );
+					JArray pos = (JArray)suggestions[ 0 ][ "position" ];
+					GeoCoordinate g = new GeoCoordinate( (double)pos[ 0 ], (double)pos[ 1 ] );
 					setCurrentPosition( g );
 
 					SmartDispatcher.BeginInvoke( () =>
@@ -483,14 +483,15 @@ namespace Cyclestreets
 			if( waypoints.Count > 1 )
 			{
 				Pushpin last = waypoints.Peek();
-				last.Style = Resources["Intermediate"] as Style;
+				last.Style = Resources[ "Intermediate" ] as Style;
+				last.Content = "" + ( waypoints.Count - 1 );
 			}
 
 			Pushpin pp = new Pushpin();
 			if( waypoints.Count == 0 )
-				pp.Style = Resources["Start"] as Style;
+				pp.Style = Resources[ "Start" ] as Style;
 			else
-				pp.Style = Resources["Finish"] as Style;
+				pp.Style = Resources[ "Finish" ] as Style;
 
 			pp.Tap += pinTapped;
 
@@ -505,7 +506,7 @@ namespace Cyclestreets
 
 			bool shownTutorial = false;
 			if( IsolatedStorageSettings.ApplicationSettings.Contains( "shownTutorialPin" ) )
-				shownTutorial = (bool)IsolatedStorageSettings.ApplicationSettings["shownTutorialPin"];
+				shownTutorial = (bool)IsolatedStorageSettings.ApplicationSettings[ "shownTutorialPin" ];
 			if( !shownTutorial )
 				routeTutorialPin.Visibility = Visibility.Visible;
 
@@ -521,19 +522,22 @@ namespace Cyclestreets
 			for( int i = 0; i < waypoints.Count; i++ )
 			{
 				MapOverlay overlay = new MapOverlay();
-				overlay.Content = waypoints[i];
-				overlay.GeoCoordinate = waypoints[i].GeoCoordinate;
+				overlay.Content = waypoints[ i ];
+				overlay.GeoCoordinate = waypoints[ i ].GeoCoordinate;
 				overlay.PositionOrigin = new Point( 0.3, 1.0 );
 				wayPointLayer.Add( overlay );
 
 				// Set pin styles
-				Pushpin pp = waypoints[i];
+				Pushpin pp = waypoints[ i ];
 				if( i == 0 )
-					pp.Style = Resources["Start"] as Style;
+					pp.Style = Resources[ "Start" ] as Style;
 				else if( i == waypoints.Count - 1 )
-					pp.Style = Resources["Finish"] as Style;
+					pp.Style = Resources[ "Finish" ] as Style;
 				else
-					pp.Style = Resources["Intermediate"] as Style;
+				{
+					pp.Style = Resources[ "Intermediate" ] as Style;
+					pp.Content = "" + i;
+				}
 			}
 		}
 
@@ -572,12 +576,12 @@ namespace Cyclestreets
 		{
 			string plan = "balanced route";
 			if( IsolatedStorageSettings.ApplicationSettings.Contains( "defaultRouteType" ) )
-				plan = (string)IsolatedStorageSettings.ApplicationSettings["defaultRouteType"];
+				plan = (string)IsolatedStorageSettings.ApplicationSettings[ "defaultRouteType" ];
 			plan = plan.Replace( " route", "" );
 
 			string speedSetting = "12mph";
 			if( IsolatedStorageSettings.ApplicationSettings.Contains( "cycleSpeed" ) )
-				speedSetting = (string)IsolatedStorageSettings.ApplicationSettings["cycleSpeed"];
+				speedSetting = (string)IsolatedStorageSettings.ApplicationSettings[ "cycleSpeed" ];
 
 			string itinerarypoints = "";// = "-1.2487100362777,53.00143068427369,NG16+1HH|-1.1430546045303,52.95200365149319,NG1+1LL";
 			int speed = getSpeedFromString( speedSetting );
@@ -689,10 +693,10 @@ namespace Cyclestreets
 					List<GeoCoordinate> coords = new List<GeoCoordinate>();
 					for( int i = 0; i < points.Length; i++ )
 					{
-						string[] xy = points[i].Split( ',' );
+						string[] xy = points[ i ].Split( ',' );
 
-						double longitude = double.Parse( xy[0] );
-						double latitude = double.Parse( xy[1] );
+						double longitude = double.Parse( xy[ 0 ] );
+						double latitude = double.Parse( xy[ 1 ] );
 						coords.Add( new GeoCoordinate( latitude, longitude ) );
 
 						if( max.Latitude > latitude )
@@ -708,8 +712,8 @@ namespace Cyclestreets
 					geometryColor.Add( ConvertHexStringToColour( p.Attribute( "color" ).Value ) );
 
 					RouteSegment s = new RouteSegment();
-					s.location = coords[0];
-					s.Bearing = Geodesy.Bearing( coords[0].Latitude, coords[0].Longitude, coords[coords.Count - 1].Latitude, coords[coords.Count - 1].Longitude );
+					s.location = coords[ 0 ];
+					s.Bearing = Geodesy.Bearing( coords[ 0 ].Latitude, coords[ 0 ].Longitude, coords[ coords.Count - 1 ].Latitude, coords[ coords.Count - 1 ].Longitude );
 					route.distance += (int)float.Parse( p.Attribute( "distance" ).Value );
 					s.Distance = "" + route.distance;// p.Attribute( "distance" ).Value;
 					s.DistanceMetres = (int)float.Parse( p.Attribute( "distance" ).Value );
@@ -760,13 +764,13 @@ namespace Cyclestreets
 				int count = geometryCoords.Count;
 				for( int i = 0; i < count; i++ )
 				{
-					List<GeoCoordinate> coords = geometryCoords[i];
-					DrawMapMarker( coords.ToArray(), geometryColor[i] );
+					List<GeoCoordinate> coords = geometryCoords[ i ];
+					DrawMapMarker( coords.ToArray(), geometryColor[ i ] );
 				}
 
 				//NavigationService.Navigate( new Uri( "/DirectionsResults.xaml", UriKind.Relative ) );
 				var sgs = ExtendedVisualStateManager.GetVisualStateGroups( LayoutRoot );
-				var sg = sgs[0] as VisualStateGroup;
+				var sg = sgs[ 0 ] as VisualStateGroup;
 				//ExtendedVisualStateManager.GoToElementState( LayoutRoot, "RouteFoundState", true );
 				VisualStateManager.GoToState( this, "RouteFoundState", true );
 
@@ -779,7 +783,7 @@ namespace Cyclestreets
 
 				bool shownTutorial = false;
 				if( IsolatedStorageSettings.ApplicationSettings.Contains( "shownTutorialRouteType" ) )
-					shownTutorial = (bool)IsolatedStorageSettings.ApplicationSettings["shownTutorialRouteType"];
+					shownTutorial = (bool)IsolatedStorageSettings.ApplicationSettings[ "shownTutorialRouteType" ];
 				if( !shownTutorial )
 					routeTutorialRouteType.Visibility = Visibility.Visible;
 			} );
@@ -811,7 +815,7 @@ namespace Cyclestreets
 			for( int i = 0; i < coordinate.Length; i++ )
 			{
 				//Point p = MyMap.ConvertGeoCoordinateToViewportPoint( coordinate[i] );
-				polygon.Path.Add( coordinate[i] );
+				polygon.Path.Add( coordinate[ i ] );
 			}
 
 			MyMap.MapElements.Add( polygon );
@@ -885,7 +889,7 @@ namespace Cyclestreets
 			{
 				arrowLeft.Opacity = 100;
 
-				MyMap.SetView( route.segments[currentStep].location, 20, route.segments[currentStep].Bearing, 75 );
+				MyMap.SetView( route.segments[ currentStep ].location, 20, route.segments[ currentStep ].Bearing, 75 );
 			}
 			if( currentStep >= route.segments.Count )
 				arrowRight.Opacity = 50;
@@ -913,9 +917,9 @@ namespace Cyclestreets
 			else
 			{
 				arrowRight.Opacity = 100;
-				MyMap.SetView( route.segments[currentStep].location, 20, route.segments[currentStep].Bearing, 75 );
+				MyMap.SetView( route.segments[ currentStep ].location, 20, route.segments[ currentStep ].Bearing, 75 );
 
-				findLabel1.Text = route.segments[currentStep].Turn + " at " + route.segments[currentStep].Name + "\n Continue for " + route.segments[currentStep].DistanceMetres + "m";
+				findLabel1.Text = route.segments[ currentStep ].Turn + " at " + route.segments[ currentStep ].Name + "\n Continue for " + route.segments[ currentStep ].DistanceMetres + "m";
 			}
 		}
 
@@ -947,7 +951,7 @@ namespace Cyclestreets
 		{
 			routeTutorial5.Visibility = Visibility.Collapsed;
 			if( IsolatedStorageSettings.ApplicationSettings.Contains( "shownTutorial" ) )
-				IsolatedStorageSettings.ApplicationSettings["shownTutorial"] = true;
+				IsolatedStorageSettings.ApplicationSettings[ "shownTutorial" ] = true;
 			else
 				IsolatedStorageSettings.ApplicationSettings.Add( "shownTutorial", true );
 		}
@@ -956,7 +960,7 @@ namespace Cyclestreets
 		{
 			routeTutorialPin.Visibility = Visibility.Collapsed;
 			if( IsolatedStorageSettings.ApplicationSettings.Contains( "shownTutorialPin" ) )
-				IsolatedStorageSettings.ApplicationSettings["shownTutorialPin"] = true;
+				IsolatedStorageSettings.ApplicationSettings[ "shownTutorialPin" ] = true;
 			else
 				IsolatedStorageSettings.ApplicationSettings.Add( "shownTutorialPin", true );
 		}
@@ -971,7 +975,7 @@ namespace Cyclestreets
 		{
 			routeTutorialRouteInfo.Visibility = Visibility.Collapsed;
 			if( IsolatedStorageSettings.ApplicationSettings.Contains( "shownTutorialRouteType" ) )
-				IsolatedStorageSettings.ApplicationSettings["shownTutorialRouteType"] = true;
+				IsolatedStorageSettings.ApplicationSettings[ "shownTutorialRouteType" ] = true;
 			else
 				IsolatedStorageSettings.ApplicationSettings.Add( "shownTutorialRouteType", true );
 		}

@@ -19,7 +19,7 @@
 		<Grid.Background>
 			<ImageBrush Stretch="UniformToFill" ImageSource="/Assets/cyclestreets19586.jpg"/>
 		</Grid.Background>
-		<phone:Panorama Title="journey information">
+		<phone:Panorama Title="my journey">
 
             <!--Panorama item one-->
             <phone:PanoramaItem Header="directions">
