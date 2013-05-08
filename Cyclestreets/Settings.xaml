@@ -45,7 +45,7 @@
 						<ColumnDefinition Width="179"/>
 						<ColumnDefinition/>
 					</Grid.ColumnDefinitions>
-					<TextBlock TextWrapping="Wrap" Margin="0" VerticalAlignment="Center" Text="My Cyclcing Speed"/>
+					<TextBlock TextWrapping="Wrap" Margin="0" VerticalAlignment="Center" Text="My Cycling Speed "/>
 					<toolkit:ListPicker x:Name="cycleSpeed" Margin="0" Grid.Column="1" SelectionChanged="cycleSpeed_SelectionChanged"/>
 				</Grid>
 				<Button Content="Save" Click="Button_Click"/>

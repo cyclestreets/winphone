@@ -89,7 +89,7 @@ namespace Cyclestreets
 			InitializeLanguage();
 
 			// Show graphics profiling information while debugging.
-			if( Debugger.IsAttached )
+			/*if( Debugger.IsAttached )
 			{
 				// Display the current frame rate counters.
 				Application.Current.Host.Settings.EnableFrameRateCounter = true;
@@ -106,7 +106,7 @@ namespace Cyclestreets
 				// Caution:- Use this under debug mode only. Application that disables user idle detection will continue to run
 				// and consume battery power when the user is not using the phone.
 				PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;
-			}
+			}*/
 
 
 			ReverseGeocodeQueryManager mgr = new ReverseGeocodeQueryManager();
