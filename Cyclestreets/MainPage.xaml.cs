@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Device.Location;
+using System.IO.IsolatedStorage;
 using System.Windows;
 using System.Windows.Media;
 using Microsoft.Expression.Interactivity.Core;
@@ -15,9 +16,21 @@ namespace Cyclestreets
 {
 	public class POIItem
 	{
-		public string POILabel { get; set; }
-		public bool POIEnabled { get; set; }
-		public string POIName { get; set; }
+		public string POILabel
+		{
+			get;
+			set;
+		}
+		public bool POIEnabled
+		{
+			get;
+			set;
+		}
+		public string POIName
+		{
+			get;
+			set;
+		}
 	}
 
 	public partial class MainPage : PhoneApplicationPage
@@ -36,7 +49,10 @@ namespace Cyclestreets
 		private GeoCoordinate _selected;
 		public GeoCoordinate selected
 		{
-			get { return _selected; }
+			get
+			{
+				return _selected;
+			}
 			set
 			{
 				if( value == null )
@@ -59,77 +75,100 @@ namespace Cyclestreets
 
 			// hack. See here http://stackoverflow.com/questions/5334574/applicationbariconbutton-is-null/5334703#5334703
 			/*findAppBar = ApplicationBar.Buttons[ 0 ] as Microsoft.Phone.Shell.ApplicationBarIconButton;*/
-			directionsAppBar = ApplicationBar.Buttons[ 0 ] as Microsoft.Phone.Shell.ApplicationBarIconButton;
-			navigateToAppBar = ApplicationBar.Buttons[ 1 ] as Microsoft.Phone.Shell.ApplicationBarIconButton;
+			directionsAppBar = ApplicationBar.Buttons[0] as Microsoft.Phone.Shell.ApplicationBarIconButton;
+			navigateToAppBar = ApplicationBar.Buttons[1] as Microsoft.Phone.Shell.ApplicationBarIconButton;
 
 			geoQ = new ReverseGeocodeQuery();
 			geoQ.QueryCompleted += geoQ_QueryCompleted;
 
 			var sgs = ExtendedVisualStateManager.GetVisualStateGroups( LayoutRoot );
-			var sg = sgs[ 0 ] as VisualStateGroup;
-			ExtendedVisualStateManager.GoToElementState( LayoutRoot, ( (VisualState)sg.States[ 0 ] ).Name, true );
+			var sg = sgs[0] as VisualStateGroup;
+			ExtendedVisualStateManager.GoToElementState( LayoutRoot, ( (VisualState)sg.States[0] ).Name, true );
 		}
 
 		protected override void OnNavigatedTo( System.Windows.Navigation.NavigationEventArgs e )
 		{
 			base.OnNavigatedTo( e );
 
-			if( poiLayer == null )
+			if( IsolatedStorageSettings.ApplicationSettings.Contains( "LocationConsent" ) && (bool)IsolatedStorageSettings.ApplicationSettings["LocationConsent"] )
 			{
-				poiLayer = new MapLayer();
-
-				MyMap.Layers.Add( poiLayer );
-			}
-			else
-			{
-				poiLayer.Clear();
-			}
-			if( NavigationContext.QueryString.ContainsKey( "longitude" ) )
-			{
-				GeoCoordinate center = new GeoCoordinate();
-				center.Longitude = float.Parse( NavigationContext.QueryString[ "longitude" ] );
-				center.Latitude = float.Parse( NavigationContext.QueryString[ "latitude" ] );
-				MyMap.Center = center;
-				MyMap.ZoomLevel = 16;
-				lockToMyPos = false;
-
-				selected = center;
-			}
-			else
-			{
-				lockToMyPos = true;
-				if( MyGeoPosition != null )
-					MyMap.SetView( CoordinateConverter.ConvertGeocoordinate( MyGeoPosition.Coordinate ), 14 );
-			}
-
-			if( POIResults.pois != null && POIResults.pois.Count > 0 )
-			{
-				pinItems.Clear();
-				foreach( POI p in POIResults.pois )
+				if( poiLayer == null )
 				{
-					Pushpin pp = new Pushpin();
-					pinItems.Add( pp, p );
-					pp.Content = p.PinID;
-					pp.Tap += poiTapped;
+					poiLayer = new MapLayer();
 
-					ContextMenu ctxt = new ContextMenu();
+					MyMap.Layers.Add( poiLayer );
+				}
+				else
+				{
+					poiLayer.Clear();
+				}
+				if( NavigationContext.QueryString.ContainsKey( "longitude" ) )
+				{
+					GeoCoordinate center = new GeoCoordinate();
+					center.Longitude = float.Parse( NavigationContext.QueryString["longitude"] );
+					center.Latitude = float.Parse( NavigationContext.QueryString["latitude"] );
+					MyMap.Center = center;
+					MyMap.ZoomLevel = 16;
+					lockToMyPos = false;
 
-
-					MapOverlay overlay = new MapOverlay();
-					overlay.Content = pp;
-					pp.GeoCoordinate = p.GetGeoCoordinate();
-					overlay.GeoCoordinate = p.GetGeoCoordinate();
-					overlay.PositionOrigin = new Point( 0, 1.0 );
-					poiLayer.Add( overlay );
+					selected = center;
+				}
+				else
+				{
+					lockToMyPos = true;
+					if( MyGeoPosition != null )
+						MyMap.SetView( CoordinateConverter.ConvertGeocoordinate( MyGeoPosition.Coordinate ), 14 );
 				}
 
+				if( POIResults.pois != null && POIResults.pois.Count > 0 )
+				{
+					pinItems.Clear();
+					foreach( POI p in POIResults.pois )
+					{
+						Pushpin pp = new Pushpin();
+						pinItems.Add( pp, p );
+						pp.Content = p.PinID;
+						pp.Tap += poiTapped;
+
+						ContextMenu ctxt = new ContextMenu();
+
+
+						MapOverlay overlay = new MapOverlay();
+						overlay.Content = pp;
+						pp.GeoCoordinate = p.GetGeoCoordinate();
+						overlay.GeoCoordinate = p.GetGeoCoordinate();
+						overlay.PositionOrigin = new Point( 0, 1.0 );
+						poiLayer.Add( overlay );
+					}
+
+				}
 			}
+			else
+			{
+				MessageBoxResult result =
+					MessageBox.Show( "CycleStreets requires access to your location in order to provide navigation and mapping information. Do you want to allow this?",
+					"Location",
+					MessageBoxButton.OKCancel );
+
+				if( result == MessageBoxResult.OK )
+				{
+					IsolatedStorageSettings.ApplicationSettings["LocationConsent"] = true;
+				}
+				else
+				{
+					IsolatedStorageSettings.ApplicationSettings["LocationConsent"] = false;
+				}
+
+				IsolatedStorageSettings.ApplicationSettings.Save();
+			}
+
+
 		}
 
 		private void poiTapped( object sender, System.Windows.Input.GestureEventArgs e )
 		{
 			Pushpin pp = sender as Pushpin;
-			POI p = pinItems[ pp ];
+			POI p = pinItems[pp];
 			foreach( KeyValuePair<Pushpin, POI> pair in pinItems )
 			{
 				Pushpin ppItem = pair.Key;

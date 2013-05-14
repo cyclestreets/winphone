@@ -206,6 +206,7 @@ namespace Cyclestreets
 
 		public static String[] RouteType = { "balanced route", "fastest route", "quietest route" };
 		public static String[] CycleSpeed = { "10mph", "12mph", "15mph" };
+		public static String[] EnabledDisabled = { "Enabled", "Disabled" };
 
 		public Directions()
 		{

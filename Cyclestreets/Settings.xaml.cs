@@ -13,19 +13,30 @@ namespace Cyclestreets
 		{
 			InitializeComponent();
 
-			string defaultRouteTypeSetting = Directions.RouteType[ 0 ];
+			string defaultRouteTypeSetting = Directions.RouteType[0];
 			if( IsolatedStorageSettings.ApplicationSettings.Contains( "defaultRouteType" ) )
-				defaultRouteTypeSetting = (string)IsolatedStorageSettings.ApplicationSettings[ "defaultRouteType" ];
+				defaultRouteTypeSetting = (string)IsolatedStorageSettings.ApplicationSettings["defaultRouteType"];
 
 			defaultRouteType.ItemsSource = Directions.RouteType;
 			defaultRouteType.SelectedItem = defaultRouteTypeSetting;
 
-			string cycleSpeedSetting = Directions.CycleSpeed[ 0 ];
+			string cycleSpeedSetting = Directions.CycleSpeed[0];
 			if( IsolatedStorageSettings.ApplicationSettings.Contains( "cycleSpeed" ) )
-				cycleSpeedSetting = (string)IsolatedStorageSettings.ApplicationSettings[ "cycleSpeed" ];
+				cycleSpeedSetting = (string)IsolatedStorageSettings.ApplicationSettings["cycleSpeed"];
 
 			cycleSpeed.ItemsSource = Directions.CycleSpeed;
 			cycleSpeed.SelectedItem = cycleSpeedSetting;
+
+			string locationEnabledSetting = Directions.EnabledDisabled[0];
+			if( IsolatedStorageSettings.ApplicationSettings.Contains( "LocationConsent" ) )
+			{
+				if( (bool)IsolatedStorageSettings.ApplicationSettings["LocationConsent"] == false )
+					locationEnabledSetting = Directions.EnabledDisabled[1];
+			}
+
+
+			locationEnabled.ItemsSource = Directions.EnabledDisabled;
+			locationEnabled.SelectedItem = locationEnabledSetting;
 		}
 
 		private void defaultRouteType_SelectionChanged( object sender, SelectionChangedEventArgs e )
@@ -43,14 +54,14 @@ namespace Cyclestreets
 			string plan = (string)defaultRouteType.SelectedItem;
 
 			if( IsolatedStorageSettings.ApplicationSettings.Contains( "defaultRouteType" ) )
-				IsolatedStorageSettings.ApplicationSettings[ "defaultRouteType" ] = plan;
+				IsolatedStorageSettings.ApplicationSettings["defaultRouteType"] = plan;
 			else
 				IsolatedStorageSettings.ApplicationSettings.Add( "defaultRouteType", plan );
 
 			plan = (string)cycleSpeed.SelectedItem;
 
 			if( IsolatedStorageSettings.ApplicationSettings.Contains( "cycleSpeed" ) )
-				IsolatedStorageSettings.ApplicationSettings[ "cycleSpeed" ] = plan;
+				IsolatedStorageSettings.ApplicationSettings["cycleSpeed"] = plan;
 			else
 				IsolatedStorageSettings.ApplicationSettings.Add( "cycleSpeed", plan );
 
