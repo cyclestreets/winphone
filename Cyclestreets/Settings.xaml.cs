@@ -88,5 +88,10 @@ namespace Cyclestreets
 			url.Uri = new System.Uri( "http://forum.rwscripts.com/" );
 			url.Show();
 		}
+
+		private void locationEnabled_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+		{
+			// TODO: Add event handler implementation here.
+		}
 	}
 }

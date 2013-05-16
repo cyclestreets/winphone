@@ -21,12 +21,12 @@
 			<ImageBrush Stretch="UniformToFill" ImageSource="/Assets/cyclestreets19586.jpg"/>
 		</Grid.Background>
 		<ProgressBar x:Name="progress" VerticalAlignment="Top" Padding="0" IsIndeterminate="True" Foreground="White" Opacity="{Binding Opacity}"/>
-		<phone:Panorama Title="journey information">
+		<phone:Panorama Title="journey information" Foreground="#DEFFFFFF">
 
 			<!--Panorama item one-->
 			<phone:PanoramaItem Header="nearest poi">
 				<ScrollViewer>
-					<phone:LongListSelector x:Name="poiList" HorizontalContentAlignment="Stretch" Width="420" SelectionChanged="poiList_SelectionChanged">
+					<phone:LongListSelector x:Name="poiList" HorizontalContentAlignment="Stretch" Width="420" SelectionChanged="poiList_SelectionChanged" Foreground="#DEFFFFFF">
 						<phone:LongListSelector.ItemTemplate>
 							<DataTemplate>
 								<Grid Margin="0" Background="{Binding BGColour}">

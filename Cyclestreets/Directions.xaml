@@ -253,11 +253,18 @@
 			</maps:Map.Center>
 		</maps:Map>
 		<Image HorizontalAlignment="Center" VerticalAlignment="Center" Source="/Assets/icons/dark/appbar.add.png" Height="76" Width="76" Grid.Row="1"/>
-		<StackPanel x:Name="locationEntry" Background="#FF212021" VerticalAlignment="Bottom" Margin="0" RenderTransformOrigin="0.5,0.5" Grid.Row="1">
+		<StackPanel x:Name="locationEntry" VerticalAlignment="Bottom" Margin="0" RenderTransformOrigin="0.5,0.5" Grid.Row="1">
+			<StackPanel.Background>
+				<SolidColorBrush Color="{StaticResource PhoneChromeColor}"/>
+			</StackPanel.Background>
 			<StackPanel.RenderTransform>
 				<CompositeTransform/>
 			</StackPanel.RenderTransform>
-			<TextBlock x:Name="findLabel" Text="TYPE LOCATION OR USE APP BAR" Padding="10,0,0,0" Foreground="White"/>
+			<TextBlock x:Name="findLabel" Text="TYPE LOCATION OR USE APP BAR" Padding="10,0,0,0">
+				<TextBlock.Foreground>
+					<SolidColorBrush Color="{StaticResource PhoneContrastBackgroundColor}"/>
+				</TextBlock.Foreground>
+			</TextBlock>
 			<toolkit:AutoCompleteBox x:Name="startPoint" InputScope="Default" IsTextCompletionEnabled="True" MinimumPrefixLength="3" SelectionChanged="startPoint_SelectionChanged" VerticalAlignment="Top" Margin="0" FontSize="20" Height="65">
 				<!-- <toolkit:AutoCompleteBox.ItemTemplate>
 					<DataTemplate>
@@ -269,7 +276,10 @@
 				</toolkit:AutoCompleteBox.ItemTemplate> -->
 			</toolkit:AutoCompleteBox>
 		</StackPanel>
-		<Grid x:Name="routeType" VerticalAlignment="Top" Background="#FF212021" RenderTransformOrigin="0.5,0.5" Grid.Row="1">
+		<Grid x:Name="routeType" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Grid.Row="1">
+			<Grid.Background>
+				<SolidColorBrush Color="{StaticResource PhoneChromeColor}"/>
+			</Grid.Background>
 			<Grid.RenderTransform>
 				<CompositeTransform TranslateY="-100"/>
 			</Grid.RenderTransform>
@@ -280,7 +290,10 @@
 			<toolkit:ListPicker x:Name="routeTypePicker" SelectionChanged="routeTypePicker_SelectionChanged" Margin="10,5,0,10" Padding="0"/>
 			<Image Source="/Assets/icons/dark/appbar.information.circle.png" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="None" Margin="0" Grid.Column="1" Tap="Image_Tap_1"/>
 		</Grid>
-		<Grid x:Name="routeDetails" Background="#FF212021" VerticalAlignment="Bottom" Margin="0" RenderTransformOrigin="0.5,0.5" Grid.Row="1">
+		<Grid x:Name="routeDetails" VerticalAlignment="Bottom" Margin="0" RenderTransformOrigin="0.5,0.5" Grid.Row="1">
+			<Grid.Background>
+				<SolidColorBrush Color="{StaticResource PhoneChromeColor}"/>
+			</Grid.Background>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="72*"/>
 				<ColumnDefinition Width="337*"/>
@@ -289,7 +302,11 @@
 			<Grid.RenderTransform>
 				<CompositeTransform TranslateY="150"/>
 			</Grid.RenderTransform>
-			<TextBlock x:Name="findLabel1" Text="TYPE LOCATION OR USE APP BAR" Padding="10,0,0,0" Foreground="White" Margin="0,0,0,38" Grid.Column="1" TextAlignment="Center" FontSize="20"/>
+			<TextBlock x:Name="findLabel1" Text="TYPE LOCATION OR USE APP BAR" Padding="10,0,0,0" Margin="0,0,0,38" Grid.Column="1" TextAlignment="Center" FontSize="20">
+				<TextBlock.Foreground>
+					<SolidColorBrush Color="{StaticResource PhoneContrastBackgroundColor}"/>
+				</TextBlock.Foreground>
+			</TextBlock>
 			<Image x:Name="arrowLeft" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Center" Source="/Assets/icons/dark/appbar.arrow.left.png" Stretch="None" Height="76" Width="76" Grid.ColumnSpan="2" Tap="arrowLeft_Tap"/>
 			<Image x:Name="arrowRight" HorizontalAlignment="Right" Margin="0" VerticalAlignment="Center" Source="/Assets/icons/dark/appbar.arrow.right.png" Grid.Column="1" Stretch="None" Grid.ColumnSpan="2" Height="76" Width="76" Tap="arrowRight_Tap"/>
 		</Grid>

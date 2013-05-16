@@ -19,12 +19,12 @@
 		<Grid.Background>
 			<ImageBrush Stretch="UniformToFill" ImageSource="/Assets/cyclestreets19586.jpg"/>
 		</Grid.Background>
-		<phone:Panorama Title="my journey">
+		<phone:Panorama Title="my journey" Foreground="#DEFFFFFF">
 
             <!--Panorama item one-->
             <phone:PanoramaItem Header="directions">
 				<ScrollViewer>
-            		<phone:LongListSelector x:Name="directionList" HorizontalContentAlignment="Stretch" Width="420">
+            		<phone:LongListSelector x:Name="directionList" HorizontalContentAlignment="Stretch" Width="420" Foreground="#DEFFFFFF">
             			<phone:LongListSelector.ItemTemplate>
             				<DataTemplate>
             					<Grid Margin="0" Background="{Binding BGColour}">
@@ -55,7 +55,7 @@
 
             <!--Panorama item two-->
             <phone:PanoramaItem Header="journey facts">
-            	<phone:LongListSelector x:Name="factsList" HorizontalContentAlignment="Stretch" Height="483">
+            	<phone:LongListSelector x:Name="factsList" HorizontalContentAlignment="Stretch" Height="483" Foreground="#DEFFFFFF">
             		<phone:LongListSelector.ItemTemplate>
             			<DataTemplate>
             				<StackPanel Background="#3F000000" Margin="0" Orientation="Horizontal" >
