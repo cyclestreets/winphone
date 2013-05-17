@@ -91,6 +91,7 @@
 		<shell:ApplicationBar>
 			<shell:ApplicationBar.MenuItems>
 				<shell:ApplicationBarMenuItem x:Name="settings" IsEnabled="True" Text="Settings" Click="settings_Click"/>
+				<shell:ApplicationBarMenuItem x:Name="privacy" IsEnabled="True" Text="Privacy Policy" Click="privacy_Click"/>
 			</shell:ApplicationBar.MenuItems>
 			<shell:ApplicationBarIconButton x:Name="myPosition" IconUri="/Assets/icons/dark/appbar.location.circle.png" IsEnabled="True" Text="My Position" Click="myPosition_Click"/>
 			<shell:ApplicationBarIconButton x:Name="cursorPos" IconUri="/Assets/icons/dark/appbar.add.png" IsEnabled="True" Text="Cursor" Click="cursorPos_Click"/>

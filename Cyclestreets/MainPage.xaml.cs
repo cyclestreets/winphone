@@ -10,6 +10,7 @@ using Microsoft.Phone.Maps.Controls;
 using Microsoft.Phone.Maps.Services;
 using Microsoft.Phone.Maps.Toolkit;
 using Microsoft.Phone.Shell;
+using Microsoft.Phone.Tasks;
 using Windows.Devices.Geolocation;
 
 namespace Cyclestreets
@@ -258,8 +259,15 @@ namespace Cyclestreets
 
 		private void MyMap_Loaded( object sender, RoutedEventArgs e )
 		{
-			Microsoft.Phone.Maps.MapsSettings.ApplicationContext.ApplicationId = "4165a41b-8248-4a1f-b57c-fb1161f56bf5";
-			Microsoft.Phone.Maps.MapsSettings.ApplicationContext.AuthenticationToken = "Mq2yqDBcrqUwKyrlDdHk6g";
+			Microsoft.Phone.Maps.MapsSettings.ApplicationContext.ApplicationId = "823e41bf-889c-4102-863f-11cfee11f652";
+			Microsoft.Phone.Maps.MapsSettings.ApplicationContext.AuthenticationToken = "xrQJghWalYn52fTfnUhWPQ";
+		}
+
+		private void privacy_Click( object sender, System.EventArgs e )
+		{
+			WebBrowserTask url = new WebBrowserTask();
+			url.Uri = new System.Uri( "http://www.cyclestreets.net/privacy/" );
+			url.Show();
 		}
 	}
 }
