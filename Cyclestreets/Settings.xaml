@@ -40,7 +40,7 @@
 						<ColumnDefinition/>
 					</Grid.ColumnDefinitions>
 					<TextBlock TextWrapping="Wrap" Margin="0" VerticalAlignment="Center" Text="Location Enabled "/>
-					<toolkit:ListPicker x:Name="locationEnabled" Margin="0" Grid.Column="1" SelectionChanged="locationEnabled_SelectionChanged"/>
+					<toolkit:ListPicker x:Name="locationEnabled" Margin="0" Grid.Column="1" />
 				</Grid>
 				<Grid>
 					<Grid.ColumnDefinitions>

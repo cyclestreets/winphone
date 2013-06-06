@@ -7,7 +7,9 @@ using Cyclestreets.Common;
 using Cyclestreets.Resources;
 using Cyclestreets.ViewModels;
 using Microsoft.Phone.Controls;
+using Microsoft.Phone.Marketplace;
 using Microsoft.Phone.Shell;
+using Microsoft.Phone.Tasks;
 
 namespace Cyclestreets
 {
@@ -48,6 +50,16 @@ namespace Cyclestreets
 		public static string apiKey = "d2ff10bbbded8e86";
 
 		public static NetworkBusy networkStatus = new NetworkBusy();
+
+		private static LicenseInformation _licenseInfo = new LicenseInformation();
+		private static bool _isTrial = true;
+		public bool IsTrial
+		{
+			get
+			{
+				return _isTrial;
+			}
+		}
 
 		/// <summary>
 		/// A static ViewModel used by the views to bind against.
@@ -108,25 +120,55 @@ namespace Cyclestreets
 				PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;
 			}*/
 
-
 			ReverseGeocodeQueryManager mgr = new ReverseGeocodeQueryManager();
+		}
+
+		/// <summary>
+		/// Check the current license information for this application
+		/// </summary>
+		private void CheckLicense()
+		{
+			// When debugging, we want to simulate a trial mode experience. The following conditional allows us to set the _isTrial 
+			// property to simulate trial mode being on or off. 
+#if DEBUG
+			_isTrial = true;
+#else
+            _isTrial = _licenseInfo.IsTrial();
+#endif
+		}
+
+		public bool trialExpired;
+		public MessageBoxResult showTrialExpiredMessage()
+		{
+			MessageBoxResult result = MessageBox.Show( "Your free trial has expired. Press OK to go to the store where you can download the full version of the app.", "Trial Expired", MessageBoxButton.OK );
+			if( result == MessageBoxResult.OK )
+			{
+				MarketplaceDetailTask _marketPlaceDetailTask = new MarketplaceDetailTask();
+				_marketPlaceDetailTask.Show();
+			}
+			return result;
 		}
 
 		// Code to execute when the application is launching (eg, from Start)
 		// This code will not execute when the application is reactivated
 		private void Application_Launching( object sender, LaunchingEventArgs e )
 		{
+			FlurryWP8SDK.Api.StartSession( "JZSMBMX659NW78S35ZPR" );
+			CheckLicense();
 		}
 
 		// Code to execute when the application is activated (brought to foreground)
 		// This code will not execute when the application is first launched
 		private void Application_Activated( object sender, ActivatedEventArgs e )
 		{
+			FlurryWP8SDK.Api.StartSession( "JZSMBMX659NW78S35ZPR" );
+
 			// Ensure that application state is restored appropriately
 			if( !App.ViewModel.IsDataLoaded )
 			{
 				App.ViewModel.LoadData();
 			}
+			CheckLicense();
 		}
 
 		// Code to execute when the application is deactivated (sent to background)
@@ -159,6 +201,10 @@ namespace Cyclestreets
 			{
 				// An unhandled exception has occurred; break into the debugger
 				Debugger.Break();
+			}
+			else
+			{
+				FlurryWP8SDK.Api.LogError( "Unhandled Exception", e.ExceptionObject );
 			}
 		}
 

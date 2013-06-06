@@ -2,8 +2,12 @@
 using System.Collections.Generic;
 using System.Device.Location;
 using System.IO.IsolatedStorage;
+using System.Linq;
+using System.Net;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Navigation;
+using System.Xml.Linq;
 using Microsoft.Expression.Interactivity.Core;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Maps.Controls;
@@ -11,7 +15,8 @@ using Microsoft.Phone.Maps.Services;
 using Microsoft.Phone.Maps.Toolkit;
 using Microsoft.Phone.Shell;
 using Microsoft.Phone.Tasks;
-using Windows.Devices.Geolocation;
+using RestSharp;
+using ScoreAlertsMobile.Util;
 
 namespace Cyclestreets
 {
@@ -41,9 +46,6 @@ namespace Cyclestreets
 		List<GeoCoordinate> waypoints = new List<GeoCoordinate>();
 		Dictionary<Pushpin, POI> pinItems = new Dictionary<Pushpin, POI>();
 
-		private Geolocator trackingGeolocator;
-		public static Geoposition MyGeoPosition = null;
-
 		private GeoCoordinate max = new GeoCoordinate( 90, -180 );
 		private GeoCoordinate min = new GeoCoordinate( -90, 180 );
 
@@ -66,32 +68,113 @@ namespace Cyclestreets
 
 		ReverseGeocodeQuery geoQ = null;
 		private MapLayer poiLayer;
-		private bool lockToMyPos = false;
+
+		// Declare the MarketplaceDetailTask object with page scope
+		// so we can access it from event handlers.
+		MarketplaceDetailTask _marketPlaceDetailTask = new MarketplaceDetailTask();
 
 		// Constructor
 		public MainPage()
 		{
 			InitializeComponent();
-			this.StartTracking();
 
 			// hack. See here http://stackoverflow.com/questions/5334574/applicationbariconbutton-is-null/5334703#5334703
 			/*findAppBar = ApplicationBar.Buttons[ 0 ] as Microsoft.Phone.Shell.ApplicationBarIconButton;*/
-			directionsAppBar = ApplicationBar.Buttons[0] as Microsoft.Phone.Shell.ApplicationBarIconButton;
-			navigateToAppBar = ApplicationBar.Buttons[1] as Microsoft.Phone.Shell.ApplicationBarIconButton;
+			directionsAppBar = ApplicationBar.Buttons[ 0 ] as Microsoft.Phone.Shell.ApplicationBarIconButton;
+			navigateToAppBar = ApplicationBar.Buttons[ 1 ] as Microsoft.Phone.Shell.ApplicationBarIconButton;
+
+			if( LocationManager.instance == null )
+			{
+				LocationManager l = new LocationManager( MyMap );
+			}
 
 			geoQ = new ReverseGeocodeQuery();
 			geoQ.QueryCompleted += geoQ_QueryCompleted;
 
 			var sgs = ExtendedVisualStateManager.GetVisualStateGroups( LayoutRoot );
-			var sg = sgs[0] as VisualStateGroup;
-			ExtendedVisualStateManager.GoToElementState( LayoutRoot, ( (VisualState)sg.States[0] ).Name, true );
+			var sg = sgs[ 0 ] as VisualStateGroup;
+			ExtendedVisualStateManager.GoToElementState( LayoutRoot, ( (VisualState)sg.States[ 0 ] ).Name, true );
+		}
+
+		void m_Click( object sender, EventArgs e )
+		{
+			_marketPlaceDetailTask.Show();
+
 		}
 
 		protected override void OnNavigatedTo( System.Windows.Navigation.NavigationEventArgs e )
 		{
 			base.OnNavigatedTo( e );
 
-			if( IsolatedStorageSettings.ApplicationSettings.Contains( "LocationConsent" ) && (bool)IsolatedStorageSettings.ApplicationSettings["LocationConsent"] )
+			if( ( Application.Current as App ).IsTrial )
+			{
+				if( ( (App)App.Current ).trialExpired )
+					( (App)App.Current ).showTrialExpiredMessage();
+
+
+				String udid = Util.GetHardwareId();
+
+				String serverUrl = "http://www.rwscripts.com/cyclestreets/trial.php";
+
+				var client = new RestClient( serverUrl );
+
+				var request = new RestRequest( "", Method.POST );
+				request.AddParameter( "Hardware", udid ); // adds to POST or URL querystring based on Method
+
+				// easily add HTTP Headers
+				request.AddHeader( "header", "value" );
+
+				// execute the request
+				//RestResponse response = client.ExecuteAsync(request, sendPushURLCallback);
+				//var content = response.Content; // raw content as string
+
+				// easy async support
+				client.ExecuteAsync( request, response =>
+				{
+					if( Util.ResultContainsErrors( response.Content, "sendPushToken" ) )
+					{
+						Util.dataFailure();
+					}
+					else if( response.StatusCode != HttpStatusCode.OK )
+					{
+						Util.networkFailure();
+					}
+					else
+					{
+						try
+						{
+							XDocument xml = XDocument.Parse( response.Content.Trim() );
+							var session = xml.Descendants( "result" )
+								.Where( ev => (string)ev.Parent.Name.LocalName == "root" );
+							foreach( XElement s in session )
+							{
+								if( int.Parse( s.Value ) == 0 )
+								{
+									//NavigationService.Navigate( new Uri( "/TrialExpired.xaml", UriKind.Relative ) );
+
+									( (App)App.Current ).trialExpired = true;
+									( (App)App.Current ).showTrialExpiredMessage();
+									if( NavigationService.CanGoBack )
+										NavigationService.GoBack();
+								}
+								else
+								{
+									MessageBoxResult result = MessageBox.Show( "Thank you for installing the CycleStreets trial. This trial lasts 24 hours and allows access to all the features of the full app. You can purchase the full version at any time from the action panel.", "Hello", MessageBoxButton.OK );
+									ApplicationBarMenuItem m = new ApplicationBarMenuItem( "buy full version" );
+									m.Click += m_Click;
+									ApplicationBar.MenuItems.Add( m );
+								}
+							}
+						}
+						catch( Exception ex )
+						{
+							FlurryWP8SDK.Api.LogError( "Failed to parse login xml", ex );
+						}
+					}
+				} );
+			}
+
+			if( IsolatedStorageSettings.ApplicationSettings.Contains( "LocationConsent" ) )
 			{
 				if( poiLayer == null )
 				{
@@ -106,19 +189,24 @@ namespace Cyclestreets
 				if( NavigationContext.QueryString.ContainsKey( "longitude" ) )
 				{
 					GeoCoordinate center = new GeoCoordinate();
-					center.Longitude = float.Parse( NavigationContext.QueryString["longitude"] );
-					center.Latitude = float.Parse( NavigationContext.QueryString["latitude"] );
+					center.Longitude = float.Parse( NavigationContext.QueryString[ "longitude" ] );
+					center.Latitude = float.Parse( NavigationContext.QueryString[ "latitude" ] );
 					MyMap.Center = center;
 					MyMap.ZoomLevel = 16;
-					lockToMyPos = false;
+					LocationManager.instance.LockToMyPos( false );
 
 					selected = center;
 				}
 				else
 				{
-					lockToMyPos = true;
-					if( MyGeoPosition != null )
-						MyMap.SetView( CoordinateConverter.ConvertGeocoordinate( MyGeoPosition.Coordinate ), 14 );
+					if( (bool)IsolatedStorageSettings.ApplicationSettings[ "LocationConsent" ] )
+					{
+						LocationManager.instance.StartTracking();
+
+						LocationManager.instance.LockToMyPos( true );
+						if( LocationManager.instance.MyGeoPosition != null )
+							MyMap.SetView( CoordinateConverter.ConvertGeocoordinate( LocationManager.instance.MyGeoPosition.Coordinate ), 14 );
+					}
 				}
 
 				if( POIResults.pois != null && POIResults.pois.Count > 0 )
@@ -153,23 +241,21 @@ namespace Cyclestreets
 
 				if( result == MessageBoxResult.OK )
 				{
-					IsolatedStorageSettings.ApplicationSettings["LocationConsent"] = true;
+					IsolatedStorageSettings.ApplicationSettings[ "LocationConsent" ] = true;
 				}
 				else
 				{
-					IsolatedStorageSettings.ApplicationSettings["LocationConsent"] = false;
+					IsolatedStorageSettings.ApplicationSettings[ "LocationConsent" ] = false;
 				}
 
 				IsolatedStorageSettings.ApplicationSettings.Save();
 			}
-
-
 		}
 
 		private void poiTapped( object sender, System.Windows.Input.GestureEventArgs e )
 		{
 			Pushpin pp = sender as Pushpin;
-			POI p = pinItems[pp];
+			POI p = pinItems[ pp ];
 			foreach( KeyValuePair<Pushpin, POI> pair in pinItems )
 			{
 				Pushpin ppItem = pair.Key;
@@ -181,36 +267,13 @@ namespace Cyclestreets
 			selected = p.GetGeoCoordinate();
 		}
 
-		public void StartTracking()
-		{
-			if( this.trackingGeolocator != null )
-			{
-				return;
-			}
 
-			this.trackingGeolocator = new Geolocator();
-			this.trackingGeolocator.ReportInterval = (uint)TimeSpan.FromSeconds( 30 ).TotalMilliseconds;
-
-			// this implicitly starts the tracking operation
-			this.trackingGeolocator.PositionChanged += positionChangedHandler;
-		}
 
 		private void geoQ_QueryCompleted( object sender, QueryCompletedEventArgs<IList<MapLocation>> e )
 		{
 			throw new NotImplementedException();
 		}
 
-		private void positionChangedHandler( Geolocator sender, PositionChangedEventArgs args )
-		{
-			MyGeoPosition = args.Position;
-			if( lockToMyPos )
-			{
-				SmartDispatcher.BeginInvoke( () =>
-				{
-					MyMap.SetView( CoordinateConverter.ConvertGeocoordinate( MyGeoPosition.Coordinate ), 14 );
-				} );
-			}
-		}
 
 		private LocationRectangle GetMapBounds()
 		{

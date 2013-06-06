@@ -97,6 +97,7 @@
     <Compile Include="AsyncWebRequest.cs" />
     <Compile Include="Common\BindableBase.cs" />
     <Compile Include="CoordinateConverter.cs" />
+    <Compile Include="LocationManager.cs" />
     <Compile Include="POIResults.xaml.cs">
       <DependentUpon>POIResults.xaml</DependentUpon>
     </Compile>
@@ -130,6 +131,7 @@
     <Compile Include="SmartDispatcher.cs" />
     <Compile Include="Utils\Geodesy.cs" />
     <Compile Include="Utils\Stackish.cs" />
+    <Compile Include="Utils\Util.cs" />
     <Compile Include="ViewModels\ItemViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
   </ItemGroup>
@@ -252,6 +254,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="FlurryWP8SDK">
+      <HintPath>Resources\FlurryWP8SDK.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Expression.Drawing" />
     <Reference Include="Microsoft.Expression.Interactions" />
     <Reference Include="Microsoft.Phone.Controls, Version=8.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e, processorArchitecture=MSIL" />
@@ -261,7 +266,16 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>packages\Newtonsoft.Json.5.0.4\lib\portable-net45+wp80+win8\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="RestSharp.WindowsPhone">
+      <HintPath>packages\RestSharp.104.1\lib\sl4-wp71\RestSharp.WindowsPhone.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Interactivity" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="MockIAPLib\MockIAPLib.csproj">
+      <Project>{015E3DFE-EB56-429F-95EF-BAB5D41B23BE}</Project>
+      <Name>MockIAPLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />

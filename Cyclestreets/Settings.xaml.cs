@@ -13,40 +13,70 @@ namespace Cyclestreets
 		{
 			InitializeComponent();
 
-			string defaultRouteTypeSetting = Directions.RouteType[0];
+			string defaultRouteTypeSetting = Directions.RouteType[ 0 ];
 			if( IsolatedStorageSettings.ApplicationSettings.Contains( "defaultRouteType" ) )
-				defaultRouteTypeSetting = (string)IsolatedStorageSettings.ApplicationSettings["defaultRouteType"];
+				defaultRouteTypeSetting = (string)IsolatedStorageSettings.ApplicationSettings[ "defaultRouteType" ];
 
 			defaultRouteType.ItemsSource = Directions.RouteType;
 			defaultRouteType.SelectedItem = defaultRouteTypeSetting;
 
-			string cycleSpeedSetting = Directions.CycleSpeed[0];
+			string cycleSpeedSetting = Directions.CycleSpeed[ 0 ];
 			if( IsolatedStorageSettings.ApplicationSettings.Contains( "cycleSpeed" ) )
-				cycleSpeedSetting = (string)IsolatedStorageSettings.ApplicationSettings["cycleSpeed"];
+				cycleSpeedSetting = (string)IsolatedStorageSettings.ApplicationSettings[ "cycleSpeed" ];
 
 			cycleSpeed.ItemsSource = Directions.CycleSpeed;
 			cycleSpeed.SelectedItem = cycleSpeedSetting;
 
-			string locationEnabledSetting = Directions.EnabledDisabled[0];
+			string locationEnabledSetting = Directions.EnabledDisabled[ 0 ];
 			if( IsolatedStorageSettings.ApplicationSettings.Contains( "LocationConsent" ) )
 			{
-				if( (bool)IsolatedStorageSettings.ApplicationSettings["LocationConsent"] == false )
-					locationEnabledSetting = Directions.EnabledDisabled[1];
+				if( (bool)IsolatedStorageSettings.ApplicationSettings[ "LocationConsent" ] == false )
+					locationEnabledSetting = Directions.EnabledDisabled[ 1 ];
 			}
 
 
 			locationEnabled.ItemsSource = Directions.EnabledDisabled;
 			locationEnabled.SelectedItem = locationEnabledSetting;
+			locationEnabled.SelectionChanged += locationEnabled_SelectionChanged;
 		}
 
 		private void defaultRouteType_SelectionChanged( object sender, SelectionChangedEventArgs e )
 		{
-
+			if( e.AddedItems.Count > 0 )
+			{
+				if( IsolatedStorageSettings.ApplicationSettings.Contains( "defaultRouteType" ) )
+					IsolatedStorageSettings.ApplicationSettings[ "defaultRouteType" ] = e.AddedItems[ 0 ];
+				else
+					IsolatedStorageSettings.ApplicationSettings.Add( "defaultRouteType", e.AddedItems[ 0 ] );
+			}
 		}
 
 		private void cycleSpeed_SelectionChanged( object sender, SelectionChangedEventArgs e )
 		{
+			if( e.AddedItems.Count > 0 )
+			{
+				if( IsolatedStorageSettings.ApplicationSettings.Contains( "cycleSpeed" ) )
+					IsolatedStorageSettings.ApplicationSettings[ "cycleSpeed" ] = e.AddedItems[ 0 ];
+				else
+					IsolatedStorageSettings.ApplicationSettings.Add( "cycleSpeed", e.AddedItems[ 0 ] );
+			}
+		}
 
+		private void locationEnabled_SelectionChanged( object sender, SelectionChangedEventArgs e )
+		{
+			if( e.AddedItems.Count > 0 )
+			{
+				bool enabled = e.AddedItems[ 0 ].Equals( "Enabled" ) ? true : false;
+				if( IsolatedStorageSettings.ApplicationSettings.Contains( "LocationConsent" ) )
+					IsolatedStorageSettings.ApplicationSettings[ "LocationConsent" ] = enabled;
+				else
+					IsolatedStorageSettings.ApplicationSettings.Add( "LocationConsent", enabled );
+
+				if( enabled )
+					LocationManager.instance.StartTracking();
+				else
+					LocationManager.instance.StopTracking();
+			}
 		}
 
 		private void Button_Click( object sender, RoutedEventArgs e )
@@ -54,14 +84,14 @@ namespace Cyclestreets
 			string plan = (string)defaultRouteType.SelectedItem;
 
 			if( IsolatedStorageSettings.ApplicationSettings.Contains( "defaultRouteType" ) )
-				IsolatedStorageSettings.ApplicationSettings["defaultRouteType"] = plan;
+				IsolatedStorageSettings.ApplicationSettings[ "defaultRouteType" ] = plan;
 			else
 				IsolatedStorageSettings.ApplicationSettings.Add( "defaultRouteType", plan );
 
 			plan = (string)cycleSpeed.SelectedItem;
 
 			if( IsolatedStorageSettings.ApplicationSettings.Contains( "cycleSpeed" ) )
-				IsolatedStorageSettings.ApplicationSettings["cycleSpeed"] = plan;
+				IsolatedStorageSettings.ApplicationSettings[ "cycleSpeed" ] = plan;
 			else
 				IsolatedStorageSettings.ApplicationSettings.Add( "cycleSpeed", plan );
 
@@ -87,11 +117,6 @@ namespace Cyclestreets
 			WebBrowserTask url = new WebBrowserTask();
 			url.Uri = new System.Uri( "http://forum.rwscripts.com/" );
 			url.Show();
-		}
-
-		private void locationEnabled_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-		{
-			// TODO: Add event handler implementation here.
 		}
 	}
 }

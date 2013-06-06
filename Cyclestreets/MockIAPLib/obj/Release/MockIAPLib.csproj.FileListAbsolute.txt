@@ -1,0 +1,4 @@
+C:\Users\Dave\Documents\Visual Studio 2012\Projects\scorealerts_wp8\MockIAPLib\Bin\Release\MockIAPLib.dll
+C:\Users\Dave\Documents\Visual Studio 2012\Projects\scorealerts_wp8\MockIAPLib\Bin\Release\MockIAPLib.pdb
+C:\Users\Dave\Documents\Visual Studio 2012\Projects\scorealerts_wp8\MockIAPLib\obj\Release\MockIAPLib.dll
+C:\Users\Dave\Documents\Visual Studio 2012\Projects\scorealerts_wp8\MockIAPLib\obj\Release\MockIAPLib.pdb

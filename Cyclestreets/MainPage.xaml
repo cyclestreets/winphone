@@ -18,7 +18,7 @@
 	SupportedOrientations="Portrait"  Orientation="Portrait"
 	shell:SystemTray.IsVisible="False">
 	<phone:PhoneApplicationPage.ApplicationBar>
-		<shell:ApplicationBar>
+		<shell:ApplicationBar x:Name="appBar">
 			<shell:ApplicationBar.MenuItems>
 				<shell:ApplicationBarMenuItem x:Name="poiList" IsEnabled="True" Text="Points of interest" Click="poiList_Click"/>
 				<shell:ApplicationBarMenuItem x:Name="settings" IsEnabled="True" Text="Settings" Click="settings_Click"/>

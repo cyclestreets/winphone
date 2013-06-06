@@ -307,7 +307,7 @@ namespace Cyclestreets
 				if( IsolatedStorageSettings.ApplicationSettings.Contains( "cycleSpeed" ) )
 					speedSetting = (string)IsolatedStorageSettings.ApplicationSettings["cycleSpeed"];
 
-				string itinerarypoints = MainPage.MyGeoPosition.Coordinate.Longitude + "," + MainPage.MyGeoPosition.Coordinate.Latitude + "|" + center.Longitude + "," + center.Latitude;// = "-1.2487100362777,53.00143068427369,NG16+1HH|-1.1430546045303,52.95200365149319,NG1+1LL";
+				string itinerarypoints = LocationManager.instance.MyGeoPosition.Coordinate.Longitude + "," + LocationManager.instance.MyGeoPosition.Coordinate.Latitude + "|" + center.Longitude + "," + center.Latitude;// = "-1.2487100362777,53.00143068427369,NG16+1HH|-1.1430546045303,52.95200365149319,NG1+1LL";
 				int speed = getSpeedFromString( speedSetting );
 				int useDom = 0;		// 0=xml 1=gml
 
@@ -315,7 +315,7 @@ namespace Cyclestreets
 				_request.Start();
 
 				Pushpin start = new Pushpin();
-				start.GeoCoordinate = CoordinateConverter.ConvertGeocoordinate( MainPage.MyGeoPosition.Coordinate );
+				start.GeoCoordinate = CoordinateConverter.ConvertGeocoordinate( LocationManager.instance.MyGeoPosition.Coordinate );
 				Pushpin end = new Pushpin();
 				end.GeoCoordinate = center;
 				waypoints.Add( start );
@@ -440,19 +440,45 @@ namespace Cyclestreets
 
 		private void myPosition_Click( object sender, EventArgs e )
 		{
-			if( !revGeoQ.IsBusy )
+			if( LocationManager.instance.MyGeoPosition != null )
 			{
-				revGeoQ.GeoCoordinate = CoordinateConverter.ConvertGeocoordinate( MainPage.MyGeoPosition.Coordinate );
-				revGeoQ.QueryAsync();
-
-				setCurrentPosition( revGeoQ.GeoCoordinate );
-
-				SmartDispatcher.BeginInvoke( () =>
+				if( !revGeoQ.IsBusy )
 				{
-					MyMap.SetView( revGeoQ.GeoCoordinate, 16 );
-					//MyMap.Center = CoordinateConverter.ConvertGeocoordinate(MyGeoPosition.Coordinate);
-				} );
+					revGeoQ.GeoCoordinate = CoordinateConverter.ConvertGeocoordinate( LocationManager.instance.MyGeoPosition.Coordinate );
+					revGeoQ.QueryAsync();
+
+					setCurrentPosition( revGeoQ.GeoCoordinate );
+
+					SmartDispatcher.BeginInvoke( () =>
+					{
+						MyMap.SetView( revGeoQ.GeoCoordinate, 16 );
+						//MyMap.Center = CoordinateConverter.ConvertGeocoordinate(MyGeoPosition.Coordinate);
+					} );
+				}
 			}
+			else
+			{
+				if( (bool)IsolatedStorageSettings.ApplicationSettings[ "LocationConsent" ] == false )
+				{
+					MessageBoxResult result =
+									MessageBox.Show( "You have denied CycleStreets permission to access your location. Press OK to change this or Cancel to cancel.",
+									"Location",
+									MessageBoxButton.OKCancel );
+					if( result == MessageBoxResult.OK )
+					{
+						NavigationService.Navigate( new Uri( "/Settings.xaml", UriKind.Relative ) );
+					}
+				}
+				else
+				{
+					MessageBoxResult result =
+										MessageBox.Show( "Unable to retrieve your location. Please check location services are enabled on this device.",
+										"Location",
+										MessageBoxButton.OK );
+				}
+
+			}
+
 		}
 
 		private void cursorPos_Click( object sender, EventArgs e )
