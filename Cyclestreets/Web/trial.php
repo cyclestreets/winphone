@@ -43,15 +43,18 @@ else
     $DB->query("SELECT * FROM `trials` WHERE `UID`='${udid}'");
     $myrow = $DB->fetch_row();
     $time = time();
+    $id = 0;
     if ( $myrow == null )
     {
         $insert = array('UID'=>$udid,
                         'time'=>$time);
         $DB->insert($insert, "trials");
+        $id = $DB->insert_id();
     }
     else
     {
         $time=$myrow['time'];
+        $id=$myrow['trialID'];
     }
     
     $elapsed = time() - $time;
@@ -61,6 +64,7 @@ else
         $result = false;
     }
     $data['result'] = $result;
+    $data['trialID'] = $id;
     
     // An array of serializer options   
     $serializer_options = array (   

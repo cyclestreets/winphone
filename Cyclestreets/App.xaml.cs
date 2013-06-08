@@ -212,6 +212,7 @@ namespace Cyclestreets
 
 		// Avoid double-initialization
 		private bool phoneApplicationInitialized = false;
+		public int trialID;
 
 		// Do not add any additional code to this method
 		private void InitializePhoneApplication()

@@ -129,6 +129,9 @@
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
     <Compile Include="SmartDispatcher.cs" />
+    <Compile Include="TrialExpired.xaml.cs">
+      <DependentUpon>TrialExpired.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utils\Geodesy.cs" />
     <Compile Include="Utils\Stackish.cs" />
     <Compile Include="Utils\Util.cs" />
@@ -169,6 +172,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Settings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TrialExpired.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

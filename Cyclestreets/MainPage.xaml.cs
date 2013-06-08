@@ -108,8 +108,8 @@ namespace Cyclestreets
 
 			if( ( Application.Current as App ).IsTrial )
 			{
-				if( ( (App)App.Current ).trialExpired )
-					( (App)App.Current ).showTrialExpiredMessage();
+				//if( ( (App)App.Current ).trialExpired )
+				//	( (App)App.Current ).showTrialExpiredMessage();
 
 
 				String udid = Util.GetHardwareId();
@@ -144,26 +144,33 @@ namespace Cyclestreets
 						try
 						{
 							XDocument xml = XDocument.Parse( response.Content.Trim() );
-							var session = xml.Descendants( "result" )
-								.Where( ev => (string)ev.Parent.Name.LocalName == "root" );
+							var session = xml.Descendants("root");
 							foreach( XElement s in session )
 							{
-								if( int.Parse( s.Value ) == 0 )
+								if( s.Element( "trialID" ) != null )
 								{
-									//NavigationService.Navigate( new Uri( "/TrialExpired.xaml", UriKind.Relative ) );
+									( (App)App.Current ).trialID = int.Parse( s.Element( "trialID" ).Value );
+								}
+								if( s.Element( "result" ) != null )
+								{
+									if( int.Parse( s.Element( "result" ).Value ) == 0 )
+									{
+										NavigationService.Navigate( new Uri( "/TrialExpired.xaml", UriKind.Relative ) );
 
-									( (App)App.Current ).trialExpired = true;
-									( (App)App.Current ).showTrialExpiredMessage();
-									if( NavigationService.CanGoBack )
-										NavigationService.GoBack();
+										( (App)App.Current ).trialExpired = true;
+										//( (App)App.Current ).showTrialExpiredMessage();
+										//if( NavigationService.CanGoBack )
+										//	NavigationService.GoBack();
+									}
+									else
+									{
+										MessageBoxResult result = MessageBox.Show( "Thank you for installing the CycleStreets trial. This trial lasts 24 hours and allows access to all the features of the full app. You can purchase the full version at any time from the action panel.", "Hello", MessageBoxButton.OK );
+										ApplicationBarMenuItem m = new ApplicationBarMenuItem( "buy full version" );
+										m.Click += m_Click;
+										ApplicationBar.MenuItems.Add( m );
+									}
 								}
-								else
-								{
-									MessageBoxResult result = MessageBox.Show( "Thank you for installing the CycleStreets trial. This trial lasts 24 hours and allows access to all the features of the full app. You can purchase the full version at any time from the action panel.", "Hello", MessageBoxButton.OK );
-									ApplicationBarMenuItem m = new ApplicationBarMenuItem( "buy full version" );
-									m.Click += m_Click;
-									ApplicationBar.MenuItems.Add( m );
-								}
+								
 							}
 						}
 						catch( Exception ex )
