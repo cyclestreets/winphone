@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Device.Location;
-using System.IO.IsolatedStorage;
-using System.Linq;
 using System.Net;
 using System.Windows;
 using System.Windows.Media;
@@ -144,7 +142,7 @@ namespace Cyclestreets
 						try
 						{
 							XDocument xml = XDocument.Parse( response.Content.Trim() );
-							var session = xml.Descendants("root");
+							var session = xml.Descendants( "root" );
 							foreach( XElement s in session )
 							{
 								if( s.Element( "trialID" ) != null )
@@ -170,7 +168,7 @@ namespace Cyclestreets
 										ApplicationBar.MenuItems.Add( m );
 									}
 								}
-								
+
 							}
 						}
 						catch( Exception ex )
@@ -181,7 +179,7 @@ namespace Cyclestreets
 				} );
 			}
 
-			if( IsolatedStorageSettings.ApplicationSettings.Contains( "LocationConsent" ) )
+			if( SettingManager.instance.GetBoolValue( "LocationConsent", true ) )
 			{
 				if( poiLayer == null )
 				{
@@ -206,7 +204,7 @@ namespace Cyclestreets
 				}
 				else
 				{
-					if( (bool)IsolatedStorageSettings.ApplicationSettings[ "LocationConsent" ] )
+					if( SettingManager.instance.GetBoolValue( "LocationConsent", true ) )
 					{
 						LocationManager.instance.StartTracking();
 
@@ -248,14 +246,12 @@ namespace Cyclestreets
 
 				if( result == MessageBoxResult.OK )
 				{
-					IsolatedStorageSettings.ApplicationSettings[ "LocationConsent" ] = true;
+					SettingManager.instance.SetBoolValue( "LocationConsent", true );
 				}
 				else
 				{
-					IsolatedStorageSettings.ApplicationSettings[ "LocationConsent" ] = false;
+					SettingManager.instance.SetBoolValue( "LocationConsent", false );
 				}
-
-				IsolatedStorageSettings.ApplicationSettings.Save();
 			}
 		}
 

@@ -44,6 +44,22 @@
 				</Grid>
 				<Grid>
 					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="179"/>
+						<ColumnDefinition/>
+					</Grid.ColumnDefinitions>
+					<TextBlock TextWrapping="Wrap" Margin="0" VerticalAlignment="Center" Text="Tutorial Enabled"/>
+					<toolkit:ListPicker x:Name="tutorialEnabled" Margin="0" Grid.Column="1" />
+				</Grid>
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="179"/>
+						<ColumnDefinition/>
+					</Grid.ColumnDefinitions>
+					<TextBlock TextWrapping="Wrap" Margin="0" VerticalAlignment="Center" Text="Prevent Sleep"/>
+					<toolkit:ListPicker x:Name="preventSleep" Margin="0" Grid.Column="1" />
+				</Grid>
+				<Grid>
+					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="179*"/>
 						<ColumnDefinition Width="277*"/>
 					</Grid.ColumnDefinitions>

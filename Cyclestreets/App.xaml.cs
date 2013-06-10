@@ -52,7 +52,7 @@ namespace Cyclestreets
 		public static NetworkBusy networkStatus = new NetworkBusy();
 
 		private static LicenseInformation _licenseInfo = new LicenseInformation();
-		private static bool _isTrial = true;
+		private static bool _isTrial = false;
 		public bool IsTrial
 		{
 			get
@@ -121,6 +121,10 @@ namespace Cyclestreets
 			}*/
 
 			ReverseGeocodeQueryManager mgr = new ReverseGeocodeQueryManager();
+			SettingManager smgr = new SettingManager();
+
+			if( smgr.GetBoolValue( "PreventSleep", true ) )
+				PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;
 		}
 
 		/// <summary>
@@ -131,7 +135,7 @@ namespace Cyclestreets
 			// When debugging, we want to simulate a trial mode experience. The following conditional allows us to set the _isTrial 
 			// property to simulate trial mode being on or off. 
 #if DEBUG
-			_isTrial = true;
+			_isTrial = false;
 #else
             _isTrial = _licenseInfo.IsTrial();
 #endif

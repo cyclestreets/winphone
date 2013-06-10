@@ -125,6 +125,7 @@
     </Compile>
     <Compile Include="ReverseGeocodeHandler.cs" />
     <Compile Include="ReverseGeocodeQueryManager.cs" />
+    <Compile Include="SettingManager.cs" />
     <Compile Include="Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>

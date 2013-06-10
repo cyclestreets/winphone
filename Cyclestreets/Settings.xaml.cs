@@ -1,8 +1,8 @@
-﻿using System.IO.IsolatedStorage;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
+using Microsoft.Phone.Shell;
 using Microsoft.Phone.Tasks;
 
 namespace Cyclestreets
@@ -13,41 +13,80 @@ namespace Cyclestreets
 		{
 			InitializeComponent();
 
-			string defaultRouteTypeSetting = Directions.RouteType[ 0 ];
-			if( IsolatedStorageSettings.ApplicationSettings.Contains( "defaultRouteType" ) )
-				defaultRouteTypeSetting = (string)IsolatedStorageSettings.ApplicationSettings[ "defaultRouteType" ];
-
+			string defaultRouteTypeSetting = SettingManager.instance.GetStringValue( "defaultRouteType", Directions.RouteType[ 0 ] );
 			defaultRouteType.ItemsSource = Directions.RouteType;
 			defaultRouteType.SelectedItem = defaultRouteTypeSetting;
 
-			string cycleSpeedSetting = Directions.CycleSpeed[ 0 ];
-			if( IsolatedStorageSettings.ApplicationSettings.Contains( "cycleSpeed" ) )
-				cycleSpeedSetting = (string)IsolatedStorageSettings.ApplicationSettings[ "cycleSpeed" ];
-
+			string cycleSpeedSetting = SettingManager.instance.GetStringValue( "cycleSpeed", Directions.CycleSpeed[ 0 ] );
 			cycleSpeed.ItemsSource = Directions.CycleSpeed;
 			cycleSpeed.SelectedItem = cycleSpeedSetting;
 
 			string locationEnabledSetting = Directions.EnabledDisabled[ 0 ];
-			if( IsolatedStorageSettings.ApplicationSettings.Contains( "LocationConsent" ) )
-			{
-				if( (bool)IsolatedStorageSettings.ApplicationSettings[ "LocationConsent" ] == false )
-					locationEnabledSetting = Directions.EnabledDisabled[ 1 ];
-			}
-
+			if( !SettingManager.instance.GetBoolValue( "LocationConsent", true ) )
+				locationEnabledSetting = Directions.EnabledDisabled[ 1 ];
 
 			locationEnabled.ItemsSource = Directions.EnabledDisabled;
 			locationEnabled.SelectedItem = locationEnabledSetting;
 			locationEnabled.SelectionChanged += locationEnabled_SelectionChanged;
+
+			string tutorialEnabledSetting = Directions.EnabledDisabled[ 0 ];
+			if( SettingManager.instance.GetBoolValue( "tutorialEnabled", true ) == false )
+				tutorialEnabledSetting = Directions.EnabledDisabled[ 1 ];
+
+			tutorialEnabled.ItemsSource = Directions.EnabledDisabled;
+			tutorialEnabled.SelectedItem = tutorialEnabledSetting;
+			tutorialEnabled.SelectionChanged += tutorialEnabled_SelectionChanged;
+
+			string preventSleepSetting = Directions.EnabledDisabled[ 0 ];
+			if( SettingManager.instance.GetBoolValue( "PreventSleep", true ) == false )
+				preventSleepSetting = Directions.EnabledDisabled[ 1 ];
+
+			preventSleep.ItemsSource = Directions.EnabledDisabled;
+			preventSleep.SelectedItem = preventSleepSetting;
+			preventSleep.SelectionChanged += preventSleep_SelectionChanged;
+		}
+
+		private void preventSleep_SelectionChanged( object sender, SelectionChangedEventArgs e )
+		{
+			if( e.AddedItems.Count > 0 )
+			{
+				bool enabled = e.AddedItems[ 0 ].Equals( "Enabled" ) ? true : false;
+				SettingManager.instance.SetBoolValue( "PreventSleep", enabled );
+				if ( enabled )
+					PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;
+				else
+					PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Enabled;
+			}
+		}
+
+		private void tutorialEnabled_SelectionChanged( object sender, SelectionChangedEventArgs e )
+		{
+			if( e.AddedItems.Count > 0 )
+			{
+				bool oldValue = SettingManager.instance.GetBoolValue( "tutorialEnabled", false );
+				bool enabled = e.AddedItems[ 0 ].Equals( "Enabled" ) ? true : false;
+				SettingManager.instance.SetBoolValue( "tutorialEnabled", enabled );
+
+				if( enabled && !oldValue )
+				{
+					SettingManager.instance.SetBoolValue( "shownTutorial", false );
+					SettingManager.instance.SetBoolValue( "shownTutorialPin", false );
+					SettingManager.instance.SetBoolValue( "shownTutorialRouteType", false );
+				}
+				else if( !enabled && oldValue )
+				{
+					SettingManager.instance.SetBoolValue( "shownTutorial", true );
+					SettingManager.instance.SetBoolValue( "shownTutorialPin", true );
+					SettingManager.instance.SetBoolValue( "shownTutorialRouteType", true );
+				}
+			}
 		}
 
 		private void defaultRouteType_SelectionChanged( object sender, SelectionChangedEventArgs e )
 		{
 			if( e.AddedItems.Count > 0 )
 			{
-				if( IsolatedStorageSettings.ApplicationSettings.Contains( "defaultRouteType" ) )
-					IsolatedStorageSettings.ApplicationSettings[ "defaultRouteType" ] = e.AddedItems[ 0 ];
-				else
-					IsolatedStorageSettings.ApplicationSettings.Add( "defaultRouteType", e.AddedItems[ 0 ] );
+				SettingManager.instance.SetStringValue( "defaultRouteType", (string)e.AddedItems[ 0 ] );
 			}
 		}
 
@@ -55,10 +94,7 @@ namespace Cyclestreets
 		{
 			if( e.AddedItems.Count > 0 )
 			{
-				if( IsolatedStorageSettings.ApplicationSettings.Contains( "cycleSpeed" ) )
-					IsolatedStorageSettings.ApplicationSettings[ "cycleSpeed" ] = e.AddedItems[ 0 ];
-				else
-					IsolatedStorageSettings.ApplicationSettings.Add( "cycleSpeed", e.AddedItems[ 0 ] );
+				SettingManager.instance.SetStringValue( "cycleSpeed", (string)e.AddedItems[ 0 ] );
 			}
 		}
 
@@ -67,10 +103,7 @@ namespace Cyclestreets
 			if( e.AddedItems.Count > 0 )
 			{
 				bool enabled = e.AddedItems[ 0 ].Equals( "Enabled" ) ? true : false;
-				if( IsolatedStorageSettings.ApplicationSettings.Contains( "LocationConsent" ) )
-					IsolatedStorageSettings.ApplicationSettings[ "LocationConsent" ] = enabled;
-				else
-					IsolatedStorageSettings.ApplicationSettings.Add( "LocationConsent", enabled );
+				SettingManager.instance.SetBoolValue( "LocationConsent", enabled );
 
 				if( enabled )
 					LocationManager.instance.StartTracking();
@@ -83,17 +116,11 @@ namespace Cyclestreets
 		{
 			string plan = (string)defaultRouteType.SelectedItem;
 
-			if( IsolatedStorageSettings.ApplicationSettings.Contains( "defaultRouteType" ) )
-				IsolatedStorageSettings.ApplicationSettings[ "defaultRouteType" ] = plan;
-			else
-				IsolatedStorageSettings.ApplicationSettings.Add( "defaultRouteType", plan );
+			SettingManager.instance.SetStringValue( "defaultRouteType", plan );
 
 			plan = (string)cycleSpeed.SelectedItem;
 
-			if( IsolatedStorageSettings.ApplicationSettings.Contains( "cycleSpeed" ) )
-				IsolatedStorageSettings.ApplicationSettings[ "cycleSpeed" ] = plan;
-			else
-				IsolatedStorageSettings.ApplicationSettings.Add( "cycleSpeed", plan );
+			SettingManager.instance.SetStringValue( "cycleSpeed", plan );
 
 			NavigationService.GoBack();
 		}

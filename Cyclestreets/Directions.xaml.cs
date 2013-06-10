@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Xml.Linq;
@@ -215,22 +216,15 @@ namespace Cyclestreets
 
 			progress.DataContext = App.networkStatus;
 
-			bool shownTutorial = false;
-			if( IsolatedStorageSettings.ApplicationSettings.Contains( "shownTutorial" ) )
-				shownTutorial = (bool)IsolatedStorageSettings.ApplicationSettings["shownTutorial"];
-
-			if( !shownTutorial )
-				routeTutorial1.Visibility = Visibility.Visible;
+			
 
 			// hack. See here http://stackoverflow.com/questions/5334574/applicationbariconbutton-is-null/5334703#5334703
-			myPosition = ApplicationBar.Buttons[0] as Microsoft.Phone.Shell.ApplicationBarIconButton;
-			cursorPos = ApplicationBar.Buttons[1] as Microsoft.Phone.Shell.ApplicationBarIconButton;
-			confirmWaypoint = ApplicationBar.Buttons[2] as Microsoft.Phone.Shell.ApplicationBarIconButton;
-			findRoute = ApplicationBar.Buttons[3] as Microsoft.Phone.Shell.ApplicationBarIconButton;
+			myPosition = ApplicationBar.Buttons[ 0 ] as Microsoft.Phone.Shell.ApplicationBarIconButton;
+			cursorPos = ApplicationBar.Buttons[ 1 ] as Microsoft.Phone.Shell.ApplicationBarIconButton;
+			confirmWaypoint = ApplicationBar.Buttons[ 2 ] as Microsoft.Phone.Shell.ApplicationBarIconButton;
+			findRoute = ApplicationBar.Buttons[ 3 ] as Microsoft.Phone.Shell.ApplicationBarIconButton;
 
-			string plan = "balanced route";
-			if( IsolatedStorageSettings.ApplicationSettings.Contains( "defaultRouteType" ) )
-				plan = (string)IsolatedStorageSettings.ApplicationSettings["defaultRouteType"];
+			string plan = SettingManager.instance.GetStringValue( "defaultRouteType", "balanced route" );
 
 			routeTypePicker.ItemsSource = RouteType;
 			routeTypePicker.SelectedItem = plan;
@@ -246,34 +240,42 @@ namespace Cyclestreets
 
 			startPoint.Populating += ( s, args ) =>
 			{
-				App.networkStatus.networkIsBusy = true;
-
 				args.Cancel = true;
-				WebClient wc = new WebClient();
-				string prefix = HttpUtility.UrlEncode( args.Parameter );
+				StartPlaceSearch( args.Parameter, s );
+			};
 
-				string myLocation = "";
-				LocationRectangle rect = GetMapBounds();
-				//myLocation = "&w=" + rect.West + "&s=" + rect.South + "&e=" + rect.East + "&n=" + rect.North + "&zoom=" + MyMap.ZoomLevel;
+			var sgs = ExtendedVisualStateManager.GetVisualStateGroups( LayoutRoot );
+			var sg = sgs[ 0 ] as VisualStateGroup;
+			ExtendedVisualStateManager.GoToElementState( LayoutRoot, "RoutePlanner", false );
+		}
+
+		private void StartPlaceSearch(string textEntry, object userObject)
+		{
+			App.networkStatus.networkIsBusy = true;
+
+			
+			WebClient wc = new WebClient();
+			string prefix = HttpUtility.UrlEncode( textEntry );
+
+			string myLocation = "";
+			LocationRectangle rect = GetMapBounds();
+			//myLocation = "&w=" + rect.West + "&s=" + rect.South + "&e=" + rect.East + "&n=" + rect.North + "&zoom=" + MyMap.ZoomLevel;
+			if( MyMap.ZoomLevel < 12f && LocationManager.instance.MyGeoPosition != null )
+				myLocation = LocationManager.instance.MyGeoPosition.Coordinate.Latitude + "," + LocationManager.instance.MyGeoPosition.Coordinate.Longitude;
+			else
 				myLocation = MyMap.Center.Latitude + "," + MyMap.Center.Longitude;
-				myLocation = HttpUtility.UrlEncode( myLocation );
+			myLocation = HttpUtility.UrlEncode( myLocation );
 
-				//Uri service = new Uri( "http://cambridge.cyclestreets.net/api/geocoder.xml?key=" + MainPage.apiKey + myLocation + "&street=" + prefix );
+			//Uri service = new Uri( "http://cambridge.cyclestreets.net/api/geocoder.xml?key=" + MainPage.apiKey + myLocation + "&street=" + prefix );
 #if DEBUG
-				Uri service = new Uri( "http://demo.places.nlp.nokia.com/places/v1/suggest?at=" + myLocation + "&q=" + prefix + "&app_id=" + App.hereAppID + "&app_code=" + App.hereAppToken + "&accept=application/json" );
+			Uri service = new Uri( "http://demo.places.nlp.nokia.com/places/v1/suggest?at=" + myLocation + "&q=" + prefix + "&app_id=" + App.hereAppID + "&app_code=" + App.hereAppToken + "&accept=application/json" );
 #else
 				Uri service = new Uri( "http://places.nlp.nokia.com/places/v1/suggest?at=" + myLocation + "&q=" + prefix + "&app_id=" + App.hereAppID + "&app_code=" + App.hereAppToken + "&accept=application/json" );
 #endif
 
-				wc.DownloadStringCompleted += DownloadStringCompleted;
-				wc.DownloadStringAsync( service, s );
-			};
-
-			var sgs = ExtendedVisualStateManager.GetVisualStateGroups( LayoutRoot );
-			var sg = sgs[0] as VisualStateGroup;
-			ExtendedVisualStateManager.GoToElementState( LayoutRoot, "RoutePlanner", false );
+			wc.DownloadStringCompleted += DownloadStringCompleted;
+			wc.DownloadStringAsync( service, userObject );
 		}
-
 		private int getSpeedFromString( string speedVal )
 		{
 			switch( speedVal )
@@ -292,20 +294,57 @@ namespace Cyclestreets
 		{
 			base.OnNavigatedTo( e );
 
+			if( !SettingManager.instance.GetBoolValue( "tutorialEnabled", true ) )
+			{
+				routeTutorial1.Visibility = Visibility.Collapsed;
+				routeTutorial2.Visibility = Visibility.Collapsed;
+				routeTutorial3.Visibility = Visibility.Collapsed;
+				routeTutorial4.Visibility = Visibility.Collapsed;
+				routeTutorial5.Visibility = Visibility.Collapsed;
+			}
+			routeTutorial1.Visibility = Visibility.Collapsed;
+
+			bool shownTutorial = SettingManager.instance.GetBoolValue( "shownTutorial", false );
+
+			if( !shownTutorial )
+			{
+				bool shownTutorialQuestion = SettingManager.instance.GetBoolValue( "shownTutorialQuestion", false );
+
+				if( !shownTutorialQuestion )
+				{
+					MessageBoxResult result = MessageBox.Show( "Would you like us to guide you through how to use the app with a tutorial?", "Tutorial", MessageBoxButton.OKCancel );
+					if( result == MessageBoxResult.Cancel )
+					{
+						shownTutorial = true;
+						SettingManager.instance.SetBoolValue( "shownTutorial", true );
+						SettingManager.instance.SetBoolValue( "tutorialEnabled", false );
+					}
+					else
+					{
+						routeTutorial1.Visibility = Visibility.Visible;
+						SettingManager.instance.SetBoolValue( "tutorialEnabled", true );
+					}
+
+					SettingManager.instance.SetBoolValue( "shownTutorialQuestion", true );
+				}
+				else
+				{
+					if( SettingManager.instance.GetBoolValue( "tutorialEnabled", true ) )
+						routeTutorial1.Visibility = Visibility.Visible;
+
+				}
+			}
+
 			if( NavigationContext.QueryString.ContainsKey( "longitude" ) )
 			{
 				GeoCoordinate center = new GeoCoordinate();
-				center.Longitude = float.Parse( NavigationContext.QueryString["longitude"] );
-				center.Latitude = float.Parse( NavigationContext.QueryString["latitude"] );
+				center.Longitude = float.Parse( NavigationContext.QueryString[ "longitude" ] );
+				center.Latitude = float.Parse( NavigationContext.QueryString[ "latitude" ] );
 
-				string plan = "balanced route";
-				if( IsolatedStorageSettings.ApplicationSettings.Contains( "defaultRouteType" ) )
-					plan = (string)IsolatedStorageSettings.ApplicationSettings["defaultRouteType"];
+				string plan = SettingManager.instance.GetStringValue( "defaultRouteType", "balanced route" );
 				plan = plan.Replace( " route", "" );
 
-				string speedSetting = "12mph";
-				if( IsolatedStorageSettings.ApplicationSettings.Contains( "cycleSpeed" ) )
-					speedSetting = (string)IsolatedStorageSettings.ApplicationSettings["cycleSpeed"];
+				string speedSetting = SettingManager.instance.GetStringValue( "cycleSpeed", "12mph" );
 
 				string itinerarypoints = LocationManager.instance.MyGeoPosition.Coordinate.Longitude + "," + LocationManager.instance.MyGeoPosition.Coordinate.Latitude + "|" + center.Longitude + "," + center.Latitude;// = "-1.2487100362777,53.00143068427369,NG16+1HH|-1.1430546045303,52.95200365149319,NG1+1LL";
 				int speed = getSpeedFromString( speedSetting );
@@ -332,20 +371,48 @@ namespace Cyclestreets
 			{
 				Console.WriteLine( e.Result );
 				JObject o = JObject.Parse( e.Result );
-				JArray suggestions = (JArray)o["suggestions"];
+				JArray suggestions = (JArray)o[ "suggestions" ];
 				List<string> names = new List<string>();
 				foreach( string s in suggestions )
 				{
 					names.Add( s );
 				}
 
-				if( suggestions.Count > 0 )
+				if( names.Count == 1 )
+				{
+					acb.Text = names[ 0 ];
+					acb.PopulateComplete();
+				}
+				else if( names.Count > 0 )
 				{
 					acb.ItemsSource = suggestions;
 					acb.PopulateComplete();
 				}
+				App.networkStatus.networkIsBusy = false;
 			}
-			App.networkStatus.networkIsBusy = false;
+			else
+			{
+				App.networkStatus.networkIsBusy = true;
+
+
+				/*WebClient wc = new WebClient();
+				string prefix = HttpUtility.UrlEncode( e. );
+
+				string myLocation = "";
+				LocationRectangle rect = GetMapBounds();
+				//myLocation = "&w=" + rect.West + "&s=" + rect.South + "&e=" + rect.East + "&n=" + rect.North + "&zoom=" + MyMap.ZoomLevel;
+				if( MyMap.ZoomLevel < 12f && LocationManager.instance.MyGeoPosition != null )
+					myLocation = LocationManager.instance.MyGeoPosition.Coordinate.Latitude + "," + LocationManager.instance.MyGeoPosition.Coordinate.Longitude;
+				else
+					myLocation = MyMap.Center.Latitude + "," + MyMap.Center.Longitude;
+				myLocation = HttpUtility.UrlEncode( myLocation );
+
+				Uri service = new Uri( "http://cambridge.cyclestreets.net/api/geocoder.xml?key=" + App.apiKey + myLocation + "&street=" + prefix );
+
+				wc.DownloadStringCompleted += DownloadStringCompleted;
+				wc.DownloadStringAsync( service, null );*/
+			}
+			
 		}
 
 		private LocationRectangle GetMapBounds()
@@ -358,7 +425,7 @@ namespace Cyclestreets
 
 		private void revGeoQ_QueryCompleted( object sender, QueryCompletedEventArgs<IList<MapLocation>> e )
 		{
-			MapLocation loc = e.Result[0];
+			MapLocation loc = e.Result[ 0 ];
 			startPoint.Text = loc.Information.Address.Street + ", " + loc.Information.Address.PostalCode;
 		}
 
@@ -382,7 +449,7 @@ namespace Cyclestreets
 		{
 			if( e.Result.Count > 0 )
 			{
-				GeoCoordinate g = e.Result[0].GeoCoordinate;
+				GeoCoordinate g = e.Result[ 0 ].GeoCoordinate;
 				setCurrentPosition( g );
 
 				SmartDispatcher.BeginInvoke( () =>
@@ -420,11 +487,11 @@ namespace Cyclestreets
 			{
 				Console.WriteLine( e.Result );
 				JObject o = JObject.Parse( e.Result );
-				JArray suggestions = (JArray)o["results"]["items"];
+				JArray suggestions = (JArray)o[ "results" ][ "items" ];
 				if( suggestions.Count > 0 )
 				{
-					JArray pos = (JArray)suggestions[0]["position"];
-					GeoCoordinate g = new GeoCoordinate( (double)pos[0], (double)pos[1] );
+					JArray pos = (JArray)suggestions[ 0 ][ "position" ];
+					GeoCoordinate g = new GeoCoordinate( (double)pos[ 0 ], (double)pos[ 1 ] );
 					setCurrentPosition( g );
 
 					SmartDispatcher.BeginInvoke( () =>
@@ -458,7 +525,7 @@ namespace Cyclestreets
 			}
 			else
 			{
-				if( (bool)IsolatedStorageSettings.ApplicationSettings[ "LocationConsent" ] == false )
+				if( SettingManager.instance.GetBoolValue( "LocationConsent", false ) == false )
 				{
 					MessageBoxResult result =
 									MessageBox.Show( "You have denied CycleStreets permission to access your location. Press OK to change this or Cancel to cancel.",
@@ -511,15 +578,15 @@ namespace Cyclestreets
 			if( waypoints.Count > 1 )
 			{
 				Pushpin last = waypoints.Peek();
-				last.Style = Resources["Intermediate"] as Style;
+				last.Style = Resources[ "Intermediate" ] as Style;
 				last.Content = "" + ( waypoints.Count - 1 );
 			}
 
 			Pushpin pp = new Pushpin();
 			if( waypoints.Count == 0 )
-				pp.Style = Resources["Start"] as Style;
+				pp.Style = Resources[ "Start" ] as Style;
 			else
-				pp.Style = Resources["Finish"] as Style;
+				pp.Style = Resources[ "Finish" ] as Style;
 
 			pp.Tap += pinTapped;
 
@@ -532,9 +599,7 @@ namespace Cyclestreets
 
 			addWaypoint( pp );
 
-			bool shownTutorial = false;
-			if( IsolatedStorageSettings.ApplicationSettings.Contains( "shownTutorialPin" ) )
-				shownTutorial = (bool)IsolatedStorageSettings.ApplicationSettings["shownTutorialPin"];
+			bool shownTutorial = SettingManager.instance.GetBoolValue( "shownTutorialPin", false);
 			if( !shownTutorial )
 				routeTutorialPin.Visibility = Visibility.Visible;
 
@@ -550,20 +615,20 @@ namespace Cyclestreets
 			for( int i = 0; i < waypoints.Count; i++ )
 			{
 				MapOverlay overlay = new MapOverlay();
-				overlay.Content = waypoints[i];
-				overlay.GeoCoordinate = waypoints[i].GeoCoordinate;
+				overlay.Content = waypoints[ i ];
+				overlay.GeoCoordinate = waypoints[ i ].GeoCoordinate;
 				overlay.PositionOrigin = new Point( 0.3, 1.0 );
 				wayPointLayer.Add( overlay );
 
 				// Set pin styles
-				Pushpin pp = waypoints[i];
+				Pushpin pp = waypoints[ i ];
 				if( i == 0 )
-					pp.Style = Resources["Start"] as Style;
+					pp.Style = Resources[ "Start" ] as Style;
 				else if( i == waypoints.Count - 1 )
-					pp.Style = Resources["Finish"] as Style;
+					pp.Style = Resources[ "Finish" ] as Style;
 				else
 				{
-					pp.Style = Resources["Intermediate"] as Style;
+					pp.Style = Resources[ "Intermediate" ] as Style;
 					pp.Content = "" + i;
 				}
 			}
@@ -602,15 +667,11 @@ namespace Cyclestreets
 
 		private void findRoute_Click( object sender, EventArgs e )
 		{
-			string plan = "balanced route";
-			if( IsolatedStorageSettings.ApplicationSettings.Contains( "defaultRouteType" ) )
-				plan = (string)IsolatedStorageSettings.ApplicationSettings["defaultRouteType"];
+			string plan = SettingManager.instance.GetStringValue("defaultRouteType","balanced route");
 			plan = plan.Replace( " route", "" );
 
-			string speedSetting = "12mph";
-			if( IsolatedStorageSettings.ApplicationSettings.Contains( "cycleSpeed" ) )
-				speedSetting = (string)IsolatedStorageSettings.ApplicationSettings["cycleSpeed"];
-
+			string speedSetting = SettingManager.instance.GetStringValue( "cycleSpeed", "12mph" );
+			
 			string itinerarypoints = "";// = "-1.2487100362777,53.00143068427369,NG16+1HH|-1.1430546045303,52.95200365149319,NG1+1LL";
 			int speed = getSpeedFromString( speedSetting );
 			int useDom = 0;		// 0=xml 1=gml
@@ -721,10 +782,10 @@ namespace Cyclestreets
 					List<GeoCoordinate> coords = new List<GeoCoordinate>();
 					for( int i = 0; i < points.Length; i++ )
 					{
-						string[] xy = points[i].Split( ',' );
+						string[] xy = points[ i ].Split( ',' );
 
-						double longitude = double.Parse( xy[0] );
-						double latitude = double.Parse( xy[1] );
+						double longitude = double.Parse( xy[ 0 ] );
+						double latitude = double.Parse( xy[ 1 ] );
 						coords.Add( new GeoCoordinate( latitude, longitude ) );
 
 						if( max.Latitude > latitude )
@@ -740,8 +801,8 @@ namespace Cyclestreets
 					geometryColor.Add( ConvertHexStringToColour( p.Attribute( "color" ).Value ) );
 
 					RouteSegment s = new RouteSegment();
-					s.location = coords[0];
-					s.Bearing = Geodesy.Bearing( coords[0].Latitude, coords[0].Longitude, coords[coords.Count - 1].Latitude, coords[coords.Count - 1].Longitude );
+					s.location = coords[ 0 ];
+					s.Bearing = Geodesy.Bearing( coords[ 0 ].Latitude, coords[ 0 ].Longitude, coords[ coords.Count - 1 ].Latitude, coords[ coords.Count - 1 ].Longitude );
 					route.distance += (int)float.Parse( p.Attribute( "distance" ).Value );
 					s.Distance = "" + route.distance;// p.Attribute( "distance" ).Value;
 					s.DistanceMetres = (int)float.Parse( p.Attribute( "distance" ).Value );
@@ -792,13 +853,13 @@ namespace Cyclestreets
 				int count = geometryCoords.Count;
 				for( int i = 0; i < count; i++ )
 				{
-					List<GeoCoordinate> coords = geometryCoords[i];
-					DrawMapMarker( coords.ToArray(), geometryColor[i] );
+					List<GeoCoordinate> coords = geometryCoords[ i ];
+					DrawMapMarker( coords.ToArray(), geometryColor[ i ] );
 				}
 
 				//NavigationService.Navigate( new Uri( "/DirectionsResults.xaml", UriKind.Relative ) );
 				var sgs = ExtendedVisualStateManager.GetVisualStateGroups( LayoutRoot );
-				var sg = sgs[0] as VisualStateGroup;
+				var sg = sgs[ 0 ] as VisualStateGroup;
 				//ExtendedVisualStateManager.GoToElementState( LayoutRoot, "RouteFoundState", true );
 				VisualStateManager.GoToState( this, "RouteFoundState", true );
 
@@ -809,9 +870,7 @@ namespace Cyclestreets
 				float f = (float)route.distance * 0.000621371192f;
 				findLabel1.Text = f.ToString( "0.00" ) + "m\n" + ( route.timeInSeconds / 60 ) + " minutes";
 
-				bool shownTutorial = false;
-				if( IsolatedStorageSettings.ApplicationSettings.Contains( "shownTutorialRouteType" ) )
-					shownTutorial = (bool)IsolatedStorageSettings.ApplicationSettings["shownTutorialRouteType"];
+				bool shownTutorial = SettingManager.instance.GetBoolValue("shownTutorialRouteType",false);
 				if( !shownTutorial )
 					routeTutorialRouteType.Visibility = Visibility.Visible;
 			} );
@@ -843,7 +902,7 @@ namespace Cyclestreets
 			for( int i = 0; i < coordinate.Length; i++ )
 			{
 				//Point p = MyMap.ConvertGeoCoordinateToViewportPoint( coordinate[i] );
-				polygon.Path.Add( coordinate[i] );
+				polygon.Path.Add( coordinate[ i ] );
 			}
 
 			MyMap.MapElements.Add( polygon );
@@ -917,7 +976,7 @@ namespace Cyclestreets
 			{
 				arrowLeft.Opacity = 100;
 
-				MyMap.SetView( route.segments[currentStep].location, 20, route.segments[currentStep].Bearing, 75 );
+				MyMap.SetView( route.segments[ currentStep ].location, 20, route.segments[ currentStep ].Bearing, 75 );
 			}
 			if( currentStep >= route.segments.Count )
 				arrowRight.Opacity = 50;
@@ -945,9 +1004,9 @@ namespace Cyclestreets
 			else
 			{
 				arrowRight.Opacity = 100;
-				MyMap.SetView( route.segments[currentStep].location, 20, route.segments[currentStep].Bearing, 75 );
+				MyMap.SetView( route.segments[ currentStep ].location, 20, route.segments[ currentStep ].Bearing, 75 );
 
-				findLabel1.Text = route.segments[currentStep].Turn + " at " + route.segments[currentStep].Name + "\n Continue for " + route.segments[currentStep].DistanceMetres + "m";
+				findLabel1.Text = route.segments[ currentStep ].Turn + " at " + route.segments[ currentStep ].Name + "\n Continue for " + route.segments[ currentStep ].DistanceMetres + "m";
 			}
 		}
 
@@ -978,19 +1037,13 @@ namespace Cyclestreets
 		private void routeTutorial5_Tap( object sender, System.Windows.Input.GestureEventArgs e )
 		{
 			routeTutorial5.Visibility = Visibility.Collapsed;
-			if( IsolatedStorageSettings.ApplicationSettings.Contains( "shownTutorial" ) )
-				IsolatedStorageSettings.ApplicationSettings["shownTutorial"] = true;
-			else
-				IsolatedStorageSettings.ApplicationSettings.Add( "shownTutorial", true );
+			SettingManager.instance.SetBoolValue( "shownTutorial", true );
 		}
 
 		private void routeTutorialPin_Tap( object sender, System.Windows.Input.GestureEventArgs e )
 		{
 			routeTutorialPin.Visibility = Visibility.Collapsed;
-			if( IsolatedStorageSettings.ApplicationSettings.Contains( "shownTutorialPin" ) )
-				IsolatedStorageSettings.ApplicationSettings["shownTutorialPin"] = true;
-			else
-				IsolatedStorageSettings.ApplicationSettings.Add( "shownTutorialPin", true );
+			SettingManager.instance.SetBoolValue( "shownTutorialPin", true );
 		}
 
 		private void routeTutorialRouteType_Tap( object sender, System.Windows.Input.GestureEventArgs e )
@@ -1002,10 +1055,7 @@ namespace Cyclestreets
 		private void routeTutorialRouteInfo_Tap( object sender, System.Windows.Input.GestureEventArgs e )
 		{
 			routeTutorialRouteInfo.Visibility = Visibility.Collapsed;
-			if( IsolatedStorageSettings.ApplicationSettings.Contains( "shownTutorialRouteType" ) )
-				IsolatedStorageSettings.ApplicationSettings["shownTutorialRouteType"] = true;
-			else
-				IsolatedStorageSettings.ApplicationSettings.Add( "shownTutorialRouteType", true );
+			SettingManager.instance.SetBoolValue( "shownTutorialRouteType", true );
 		}
 
 		private void settings_Click( object sender, System.EventArgs e )
@@ -1024,6 +1074,27 @@ namespace Cyclestreets
 		{
 			Microsoft.Phone.Maps.MapsSettings.ApplicationContext.ApplicationId = "823e41bf-889c-4102-863f-11cfee11f652";
 			Microsoft.Phone.Maps.MapsSettings.ApplicationContext.AuthenticationToken = "xrQJghWalYn52fTfnUhWPQ";
+		}
+
+		private void startPoint_KeyUp( object sender, System.Windows.Input.KeyEventArgs e )
+		{
+			if( e.Key == Key.Enter )
+			{
+				AutoCompleteBox box = sender as AutoCompleteBox;
+				string text = box.Text;
+				if( text.Length == 6 || text.Length == 7 )
+				{
+					if( char.IsLetter( text[ 0 ] ) && char.IsLetter( text[ text.Length - 1 ] ) && char.IsLetter( text[ text.Length - 2 ] )
+						 && char.IsNumber( text[ text.Length - 3 ] ) && char.IsNumber( text[ text.Length - 4 ] ) )
+					{
+						// This is a postcode
+						string newPostcodeEnd = text.Substring( text.Length - 3, 3 );
+						string newPostcodeStart = text.Substring( 0, text.Length - 3 );
+						box.Text = newPostcodeStart + " " + newPostcodeEnd;
+					}
+				}
+				StartPlaceSearch( box.Text, box );
+			}
 		}
 	}
 }
