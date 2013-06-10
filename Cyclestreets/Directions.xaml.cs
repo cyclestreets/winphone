@@ -378,12 +378,7 @@ namespace Cyclestreets
 					names.Add( s );
 				}
 
-				if( names.Count == 1 )
-				{
-					acb.Text = names[ 0 ];
-					acb.PopulateComplete();
-				}
-				else if( names.Count > 0 )
+				if( names.Count > 0 )
 				{
 					acb.ItemsSource = suggestions;
 					acb.PopulateComplete();
