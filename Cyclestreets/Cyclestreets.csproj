@@ -265,6 +265,9 @@
     <Reference Include="FlurryWP8SDK">
       <HintPath>Resources\FlurryWP8SDK.dll</HintPath>
     </Reference>
+    <Reference Include="MarkedUp">
+      <HintPath>packages\MarkedUp-wp8beta.1.1.2-beta\lib\WindowsPhone8\MarkedUp.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Expression.Drawing" />
     <Reference Include="Microsoft.Expression.Interactions" />
     <Reference Include="Microsoft.Phone.Controls, Version=8.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e, processorArchitecture=MSIL" />

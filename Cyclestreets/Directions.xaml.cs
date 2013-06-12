@@ -22,6 +22,17 @@ using Newtonsoft.Json.Linq;
 
 namespace Cyclestreets
 {
+	public class CSResult
+	{
+		public string resultName;
+		public GeoCoordinate coord;
+
+		public override string ToString()
+		{
+			return resultName;
+		}
+	}
+
 	public class RouteSegment
 	{
 		private int _time;
@@ -373,41 +384,81 @@ namespace Cyclestreets
 				JObject o = JObject.Parse( e.Result );
 				JArray suggestions = (JArray)o[ "suggestions" ];
 				List<string> names = new List<string>();
-				foreach( string s in suggestions )
+				if( false/*suggestions.Count > 0*/ )
 				{
-					names.Add( s );
-				}
+					foreach( string s in suggestions )
+					{
+						names.Add( s );
+					}
 
-				if( names.Count > 0 )
+					if( names.Count > 0 )
+					{
+						acb.ItemsSource = names;
+						acb.PopulateComplete();
+					}
+				}
+				else
 				{
-					acb.ItemsSource = suggestions;
-					acb.PopulateComplete();
+					WebClient wc = new WebClient();
+					string prefix = HttpUtility.UrlEncode( startPoint.Text );
+
+					string myLocation = "";
+					LocationRectangle rect = GetMapBounds();
+					myLocation = "&w=" + rect.West + "&s=" + rect.South + "&e=" + rect.East + "&n=" + rect.North + "&zoom=" + MyMap.ZoomLevel;
+					//myLocation = HttpUtility.UrlEncode( myLocation );
+
+					Uri service = new Uri( "http://cambridge.cyclestreets.net/api/geocoder.json?key=" + App.apiKey + myLocation + "&street=" + prefix );
+
+					wc.DownloadStringCompleted += CSDownloadStringCompleted;
+					wc.DownloadStringAsync( service, e.UserState );
 				}
 				App.networkStatus.networkIsBusy = false;
-			}
-			else
+			}			
+		}
+
+		private void CSDownloadStringCompleted( object sender, DownloadStringCompletedEventArgs e )
+		{
+			AutoCompleteBox acb = e.UserState as AutoCompleteBox;
+			if( acb != null && e.Error == null && !e.Cancelled && !string.IsNullOrEmpty( e.Result ) )
 			{
-				App.networkStatus.networkIsBusy = true;
+				Console.WriteLine( e.Result );
+				JObject o = JObject.Parse( e.Result );
+				JArray suggestions = null;
 
-
-				/*WebClient wc = new WebClient();
-				string prefix = HttpUtility.UrlEncode( e. );
-
-				string myLocation = "";
-				LocationRectangle rect = GetMapBounds();
-				//myLocation = "&w=" + rect.West + "&s=" + rect.South + "&e=" + rect.East + "&n=" + rect.North + "&zoom=" + MyMap.ZoomLevel;
-				if( MyMap.ZoomLevel < 12f && LocationManager.instance.MyGeoPosition != null )
-					myLocation = LocationManager.instance.MyGeoPosition.Coordinate.Latitude + "," + LocationManager.instance.MyGeoPosition.Coordinate.Longitude;
+				if( o[ "results" ] != null && o[ "results" ][ "result" ] != null )
+				{
+					if( o[ "results" ][ "result" ] is JArray )
+						suggestions = (JArray)o[ "results" ][ "result" ];
+					else
+					{
+						suggestions = new JArray();
+						suggestions.Add( (JObject)o[ "results" ][ "result" ] );
+					}
+					if( suggestions.Count > 0 )
+					{
+						List<CSResult> names = new List<CSResult>();
+						foreach( JObject s in suggestions )
+						{
+							CSResult res = new CSResult();
+							res.coord = new GeoCoordinate( double.Parse( s[ "latitude" ].ToString() ), double.Parse( s[ "longitude" ].ToString() ) );
+							res.resultName = s[ "name" ].ToString();
+							if( !string.IsNullOrWhiteSpace( s[ "near" ].ToString() ) )
+								res.resultName += ", " + s[ "near" ].ToString();
+							names.Add( res );
+						}
+						acb.ItemsSource = names;
+					}
+				}
+				
 				else
-					myLocation = MyMap.Center.Latitude + "," + MyMap.Center.Longitude;
-				myLocation = HttpUtility.UrlEncode( myLocation );
+				{
+					List<string> names = new List<string>();
+					names.Add( "No suggestions" );
 
-				Uri service = new Uri( "http://cambridge.cyclestreets.net/api/geocoder.xml?key=" + App.apiKey + myLocation + "&street=" + prefix );
-
-				wc.DownloadStringCompleted += DownloadStringCompleted;
-				wc.DownloadStringAsync( service, null );*/
+					acb.ItemsSource = names;
+				}
+				acb.PopulateComplete();
 			}
-			
 		}
 
 		private LocationRectangle GetMapBounds()
@@ -428,14 +479,30 @@ namespace Cyclestreets
 		{
 			if( startPoint.SelectedItem != null )
 			{
-				string start = ( (JValue)startPoint.SelectedItem ).Value as string;
-
-				if( !geoQ.IsBusy && !string.IsNullOrWhiteSpace( start ) )
+				if( startPoint.SelectedItem is CSResult )
 				{
-					geoQ.SearchTerm = start;
-					geoQ.GeoCoordinate = MyMap.Center;
-					geoQ.QueryAsync();
-					App.networkStatus.networkIsBusy = true;
+					CSResult res = startPoint.SelectedItem as CSResult;
+					setCurrentPosition( res.coord );
+
+					SmartDispatcher.BeginInvoke( () =>
+					{
+						MyMap.SetView( res.coord, 16 );
+						//MyMap.Center = CoordinateConverter.ConvertGeocoordinate(MyGeoPosition.Coordinate);
+					} );
+					App.networkStatus.networkIsBusy = false;
+				}
+				else
+				{
+					string start = startPoint.SelectedItem as string;
+
+					if( !geoQ.IsBusy && !string.IsNullOrWhiteSpace( start ) && start != "No suggestions" )
+					{
+						geoQ.SearchTerm = start;
+						geoQ.GeoCoordinate = MyMap.Center;
+						geoQ.QueryAsync();
+						App.networkStatus.networkIsBusy = true;
+
+					}
 				}
 			}
 		}

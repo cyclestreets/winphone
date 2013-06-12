@@ -266,7 +266,7 @@
 					<SolidColorBrush Color="{StaticResource PhoneContrastBackgroundColor}"/>
 				</TextBlock.Foreground>
 			</TextBlock>
-			<toolkit:AutoCompleteBox x:Name="startPoint" InputScope="Default" IsTextCompletionEnabled="True" MinimumPrefixLength="3" SelectionChanged="startPoint_SelectionChanged" VerticalAlignment="Top" Margin="0" FontSize="20" Height="65" KeyUp="startPoint_KeyUp">
+			<toolkit:AutoCompleteBox x:Name="startPoint" InputScope="Default" MinimumPrefixLength="3" SelectionChanged="startPoint_SelectionChanged" VerticalAlignment="Top" Margin="0" FontSize="20" Height="65" KeyUp="startPoint_KeyUp" FilterMode="None">
 				<!-- <toolkit:AutoCompleteBox.ItemTemplate>
 					<DataTemplate>
 						<StackPanel>
