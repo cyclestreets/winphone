@@ -158,6 +158,8 @@ namespace Cyclestreets
 		private void Application_Launching( object sender, LaunchingEventArgs e )
 		{
 			FlurryWP8SDK.Api.StartSession( "JZSMBMX659NW78S35ZPR" );
+			MarkedUp.AnalyticClient.Initialize( "87c139ca-14a7-41ff-8b3b-095894a52bdf" );
+			MarkedUp.AnalyticClient.RegisterRootNavigationFrame( RootFrame );
 			CheckLicense();
 		}
 
@@ -166,6 +168,8 @@ namespace Cyclestreets
 		private void Application_Activated( object sender, ActivatedEventArgs e )
 		{
 			FlurryWP8SDK.Api.StartSession( "JZSMBMX659NW78S35ZPR" );
+			MarkedUp.AnalyticClient.Initialize( "87c139ca-14a7-41ff-8b3b-095894a52bdf" );
+			//MarkedUp.AnalyticClient.RegisterRootNavigationFrame( RootFrame );
 
 			// Ensure that application state is restored appropriately
 			if( !App.ViewModel.IsDataLoaded )
