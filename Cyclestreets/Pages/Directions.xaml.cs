@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Device.Location;
-using System.IO.IsolatedStorage;
 using System.Net;
 using System.Text;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -375,7 +373,7 @@ namespace Cyclestreets
 				App.networkStatus.networkIsBusy = true;
 			}
 
-			if( PhoneApplicationService.Current.State.ContainsKey("loadedRoute") && PhoneApplicationService.Current.State[ "loadedRoute" ] != null )
+			if( PhoneApplicationService.Current.State.ContainsKey( "loadedRoute" ) && PhoneApplicationService.Current.State[ "loadedRoute" ] != null )
 			{
 				string routeData = (string)PhoneApplicationService.Current.State[ "loadedRoute" ];
 				RouteFound( routeData );
@@ -765,7 +763,7 @@ namespace Cyclestreets
 
 			UTF8Encoding enc = new UTF8Encoding();
 
-			RouteFound(enc.GetString( data, 0, data.Length ));
+			RouteFound( enc.GetString( data, 0, data.Length ) );
 		}
 
 		private void RouteFound( string data )
@@ -1015,6 +1013,7 @@ namespace Cyclestreets
 		private void Image_Tap_1( object sender, System.Windows.Input.GestureEventArgs e )
 		{
 			PhoneApplicationService.Current.State[ "route" ] = currentRouteData;
+			PhoneApplicationService.Current.State[ "routeIndex" ] = route.routeIndex;
 			NavigationService.Navigate( new Uri( "/Pages/DirectionsResults.xaml", UriKind.Relative ) );
 		}
 

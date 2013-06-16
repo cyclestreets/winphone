@@ -207,6 +207,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\AppBar\save.png" />
+    <Content Include="Assets\AppBar\share.png" />
     <Content Include="Assets\AppIcon\appstore-icon-512.png" />
     <Content Include="Assets\bike_white.png" />
     <Content Include="Assets\bullet_go.png" />
