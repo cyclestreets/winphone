@@ -28,9 +28,9 @@ namespace Cyclestreets
 		{
 			ShareLinkTask shareLinkTask = new ShareLinkTask();
 
-			shareLinkTask.Title = "Cycle Route";
+			shareLinkTask.Title = "CycleStreets Cycle Route";
 			shareLinkTask.LinkUri = new Uri( "http://www.cyclestreets.net/journey/" + (int)PhoneApplicationService.Current.State[ "routeIndex" ] + "/", UriKind.Absolute );
-			shareLinkTask.Message = "CycleStreets route sharing test.";
+			shareLinkTask.Message = "Cycling directions";
 
 			shareLinkTask.Show();
 		}

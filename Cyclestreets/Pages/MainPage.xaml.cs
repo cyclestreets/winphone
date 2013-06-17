@@ -347,5 +347,10 @@ namespace Cyclestreets
 			url.Uri = new System.Uri( "http://www.cyclestreets.net/privacy/" );
 			url.Show();
 		}
+
+		private void leisureRouting_Click( object sender, EventArgs e )
+		{
+			NavigationService.Navigate( new Uri( "/Pages/LeisureRouting.xaml", UriKind.Relative ) );
+		}
 	}
 }

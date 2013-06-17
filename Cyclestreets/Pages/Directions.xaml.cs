@@ -390,7 +390,7 @@ namespace Cyclestreets
 				JObject o = JObject.Parse( e.Result );
 				JArray suggestions = (JArray)o[ "suggestions" ];
 				List<string> names = new List<string>();
-				if( false/*suggestions.Count > 0*/ )
+				if( suggestions.Count > 0 )
 				{
 					foreach( string s in suggestions )
 					{
@@ -803,7 +803,7 @@ namespace Cyclestreets
 					route.timeInSeconds = int.Parse( (string)p[ "time" ] );
 					i = new JourneyFactItem( "Assets/clock.png" );
 					i.Caption = "Journey time";
-					i.Value = ( route.timeInSeconds / 60 ) + " minutes";
+					i.Value = UtilTime.secsToLongDHMS( route.timeInSeconds );
 					facts.Add( i );
 					route.quietness = float.Parse( (string)p[ "quietness" ] );
 					i = new JourneyFactItem( "Assets/picture.png" );
@@ -924,7 +924,7 @@ namespace Cyclestreets
 				App.networkStatus.networkIsBusy = false;
 
 				float f = (float)route.distance * 0.000621371192f;
-				findLabel1.Text = f.ToString( "0.00" ) + "m\n" + ( route.timeInSeconds / 60 ) + " minutes";
+				findLabel1.Text = f.ToString( "0.00" ) + "m\n" + UtilTime.secsToLongDHMS( route.timeInSeconds  );
 
 				bool shownTutorial = SettingManager.instance.GetBoolValue( "shownTutorialRouteType", false );
 				if( !shownTutorial )
@@ -986,7 +986,8 @@ namespace Cyclestreets
 
 		private void routeTypePicker_SelectionChanged( object sender, System.Windows.Controls.SelectionChangedEventArgs e )
 		{
-			ListPicker picker = sender as ListPicker;
+			//FIXME: Can't guarantee this is a normal route plan
+			/*ListPicker picker = sender as ListPicker;
 			string plan = (string)picker.SelectedItem;
 			plan = plan.Replace( " route", "" );
 			if( routeFound )
@@ -1007,7 +1008,7 @@ namespace Cyclestreets
 				_request.Start();
 
 				App.networkStatus.networkIsBusy = true;
-			}
+			}*/
 		}
 
 		private void Image_Tap_1( object sender, System.Windows.Input.GestureEventArgs e )

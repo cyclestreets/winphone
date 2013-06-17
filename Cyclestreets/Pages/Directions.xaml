@@ -342,7 +342,7 @@
 			<Grid.RenderTransform>
 				<CompositeTransform TranslateY="150"/>
 			</Grid.RenderTransform>
-			<TextBlock x:Name="findLabel1" Text="TYPE LOCATION OR USE APP BAR" Padding="10,0,0,0" Margin="0,0,0,38" Grid.Column="1" TextAlignment="Center" FontSize="20">
+			<TextBlock x:Name="findLabel1" Text="TYPE LOCATION OR USE APP BAR" Padding="10,0,0,0" Margin="0,0,0,38" Grid.Column="1" TextAlignment="Center" FontSize="20" TextWrapping="Wrap">
 				<TextBlock.Foreground>
 					<SolidColorBrush Color="{StaticResource PhoneContrastBackgroundColor}"/>
 				</TextBlock.Foreground>

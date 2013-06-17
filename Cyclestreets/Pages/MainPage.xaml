@@ -11,7 +11,6 @@
 	xmlns:Location="clr-namespace:System.Device.Location;assembly=System.Device"
 	x:Class="Cyclestreets.MainPage"
 	mc:Ignorable="d"
-	d:DataContext="{d:DesignData SampleData/MainViewModelSampleData.xaml}"
 	FontFamily="{StaticResource PhoneFontFamilyNormal}"
 	FontSize="{StaticResource PhoneFontSizeNormal}"
 	Foreground="{StaticResource PhoneForegroundBrush}"
@@ -27,6 +26,7 @@
 			<!-- <shell:ApplicationBarIconButton x:Name="findAppBar" IconUri="/Assets/icons/dark/appbar.magnify.png" IsEnabled="True" Text="Find"/> -->
 			<shell:ApplicationBarIconButton x:Name="directionsAppBar" IconUri="/Assets/icons/dark/appbar.directions.png" IsEnabled="True" Text="Directions" Click="ApplicationBarIconButton_Directions"/>
 			<shell:ApplicationBarIconButton x:Name="navigateToAppBar" IconUri="/Assets/icons/dark/appbar.location.png" IsEnabled="False" Text="Navigate To" Click="ApplicationBarIconButton_NavigateTo"/>
+			<shell:ApplicationBarIconButton x:Name="leisureRouting" IconUri="/Assets/icons/dark/appbar.map.aerial.png" IsEnabled="True" Text="leisure" Click="leisureRouting_Click"/>
 		</shell:ApplicationBar>
 	</phone:PhoneApplicationPage.ApplicationBar>
 

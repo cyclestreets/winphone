@@ -98,6 +98,9 @@
     <Compile Include="Common\BindableBase.cs" />
     <Compile Include="CoordinateConverter.cs" />
     <Compile Include="LocationManager.cs" />
+    <Compile Include="Pages\LeisureRouting.xaml.cs">
+      <DependentUpon>LeisureRouting.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\LoadRoute.xaml.cs">
       <DependentUpon>LoadRoute.xaml</DependentUpon>
     </Compile>
@@ -142,6 +145,7 @@
     <Compile Include="Utils\Geodesy.cs" />
     <Compile Include="Utils\Stackish.cs" />
     <Compile Include="Utils\Util.cs" />
+    <Compile Include="Utils\UtilTime.cs" />
     <Compile Include="ViewModels\ItemViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
   </ItemGroup>
@@ -150,6 +154,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Page Include="Pages\LeisureRouting.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\LoadRoute.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
