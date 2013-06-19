@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
@@ -8,22 +7,23 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 using System.Xml.Linq;
+using CycleStreets.Util;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
-using System.Device.Location;
 using Windows.Devices.Geolocation;
-using System.Windows.Controls.Primitives;
 
 namespace Cyclestreets.Pages
 {
 	public partial class LeisureRouting : PhoneApplicationPage
 	{
 		private ObservableCollection<POIItem> items = new ObservableCollection<POIItem>();
+		AsyncWebRequest _request;
 
 		public LeisureRouting()
 		{
 			InitializeComponent();
 
+			progress.DataContext = App.networkStatus;
 			routeType.SelectionChanged += routeType_SelectionChanged;
 
 			AsyncWebRequest _request = new AsyncWebRequest( "http://www.cyclestreets.net/api/poitypes.xml?key=" + App.apiKey + "&icons=32", POIFound );
@@ -76,6 +76,11 @@ namespace Cyclestreets.Pages
 		private void btn_cancel_Click( object sender, RoutedEventArgs e )
 		{
 			pleaseWait.IsOpen = false;
+			App.networkStatus.networkIsBusy = false;
+			if( _request != null )
+			{
+				_request.Stop();
+			}
 		}
 
 		private void PhoneApplicationPage_BackKeyPress( object sender, System.ComponentModel.CancelEventArgs e )
@@ -93,6 +98,9 @@ namespace Cyclestreets.Pages
 
 		private void findRoute_Click( object sender, EventArgs e )
 		{
+			App.networkStatus.networkIsBusy = true;
+			this.Focus();
+
 			if( LocationManager.instance.MyGeoPosition != null )
 			{
 				Geoposition coord = LocationManager.instance.MyGeoPosition;
@@ -103,7 +111,7 @@ namespace Cyclestreets.Pages
 					int val = 0;
 					int.TryParse( valueEntry.Text, out val );
 
-					extra = "&duration=" + (val * 60);
+					extra = "&duration=" + ( val * 60 );
 				}
 				else
 				{
@@ -112,7 +120,21 @@ namespace Cyclestreets.Pages
 
 					extra = "&distance=" + (int)( val * 1609.344 );
 				}
-				AsyncWebRequest _request = new AsyncWebRequest( "http://www.cyclestreets.net/api/journey.json?key=" + App.apiKey + "&plan=leisure&itinerarypoints=" + coord.Coordinate.Longitude + "," + coord.Coordinate.Latitude + "&speed=20" + extra, RouteFound );
+				string poiNames = "";
+				foreach (POIItem item in items)
+				{
+					if( item.POIEnabled )
+						poiNames += item.POILabel+",";
+				}
+				poiNames = HttpUtility.UrlEncode(poiNames.TrimEnd( ',' ));
+
+				string speedSetting = SettingManager.instance.GetStringValue( "cycleSpeed", "12mph" );
+				int speed = Util.getSpeedFromString( speedSetting );
+
+				if ( !string.IsNullOrWhiteSpace(poiNames) )
+					extra += "&poitypes=" + poiNames;
+
+				_request = new AsyncWebRequest( "http://www.cyclestreets.net/api/journey.json?key=" + App.apiKey + "&plan=leisure&itinerarypoints=" + coord.Coordinate.Longitude + "," + coord.Coordinate.Latitude + "&speed=" + speed + extra, RouteFound );
 				_request.Start();
 
 				pleaseWait.IsOpen = true;

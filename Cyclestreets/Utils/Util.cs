@@ -6,7 +6,7 @@ using System.Xml.Linq;
 using Cyclestreets;
 using Microsoft.Phone.Info;
 
-namespace ScoreAlertsMobile.Util
+namespace CycleStreets.Util
 {
 	public static class EnumerableExtensions
 	{
@@ -138,6 +138,20 @@ namespace ScoreAlertsMobile.Util
 // 					App.RootFrame.Navigate( nUri );
 				}
 			} );
+		}
+
+		public static int getSpeedFromString( string speedVal )
+		{
+			switch( speedVal )
+			{
+				case "10mph":
+					return 16;
+				case "12mph":
+					return 20;
+				case "15mph":
+					return 24;
+			}
+			return 20;
 		}
 	}
 }

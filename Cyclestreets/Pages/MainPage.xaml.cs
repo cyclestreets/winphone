@@ -14,7 +14,7 @@ using Microsoft.Phone.Maps.Toolkit;
 using Microsoft.Phone.Shell;
 using Microsoft.Phone.Tasks;
 using RestSharp;
-using ScoreAlertsMobile.Util;
+using CycleStreets.Util;
 
 namespace Cyclestreets
 {

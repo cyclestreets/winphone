@@ -16,6 +16,7 @@ using Microsoft.Phone.Maps.Toolkit;
 using Microsoft.Phone.Shell;
 using Microsoft.Phone.Tasks;
 using Newtonsoft.Json.Linq;
+using CycleStreets.Util;
 
 namespace Cyclestreets
 {
@@ -194,7 +195,6 @@ namespace Cyclestreets
 
 	public partial class Directions : PhoneApplicationPage
 	{
-		bool routeFound = false;
 		ReverseGeocodeQuery revGeoQ = null;
 		GeocodeQuery geoQ = null;
 		//List<GeoCoordinate> waypoints = new List<GeoCoordinate>();
@@ -286,19 +286,6 @@ namespace Cyclestreets
 			wc.DownloadStringCompleted += DownloadStringCompleted;
 			wc.DownloadStringAsync( service, userObject );
 		}
-		private int getSpeedFromString( string speedVal )
-		{
-			switch( speedVal )
-			{
-				case "10mph":
-					return 16;
-				case "12mph":
-					return 20;
-				case "15mph":
-					return 24;
-			}
-			return 20;
-		}
 
 		protected override void OnNavigatedTo( System.Windows.Navigation.NavigationEventArgs e )
 		{
@@ -357,7 +344,7 @@ namespace Cyclestreets
 				string speedSetting = SettingManager.instance.GetStringValue( "cycleSpeed", "12mph" );
 
 				string itinerarypoints = LocationManager.instance.MyGeoPosition.Coordinate.Longitude + "," + LocationManager.instance.MyGeoPosition.Coordinate.Latitude + "|" + center.Longitude + "," + center.Latitude;// = "-1.2487100362777,53.00143068427369,NG16+1HH|-1.1430546045303,52.95200365149319,NG1+1LL";
-				int speed = getSpeedFromString( speedSetting );
+				int speed = Util.getSpeedFromString( speedSetting );
 				int useDom = 0;		// 0=xml 1=gml
 
 				AsyncWebRequest _request = new AsyncWebRequest( "http://www.cyclestreets.net/api/journey.json?key=" + App.apiKey + "&plan=" + plan + "&itinerarypoints=" + itinerarypoints + "&speed=" + speed + "&useDom=" + useDom, RouteFound );
@@ -741,7 +728,7 @@ namespace Cyclestreets
 			string speedSetting = SettingManager.instance.GetStringValue( "cycleSpeed", "12mph" );
 
 			string itinerarypoints = "";// = "-1.2487100362777,53.00143068427369,NG16+1HH|-1.1430546045303,52.95200365149319,NG1+1LL";
-			int speed = getSpeedFromString( speedSetting );
+			int speed = Util.getSpeedFromString( speedSetting );
 			int useDom = 0;		// 0=xml 1=gml
 
 			foreach( Pushpin p in waypoints )
@@ -770,8 +757,15 @@ namespace Cyclestreets
 		{
 			currentRouteData = data;
 
-			JObject o = JObject.Parse( currentRouteData.Trim() );
-
+			JObject o = null;
+			if ( currentRouteData != null )
+				o = JObject.Parse( currentRouteData.Trim() );
+			if( o == null || o[ "marker" ] == null )
+			{
+				MessageBoxResult result = MessageBox.Show( "No route found. Try another search", "No Route", MessageBoxButton.OK );
+				NavigationService.GoBack();
+				return;
+			}
 			geometryCoords.Clear();
 			facts.Clear();
 			route.segments.Clear();
@@ -922,8 +916,6 @@ namespace Cyclestreets
 				var sg = sgs[ 0 ] as VisualStateGroup;
 				//ExtendedVisualStateManager.GoToElementState( LayoutRoot, "RouteFoundState", true );
 				VisualStateManager.GoToState( this, "RouteFoundState", true );
-
-				routeFound = true;
 
 				App.networkStatus.networkIsBusy = false;
 

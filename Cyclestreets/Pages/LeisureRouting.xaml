@@ -16,7 +16,7 @@
 	<phone:PhoneApplicationPage.Resources>
 		<DataTemplate x:Key="POIItem">
 			<Grid>
-				<CheckBox Content="{Binding POILabel}" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="{Binding POIEnabled}"/>
+				<CheckBox Content="{Binding POILabel}" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="{Binding POIEnabled, Mode=TwoWay}"/>
 			</Grid>
 		</DataTemplate>
 	</phone:PhoneApplicationPage.Resources>
@@ -75,7 +75,7 @@
 					<TranslateTransform/>
 				</phone:PanoramaItem.RenderTransform>
 				<Grid>
-					<ScrollViewer Margin="0,282,0,-166">
+					<ScrollViewer Margin="0">
 						<phone:LongListSelector x:Name="poiList" ItemTemplate="{StaticResource POIItem}" Margin="0" Height="379" Width="420"/>
 					</ScrollViewer>
 				</Grid>

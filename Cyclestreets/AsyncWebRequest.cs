@@ -21,7 +21,7 @@ namespace Cyclestreets
         }
         private EState requestState;
         private Action<byte[]> OnComplete;
-
+		HttpWebRequest request = null;
 
         public AsyncWebRequest(String uri, Action<byte[]> OnComplete)
         {
@@ -46,9 +46,9 @@ namespace Cyclestreets
             return requestState == EState.COMPLETE;
         }
 
-        public static Task<byte[]> GetURLContentsAsync(string url)
+        public Task<byte[]> GetURLContentsAsync(string url)
         {
-            var request = (HttpWebRequest)WebRequest.Create( url );
+            request = (HttpWebRequest)WebRequest.Create( url );
             
 			try
 			{
@@ -73,7 +73,7 @@ namespace Cyclestreets
 			catch (System.Exception ex)
 			{
 				MessageBox.Show( "An error occurred getting data from "+url );
-				//FlurryWP8SDK.Api.LogError("An error occurred getting data from " + url, ex);
+				FlurryWP8SDK.Api.LogError("An error occurred getting data from " + url, ex);
 				return null;
 			}
             
@@ -92,9 +92,18 @@ namespace Cyclestreets
             }
             catch( System.Exception ex )
             {
-				//FlurryWP8SDK.Api.LogError("Failed to read response stream", ex);
+				FlurryWP8SDK.Api.LogError("Failed to read response stream", ex);
                 return null;
             }
         }
-    }
+
+		internal void Stop()
+		{
+			if( request != null )
+			{
+				request.Abort();
+				request = null;
+			}
+		}
+	}
 }
