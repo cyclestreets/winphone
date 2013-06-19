@@ -99,7 +99,12 @@ namespace Cyclestreets.Pages
 
 				string extra;
 				if( ( (ListBoxItem)routeType.SelectedItem ).Content.Equals( "Target Time" ) )
-					extra = "&duration=" + valueEntry.Text;
+				{
+					int val = 0;
+					int.TryParse( valueEntry.Text, out val );
+
+					extra = "&duration=" + (val * 60);
+				}
 				else
 				{
 					int val = 0;

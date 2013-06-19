@@ -775,6 +775,10 @@ namespace Cyclestreets
 			geometryCoords.Clear();
 			facts.Clear();
 			route.segments.Clear();
+			MyMap.MapElements.Clear();
+
+			max = new GeoCoordinate( 90, -180 );
+			min = new GeoCoordinate( -90, 180 );
 
 			currentStep = -1;
 
@@ -924,7 +928,7 @@ namespace Cyclestreets
 				App.networkStatus.networkIsBusy = false;
 
 				float f = (float)route.distance * 0.000621371192f;
-				findLabel1.Text = f.ToString( "0.00" ) + "m\n" + UtilTime.secsToLongDHMS( route.timeInSeconds  );
+				findLabel1.Text = f.ToString( "0.00" ) + "m\n" + UtilTime.secsToLongDHMS( route.timeInSeconds );
 
 				bool shownTutorial = SettingManager.instance.GetBoolValue( "shownTutorialRouteType", false );
 				if( !shownTutorial )
