@@ -14,6 +14,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Cyclestreets.Utils;
+using CycleStreets.Util;
 using Microsoft.Expression.Interactivity.Core;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Maps.Controls;
@@ -22,7 +23,6 @@ using Microsoft.Phone.Maps.Toolkit;
 using Microsoft.Phone.Shell;
 using Microsoft.Phone.Tasks;
 using Newtonsoft.Json.Linq;
-using CycleStreets.Util;
 
 namespace Cyclestreets
 {
@@ -207,6 +207,7 @@ namespace Cyclestreets
 		MapLayer wayPointLayer = null;
 		Stackish<Pushpin> waypoints = new Stackish<Pushpin>();
 		Dictionary<Pushpin, POI> pinItems = new Dictionary<Pushpin, POI>();
+		private MapLayer poiLayer;
 
 		List<List<GeoCoordinate>> geometryCoords = new List<List<GeoCoordinate>>();
 		List<Color> geometryColor = new List<Color>();
@@ -765,7 +766,7 @@ namespace Cyclestreets
 			currentRouteData = data;
 
 			JObject o = null;
-			if ( currentRouteData != null )
+			if( currentRouteData != null )
 				o = JObject.Parse( currentRouteData.Trim() );
 			if( o == null || o[ "marker" ] == null )
 			{
@@ -883,11 +884,41 @@ namespace Cyclestreets
 					route.segments.Add( s );
 				}
 			}
+			if( poiLayer == null )
+			{
+				poiLayer = new MapLayer();
+
+				MyMap.Layers.Add( poiLayer );
+			}
+			else
+			{
+				poiLayer.Clear();
+			}
+			int id = 0;
 			foreach( JObject poi in pois )
 			{
 				JObject p = (JObject)poi[ "@attributes" ];
-/ 				POI item = new POI();
-				item.
+				POI poiItem = new POI();
+				poiItem.Name = (string)p[ "name" ];
+				GeoCoordinate g = new GeoCoordinate();
+				g.Longitude = float.Parse( (string)p[ "longitude" ] );
+				g.Latitude = float.Parse( (string)p[ "latitude" ] );
+				poiItem.Position = g;
+
+				poiItem.PinID = "" + ( id++ );
+
+				Pushpin pp = new Pushpin();
+				pp.Content = poiItem.PinID;
+				pp.Tap += poiTapped;
+
+				pinItems.Add( pp, poiItem );
+
+				MapOverlay overlay = new MapOverlay();
+				overlay.Content = pp;
+				pp.GeoCoordinate = poiItem.GetGeoCoordinate();
+				overlay.GeoCoordinate = poiItem.GetGeoCoordinate();
+				overlay.PositionOrigin = new Point( 0, 1.0 );
+				poiLayer.Add( overlay );
 			}
 			JourneyFactItem item = new JourneyFactItem( "Assets/bullet_go.png" );
 			item.Caption = "Distance";
@@ -941,6 +972,21 @@ namespace Cyclestreets
 			} );
 
 			saveRoute.IsEnabled = true;
+		}
+
+		private void poiTapped( object sender, System.Windows.Input.GestureEventArgs e )
+		{
+			Pushpin pp = sender as Pushpin;
+			POI p = pinItems[ pp ];
+			foreach( KeyValuePair<Pushpin, POI> pair in pinItems )
+			{
+				Pushpin ppItem = pair.Key;
+				POI pItem = pair.Value;
+				ppItem.Content = pItem.PinID;
+			}
+			pp.Content = p.Name;
+
+			//selected = p.GetGeoCoordinate();
 		}
 
 		private string getQuietnessString( float p )

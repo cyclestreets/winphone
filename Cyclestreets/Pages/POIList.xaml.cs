@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 using System.Xml.Linq;
+using Cyclestreets.Utils;
 using Microsoft.Phone.Controls;
 
 namespace Cyclestreets
