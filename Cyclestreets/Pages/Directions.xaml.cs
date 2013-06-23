@@ -1,4 +1,10 @@
-﻿using System;
+﻿/// Update location on this page
+/// Display current location
+/// Favourite places
+/// Satnav mode
+
+
+using System;
 using System.Collections.Generic;
 using System.Device.Location;
 using System.Net;
@@ -200,6 +206,7 @@ namespace Cyclestreets
 		//List<GeoCoordinate> waypoints = new List<GeoCoordinate>();
 		MapLayer wayPointLayer = null;
 		Stackish<Pushpin> waypoints = new Stackish<Pushpin>();
+		Dictionary<Pushpin, POI> pinItems = new Dictionary<Pushpin, POI>();
 
 		List<List<GeoCoordinate>> geometryCoords = new List<List<GeoCoordinate>>();
 		List<Color> geometryColor = new List<Color>();
@@ -783,6 +790,7 @@ namespace Cyclestreets
 
 			List<RouteManeuver> manouvers = new List<RouteManeuver>();
 			JArray steps = (JArray)o[ "marker" ];
+			JArray pois = (JArray)o[ "poi" ];
 			string col1 = "#7F000000";
 			string col2 = "#3F000000";
 			bool swap = true;
@@ -875,7 +883,12 @@ namespace Cyclestreets
 					route.segments.Add( s );
 				}
 			}
-
+			foreach( JObject poi in pois )
+			{
+				JObject p = (JObject)poi[ "@attributes" ];
+/ 				POI item = new POI();
+				item.
+			}
 			JourneyFactItem item = new JourneyFactItem( "Assets/bullet_go.png" );
 			item.Caption = "Distance";
 			float dist = (float)route.distance * 0.000621371192f;

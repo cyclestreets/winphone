@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 using System.Xml.Linq;
+using Cyclestreets.Utils;
 using CycleStreets.Util;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;

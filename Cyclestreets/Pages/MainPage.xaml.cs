@@ -18,25 +18,6 @@ using CycleStreets.Util;
 
 namespace Cyclestreets
 {
-	public class POIItem
-	{
-		public string POILabel
-		{
-			get;
-			set;
-		}
-		public bool POIEnabled
-		{
-			get;
-			set;
-		}
-		public string POIName
-		{
-			get;
-			set;
-		}
-	}
-
 	public partial class MainPage : PhoneApplicationPage
 	{
 		List<List<GeoCoordinate>> geometryCoords = new List<List<GeoCoordinate>>();

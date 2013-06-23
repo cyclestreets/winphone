@@ -101,7 +101,7 @@ namespace Cyclestreets
 			bool swap = true;
 			foreach( XElement p in poi )
 			{
-				POI item = new POI();
+				       POI item = new POI();
 				item.Name = p.Element( "name" ).Value;
 				GeoCoordinate g = new GeoCoordinate();
 				g.Longitude = float.Parse( p.Element( "longitude" ).Value );
