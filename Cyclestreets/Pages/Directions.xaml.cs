@@ -24,6 +24,7 @@ using Microsoft.Phone.Maps.Toolkit;
 using Microsoft.Phone.Shell;
 using Microsoft.Phone.Tasks;
 using Newtonsoft.Json.Linq;
+using System.Diagnostics;
 
 namespace Cyclestreets
 {
@@ -229,6 +230,7 @@ namespace Cyclestreets
 		public static String[] CycleSpeed = { "10mph", "12mph", "15mph" };
 		public static String[] EnabledDisabled = { "Enabled", "Disabled" };
 		private string currentRouteData;
+		private WebClient placeSearch;
 
 		public Directions()
 		{
@@ -239,11 +241,11 @@ namespace Cyclestreets
 
 
 			// hack. See here http://stackoverflow.com/questions/5334574/applicationbariconbutton-is-null/5334703#5334703
-			myPosition = ApplicationBar.Buttons[0] as Microsoft.Phone.Shell.ApplicationBarIconButton;
-			cursorPos = ApplicationBar.Buttons[1] as Microsoft.Phone.Shell.ApplicationBarIconButton;
-			confirmWaypoint = ApplicationBar.Buttons[2] as Microsoft.Phone.Shell.ApplicationBarIconButton;
-			findRoute = ApplicationBar.Buttons[3] as Microsoft.Phone.Shell.ApplicationBarIconButton;
-			saveRoute = ApplicationBar.MenuItems[0] as Microsoft.Phone.Shell.ApplicationBarMenuItem;
+			myPosition = ApplicationBar.Buttons[ 0 ] as Microsoft.Phone.Shell.ApplicationBarIconButton;
+			cursorPos = ApplicationBar.Buttons[ 1 ] as Microsoft.Phone.Shell.ApplicationBarIconButton;
+			confirmWaypoint = ApplicationBar.Buttons[ 2 ] as Microsoft.Phone.Shell.ApplicationBarIconButton;
+			findRoute = ApplicationBar.Buttons[ 3 ] as Microsoft.Phone.Shell.ApplicationBarIconButton;
+			saveRoute = ApplicationBar.MenuItems[ 0 ] as Microsoft.Phone.Shell.ApplicationBarMenuItem;
 
 			findRoute.IsEnabled = false;
 			saveRoute.IsEnabled = false;
@@ -263,21 +265,27 @@ namespace Cyclestreets
 
 			startPoint.Populating += ( s, args ) =>
 			{
+				if( placeSearch != null )
+				{
+					System.Diagnostics.Debug.WriteLine( "Cancelling previous request" );
+					placeSearch.CancelAsync();
+				}
+
 				args.Cancel = true;
 				StartPlaceSearch( args.Parameter, s );
 			};
 
 			var sgs = ExtendedVisualStateManager.GetVisualStateGroups( LayoutRoot );
-			var sg = sgs[0] as VisualStateGroup;
+			var sg = sgs[ 0 ] as VisualStateGroup;
 			ExtendedVisualStateManager.GoToElementState( LayoutRoot, "RoutePlanner", false );
 		}
 
 		private void StartPlaceSearch( string textEntry, object userObject )
 		{
 			App.networkStatus.networkIsBusy = true;
+			System.Diagnostics.Debug.WriteLine( "Searching for " + textEntry );
 
-
-			WebClient wc = new WebClient();
+			placeSearch = new WebClient();
 			string prefix = HttpUtility.UrlEncode( textEntry );
 
 			string myLocation = "";
@@ -295,8 +303,8 @@ namespace Cyclestreets
 			Uri service = new Uri( "http://places.nlp.nokia.com/places/v1/suggest?at=" + myLocation + "&q=" + prefix + "&app_id=" + App.hereAppID + "&app_code=" + App.hereAppToken + "&accept=application/json" );
 #endif
 
-			wc.DownloadStringCompleted += DownloadStringCompleted;
-			wc.DownloadStringAsync( service, userObject );
+			placeSearch.DownloadStringCompleted += DownloadStringCompleted;
+			placeSearch.DownloadStringAsync( service, userObject );
 		}
 
 		protected override void OnNavigatedTo( System.Windows.Navigation.NavigationEventArgs e )
@@ -305,7 +313,7 @@ namespace Cyclestreets
 
 			if( NavigationContext.QueryString.ContainsKey( "plan" ) )
 			{
-				isLeisureRoute = ( NavigationContext.QueryString["plan"].Equals( "leisure" ) ) ? true : false;
+				isLeisureRoute = ( NavigationContext.QueryString[ "plan" ].Equals( "leisure" ) ) ? true : false;
 			}
 			if( isLeisureRoute )
 				routeTypePicker.Visibility = Visibility.Collapsed;
@@ -356,8 +364,8 @@ namespace Cyclestreets
 			if( NavigationContext.QueryString.ContainsKey( "longitude" ) )
 			{
 				GeoCoordinate center = new GeoCoordinate();
-				center.Longitude = float.Parse( NavigationContext.QueryString["longitude"] );
-				center.Latitude = float.Parse( NavigationContext.QueryString["latitude"] );
+				center.Longitude = float.Parse( NavigationContext.QueryString[ "longitude" ] );
+				center.Latitude = float.Parse( NavigationContext.QueryString[ "latitude" ] );
 
 				string plan = SettingManager.instance.GetStringValue( "defaultRouteType", "balanced route" );
 				plan = plan.Replace( " route", "" );
@@ -381,11 +389,11 @@ namespace Cyclestreets
 				App.networkStatus.networkIsBusy = true;
 			}
 
-			if( PhoneApplicationService.Current.State.ContainsKey( "loadedRoute" ) && PhoneApplicationService.Current.State["loadedRoute"] != null )
+			if( PhoneApplicationService.Current.State.ContainsKey( "loadedRoute" ) && PhoneApplicationService.Current.State[ "loadedRoute" ] != null )
 			{
-				string routeData = (string)PhoneApplicationService.Current.State["loadedRoute"];
+				string routeData = (string)PhoneApplicationService.Current.State[ "loadedRoute" ];
 				RouteFound( routeData );
-				PhoneApplicationService.Current.State["loadedRoute"] = null;
+				PhoneApplicationService.Current.State[ "loadedRoute" ] = null;
 			}
 		}
 
@@ -394,9 +402,9 @@ namespace Cyclestreets
 			AutoCompleteBox acb = e.UserState as AutoCompleteBox;
 			if( acb != null && e.Error == null && !e.Cancelled && !string.IsNullOrEmpty( e.Result ) )
 			{
-				Console.WriteLine( e.Result );
+				System.Diagnostics.Debug.WriteLine( e.Result );
 				JObject o = JObject.Parse( e.Result );
-				JArray suggestions = (JArray)o["suggestions"];
+				JArray suggestions = (JArray)o[ "suggestions" ];
 				List<string> names = new List<string>();
 				if( suggestions.Count > 0 )
 				{
@@ -407,13 +415,15 @@ namespace Cyclestreets
 
 					if( names.Count > 0 )
 					{
+						acb.ItemsSource = null;
 						acb.ItemsSource = names;
 						acb.PopulateComplete();
 					}
 				}
 				else
 				{
-					WebClient wc = new WebClient();
+					System.Diagnostics.Debug.WriteLine( "Starting backup search for " + startPoint.Text );
+					placeSearch = new WebClient();
 					string prefix = HttpUtility.UrlEncode( startPoint.Text );
 
 					string myLocation = "";
@@ -423,8 +433,8 @@ namespace Cyclestreets
 
 					Uri service = new Uri( "http://cambridge.cyclestreets.net/api/geocoder.json?key=" + App.apiKey + myLocation + "&street=" + prefix );
 
-					wc.DownloadStringCompleted += CSDownloadStringCompleted;
-					wc.DownloadStringAsync( service, e.UserState );
+					placeSearch.DownloadStringCompleted += CSDownloadStringCompleted;
+					placeSearch.DownloadStringAsync( service, e.UserState );
 				}
 				App.networkStatus.networkIsBusy = false;
 			}
@@ -432,21 +442,22 @@ namespace Cyclestreets
 
 		private void CSDownloadStringCompleted( object sender, DownloadStringCompletedEventArgs e )
 		{
+			placeSearch = null;
 			AutoCompleteBox acb = e.UserState as AutoCompleteBox;
 			if( acb != null && e.Error == null && !e.Cancelled && !string.IsNullOrEmpty( e.Result ) )
 			{
-				Console.WriteLine( e.Result );
+				System.Diagnostics.Debug.WriteLine( e.Result );
 				JObject o = JObject.Parse( e.Result );
 				JArray suggestions = null;
 
-				if( o["results"] != null && o["results"]["result"] != null )
+				if( o[ "results" ] != null && o[ "results" ][ "result" ] != null )
 				{
-					if( o["results"]["result"] is JArray )
-						suggestions = (JArray)o["results"]["result"];
+					if( o[ "results" ][ "result" ] is JArray )
+						suggestions = (JArray)o[ "results" ][ "result" ];
 					else
 					{
 						suggestions = new JArray();
-						suggestions.Add( (JObject)o["results"]["result"] );
+						suggestions.Add( (JObject)o[ "results" ][ "result" ] );
 					}
 					if( suggestions.Count > 0 )
 					{
@@ -454,12 +465,13 @@ namespace Cyclestreets
 						foreach( JObject s in suggestions )
 						{
 							CSResult res = new CSResult();
-							res.coord = new GeoCoordinate( double.Parse( s["latitude"].ToString() ), double.Parse( s["longitude"].ToString() ) );
-							res.resultName = s["name"].ToString();
-							if( !string.IsNullOrWhiteSpace( s["near"].ToString() ) )
-								res.resultName += ", " + s["near"].ToString();
+							res.coord = new GeoCoordinate( double.Parse( s[ "latitude" ].ToString() ), double.Parse( s[ "longitude" ].ToString() ) );
+							res.resultName = s[ "name" ].ToString();
+							if( !string.IsNullOrWhiteSpace( s[ "near" ].ToString() ) )
+								res.resultName += ", " + s[ "near" ].ToString();
 							names.Add( res );
 						}
+						acb.ItemsSource = null;
 						acb.ItemsSource = names;
 					}
 				}
@@ -469,6 +481,7 @@ namespace Cyclestreets
 					List<string> names = new List<string>();
 					names.Add( "No suggestions" );
 
+					acb.ItemsSource = null;
 					acb.ItemsSource = names;
 				}
 				acb.PopulateComplete();
@@ -485,7 +498,7 @@ namespace Cyclestreets
 
 		private void revGeoQ_QueryCompleted( object sender, QueryCompletedEventArgs<IList<MapLocation>> e )
 		{
-			MapLocation loc = e.Result[0];
+			MapLocation loc = e.Result[ 0 ];
 			startPoint.Text = loc.Information.Address.Street + ", " + loc.Information.Address.PostalCode;
 		}
 
@@ -501,6 +514,7 @@ namespace Cyclestreets
 					SmartDispatcher.BeginInvoke( () =>
 					{
 						MyMap.SetView( res.coord, 16 );
+						this.Focus();
 						//MyMap.Center = CoordinateConverter.ConvertGeocoordinate(MyGeoPosition.Coordinate);
 					} );
 					App.networkStatus.networkIsBusy = false;
@@ -525,7 +539,7 @@ namespace Cyclestreets
 		{
 			if( e.Result.Count > 0 )
 			{
-				GeoCoordinate g = e.Result[0].GeoCoordinate;
+				GeoCoordinate g = e.Result[ 0 ].GeoCoordinate;
 				setCurrentPosition( g );
 
 				SmartDispatcher.BeginInvoke( () =>
@@ -534,6 +548,7 @@ namespace Cyclestreets
 					//MyMap.Center = CoordinateConverter.ConvertGeocoordinate(MyGeoPosition.Coordinate);
 				} );
 				App.networkStatus.networkIsBusy = false;
+				this.Focus();
 			}
 			else
 			{
@@ -561,13 +576,13 @@ namespace Cyclestreets
 		{
 			if( e.Error == null && !e.Cancelled && !string.IsNullOrEmpty( e.Result ) )
 			{
-				Console.WriteLine( e.Result );
+				System.Diagnostics.Debug.WriteLine( e.Result );
 				JObject o = JObject.Parse( e.Result );
-				JArray suggestions = (JArray)o["results"]["items"];
+				JArray suggestions = (JArray)o[ "results" ][ "items" ];
 				if( suggestions.Count > 0 )
 				{
-					JArray pos = (JArray)suggestions[0]["position"];
-					GeoCoordinate g = new GeoCoordinate( (double)pos[0], (double)pos[1] );
+					JArray pos = (JArray)suggestions[ 0 ][ "position" ];
+					GeoCoordinate g = new GeoCoordinate( (double)pos[ 0 ], (double)pos[ 1 ] );
 					setCurrentPosition( g );
 
 					SmartDispatcher.BeginInvoke( () =>
@@ -579,6 +594,7 @@ namespace Cyclestreets
 				}
 			}
 			App.networkStatus.networkIsBusy = false;
+			this.Focus();
 		}
 
 		private void myPosition_Click( object sender, EventArgs e )
@@ -654,15 +670,15 @@ namespace Cyclestreets
 			if( waypoints.Count > 1 )
 			{
 				Pushpin last = waypoints.Peek();
-				last.Style = Resources["Intermediate"] as Style;
+				last.Style = Resources[ "Intermediate" ] as Style;
 				last.Content = "" + ( waypoints.Count - 1 );
 			}
 
 			Pushpin pp = new Pushpin();
 			if( waypoints.Count == 0 )
-				pp.Style = Resources["Start"] as Style;
+				pp.Style = Resources[ "Start" ] as Style;
 			else
-				pp.Style = Resources["Finish"] as Style;
+				pp.Style = Resources[ "Finish" ] as Style;
 
 			pp.Tap += pinTapped;
 
@@ -694,20 +710,20 @@ namespace Cyclestreets
 			for( int i = 0; i < waypoints.Count; i++ )
 			{
 				MapOverlay overlay = new MapOverlay();
-				overlay.Content = waypoints[i];
-				overlay.GeoCoordinate = waypoints[i].GeoCoordinate;
+				overlay.Content = waypoints[ i ];
+				overlay.GeoCoordinate = waypoints[ i ].GeoCoordinate;
 				overlay.PositionOrigin = new Point( 0.3, 1.0 );
 				wayPointLayer.Add( overlay );
 
 				// Set pin styles
-				Pushpin pp = waypoints[i];
+				Pushpin pp = waypoints[ i ];
 				if( i == 0 )
-					pp.Style = Resources["Start"] as Style;
+					pp.Style = Resources[ "Start" ] as Style;
 				else if( i == waypoints.Count - 1 )
-					pp.Style = Resources["Finish"] as Style;
+					pp.Style = Resources[ "Finish" ] as Style;
 				else
 				{
-					pp.Style = Resources["Intermediate"] as Style;
+					pp.Style = Resources[ "Intermediate" ] as Style;
 					pp.Content = "" + i;
 				}
 			}
@@ -786,7 +802,7 @@ namespace Cyclestreets
 			JObject o = null;
 			if( currentRouteData != null )
 				o = JObject.Parse( currentRouteData.Trim() );
-			if( o == null || o["marker"] == null )
+			if( o == null || o[ "marker" ] == null )
 			{
 				MessageBoxResult result = MessageBox.Show( "No route found. Try another search", "No Route", MessageBoxButton.OK );
 				NavigationService.GoBack();
@@ -808,49 +824,49 @@ namespace Cyclestreets
 			route = new RouteDetails();
 
 			List<RouteManeuver> manouvers = new List<RouteManeuver>();
-			JArray steps = (JArray)o["marker"];
-			JArray pois = (JArray)o["poi"];
+			JArray steps = (JArray)o[ "marker" ];
+			JArray pois = (JArray)o[ "poi" ];
 			string col1 = "#7F000000";
 			string col2 = "#3F000000";
 			bool swap = true;
 			int totalTime = 0;
 			foreach( JObject step in steps )
 			{
-				JObject p = (JObject)step["@attributes"];
-				string markerType = (string)p["type"];
+				JObject p = (JObject)step[ "@attributes" ];
+				string markerType = (string)p[ "type" ];
 				if( markerType == "route" )
 				{
-					route.routeIndex = int.Parse( (string)p["itinerary"] );
+					route.routeIndex = int.Parse( (string)p[ "itinerary" ] );
 					JourneyFactItem i = new JourneyFactItem( "Assets/picture.png" );
 					i.Caption = "Route Number";
 					i.Value = "" + route.routeIndex;
 					facts.Add( i );
-					route.timeInSeconds = int.Parse( (string)p["time"] );
+					route.timeInSeconds = int.Parse( (string)p[ "time" ] );
 					i = new JourneyFactItem( "Assets/clock.png" );
 					i.Caption = "Journey time";
 					i.Value = UtilTime.secsToLongDHMS( route.timeInSeconds );
 					facts.Add( i );
-					route.quietness = float.Parse( (string)p["quietness"] );
+					route.quietness = float.Parse( (string)p[ "quietness" ] );
 					i = new JourneyFactItem( "Assets/picture.png" );
 					i.Caption = "Quietness";
 					i.Value = route.quietness + "% " + getQuietnessString( route.quietness );
 					facts.Add( i );
-					route.signalledJunctions = int.Parse( (string)p["signalledJunctions"] );
+					route.signalledJunctions = int.Parse( (string)p[ "signalledJunctions" ] );
 					i = new JourneyFactItem( "Assets/traffic_signals.png" );
 					i.Caption = "Signalled Junctions";
 					i.Value = "" + route.signalledJunctions;
 					facts.Add( i );
-					route.signalledCrossings = int.Parse( (string)p["signalledCrossings"] );
+					route.signalledCrossings = int.Parse( (string)p[ "signalledCrossings" ] );
 					i = new JourneyFactItem( "Assets/traffic_signals.png" );
 					i.Caption = "Signalled Crossings";
 					i.Value = "" + route.signalledCrossings;
 					facts.Add( i );
-					route.grammesCO2saved = int.Parse( (string)p["grammesCO2saved"] );
+					route.grammesCO2saved = int.Parse( (string)p[ "grammesCO2saved" ] );
 					i = new JourneyFactItem( "Assets/world.png" );
 					i.Caption = "CO2 avoided";
 					i.Value = (float)route.grammesCO2saved / 1000f + " kg";
 					facts.Add( i );
-					route.calories = int.Parse( (string)p["calories"] );
+					route.calories = int.Parse( (string)p[ "calories" ] );
 					i = new JourneyFactItem( "Assets/heart.png" );
 					i.Caption = "Calories";
 					i.Value = route.calories + " kcal";
@@ -858,15 +874,15 @@ namespace Cyclestreets
 				}
 				else if( markerType == "segment" )
 				{
-					string pointsText = (string)p["points"];
+					string pointsText = (string)p[ "points" ];
 					string[] points = pointsText.Split( ' ' );
 					List<GeoCoordinate> coords = new List<GeoCoordinate>();
 					for( int i = 0; i < points.Length; i++ )
 					{
-						string[] xy = points[i].Split( ',' );
+						string[] xy = points[ i ].Split( ',' );
 
-						double longitude = double.Parse( xy[0] );
-						double latitude = double.Parse( xy[1] );
+						double longitude = double.Parse( xy[ 0 ] );
+						double latitude = double.Parse( xy[ 1 ] );
 						coords.Add( new GeoCoordinate( latitude, longitude ) );
 
 						if( max.Latitude > latitude )
@@ -879,21 +895,21 @@ namespace Cyclestreets
 							min.Longitude = longitude;
 					}
 					geometryCoords.Add( coords );
-					geometryColor.Add( ConvertHexStringToColour( (string)p["color"] ) );
+					geometryColor.Add( ConvertHexStringToColour( (string)p[ "color" ] ) );
 
 					RouteSegment s = new RouteSegment();
-					s.location = coords[0];
-					s.Bearing = Geodesy.Bearing( coords[0].Latitude, coords[0].Longitude, coords[coords.Count - 1].Latitude, coords[coords.Count - 1].Longitude );
-					route.distance += (int)float.Parse( (string)p["distance"] );
+					s.location = coords[ 0 ];
+					s.Bearing = Geodesy.Bearing( coords[ 0 ].Latitude, coords[ 0 ].Longitude, coords[ coords.Count - 1 ].Latitude, coords[ coords.Count - 1 ].Longitude );
+					route.distance += (int)float.Parse( (string)p[ "distance" ] );
 					s.Distance = "" + route.distance;// p.Attribute( "distance" ).Value;
-					s.DistanceMetres = (int)float.Parse( (string)p["distance"] );
-					s.Name = (string)p["name"];
-					s.ProvisionName = (string)p["provisionName"];
-					int theLegOfTime = int.Parse( (string)p["time"] );
+					s.DistanceMetres = (int)float.Parse( (string)p[ "distance" ] );
+					s.Name = (string)p[ "name" ];
+					s.ProvisionName = (string)p[ "provisionName" ];
+					int theLegOfTime = int.Parse( (string)p[ "time" ] );
 					s.Time = "" + ( totalTime + theLegOfTime );
 					totalTime += theLegOfTime;
-					s.Turn = (string)p["turn"];
-					s.Walk = ( int.Parse( (string)p["walk"] ) == 1 ? true : false );
+					s.Turn = (string)p[ "turn" ];
+					s.Walk = ( int.Parse( (string)p[ "walk" ] ) == 1 ? true : false );
 					if( swap )
 						s.BGColour = col1;
 					else
@@ -917,12 +933,12 @@ namespace Cyclestreets
 			{
 				foreach( JObject poi in pois )
 				{
-					JObject p = (JObject)poi["@attributes"];
+					JObject p = (JObject)poi[ "@attributes" ];
 					POI poiItem = new POI();
-					poiItem.Name = (string)p["name"];
+					poiItem.Name = (string)p[ "name" ];
 					GeoCoordinate g = new GeoCoordinate();
-					g.Longitude = float.Parse( (string)p["longitude"] );
-					g.Latitude = float.Parse( (string)p["latitude"] );
+					g.Longitude = float.Parse( (string)p[ "longitude" ] );
+					g.Latitude = float.Parse( (string)p[ "latitude" ] );
 					poiItem.Position = g;
 
 					poiItem.PinID = "" + ( id++ );
@@ -964,7 +980,7 @@ namespace Cyclestreets
 				}
 				catch( System.Exception ex )
 				{
-					Console.WriteLine( "Invalid box" );
+					System.Diagnostics.Debug.WriteLine( "Invalid box" );
 				}
 
 				//MyMap.Center = new GeoCoordinate(min.Latitude + ((max.Latitude - min.Latitude) / 2f), min.Longitude + ((max.Longitude - min.Longitude) / 2f));
@@ -972,13 +988,13 @@ namespace Cyclestreets
 				int count = geometryCoords.Count;
 				for( int i = 0; i < count; i++ )
 				{
-					List<GeoCoordinate> coords = geometryCoords[i];
-					DrawMapMarker( coords.ToArray(), geometryColor[i] );
+					List<GeoCoordinate> coords = geometryCoords[ i ];
+					DrawMapMarker( coords.ToArray(), geometryColor[ i ] );
 				}
 
 				//NavigationService.Navigate( new Uri( "/Pages/DirectionsResults.xaml", UriKind.Relative ) );
 				var sgs = ExtendedVisualStateManager.GetVisualStateGroups( LayoutRoot );
-				var sg = sgs[0] as VisualStateGroup;
+				var sg = sgs[ 0 ] as VisualStateGroup;
 				//ExtendedVisualStateManager.GoToElementState( LayoutRoot, "RouteFoundState", true );
 				VisualStateManager.GoToState( this, "RouteFoundState", true );
 
@@ -998,7 +1014,7 @@ namespace Cyclestreets
 		private void poiTapped( object sender, System.Windows.Input.GestureEventArgs e )
 		{
 			Pushpin pp = sender as Pushpin;
-			POI p = pinItems[pp];
+			POI p = pinItems[ pp ];
 			foreach( KeyValuePair<Pushpin, POI> pair in pinItems )
 			{
 				Pushpin ppItem = pair.Key;
@@ -1034,7 +1050,7 @@ namespace Cyclestreets
 			for( int i = 0; i < coordinate.Length; i++ )
 			{
 				//Point p = MyMap.ConvertGeoCoordinateToViewportPoint( coordinate[i] );
-				polygon.Path.Add( coordinate[i] );
+				polygon.Path.Add( coordinate[ i ] );
 			}
 
 			MyMap.MapElements.Add( polygon );
@@ -1088,8 +1104,8 @@ namespace Cyclestreets
 
 		private void Image_Tap_1( object sender, System.Windows.Input.GestureEventArgs e )
 		{
-			PhoneApplicationService.Current.State["route"] = currentRouteData;
-			PhoneApplicationService.Current.State["routeIndex"] = route.routeIndex;
+			PhoneApplicationService.Current.State[ "route" ] = currentRouteData;
+			PhoneApplicationService.Current.State[ "routeIndex" ] = route.routeIndex;
 			NavigationService.Navigate( new Uri( "/Pages/DirectionsResults.xaml", UriKind.Relative ) );
 		}
 
@@ -1110,7 +1126,7 @@ namespace Cyclestreets
 			{
 				arrowLeft.Opacity = 100;
 
-				MyMap.SetView( route.segments[currentStep].location, 20, route.segments[currentStep].Bearing, 75 );
+				MyMap.SetView( route.segments[ currentStep ].location, 20, route.segments[ currentStep ].Bearing, 75 );
 			}
 			if( currentStep >= route.segments.Count )
 				arrowRight.Opacity = 50;
@@ -1138,9 +1154,9 @@ namespace Cyclestreets
 			else
 			{
 				arrowRight.Opacity = 100;
-				MyMap.SetView( route.segments[currentStep].location, 20, route.segments[currentStep].Bearing, 75 );
+				MyMap.SetView( route.segments[ currentStep ].location, 20, route.segments[ currentStep ].Bearing, 75 );
 
-				findLabel1.Text = route.segments[currentStep].Turn + " at " + route.segments[currentStep].Name + "\n Continue for " + route.segments[currentStep].DistanceMetres + "m";
+				findLabel1.Text = route.segments[ currentStep ].Turn + " at " + route.segments[ currentStep ].Name + "\n Continue for " + route.segments[ currentStep ].DistanceMetres + "m";
 			}
 		}
 
@@ -1218,8 +1234,8 @@ namespace Cyclestreets
 				string text = box.Text;
 				if( text.Length == 6 || text.Length == 7 )
 				{
-					if( char.IsLetter( text[0] ) && char.IsLetter( text[text.Length - 1] ) && char.IsLetter( text[text.Length - 2] )
-						 && char.IsNumber( text[text.Length - 3] ) && char.IsNumber( text[text.Length - 4] ) )
+					if( char.IsLetter( text[ 0 ] ) && char.IsLetter( text[ text.Length - 1 ] ) && char.IsLetter( text[ text.Length - 2 ] )
+						 && char.IsNumber( text[ text.Length - 3 ] ) && char.IsNumber( text[ text.Length - 4 ] ) )
 					{
 						// This is a postcode
 						string newPostcodeEnd = text.Substring( text.Length - 3, 3 );
@@ -1228,18 +1244,37 @@ namespace Cyclestreets
 					}
 				}
 				StartPlaceSearch( box.Text, box );
+				
+				geoQ.SearchTerm = box.Text;
+				geoQ.GeoCoordinate = MyMap.Center;
+				geoQ.QueryAsync();
+				App.networkStatus.networkIsBusy = true;
+
+				this.Focus();
 			}
 		}
 
 		private void saveRoute_Click( object sender, EventArgs e )
 		{
-			PhoneApplicationService.Current.State["route"] = currentRouteData;
+			PhoneApplicationService.Current.State[ "route" ] = currentRouteData;
 			NavigationService.Navigate( new Uri( "/Pages/SaveRoute.xaml", UriKind.Relative ) );
 		}
 
 		private void loadRoute_Click( object sender, EventArgs e )
 		{
 			NavigationService.Navigate( new Uri( "/Pages/LoadRoute.xaml", UriKind.Relative ) );
+		}
+
+		private void startPoint_Populated( object sender, PopulatedEventArgs e )
+		{
+			/*foreach (object o in e.Data)
+			{
+				if( o is CSResult )
+					Debug.WriteLine( ( (CSResult)o ).resultName );
+				else
+					Debug.WriteLine( (string)o );
+			}*/
+			
 		}
 	}
 }

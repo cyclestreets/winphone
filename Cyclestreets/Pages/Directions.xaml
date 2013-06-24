@@ -305,7 +305,7 @@
 					<SolidColorBrush Color="{StaticResource PhoneContrastBackgroundColor}"/>
 				</TextBlock.Foreground>
 			</TextBlock>
-			<toolkit:AutoCompleteBox x:Name="startPoint" InputScope="Default" MinimumPrefixLength="3" SelectionChanged="startPoint_SelectionChanged" VerticalAlignment="Top" Margin="0" FontSize="20" Height="65" KeyUp="startPoint_KeyUp" FilterMode="None">
+			<toolkit:AutoCompleteBox x:Name="startPoint" MinimumPrefixLength="3" SelectionChanged="startPoint_SelectionChanged" VerticalAlignment="Top" Margin="0" FontSize="20" Height="65" KeyUp="startPoint_KeyUp" FilterMode="None" Populated="startPoint_Populated" IsDropDownOpen="True">
 				<!-- <toolkit:AutoCompleteBox.ItemTemplate>
 					<DataTemplate>
 						<StackPanel>
@@ -316,6 +316,7 @@
 				</toolkit:AutoCompleteBox.ItemTemplate> -->
 			</toolkit:AutoCompleteBox>
 		</StackPanel>
+		
 		<Grid x:Name="routeType" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Grid.Row="1">
 			<Grid.Background>
 				<SolidColorBrush Color="{StaticResource PhoneChromeColor}"/>
