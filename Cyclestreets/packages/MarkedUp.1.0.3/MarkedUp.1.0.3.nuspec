@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>MarkedUp</id>
+    <version>1.0.3</version>
+    <title>MarkedUp Analytics SDK for .NET</title>
+    <authors>Aaron Stannard</authors>
+    <owners>Aaron Stannard</owners>
+    <licenseUrl>https://markedup.com/terms</licenseUrl>
+    <projectUrl>https://markedup.com/</projectUrl>
+    <iconUrl>http://www.gravatar.com/avatar/656c19151e86857985d06fee38ec0a2f?s=32</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>MarkedUp Analytics SDK for Windows 8 and Windows Phone 8 developers. Learn more at https://markedup.com/</description>
+    <releaseNotes />
+    <copyright />
+    <language />
+    <tags>analytics mobile markedup winrt metro win8 winjs logging logs</tags>
+  </metadata>
+</package>

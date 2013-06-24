@@ -254,7 +254,6 @@
     </Content>
     <Content Include="Assets\traffic_signals.png" />
     <Content Include="Assets\world.png" />
-    <Content Include="README_FIRST.txt" />
     <Content Include="Toolkit.Content\ApplicationBar.Cancel.png" />
     <Content Include="Toolkit.Content\ApplicationBar.Check.png" />
     <Content Include="Toolkit.Content\ApplicationBar.Delete.png" />
@@ -290,9 +289,9 @@
     <Reference Include="FlurryWP8SDK">
       <HintPath>Resources\FlurryWP8SDK.dll</HintPath>
     </Reference>
-    <Reference Include="MarkedUp, Version=1.1.3.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="MarkedUp, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>packages\MarkedUp-wp8beta.1.1.3-beta\lib\WindowsPhone8\MarkedUp.dll</HintPath>
+      <HintPath>packages\MarkedUp.1.0.3\lib\WindowsPhone8\MarkedUp.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Expression.Drawing" />
     <Reference Include="Microsoft.Expression.Interactions" />

@@ -69,7 +69,7 @@ namespace Cyclestreets.Pages
 			UTF8Encoding enc = new UTF8Encoding();
 
 			PhoneApplicationService.Current.State[ "loadedRoute" ] = enc.GetString( data, 0, data.Length );
-			NavigationService.Navigate( new Uri( "/Pages/Directions.xaml", UriKind.Relative ) );
+			NavigationService.Navigate( new Uri( "/Pages/Directions.xaml?plan=leisure", UriKind.Relative ) );
 
 			App.networkStatus.networkIsBusy = false;
 		}

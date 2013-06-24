@@ -81,7 +81,11 @@ namespace Cyclestreets
 		/// Provides easy access to the root frame of the Phone Application.
 		/// </summary>
 		/// <returns>The root frame of the Phone Application.</returns>
-		public static PhoneApplicationFrame RootFrame { get; private set; }
+		public static PhoneApplicationFrame RootFrame
+		{
+			get;
+			private set;
+		}
 
 		/// <summary>
 		/// Constructor for the Application object.
@@ -137,7 +141,7 @@ namespace Cyclestreets
 #if DEBUG
 			_isTrial = false;
 #else
-            _isTrial = _licenseInfo.IsTrial();
+			_isTrial = _licenseInfo.IsTrial();
 #endif
 		}
 
@@ -213,6 +217,7 @@ namespace Cyclestreets
 			else
 			{
 				FlurryWP8SDK.Api.LogError( "Unhandled Exception", e.ExceptionObject );
+				MarkedUp.AnalyticClient.LogLastChanceException( e );
 			}
 		}
 
