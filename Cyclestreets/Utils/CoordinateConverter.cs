@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.Geolocation;
 
-namespace Cyclestreets
+namespace Cyclestreets.Utils
 {
 	public static class CoordinateConverter
 	{

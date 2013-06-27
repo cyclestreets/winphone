@@ -165,6 +165,8 @@ namespace Cyclestreets
 			MarkedUp.AnalyticClient.Initialize( "87c139ca-14a7-41ff-8b3b-095894a52bdf" );
 			MarkedUp.AnalyticClient.RegisterRootNavigationFrame( RootFrame );
 			CheckLicense();
+
+			SettingManager.instance.SetIntValue( "LaunchCount", SettingManager.instance.GetIntValue( "LaunchCount", 0 ) + 1 );
 		}
 
 		// Code to execute when the application is activated (brought to foreground)

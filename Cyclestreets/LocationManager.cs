@@ -1,4 +1,5 @@
 ﻿using System;
+using Cyclestreets.Utils;
 using Microsoft.Phone.Maps.Controls;
 using Windows.Devices.Geolocation;
 
@@ -8,8 +9,12 @@ namespace Cyclestreets
 	{
 		public static LocationManager instance;
 
-		public Geoposition MyGeoPosition { get; set; }
-		private Geolocator trackingGeolocator;
+		public Geoposition MyGeoPosition
+		{
+			get;
+			set;
+		}
+		public Geolocator trackingGeolocator;
 
 		private Map MyMap;
 		private bool lockToMyPos;

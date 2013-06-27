@@ -96,7 +96,7 @@
     </Compile>
     <Compile Include="AsyncWebRequest.cs" />
     <Compile Include="Common\BindableBase.cs" />
-    <Compile Include="CoordinateConverter.cs" />
+    <Compile Include="Utils\CoordinateConverter.cs" />
     <Compile Include="LocationManager.cs" />
     <Compile Include="Pages\LeisureRouting.xaml.cs">
       <DependentUpon>LeisureRouting.xaml</DependentUpon>

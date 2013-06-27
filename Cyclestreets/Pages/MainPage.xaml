@@ -16,6 +16,45 @@
 	Foreground="{StaticResource PhoneForegroundBrush}"
 	SupportedOrientations="Portrait"  Orientation="Portrait"
 	shell:SystemTray.IsVisible="False">
+	<phone:PhoneApplicationPage.Resources>
+		<Style x:Key="CustomMessageBoxStyle1" TargetType="toolkit:CustomMessageBox">
+		<Setter Property="VerticalAlignment" Value="Top"/>
+		<Setter Property="HorizontalContentAlignment" Value="Left"/>
+		<Setter Property="VerticalContentAlignment" Value="Top"/>
+		<Setter Property="FontFamily" Value="{StaticResource PhoneFontFamilyNormal}"/>
+		<Setter Property="FontSize" Value="{StaticResource PhoneFontSizeNormal}"/>
+		<Setter Property="Foreground" Value="{StaticResource PhoneForegroundBrush}"/>
+		<Setter Property="Background" Value="{StaticResource PhoneChromeBrush}"/>
+		<Setter Property="Margin" Value="0"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="toolkit:CustomMessageBox">
+					<Grid Background="{TemplateBinding Background}" HorizontalAlignment="Stretch">
+						<Grid HorizontalAlignment="Left" Width="480">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="*"/>
+							</Grid.ColumnDefinitions>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="*"/>
+								<RowDefinition Height="Auto"/>
+							</Grid.RowDefinitions>
+							<StackPanel Grid.ColumnSpan="2" Margin="0,0,0,18">
+								<TextBlock x:Name="TitleTextBlock" Foreground="{TemplateBinding Foreground}" FontFamily="{StaticResource PhoneFontFamilySemiBold}" Margin="24,16,24,-6" Text="{TemplateBinding Title}" Visibility="Collapsed"/>
+								<TextBlock x:Name="CaptionTextBlock" Foreground="{TemplateBinding Foreground}" FontSize="{StaticResource PhoneFontSizeLarge}" FontFamily="{StaticResource PhoneFontFamilySemiBold}" HorizontalAlignment="Left" Margin="24,8,24,0" TextWrapping="Wrap" Text="{TemplateBinding Caption}" Visibility="Collapsed"/>
+								<!-- <TextBlock x:Name="MessageTextBlock" Foreground="{TemplateBinding Foreground}" FontSize="{StaticResource PhoneFontSizeMedium}" FontFamily="{StaticResource PhoneFontFamilySemiLight}" HorizontalAlignment="Left" Margin="24,11,24,0" TextWrapping="Wrap" Text="{TemplateBinding Message}" Visibility="Collapsed"/> -->
+								<TextBox x:Name="saveFileName" Height="72" TextWrapping="Wrap" Text="{TemplateBinding Message}"/>
+								<ContentPresenter Margin="12,0,0,0"/>
+							</StackPanel>
+							<Button x:Name="LeftButton" Content="{TemplateBinding LeftButtonContent}" Grid.Column="0" Foreground="{TemplateBinding Foreground}" toolkit:TiltEffect.IsTiltEnabled="True" IsEnabled="{Binding IsLeftButtonEnabled}" Margin="12,0,0,12" Grid.Row="1" Visibility="Collapsed"/>
+							<Button x:Name="RightButton" Content="{TemplateBinding RightButtonContent}" Grid.Column="1" Foreground="{TemplateBinding Foreground}" toolkit:TiltEffect.IsTiltEnabled="True" IsEnabled="{Binding IsRightButtonEnabled}" Margin="0,0,12,12" Grid.Row="1" Visibility="Collapsed"/>
+						</Grid>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	</phone:PhoneApplicationPage.Resources>
 	<phone:PhoneApplicationPage.ApplicationBar>
 		<shell:ApplicationBar x:Name="appBar">
 			<shell:ApplicationBar.MenuItems>

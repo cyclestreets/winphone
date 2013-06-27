@@ -6,6 +6,8 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Navigation;
 using System.Xml.Linq;
+using Cyclestreets.Utils;
+using CycleStreets.Util;
 using Microsoft.Expression.Interactivity.Core;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Maps.Controls;
@@ -14,7 +16,6 @@ using Microsoft.Phone.Maps.Toolkit;
 using Microsoft.Phone.Shell;
 using Microsoft.Phone.Tasks;
 using RestSharp;
-using CycleStreets.Util;
 
 namespace Cyclestreets
 {
@@ -59,8 +60,8 @@ namespace Cyclestreets
 
 			// hack. See here http://stackoverflow.com/questions/5334574/applicationbariconbutton-is-null/5334703#5334703
 			/*findAppBar = ApplicationBar.Buttons[ 0 ] as Microsoft.Phone.Shell.ApplicationBarIconButton;*/
-			directionsAppBar = ApplicationBar.Buttons[ 0 ] as Microsoft.Phone.Shell.ApplicationBarIconButton;
-			navigateToAppBar = ApplicationBar.Buttons[ 1 ] as Microsoft.Phone.Shell.ApplicationBarIconButton;
+			directionsAppBar = ApplicationBar.Buttons[0] as Microsoft.Phone.Shell.ApplicationBarIconButton;
+			navigateToAppBar = ApplicationBar.Buttons[1] as Microsoft.Phone.Shell.ApplicationBarIconButton;
 
 			if( LocationManager.instance == null )
 			{
@@ -71,8 +72,8 @@ namespace Cyclestreets
 			geoQ.QueryCompleted += geoQ_QueryCompleted;
 
 			var sgs = ExtendedVisualStateManager.GetVisualStateGroups( LayoutRoot );
-			var sg = sgs[ 0 ] as VisualStateGroup;
-			ExtendedVisualStateManager.GoToElementState( LayoutRoot, ( (VisualState)sg.States[ 0 ] ).Name, true );
+			var sg = sgs[0] as VisualStateGroup;
+			ExtendedVisualStateManager.GoToElementState( LayoutRoot, ( (VisualState)sg.States[0] ).Name, true );
 		}
 
 		void m_Click( object sender, EventArgs e )
@@ -170,6 +171,41 @@ namespace Cyclestreets
 					MarkedUp.AnalyticClient.TrialConversionComplete();
 					SettingManager.instance.SetBoolValue( "appIsTrial", false );
 				}
+
+				if( !SettingManager.instance.GetBoolValue( "RatedApp", false ) )
+				{
+					if( SettingManager.instance.GetIntValue( "LaunchCount", 0 ) > 0 && ( SettingManager.instance.GetIntValue( "LaunchCount", 0 ) % 5 ) == 0 )
+					{
+						CustomMessageBox msg = new CustomMessageBox();
+						msg.Message = "Would you be kind enough to help our app get noticed by rating us in the store? If you don't think our app is worth 4 or 5 stars then please consider sending us feedback instead so we can improve our app.";
+						msg.IsLeftButtonEnabled = true;
+						msg.IsRightButtonEnabled = true;
+						msg.LeftButtonContent = "Rate";
+						msg.RightButtonContent = "Don't ask again";
+						msg.Title = "Rate CycleStreets";
+
+						msg.Dismissed += ( s1, e1 ) =>
+						{
+							switch( e1.Result )
+							{
+								case CustomMessageBoxResult.LeftButton:
+									MarketplaceReviewTask marketplaceReviewTask = new MarketplaceReviewTask();
+									marketplaceReviewTask.Show();
+									SettingManager.instance.SetBoolValue( "RatedApp", true );
+									break;
+								case CustomMessageBoxResult.RightButton:
+									SettingManager.instance.SetBoolValue( "RatedApp", true );
+									break;
+								case CustomMessageBoxResult.None:
+									// Do nothing.
+									break;
+								default:
+									break;
+							}
+						};
+						msg.Show();
+					}
+				}
 			}
 
 			if( SettingManager.instance.GetBoolValue( "LocationConsent", true ) )
@@ -187,8 +223,8 @@ namespace Cyclestreets
 				if( NavigationContext.QueryString.ContainsKey( "longitude" ) )
 				{
 					GeoCoordinate center = new GeoCoordinate();
-					center.Longitude = float.Parse( NavigationContext.QueryString[ "longitude" ] );
-					center.Latitude = float.Parse( NavigationContext.QueryString[ "latitude" ] );
+					center.Longitude = float.Parse( NavigationContext.QueryString["longitude"] );
+					center.Latitude = float.Parse( NavigationContext.QueryString["latitude"] );
 					MyMap.Center = center;
 					MyMap.ZoomLevel = 16;
 					LocationManager.instance.LockToMyPos( false );
@@ -251,7 +287,7 @@ namespace Cyclestreets
 		private void poiTapped( object sender, System.Windows.Input.GestureEventArgs e )
 		{
 			Pushpin pp = sender as Pushpin;
-			POI p = pinItems[ pp ];
+			POI p = pinItems[pp];
 			foreach( KeyValuePair<Pushpin, POI> pair in pinItems )
 			{
 				Pushpin ppItem = pair.Key;
