@@ -60,8 +60,8 @@ namespace Cyclestreets
 
 			// hack. See here http://stackoverflow.com/questions/5334574/applicationbariconbutton-is-null/5334703#5334703
 			/*findAppBar = ApplicationBar.Buttons[ 0 ] as Microsoft.Phone.Shell.ApplicationBarIconButton;*/
-			directionsAppBar = ApplicationBar.Buttons[0] as Microsoft.Phone.Shell.ApplicationBarIconButton;
-			navigateToAppBar = ApplicationBar.Buttons[1] as Microsoft.Phone.Shell.ApplicationBarIconButton;
+			directionsAppBar = ApplicationBar.Buttons[ 0 ] as Microsoft.Phone.Shell.ApplicationBarIconButton;
+			navigateToAppBar = ApplicationBar.Buttons[ 1 ] as Microsoft.Phone.Shell.ApplicationBarIconButton;
 
 			if( LocationManager.instance == null )
 			{
@@ -72,8 +72,8 @@ namespace Cyclestreets
 			geoQ.QueryCompleted += geoQ_QueryCompleted;
 
 			var sgs = ExtendedVisualStateManager.GetVisualStateGroups( LayoutRoot );
-			var sg = sgs[0] as VisualStateGroup;
-			ExtendedVisualStateManager.GoToElementState( LayoutRoot, ( (VisualState)sg.States[0] ).Name, true );
+			var sg = sgs[ 0 ] as VisualStateGroup;
+			ExtendedVisualStateManager.GoToElementState( LayoutRoot, ( (VisualState)sg.States[ 0 ] ).Name, true );
 		}
 
 		void m_Click( object sender, EventArgs e )
@@ -184,19 +184,24 @@ namespace Cyclestreets
 						msg.RightButtonContent = "Don't ask again";
 						msg.Title = "Rate CycleStreets";
 
+						FlurryWP8SDK.Api.LogEvent( "Rate App Shown" );
+
 						msg.Dismissed += ( s1, e1 ) =>
 						{
 							switch( e1.Result )
 							{
 								case CustomMessageBoxResult.LeftButton:
+									FlurryWP8SDK.Api.LogEvent( "Chosen to rate" );
 									MarketplaceReviewTask marketplaceReviewTask = new MarketplaceReviewTask();
 									marketplaceReviewTask.Show();
 									SettingManager.instance.SetBoolValue( "RatedApp", true );
 									break;
 								case CustomMessageBoxResult.RightButton:
+									FlurryWP8SDK.Api.LogEvent( "Dont ever rate" );
 									SettingManager.instance.SetBoolValue( "RatedApp", true );
 									break;
 								case CustomMessageBoxResult.None:
+									FlurryWP8SDK.Api.LogEvent( "Skipped rate" );
 									// Do nothing.
 									break;
 								default:
@@ -223,8 +228,8 @@ namespace Cyclestreets
 				if( NavigationContext.QueryString.ContainsKey( "longitude" ) )
 				{
 					GeoCoordinate center = new GeoCoordinate();
-					center.Longitude = float.Parse( NavigationContext.QueryString["longitude"] );
-					center.Latitude = float.Parse( NavigationContext.QueryString["latitude"] );
+					center.Longitude = float.Parse( NavigationContext.QueryString[ "longitude" ] );
+					center.Latitude = float.Parse( NavigationContext.QueryString[ "latitude" ] );
 					MyMap.Center = center;
 					MyMap.ZoomLevel = 16;
 					LocationManager.instance.LockToMyPos( false );
@@ -282,12 +287,18 @@ namespace Cyclestreets
 					SettingManager.instance.SetBoolValue( "LocationConsent", false );
 				}
 			}
+
+			if( PhoneApplicationService.Current.State.ContainsKey( "loadedRoute" ) && PhoneApplicationService.Current.State[ "loadedRoute" ] != null )
+			{
+				NavigationService.Navigate( new Uri( "/pages/Directions.xaml", UriKind.Relative ) );
+			}
+
 		}
 
 		private void poiTapped( object sender, System.Windows.Input.GestureEventArgs e )
 		{
 			Pushpin pp = sender as Pushpin;
-			POI p = pinItems[pp];
+			POI p = pinItems[ pp ];
 			foreach( KeyValuePair<Pushpin, POI> pair in pinItems )
 			{
 				Pushpin ppItem = pair.Key;
@@ -368,6 +379,19 @@ namespace Cyclestreets
 		private void leisureRouting_Click( object sender, EventArgs e )
 		{
 			NavigationService.Navigate( new Uri( "/Pages/LeisureRouting.xaml", UriKind.Relative ) );
+		}
+
+		private void sendFeedback_Click( object sender, EventArgs e )
+		{
+			EmailComposeTask task = new EmailComposeTask();
+			task.Subject = "CycleStreets [WP8] feedback";
+			task.To = "info@cyclestreets.net";
+			task.Show();
+		}
+
+		private void loadRoute_Click( object sender, EventArgs e )
+		{
+			NavigationService.Navigate( new Uri( "/Pages/LoadRoute.xaml", UriKind.Relative ) );
 		}
 	}
 }

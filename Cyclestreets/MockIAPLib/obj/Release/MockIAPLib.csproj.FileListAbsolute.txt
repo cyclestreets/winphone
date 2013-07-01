@@ -6,3 +6,7 @@ D:\Data\cyclestreets\Cyclestreets\MockIAPLib\Bin\Release\MockIAPLib.dll
 D:\Data\cyclestreets\Cyclestreets\MockIAPLib\Bin\Release\MockIAPLib.pdb
 D:\Data\cyclestreets\Cyclestreets\MockIAPLib\obj\Release\MockIAPLib.dll
 D:\Data\cyclestreets\Cyclestreets\MockIAPLib\obj\Release\MockIAPLib.pdb
+C:\Users\Dave\Documents\Visual Studio 2012\Projects\Cyclestreets\Cyclestreets\MockIAPLib\Bin\Release\MockIAPLib.dll
+C:\Users\Dave\Documents\Visual Studio 2012\Projects\Cyclestreets\Cyclestreets\MockIAPLib\Bin\Release\MockIAPLib.pdb
+C:\Users\Dave\Documents\Visual Studio 2012\Projects\Cyclestreets\Cyclestreets\MockIAPLib\obj\Release\MockIAPLib.dll
+C:\Users\Dave\Documents\Visual Studio 2012\Projects\Cyclestreets\Cyclestreets\MockIAPLib\obj\Release\MockIAPLib.pdb

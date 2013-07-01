@@ -96,6 +96,9 @@
     </Compile>
     <Compile Include="AsyncWebRequest.cs" />
     <Compile Include="Common\BindableBase.cs" />
+    <Compile Include="Pages\ShareChoice.xaml.cs">
+      <DependentUpon>ShareChoice.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utils\CoordinateConverter.cs" />
     <Compile Include="LocationManager.cs" />
     <Compile Include="Pages\LeisureRouting.xaml.cs">
@@ -196,6 +199,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\Settings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\ShareChoice.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

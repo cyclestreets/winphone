@@ -95,6 +95,7 @@
 				<shell:ApplicationBarMenuItem x:Name="loadRoute" IsEnabled="True" Text="load route" Click="loadRoute_Click"/>
 				<shell:ApplicationBarMenuItem x:Name="settings" IsEnabled="True" Text="Settings" Click="settings_Click"/>
 				<shell:ApplicationBarMenuItem x:Name="privacy" IsEnabled="True" Text="Privacy Policy" Click="privacy_Click"/>
+				<shell:ApplicationBarMenuItem x:Name="sendFeedback" IsEnabled="True" Text="send feedback" Click="sendFeedback_Click"/>
 			</shell:ApplicationBar.MenuItems>
 			<shell:ApplicationBarIconButton x:Name="myPosition" IconUri="/Assets/icons/dark/appbar.location.circle.png" IsEnabled="True" Text="My Position" Click="myPosition_Click"/>
 			<shell:ApplicationBarIconButton x:Name="cursorPos" IconUri="/Assets/icons/dark/appbar.add.png" IsEnabled="True" Text="Cursor" Click="cursorPos_Click"/>
@@ -251,7 +252,7 @@
 			<ec:ExtendedVisualStateManager/>
 		</VisualStateManager.CustomVisualStateManager>
 		<ProgressBar x:Name="progress" Margin="0" VerticalAlignment="Top" IsIndeterminate="True" Foreground="White" Opacity="{Binding Opacity}"/>
-		<maps:Map x:Name="MyMap" Margin="0" Grid.Row="1" ZoomLevel="5.684" Loaded="MyMap_Loaded">
+		<maps:Map x:Name="MyMap" Margin="0" Grid.Row="1" ZoomLevel="5.684" Loaded="MyMap_Loaded" LandmarksEnabled="True">
 			<maps:Map.Center>
 				<Location:GeoCoordinate Altitude="NaN" Course="NaN" HorizontalAccuracy="NaN" Longitude="-4.367" Latitude="55.551" Speed="NaN" VerticalAccuracy="NaN"/>
 			</maps:Map.Center>
