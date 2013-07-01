@@ -96,6 +96,9 @@
     </Compile>
     <Compile Include="AsyncWebRequest.cs" />
     <Compile Include="Common\BindableBase.cs" />
+    <Compile Include="Pages\Feedback.xaml.cs">
+      <DependentUpon>Feedback.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\ShareChoice.xaml.cs">
       <DependentUpon>ShareChoice.xaml</DependentUpon>
     </Compile>
@@ -158,6 +161,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Page Include="Pages\Feedback.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\LeisureRouting.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

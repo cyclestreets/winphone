@@ -383,10 +383,11 @@ namespace Cyclestreets
 
 		private void sendFeedback_Click( object sender, EventArgs e )
 		{
-			EmailComposeTask task = new EmailComposeTask();
-			task.Subject = "CycleStreets [WP8] feedback";
-			task.To = "info@cyclestreets.net";
-			task.Show();
+// 			EmailComposeTask task = new EmailComposeTask();
+// 			task.Subject = "CycleStreets [WP8] feedback";
+// 			task.To = "info@cyclestreets.net";
+// 			task.Show();
+			NavigationService.Navigate( new Uri( "/Pages/Feedback.xaml", UriKind.Relative ) );
 		}
 
 		private void loadRoute_Click( object sender, EventArgs e )
