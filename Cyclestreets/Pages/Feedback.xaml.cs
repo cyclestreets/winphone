@@ -1,20 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
-using Microsoft.Phone.Shell;
+using RestSharp;
 
 namespace Cyclestreets.Pages
 {
 	class feedbackType
 	{
-		public string DisplayName { get; set; }
-		public string InternalCode { get; set; }
-		public feedbackType(string d, string i)
+		public string DisplayName
+		{
+			get;
+			set;
+		}
+		public string InternalCode
+		{
+			get;
+			set;
+		}
+		public feedbackType( string d, string i )
 		{
 			DisplayName = d;
 			InternalCode = i;
@@ -28,7 +31,7 @@ namespace Cyclestreets.Pages
 
 			feedbackTypeDropdown.ItemsSource = feedbackTypes;
 			feedbackTypeDropdown.DisplayMemberPath = "DisplayName";
-			feedbackTypeDropdown.SelectedIndex = 0;
+			feedbackTypeDropdown.SelectedIndex = 1;
 		}
 
 		private feedbackType[] feedbackTypes =
@@ -39,9 +42,36 @@ namespace Cyclestreets.Pages
 			new feedbackType("Other", "other"),
 		};
 
+		protected override void OnNavigatedTo( System.Windows.Navigation.NavigationEventArgs e )
+		{
+			base.OnNavigatedTo( e );
+
+			if( NavigationContext.QueryString.ContainsKey( "routeID" ) )
+			{
+				feedbackTypeDropdown.SelectedIndex = 0;
+				itinerary.Text = NavigationContext.QueryString["routeID"];
+			}
+		}
+
 		private void submitButton_Tap( object sender, System.Windows.Input.GestureEventArgs e )
 		{
+			var client = new RestClient( "https://www.cyclestreets.net/api/feedback.xml?key=" + App.apiKey );
 
+			feedbackType type = feedbackTypeDropdown.SelectedItem as feedbackType;
+			var request = new RestRequest( "", Method.POST );
+			request.AddParameter( "type", type.InternalCode );
+			request.AddParameter( "itinerary", itinerary.Text );
+			request.AddParameter( "comments", comments.Text );
+			request.AddParameter( "email", email.Text );
+			request.AddParameter( "name", name.Text );
+
+			// easy async support
+			client.ExecuteAsync( request, response =>
+			{
+				//Debug.WriteLine( response );
+				formScroller.Visibility = System.Windows.Visibility.Collapsed;
+				feedbackResult.Visibility = System.Windows.Visibility.Visible;
+			} );
 		}
 
 		private void feedbackType_SelectionChanged( object sender, SelectionChangedEventArgs e )

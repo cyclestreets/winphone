@@ -27,6 +27,11 @@ namespace Cyclestreets
 			NavigationService.Navigate( new Uri( "/Pages/ShareChoice.xaml", UriKind.Relative ) );
 		}
 
+		private void routeFeedback_Click( object sender, EventArgs e )
+		{
+			NavigationService.Navigate( new Uri( "/Pages/Feedback.xaml?routeID=" + Directions.route.routeIndex, UriKind.Relative ) );
+		}
+
 
 	}
 }

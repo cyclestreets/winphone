@@ -14,6 +14,7 @@
 		<shell:ApplicationBar>
 			<shell:ApplicationBarIconButton IconUri="/Assets/AppBar/save.png" IsEnabled="True" Text="Save" Click="ApplicationBarIconButton_Click"/>
 			<shell:ApplicationBarIconButton x:Name="share" IconUri="/Assets/AppBar/share.png" IsEnabled="True" Text="Share" Click="share_Click"/>
+			<shell:ApplicationBarIconButton x:Name="routeFeedback" IconUri="/Assets/AppBar/feature.email.png" IsEnabled="True" Text="Route Feedback" Click="routeFeedback_Click"/>
 		</shell:ApplicationBar>
 	</phone:PhoneApplicationPage.ApplicationBar>
 	<phone:PhoneApplicationPage.Background>
