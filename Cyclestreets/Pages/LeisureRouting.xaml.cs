@@ -99,11 +99,12 @@ namespace Cyclestreets.Pages
 
 		private void findRoute_Click( object sender, EventArgs e )
 		{
-			App.networkStatus.networkIsBusy = true;
 			this.Focus();
 
 			if( LocationManager.instance.MyGeoPosition != null )
 			{
+				App.networkStatus.networkIsBusy = true;
+
 				Geoposition coord = LocationManager.instance.MyGeoPosition;
 
 				string extra;
@@ -122,17 +123,17 @@ namespace Cyclestreets.Pages
 					extra = "&distance=" + (int)( val * 1609.344 );
 				}
 				string poiNames = "";
-				foreach (POIItem item in items)
+				foreach( POIItem item in items )
 				{
 					if( item.POIEnabled )
-						poiNames += item.POILabel+",";
+						poiNames += item.POILabel + ",";
 				}
-				poiNames = HttpUtility.UrlEncode(poiNames.TrimEnd( ',' ));
+				poiNames = HttpUtility.UrlEncode( poiNames.TrimEnd( ',' ) );
 
 				string speedSetting = SettingManager.instance.GetStringValue( "cycleSpeed", "12mph" );
 				int speed = Util.getSpeedFromString( speedSetting );
 
-				if ( !string.IsNullOrWhiteSpace(poiNames) )
+				if( !string.IsNullOrWhiteSpace( poiNames ) )
 					extra += "&poitypes=" + poiNames;
 
 				_request = new AsyncWebRequest( "http://www.cyclestreets.net/api/journey.json?key=" + App.apiKey + "&plan=leisure&itinerarypoints=" + coord.Coordinate.Longitude + "," + coord.Coordinate.Latitude + "&speed=" + speed + extra, RouteFound );
@@ -140,6 +141,10 @@ namespace Cyclestreets.Pages
 
 				pleaseWait.IsOpen = true;
 				popupPanel.Width = Application.Current.Host.Content.ActualWidth;
+			}
+			else
+			{
+				Util.showLocationDialog();
 			}
 		}
 

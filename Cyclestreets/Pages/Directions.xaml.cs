@@ -3,10 +3,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Device.Location;
 using System.Net;
 using System.Text;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -620,24 +622,7 @@ namespace Cyclestreets
 			}
 			else
 			{
-				if( SettingManager.instance.GetBoolValue( "LocationConsent", false ) == false )
-				{
-					MessageBoxResult result =
-									MessageBox.Show( "You have denied CycleStreets permission to access your location. Press OK to change this or Cancel to cancel.",
-									"Location",
-									MessageBoxButton.OKCancel );
-					if( result == MessageBoxResult.OK )
-					{
-						NavigationService.Navigate( new Uri( "/Pages/Settings.xaml", UriKind.Relative ) );
-					}
-				}
-				else
-				{
-					MessageBoxResult result =
-										MessageBox.Show( "Unable to retrieve your location. Please check location services are enabled on this device.",
-										"Location",
-										MessageBoxButton.OK );
-				}
+				Util.showLocationDialog();
 
 			}
 
@@ -694,10 +679,12 @@ namespace Cyclestreets
 
 			addWaypoint( pp );
 
-			bool shownTutorial = SettingManager.instance.GetBoolValue( "shownTutorialPin", false );
-			if( !shownTutorial )
-				routeTutorialPin.Visibility = Visibility.Visible;
-
+			if( SettingManager.instance.GetBoolValue( "tutorialEnabled", true ) )
+			{
+				bool shownTutorial = SettingManager.instance.GetBoolValue( "shownTutorialPin", false );
+				if( !shownTutorial )
+					routeTutorialPin.Visibility = Visibility.Visible;
+			}
 			// Clear box
 			startPoint.Text = "";
 
@@ -1006,9 +993,12 @@ namespace Cyclestreets
 				float f = (float)route.distance * 0.000621371192f;
 				findLabel1.Text = f.ToString( "0.00" ) + "m\n" + UtilTime.secsToLongDHMS( route.timeInSeconds );
 
-				bool shownTutorial = SettingManager.instance.GetBoolValue( "shownTutorialRouteType", false );
-				if( !shownTutorial )
-					routeTutorialRouteType.Visibility = Visibility.Visible;
+				if( SettingManager.instance.GetBoolValue( "tutorialEnabled", true ) )
+				{
+					bool shownTutorial = SettingManager.instance.GetBoolValue( "shownTutorialRouteType", false );
+					if( !shownTutorial )
+						routeTutorialRouteType.Visibility = Visibility.Visible;
+				}
 			} );
 
 			saveRoute.IsEnabled = true;
@@ -1301,42 +1291,39 @@ namespace Cyclestreets
 			if( LocationManager.instance.MyGeoPosition != null )
 			{
 
-				SmartDispatcher.BeginInvoke( () =>
-					{
-						//myLocationIndicator.Visibility = Visibility.Visible;
+				if( myLocationOverlay == null )
+				{
+					// 				Arc myArc = new Arc();
+					// 				myArc.ArcThickness = 5;
+					// 				myArc.ArcThicknessUnit = Microsoft.Expression.Media.UnitType.Pixel;
+					// 				myArc.EndAngle = 360;
+					// 				myArc.StartAngle = 0;
+					// 				myArc.Height = 30;
+					// Create a small circle to mark the current location.
+					Ellipse myCircle = new Ellipse();
+					myCircle.Fill = new SolidColorBrush( Colors.Black );
+					myCircle.Height = 20;
+					myCircle.Width = 20;
+					myCircle.Opacity = 30;
+					Binding myBinding = new Binding( "Visible" );
+					myBinding.Source = new MyPositionDataSource(MyMap);
+					myCircle.Visibility = Visibility.Visible;
+					myCircle.SetBinding( Ellipse.VisibilityProperty, myBinding );
 
-						if( myLocationOverlay == null )
-						{
-							// 				Arc myArc = new Arc();
-							// 				myArc.ArcThickness = 5;
-							// 				myArc.ArcThicknessUnit = Microsoft.Expression.Media.UnitType.Pixel;
-							// 				myArc.EndAngle = 360;
-							// 				myArc.StartAngle = 0;
-							// 				myArc.Height = 30;
-							// Create a small circle to mark the current location.
-							Ellipse myCircle = new Ellipse();
-							myCircle.Fill = new SolidColorBrush( Colors.Black );
-							myCircle.Height = 20;
-							myCircle.Width = 20;
-							myCircle.Opacity = 30;
+					// Create a MapOverlay to contain the circle.
+					myLocationOverlay = new MapOverlay();
+					myLocationOverlay.Content = myCircle;
+					myLocationOverlay.PositionOrigin = new Point( 0.5, 0.5 );
+					myLocationOverlay.GeoCoordinate = CoordinateConverter.ConvertGeocoordinate( LocationManager.instance.MyGeoPosition.Coordinate );
 
-							// Create a MapOverlay to contain the circle.
+					// Create a MapLayer to contain the MapOverlay.
+					MapLayer myLocationLayer = new MapLayer();
+					myLocationLayer.Add( myLocationOverlay );
 
-							myLocationOverlay = new MapOverlay();
-							myLocationOverlay.Content = myCircle;
-							myLocationOverlay.PositionOrigin = new Point( 0.5, 0.5 );
-							myLocationOverlay.GeoCoordinate = CoordinateConverter.ConvertGeocoordinate( LocationManager.instance.MyGeoPosition.Coordinate );
+					MyMap.Layers.Add( myLocationLayer );
+				}
 
-							// Create a MapLayer to contain the MapOverlay.
-							MapLayer myLocationLayer = new MapLayer();
-							myLocationLayer.Add( myLocationOverlay );
-
-							MyMap.Layers.Add( myLocationLayer );
-						}
-
-
-						myLocationOverlay.GeoCoordinate = CoordinateConverter.ConvertGeocoordinate( LocationManager.instance.MyGeoPosition.Coordinate );
-					} );
+				myLocationOverlay.GeoCoordinate = CoordinateConverter.ConvertGeocoordinate( LocationManager.instance.MyGeoPosition.Coordinate );
 			}
 		}
 
@@ -1349,5 +1336,51 @@ namespace Cyclestreets
 			NavigationService.Navigate( new Uri( "/Pages/Feedback.xaml", UriKind.Relative ) );
 		}
 
+	}
+
+	public class MyPositionDataSource : INotifyPropertyChanged
+	{
+		private Map MyMap;
+
+		public MyPositionDataSource( Map MyMap )
+		{
+			// TODO: Complete member initialization
+			this.MyMap = MyMap;
+			MyMap.ZoomLevelChanged += MyMap_ZoomLevelChanged;
+		}
+
+		private void MyMap_ZoomLevelChanged( object sender, MapZoomLevelChangedEventArgs e )
+		{
+			this.Visible = _isVisible;
+		}
+
+		private Visibility _isVisible = Visibility.Visible;
+		public Visibility Visible
+		{
+			set
+			{
+				if( MyMap.ZoomLevel > 12 && _isVisible == Visibility.Collapsed )
+				{
+					_isVisible = Visibility.Visible;
+					NotifyPropertyChanged( "Visible" );
+				}
+				else if( MyMap.ZoomLevel <= 12 && _isVisible == Visibility.Visible )
+				{
+					_isVisible = Visibility.Collapsed;
+					NotifyPropertyChanged( "Visible" );
+				}
+			}
+			get { return _isVisible; }
+		}
+
+		public event PropertyChangedEventHandler PropertyChanged;
+		private void NotifyPropertyChanged( String propertyName )
+		{
+			PropertyChangedEventHandler handler = PropertyChanged;
+			if( null != handler )
+			{
+				handler( this, new PropertyChangedEventArgs( propertyName ) );
+			}
+		}
 	}
 }

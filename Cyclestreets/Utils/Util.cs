@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Navigation;
 using System.Xml.Linq;
 using Cyclestreets;
+using Microsoft.Phone.Controls;
 using Microsoft.Phone.Info;
 
 namespace CycleStreets.Util
@@ -77,7 +79,7 @@ namespace CycleStreets.Util
 						SmartDispatcher.BeginInvoke( () =>
 						{
 							MessageBoxResult result = MessageBox.Show( "Server reported an error.\nAction: " + actionPerformed + "\nCode " + errorCode + "\nMessage: " + e.Element( "error" ).Value + ".\nPlease try again later or report to dave@rwscripts.com if it continues. Thanks.\n", "Error", MessageBoxButton.OK );
-							
+
 						} );
 
 						return true;
@@ -118,7 +120,7 @@ namespace CycleStreets.Util
 				MessageBoxResult result = MessageBox.Show( "There was an error while downloading data from the server. Please try again.", "Error", MessageBoxButton.OK );
 				if( result == MessageBoxResult.OK )
 				{
-					
+
 				}
 			} );
 		}
@@ -130,12 +132,12 @@ namespace CycleStreets.Util
 				MessageBoxResult result = MessageBox.Show( "No Internet connection available. A connection to the Internet is required to use this app. Check flight mode is not enabled and try again.", "No Internet", MessageBoxButton.OK );
 				//if( result == MessageBoxResult.OK )
 				{
-// 					Uri nUri = null;
-// 					if( App.UserSession != null )
-// 						nUri = new Uri( string.Format( "/MainPage.xaml?Refresh=true&random={0}", Guid.NewGuid() ), UriKind.Relative );
-// 					else
-// 						nUri = new Uri( string.Format( "/SplashPage.xaml?Refresh=true&random={0}", Guid.NewGuid() ), UriKind.Relative );
-// 					App.RootFrame.Navigate( nUri );
+					// 					Uri nUri = null;
+					// 					if( App.UserSession != null )
+					// 						nUri = new Uri( string.Format( "/MainPage.xaml?Refresh=true&random={0}", Guid.NewGuid() ), UriKind.Relative );
+					// 					else
+					// 						nUri = new Uri( string.Format( "/SplashPage.xaml?Refresh=true&random={0}", Guid.NewGuid() ), UriKind.Relative );
+					// 					App.RootFrame.Navigate( nUri );
 				}
 			} );
 		}
@@ -152,6 +154,28 @@ namespace CycleStreets.Util
 					return 24;
 			}
 			return 20;
+		}
+
+		internal static void showLocationDialog()
+		{
+			if( SettingManager.instance.GetBoolValue( "LocationConsent", true ) == false )
+			{
+				MessageBoxResult result =
+								MessageBox.Show( "You have denied CycleStreets permission to access your location. Press OK to change this or Cancel to cancel.",
+								"Location",
+								MessageBoxButton.OKCancel );
+				if( result == MessageBoxResult.OK )
+				{
+					( (PhoneApplicationFrame)Application.Current.RootVisual ).Navigate( new Uri( "/Pages/Settings.xaml", UriKind.Relative ) );
+				}
+			}
+			else
+			{
+				MessageBoxResult result =
+									MessageBox.Show( "Unable to retrieve your location. Please check location services are enabled on this device.",
+									"Location",
+									MessageBoxButton.OK );
+			}
 		}
 	}
 }
