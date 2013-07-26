@@ -1,0 +1,217 @@
+﻿<phone:PhoneApplicationPage x:Class="UsingBingMaps.MainPage"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+	xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"    
+    xmlns:System="clr-namespace:System;assembly=mscorlib"
+    xmlns:local="clr-namespace:UsingBingMaps"
+    
+	FontFamily="{StaticResource PhoneFontFamilyNormal}"
+	FontSize="{StaticResource PhoneFontSizeNormal}"
+	Foreground="{StaticResource PhoneForegroundBrush}"
+	SupportedOrientations="Portrait" Orientation="Portrait"
+	mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="768"
+	shell:SystemTray.IsVisible="True" xmlns:my="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps">
+
+    <Canvas x:Name="LayoutRoot">
+
+        <!-- Map View -->
+        <Border x:Name="MapView"
+                Background="Black"
+			    Height="768" Width="480">
+            
+            <!-- TODO : Add map control -->
+            <my:Map Name="Map"
+                    CredentialsProvider="{Binding CredentialsProvider}"                    
+                     Center="49.320574,16.68942" 
+                     ZoomLevel="14" >
+                
+                <my:Map.Mode>
+                    <my:AerialMode ShouldDisplayLabels="True" />
+                </my:Map.Mode>
+
+                <my:Map.Children>
+                    <my:MapTileLayer Opacity="1">
+                        <my:MapTileLayer.TileSources>
+                            <!-- Display OpenStreetMap Imagery -->
+                            <!--   <local:OpenStreetMapTileSource></local:OpenStreetMapTileSource>-->
+                            <local:GoogleTile></local:GoogleTile>
+                        </my:MapTileLayer.TileSources>
+                    </my:MapTileLayer>
+                    <my:MapTileLayer Opacity="1">
+                        <my:MapTileLayer.TileSources>
+                            <!-- Display OpenStreetMap Imagery -->
+                            <!--   <local:OpenStreetMapTileSource></local:OpenStreetMapTileSource>-->
+                            <local:WMSTile></local:WMSTile>
+                        </my:MapTileLayer.TileSources>
+                    </my:MapTileLayer>
+
+
+
+                    <Button x:Name="ButtonZoomIn"
+                        Style="{StaticResource ButtonZoomInStyle}"
+                        HorizontalAlignment="Left" VerticalAlignment="Top"
+                        Height="56" Width="56" Margin="8,180,0,0"
+                        Click="ButtonZoomIn_Click" />
+                
+                <Button x:Name="ButtonZoomOut"
+                        Style="{StaticResource ButtonZoomOutStyle}"
+                        HorizontalAlignment="Left" VerticalAlignment="Top"
+                        Height="56" Width="56" Margin="8,260,0,0"
+                        Click="ButtonZoomOut_Click" />
+                </my:Map.Children>
+            </my:Map>
+        </Border>
+
+        <!-- Route View -->
+        <Border x:Name="RouteView"
+			Height="160" Margin="0"
+			Padding="8" RenderTransformOrigin="0.5,0.5" Width="480"
+			Background="{StaticResource ControlBackgroundBrush}">
+            <Border.RenderTransform>
+                <CompositeTransform TranslateY="-160"/>
+            </Border.RenderTransform>
+            
+            <!-- TODO : Add controls for route calculation -->
+            
+        </Border>
+
+        <!-- Directions View -->
+        <Border x:Name="DirectionsView"
+			VerticalAlignment="Bottom"
+			Height="340" RenderTransformOrigin="0.5,0.5" Canvas.Top="428" Width="480"
+			Background="{StaticResource DirectionBackgroundBrush}">
+            <Border.RenderTransform>
+                <CompositeTransform TranslateY="340"/>
+            </Border.RenderTransform>
+
+            <!-- TODO : Add control for displaying directions -->
+
+        </Border>
+
+        <Popup x:Name="PushpinPopup" IsOpen="False" Canvas.Top="330" Canvas.Left="25" Opacity="0">
+            
+            <!-- TODO : Add control for displaying pushpins -->
+            
+        </Popup>
+
+        <!-- Visual States -->
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="RouteStates">
+                <VisualStateGroup.Transitions>
+                    <VisualTransition To="ShowRoute" />
+                    <VisualTransition To="HideRoute" />
+                </VisualStateGroup.Transitions>
+                <VisualState x:Name="ShowRoute">
+                    <Storyboard>
+                        <DoubleAnimation Duration="0:0:0.3" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="RouteView" d:IsOptimized="True">
+                            <DoubleAnimation.EasingFunction>
+                                <CircleEase EasingMode="EaseIn" />
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                    </Storyboard>
+                </VisualState>
+                <VisualState x:Name="HideRoute">
+                    <Storyboard>
+                        <DoubleAnimation Duration="0:0:0.3" To="-160" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="RouteView" d:IsOptimized="True">
+                            <DoubleAnimation.EasingFunction>
+                                <CircleEase EasingMode="EaseOut" />
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+            <VisualStateGroup x:Name="DirectionsStates">
+                <VisualStateGroup.Transitions>
+                    <VisualTransition To="ShowDirections" />
+                    <VisualTransition To="HideDirections" />
+                </VisualStateGroup.Transitions>
+                <VisualState x:Name="ShowDirections">
+                    <Storyboard>
+                        <DoubleAnimation Duration="0:0:0.3" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="DirectionsView" d:IsOptimized="True">
+                            <DoubleAnimation.EasingFunction>
+                                <CircleEase EasingMode="EaseIn" />
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                        <DoubleAnimation Duration="0:0:0.3" To="428" Storyboard.TargetProperty="Height" Storyboard.TargetName="MapView" d:IsOptimized="True">
+                            <DoubleAnimation.EasingFunction>
+                                <CircleEase EasingMode="EaseIn" />
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                    </Storyboard>
+                </VisualState>
+                <VisualState x:Name="HideDirections">
+                    <Storyboard>
+                        <DoubleAnimation Duration="0:0:0.3" To="340" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="DirectionsView" d:IsOptimized="True">
+                            <DoubleAnimation.EasingFunction>
+                                <CircleEase EasingMode="EaseOut" />
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                        <DoubleAnimation Duration="0:0:0.3" To="768" Storyboard.TargetProperty="Height" Storyboard.TargetName="MapView" d:IsOptimized="True">
+                            <DoubleAnimation.EasingFunction>
+                                <CircleEase EasingMode="EaseOut" />
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+            <VisualStateGroup x:Name="PushpinsStates">
+                <VisualStateGroup.Transitions>
+                    <VisualTransition To="ShowPushpins" />
+                    <VisualTransition To="HidePushpins" />
+                </VisualStateGroup.Transitions>
+                <VisualState x:Name="ShowPushpins">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Popup.IsOpen)" Storyboard.TargetName="PushpinPopup">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <System:Boolean>True</System:Boolean>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <DoubleAnimation Duration="0:0:0.3" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="PushpinPopup" d:IsOptimized="True">
+                            <DoubleAnimation.EasingFunction>
+                                <CircleEase EasingMode="EaseIn" />
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                    </Storyboard>
+                </VisualState>
+                <VisualState x:Name="HidePushpins">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Popup.IsOpen)" Storyboard.TargetName="PushpinPopup">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <System:Boolean>False</System:Boolean>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <DoubleAnimation Duration="0:0:0.3" To="0" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="PushpinPopup" d:IsOptimized="True">
+                            <DoubleAnimation.EasingFunction>
+                                <CircleEase EasingMode="EaseOut" />
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+    </Canvas>
+
+    <!-- Application Bar -->
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar x:Name="applicationBar"
+							  IsVisible="True"
+							  IsMenuEnabled="False"
+							  Opacity="0.7">
+
+            <shell:ApplicationBarIconButton Text="Origin" IconUri="/Resources/Icons/ApplicationBar/Location.png" Click="ButtonLocation_Click" />
+            <shell:ApplicationBarIconButton Text="Route" IconUri="/Resources/Icons/ApplicationBar/Route.png"  Click="ButtonRoute_Click" />
+            <shell:ApplicationBarIconButton Text="Directions" IconUri="/Resources/Icons/ApplicationBar/Directions.png"  Click="ButtonDirections_Click" />
+            <shell:ApplicationBarIconButton Text="Mode" IconUri="/Resources/Icons/ApplicationBar/Mode.png"  Click="ButtonMode_Click" />
+
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
+
+</phone:PhoneApplicationPage>
