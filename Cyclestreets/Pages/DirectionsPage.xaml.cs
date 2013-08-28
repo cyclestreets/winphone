@@ -1088,7 +1088,7 @@ namespace Cyclestreets
 
 				foreach( Pushpin p in waypoints )
 				{
-					itinerarypoints = p.GeoCoordinate.Longitude + "," + p.GeoCoordinate.Latitude + "|" + itinerarypoints;
+					itinerarypoints = itinerarypoints + p.GeoCoordinate.Longitude + "," + p.GeoCoordinate.Latitude + "|";
 				}
 				itinerarypoints = itinerarypoints.TrimEnd( '|' );
 
