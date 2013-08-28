@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Device.Location;
 using System.Net;
 using System.Windows;
-using System.Windows.Media;
 using System.Windows.Navigation;
 using System.Xml.Linq;
+using Cyclestreets.Pages;
 using Cyclestreets.Utils;
 using CycleStreets.Util;
 using Microsoft.Expression.Interactivity.Core;
@@ -21,16 +21,11 @@ namespace Cyclestreets
 {
 	public partial class MainPage : PhoneApplicationPage
 	{
-		List<List<GeoCoordinate>> geometryCoords = new List<List<GeoCoordinate>>();
-		List<Color> geometryColor = new List<Color>();
-		List<GeoCoordinate> waypoints = new List<GeoCoordinate>();
-		Dictionary<Pushpin, POI> pinItems = new Dictionary<Pushpin, POI>();
-
-		private GeoCoordinate max = new GeoCoordinate( 90, -180 );
-		private GeoCoordinate min = new GeoCoordinate( -90, 180 );
+		readonly Dictionary<Pushpin, POI> pinItems = new Dictionary<Pushpin, POI>();
 
 		private GeoCoordinate _selected;
-		public GeoCoordinate selected
+
+		private GeoCoordinate selected
 		{
 			get
 			{
@@ -38,20 +33,16 @@ namespace Cyclestreets
 			}
 			set
 			{
-				if( value == null )
-					navigateToAppBar.IsEnabled = false;
-				else
-					navigateToAppBar.IsEnabled = true;
+				navigateToAppBar.IsEnabled = value != null;
 				_selected = value;
 			}
 		}
 
-		ReverseGeocodeQuery geoQ = null;
 		private MapLayer poiLayer;
 
 		// Declare the MarketplaceDetailTask object with page scope
 		// so we can access it from event handlers.
-		MarketplaceDetailTask _marketPlaceDetailTask = new MarketplaceDetailTask();
+		readonly MarketplaceDetailTask _marketPlaceDetailTask = new MarketplaceDetailTask();
 
 		// Constructor
 		public MainPage()
@@ -60,20 +51,20 @@ namespace Cyclestreets
 
 			// hack. See here http://stackoverflow.com/questions/5334574/applicationbariconbutton-is-null/5334703#5334703
 			/*findAppBar = ApplicationBar.Buttons[ 0 ] as Microsoft.Phone.Shell.ApplicationBarIconButton;*/
-			directionsAppBar = ApplicationBar.Buttons[ 0 ] as Microsoft.Phone.Shell.ApplicationBarIconButton;
-			navigateToAppBar = ApplicationBar.Buttons[ 1 ] as Microsoft.Phone.Shell.ApplicationBarIconButton;
+			directionsAppBar = ApplicationBar.Buttons[0] as Microsoft.Phone.Shell.ApplicationBarIconButton;
+			navigateToAppBar = ApplicationBar.Buttons[1] as Microsoft.Phone.Shell.ApplicationBarIconButton;
 
 			if( LocationManager.instance == null )
 			{
 				LocationManager l = new LocationManager( MyMap );
 			}
 
-			geoQ = new ReverseGeocodeQuery();
+			ReverseGeocodeQuery geoQ = new ReverseGeocodeQuery();
 			geoQ.QueryCompleted += geoQ_QueryCompleted;
 
-			var sgs = ExtendedVisualStateManager.GetVisualStateGroups( LayoutRoot );
-			var sg = sgs[ 0 ] as VisualStateGroup;
-			ExtendedVisualStateManager.GoToElementState( LayoutRoot, ( (VisualState)sg.States[ 0 ] ).Name, true );
+			var sgs = VisualStateManager.GetVisualStateGroups( LayoutRoot );
+			var sg = sgs[0] as VisualStateGroup;
+			ExtendedVisualStateManager.GoToElementState( LayoutRoot, ( (VisualState)sg.States[0] ).Name, true );
 		}
 
 		void m_Click( object sender, EventArgs e )
@@ -86,7 +77,8 @@ namespace Cyclestreets
 		{
 			base.OnNavigatedTo( e );
 
-			if( ( Application.Current as App ).IsTrial )
+			var app = Application.Current as App;
+			if( app != null && app.IsTrial )
 			{
 				//if( ( (App)App.Current ).trialExpired )
 				//	( (App)App.Current ).showTrialExpiredMessage();
@@ -228,8 +220,8 @@ namespace Cyclestreets
 				if( NavigationContext.QueryString.ContainsKey( "longitude" ) )
 				{
 					GeoCoordinate center = new GeoCoordinate();
-					center.Longitude = float.Parse( NavigationContext.QueryString[ "longitude" ] );
-					center.Latitude = float.Parse( NavigationContext.QueryString[ "latitude" ] );
+					center.Longitude = float.Parse( NavigationContext.QueryString["longitude"] );
+					center.Latitude = float.Parse( NavigationContext.QueryString["latitude"] );
 					MyMap.Center = center;
 					MyMap.ZoomLevel = 16;
 					LocationManager.instance.LockToMyPos( false );
@@ -288,17 +280,16 @@ namespace Cyclestreets
 				}
 			}
 
-			if( PhoneApplicationService.Current.State.ContainsKey( "loadedRoute" ) && PhoneApplicationService.Current.State[ "loadedRoute" ] != null )
+			if( PhoneApplicationService.Current.State.ContainsKey( "loadedRoute" ) && PhoneApplicationService.Current.State["loadedRoute"] != null )
 			{
-				NavigationService.Navigate( new Uri( "/pages/Directions.xaml", UriKind.Relative ) );
+				NavigationService.Navigate( new Uri( "/pages/DirectionsPage.xaml", UriKind.Relative ) );
 			}
-
 		}
 
 		private void poiTapped( object sender, System.Windows.Input.GestureEventArgs e )
 		{
 			Pushpin pp = sender as Pushpin;
-			POI p = pinItems[ pp ];
+			POI p = pinItems[pp];
 			foreach( KeyValuePair<Pushpin, POI> pair in pinItems )
 			{
 				Pushpin ppItem = pair.Key;
@@ -343,14 +334,14 @@ namespace Cyclestreets
 
 		private void ApplicationBarIconButton_Directions( object sender, EventArgs e )
 		{
-			NavigationService.Navigate( new Uri( "/Pages/Directions.xaml", UriKind.Relative ) );
+			NavigationService.Navigate( new Uri( "/Pages/DirectionsPage.xaml", UriKind.Relative ) );
 
 		}
 
 		private void ApplicationBarIconButton_NavigateTo( object sender, EventArgs e )
 		{
 			if( selected != null )
-				NavigationService.Navigate( new Uri( "/Pages/Directions.xaml?longitude=" + selected.Longitude + "&latitude=" + selected.Latitude, UriKind.Relative ) );
+				NavigationService.Navigate( new Uri( "/Pages/DirectionsPage.xaml?longitude=" + selected.Longitude + "&latitude=" + selected.Latitude, UriKind.Relative ) );
 		}
 
 		private void poiList_Click( object sender, System.EventArgs e )
@@ -367,6 +358,23 @@ namespace Cyclestreets
 		{
 			Microsoft.Phone.Maps.MapsSettings.ApplicationContext.ApplicationId = "823e41bf-889c-4102-863f-11cfee11f652";
 			Microsoft.Phone.Maps.MapsSettings.ApplicationContext.AuthenticationToken = "xrQJghWalYn52fTfnUhWPQ";
+
+			MyTileSource ts;
+			switch( SettingManager.instance.GetStringValue( "mapStyle", DirectionsPage.MapStyle[0] ) )
+			{
+				case "OpenStreetMap":
+					ts = new OSMTileSource();
+					break;
+				case "OpenCycleMap":
+					ts = new OSMTileSource();
+					break;
+				default:
+					ts = null;
+					break;
+			}
+			MyMap.TileSources.Clear();
+			if ( ts != null )
+				MyMap.TileSources.Add( ts );
 		}
 
 		private void privacy_Click( object sender, System.EventArgs e )
@@ -383,10 +391,10 @@ namespace Cyclestreets
 
 		private void sendFeedback_Click( object sender, EventArgs e )
 		{
-// 			EmailComposeTask task = new EmailComposeTask();
-// 			task.Subject = "CycleStreets [WP8] feedback";
-// 			task.To = "info@cyclestreets.net";
-// 			task.Show();
+			// 			EmailComposeTask task = new EmailComposeTask();
+			// 			task.Subject = "CycleStreets [WP8] feedback";
+			// 			task.To = "info@cyclestreets.net";
+			// 			task.Show();
 			NavigationService.Navigate( new Uri( "/Pages/Feedback.xaml", UriKind.Relative ) );
 		}
 

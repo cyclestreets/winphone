@@ -1,14 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Deployment xmlns="http://schemas.microsoft.com/windowsphone/2009/deployment" AppPlatformVersion="7.0">
-  <App xmlns=""
-       ProductID="{b4846077-ddef-4814-aa82-b0fc1fe8f2bd}"
-       Title="Bing Maps"
-       RuntimeType="Silverlight"
-       Version="1.0.0.0"
-       Genre="apps.normal"
-       Author="Tomer Shamam"
-       Description="Sample application demonstrating how to develop a Windows Phone application which uses the Bing Map services and Bing Map control"
-       Publisher="Microsoft">
+<Deployment xmlns="http://schemas.microsoft.com/windowsphone/2009/deployment" AppPlatformVersion="7.1">
+  <App xmlns="" ProductID="{4cc58b63-7945-4904-9abd-383b0bb7a4b2}" Title="Bing Maps" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal" Author="Tomer Shamam" Description="Sample application demonstrating how to develop a Windows Phone application which uses the Bing Map services and Bing Map control" Publisher="Microsoft">
     <IconPath IsRelative="true" IsResource="false">ApplicationIcon.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_NETWORKING" />

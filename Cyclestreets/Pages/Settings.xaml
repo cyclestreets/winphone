@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
-    x:Class="Cyclestreets.Settings"
+    x:Class="Cyclestreets.Pages.Settings"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
@@ -34,6 +34,14 @@
 		<!--ContentPanel - place additional content here-->
 		<Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
 			<StackPanel>
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="179"/>
+						<ColumnDefinition/>
+					</Grid.ColumnDefinitions>
+					<TextBlock TextWrapping="Wrap" Margin="0" VerticalAlignment="Center" Text="Map Style "/>
+					<toolkit:ListPicker x:Name="mapStyle" Margin="0" Grid.Column="1" SelectionChanged="mapStyle_SelectionChanged" />
+				</Grid>
 				<Grid>
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="179"/>

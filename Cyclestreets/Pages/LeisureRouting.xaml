@@ -16,7 +16,7 @@
 	<phone:PhoneApplicationPage.Resources>
 		<DataTemplate x:Key="POIItem">
 			<Grid>
-				<CheckBox Content="{Binding POILabel}" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="{Binding POIEnabled, Mode=TwoWay}"/>
+				<CheckBox Content="{Binding POILabel}" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="{Binding POIEnabled, Mode=TwoWay}" Foreground="White" BorderBrush="#DEFFFFFF"/>
 			</Grid>
 		</DataTemplate>
 	</phone:PhoneApplicationPage.Resources>
@@ -33,6 +33,9 @@
 		</Grid.Background>
 		<!--TitlePanel contains the name of the application and page title-->
 		<phone:Panorama Margin="0" Title="leisure routing">
+			<phone:Panorama.Foreground>
+				<SolidColorBrush Color="White"/>
+			</phone:Panorama.Foreground>
 			<phone:PanoramaItem CacheMode="{x:Null}" Header="route type">
 				<phone:PanoramaItem.RenderTransform>
 					<TranslateTransform/>
@@ -51,12 +54,12 @@
 							</toolkit:ListPicker.Background>
 							<ListBoxItem Content="Target Time">
 								<ListBoxItem.Foreground>
-									<SolidColorBrush Color="{StaticResource PhoneTextBoxForegroundColor}"/>
+									<SolidColorBrush Color="White"/>
 								</ListBoxItem.Foreground>
 							</ListBoxItem>
 							<ListBoxItem Content="Target Distance">
 								<ListBoxItem.Foreground>
-									<SolidColorBrush Color="{StaticResource PhoneTextBoxForegroundColor}"/>
+									<SolidColorBrush Color="#DEFFFFFF"/>
 								</ListBoxItem.Foreground>
 							</ListBoxItem>
 						</toolkit:ListPicker>
@@ -66,7 +69,11 @@
 							<ListBoxItem Content="Target Distance"/>
 						</toolkit:ListPicker> -->
 						<TextBlock x:Name="valueDescription" TextWrapping="Wrap" FontWeight="Bold" Height="35" Text="Enter time in minutes" Padding="0,5,0,0"/>
-						<TextBox x:Name="valueEntry" Height="72" Padding="2" InputScope="Number"/>
+						<TextBox x:Name="valueEntry" Height="72" Padding="2" InputScope="Number">
+							<TextBox.Foreground>
+								<SolidColorBrush Color="White"/>
+							</TextBox.Foreground>
+						</TextBox>
 					</StackPanel>
 				</Grid>
 			</phone:PanoramaItem>
@@ -76,7 +83,11 @@
 				</phone:PanoramaItem.RenderTransform>
 				<Grid>
 					<ScrollViewer Margin="0">
-						<phone:LongListSelector x:Name="poiList" ItemTemplate="{StaticResource POIItem}" Margin="0" Height="379" Width="420"/>
+						<phone:LongListSelector x:Name="poiList" ItemTemplate="{StaticResource POIItem}" Margin="0" Height="379" Width="420">
+							<phone:LongListSelector.Foreground>
+								<SolidColorBrush Color="White"/>
+							</phone:LongListSelector.Foreground>
+						</phone:LongListSelector>
 					</ScrollViewer>
 				</Grid>
 			</phone:PanoramaItem>

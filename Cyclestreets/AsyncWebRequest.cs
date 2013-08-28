@@ -6,6 +6,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using CycleStreets.Util;
 using Windows.UI.Popups;
 
 namespace Cyclestreets
@@ -59,7 +60,7 @@ namespace Cyclestreets
 					{
 						//handle error
 						//Exception firstException = t.Exception.InnerExceptions.First();
-						//Util.networkFailure();
+						Util.networkFailure();
 						return null;
 					}
 					else

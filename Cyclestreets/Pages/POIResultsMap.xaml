@@ -27,12 +27,12 @@
 							<QuadraticEase EasingMode="EaseInOut"/>
 						</VisualTransition.GeneratedEasingFunction>
 					</VisualTransition>
-					<VisualTransition From="Standard" GeneratedDuration="0" To="Directions">
+					<VisualTransition From="Standard" GeneratedDuration="0" To="DirectionsPage">
 						<VisualTransition.GeneratedEasingFunction>
 							<QuadraticEase EasingMode="EaseInOut"/>
 						</VisualTransition.GeneratedEasingFunction>
 					</VisualTransition>
-					<VisualTransition From="Directions" GeneratedDuration="0" To="Standard">
+					<VisualTransition From="DirectionsPage" GeneratedDuration="0" To="Standard">
 						<VisualTransition.GeneratedEasingFunction>
 							<QuadraticEase EasingMode="EaseInOut"/>
 						</VisualTransition.GeneratedEasingFunction>

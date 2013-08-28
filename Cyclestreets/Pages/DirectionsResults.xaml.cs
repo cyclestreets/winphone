@@ -12,8 +12,8 @@ namespace Cyclestreets
 		{
 			InitializeComponent();
 
-			directionList.ItemsSource = Directions.route.segments;
-			factsList.ItemsSource = Directions.facts;
+			directionList.ItemsSource = DirectionsPage.route.segments;
+			factsList.ItemsSource = DirectionsPage.facts;
 		}
 
 		private void ApplicationBarIconButton_Click( object sender, EventArgs e )
@@ -29,7 +29,7 @@ namespace Cyclestreets
 
 		private void routeFeedback_Click( object sender, EventArgs e )
 		{
-			NavigationService.Navigate( new Uri( "/Pages/Feedback.xaml?routeID=" + Directions.route.routeIndex, UriKind.Relative ) );
+			NavigationService.Navigate( new Uri( "/Pages/Feedback.xaml?routeID=" + DirectionsPage.route.routeIndex, UriKind.Relative ) );
 		}
 
 

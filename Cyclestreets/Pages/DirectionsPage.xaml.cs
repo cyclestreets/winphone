@@ -13,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Cyclestreets.Pages;
 using Cyclestreets.Utils;
 using CycleStreets.Util;
 using Microsoft.Expression.Interactivity.Core;
@@ -200,7 +201,7 @@ namespace Cyclestreets
 		}
 	}
 
-	public partial class Directions : PhoneApplicationPage
+	public partial class DirectionsPage : PhoneApplicationPage
 	{
 		ReverseGeocodeQuery revGeoQ = null;
 		GeocodeQuery geoQ = null;
@@ -225,13 +226,14 @@ namespace Cyclestreets
 
 		private int currentStep = -1;
 
+		public static String[] MapStyle = { "OpenStreetMap", "OpenCycleMap", "Nokia" };
 		public static String[] RouteType = { "balanced route", "fastest route", "quietest route" };
 		public static String[] CycleSpeed = { "10mph", "12mph", "15mph" };
 		public static String[] EnabledDisabled = { "Enabled", "Disabled" };
 		private string currentRouteData;
 		private WebClient placeSearch;
 
-		public Directions()
+		public DirectionsPage()
 		{
 			InitializeComponent();
 
@@ -503,6 +505,8 @@ namespace Cyclestreets
 
 		private void revGeoQ_QueryCompleted( object sender, QueryCompletedEventArgs<IList<MapLocation>> e )
 		{
+			if( e.Result == null || e.Result.Count <= 0 )
+				return;
 			MapLocation loc = e.Result[0];
 			startPoint.Text = loc.Information.Address.Street + ", " + loc.Information.Address.PostalCode;
 		}
@@ -778,7 +782,9 @@ namespace Cyclestreets
 		private void RouteFound( byte[] data )
 		{
 			if( data == null )
+			{
 				return;
+			}
 
 			UTF8Encoding enc = new UTF8Encoding();
 
@@ -1114,12 +1120,16 @@ namespace Cyclestreets
 				MyMap.SetView( rect );
 				MyMap.Pitch = 0;
 				MyMap.Heading = 0;
+
+				SetMapStyle();
 			}
 			else
 			{
 				arrowLeft.Opacity = 100;
 
 				MyMap.SetView( route.segments[currentStep].location, 20, route.segments[currentStep].Bearing, 75 );
+
+				MyMap.TileSources.Clear();
 			}
 			if( currentStep >= route.segments.Count )
 				arrowRight.Opacity = 50;
@@ -1150,6 +1160,8 @@ namespace Cyclestreets
 				MyMap.SetView( route.segments[currentStep].location, 20, route.segments[currentStep].Bearing, 75 );
 
 				findLabel1.Text = route.segments[currentStep].Turn + " at " + route.segments[currentStep].Name + "\n Continue for " + route.segments[currentStep].DistanceMetres + "m";
+
+				MyMap.TileSources.Clear();
 			}
 		}
 
@@ -1226,12 +1238,31 @@ namespace Cyclestreets
 				PhoneApplicationService.Current.State["loadedRoute"] = null;
 			}
 
-			if( hideRouteOptions )
-				routeTypePicker.Visibility = Visibility.Collapsed;
-			else
-				routeTypePicker.Visibility = Visibility.Visible;
+			routeTypePicker.Visibility = hideRouteOptions ? Visibility.Collapsed : Visibility.Visible;
 
 			positionChangedHandler( null, null );
+
+			SetMapStyle();
+		}
+
+		private void SetMapStyle()
+		{
+			MyTileSource ts;
+			switch (SettingManager.instance.GetStringValue("mapStyle", MapStyle[0]))
+			{
+				case "OpenStreetMap":
+					ts = new OSMTileSource();
+					break;
+				case "OpenCycleMap":
+					ts = new OSMTileSource();
+					break;
+				default:
+					ts = null;
+					break;
+			}
+			MyMap.TileSources.Clear();
+			if (ts != null)
+				MyMap.TileSources.Add(ts);
 		}
 
 		private void startPoint_KeyUp( object sender, System.Windows.Input.KeyEventArgs e )
@@ -1288,43 +1319,46 @@ namespace Cyclestreets
 		private MapOverlay myLocationOverlay = null;
 		private void positionChangedHandler( Geolocator sender, PositionChangedEventArgs args )
 		{
-			if( LocationManager.instance.MyGeoPosition != null )
-			{
-
-				if( myLocationOverlay == null )
+			SmartDispatcher.BeginInvoke( () =>
 				{
-					// 				Arc myArc = new Arc();
-					// 				myArc.ArcThickness = 5;
-					// 				myArc.ArcThicknessUnit = Microsoft.Expression.Media.UnitType.Pixel;
-					// 				myArc.EndAngle = 360;
-					// 				myArc.StartAngle = 0;
-					// 				myArc.Height = 30;
-					// Create a small circle to mark the current location.
-					Ellipse myCircle = new Ellipse();
-					myCircle.Fill = new SolidColorBrush( Colors.Black );
-					myCircle.Height = 20;
-					myCircle.Width = 20;
-					myCircle.Opacity = 30;
-					Binding myBinding = new Binding( "Visible" );
-					myBinding.Source = new MyPositionDataSource(MyMap);
-					myCircle.Visibility = Visibility.Visible;
-					myCircle.SetBinding( Ellipse.VisibilityProperty, myBinding );
+					if( LocationManager.instance.MyGeoPosition != null )
+					{
 
-					// Create a MapOverlay to contain the circle.
-					myLocationOverlay = new MapOverlay();
-					myLocationOverlay.Content = myCircle;
-					myLocationOverlay.PositionOrigin = new Point( 0.5, 0.5 );
-					myLocationOverlay.GeoCoordinate = CoordinateConverter.ConvertGeocoordinate( LocationManager.instance.MyGeoPosition.Coordinate );
+						if( myLocationOverlay == null )
+						{
+							// 				Arc myArc = new Arc();
+							// 				myArc.ArcThickness = 5;
+							// 				myArc.ArcThicknessUnit = Microsoft.Expression.Media.UnitType.Pixel;
+							// 				myArc.EndAngle = 360;
+							// 				myArc.StartAngle = 0;
+							// 				myArc.Height = 30;
+							// Create a small circle to mark the current location.
+							Ellipse myCircle = new Ellipse();
+							myCircle.Fill = new SolidColorBrush( Colors.Black );
+							myCircle.Height = 20;
+							myCircle.Width = 20;
+							myCircle.Opacity = 30;
+							Binding myBinding = new Binding( "Visible" );
+							myBinding.Source = new MyPositionDataSource( MyMap );
+							myCircle.Visibility = Visibility.Visible;
+							myCircle.SetBinding( Ellipse.VisibilityProperty, myBinding );
 
-					// Create a MapLayer to contain the MapOverlay.
-					MapLayer myLocationLayer = new MapLayer();
-					myLocationLayer.Add( myLocationOverlay );
+							// Create a MapOverlay to contain the circle.
+							myLocationOverlay = new MapOverlay();
+							myLocationOverlay.Content = myCircle;
+							myLocationOverlay.PositionOrigin = new Point( 0.5, 0.5 );
+							myLocationOverlay.GeoCoordinate = CoordinateConverter.ConvertGeocoordinate( LocationManager.instance.MyGeoPosition.Coordinate );
 
-					MyMap.Layers.Add( myLocationLayer );
-				}
+							// Create a MapLayer to contain the MapOverlay.
+							MapLayer myLocationLayer = new MapLayer();
+							myLocationLayer.Add( myLocationOverlay );
 
-				myLocationOverlay.GeoCoordinate = CoordinateConverter.ConvertGeocoordinate( LocationManager.instance.MyGeoPosition.Coordinate );
-			}
+							MyMap.Layers.Add( myLocationLayer );
+						}
+
+						myLocationOverlay.GeoCoordinate = CoordinateConverter.ConvertGeocoordinate( LocationManager.instance.MyGeoPosition.Coordinate );
+					}
+				} );
 		}
 
 		private void sendFeedback_Click( object sender, EventArgs e )
@@ -1370,7 +1404,10 @@ namespace Cyclestreets
 					NotifyPropertyChanged( "Visible" );
 				}
 			}
-			get { return _isVisible; }
+			get
+			{
+				return _isVisible;
+			}
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;

@@ -2,7 +2,7 @@
 ini_set('display_errors','On');
 
 require_once('./functions/rwd_constants.php');
-require_once 'XML/Serializer.php';
+require_once ('/home/rwscript/php/XML/Serializer.php');
 
 // Create our superglobal wotsit so we can save doing the same things over and over
 class wotsit

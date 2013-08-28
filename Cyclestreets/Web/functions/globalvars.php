@@ -1,7 +1,7 @@
 <?php
-$CONFIG['sqldatabase'] = 'rwscrip1_cyclestreets';
+$CONFIG['sqldatabase'] = 'rwscript_cyclestreets';
 $CONFIG['sqlhost'] = 'localhost';
 $CONFIG['sqlpassword'] = '1xb!]~0q7cwn';
 $CONFIG['sqlprefix'] = '';
-$CONFIG['sqlusername'] = 'rwscrip1_cycle';
+$CONFIG['sqlusername'] = 'rwscript_cycle';
 ?>

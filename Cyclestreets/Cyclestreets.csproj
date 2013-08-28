@@ -96,6 +96,7 @@
     </Compile>
     <Compile Include="AsyncWebRequest.cs" />
     <Compile Include="Common\BindableBase.cs" />
+    <Compile Include="Pages\TileSources.cs" />
     <Compile Include="Pages\Feedback.xaml.cs">
       <DependentUpon>Feedback.xaml</DependentUpon>
     </Compile>
@@ -116,8 +117,8 @@
     <Compile Include="Pages\POIResultsMap.xaml.cs">
       <DependentUpon>POIResultsMap.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\Directions.xaml.cs">
-      <DependentUpon>Directions.xaml</DependentUpon>
+    <Compile Include="Pages\DirectionsPage.xaml.cs">
+      <DependentUpon>DirectionsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\DirectionsResults.xaml.cs">
       <DependentUpon>DirectionsResults.xaml</DependentUpon>
@@ -181,7 +182,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\Directions.xaml">
+    <Page Include="Pages\DirectionsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
