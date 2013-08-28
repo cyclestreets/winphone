@@ -54,12 +54,12 @@
 							</toolkit:ListPicker.Background>
 							<ListBoxItem Content="Target Time">
 								<ListBoxItem.Foreground>
-									<SolidColorBrush Color="White"/>
+									<SolidColorBrush Color="Black"/>
 								</ListBoxItem.Foreground>
 							</ListBoxItem>
 							<ListBoxItem Content="Target Distance">
 								<ListBoxItem.Foreground>
-									<SolidColorBrush Color="#DEFFFFFF"/>
+									<SolidColorBrush Color="Black"/>
 								</ListBoxItem.Foreground>
 							</ListBoxItem>
 						</toolkit:ListPicker>
@@ -71,7 +71,7 @@
 						<TextBlock x:Name="valueDescription" TextWrapping="Wrap" FontWeight="Bold" Height="35" Text="Enter time in minutes" Padding="0,5,0,0"/>
 						<TextBox x:Name="valueEntry" Height="72" Padding="2" InputScope="Number">
 							<TextBox.Foreground>
-								<SolidColorBrush Color="White"/>
+								<SolidColorBrush Color="Black"/>
 							</TextBox.Foreground>
 						</TextBox>
 					</StackPanel>
