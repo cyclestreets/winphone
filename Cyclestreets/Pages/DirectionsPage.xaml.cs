@@ -213,6 +213,7 @@ namespace Cyclestreets
 
 		List<List<GeoCoordinate>> geometryCoords = new List<List<GeoCoordinate>>();
 		List<Color> geometryColor = new List<Color>();
+		List<bool> geometryDashed = new List<bool>();
 		public static List<JourneyFactItem> facts = new List<JourneyFactItem>();
 
 		private GeoCoordinate max = new GeoCoordinate( 90, -180 );
@@ -891,7 +892,7 @@ namespace Cyclestreets
 							min.Longitude = longitude;
 					}
 					geometryCoords.Add( coords );
-					geometryColor.Add( ConvertHexStringToColour( (string)p["color"] ) );
+					
 
 					RouteSegment s = new RouteSegment();
 					s.location = coords[0];
@@ -906,6 +907,13 @@ namespace Cyclestreets
 					totalTime += theLegOfTime;
 					s.Turn = (string)p["turn"];
 					s.Walk = ( int.Parse( (string)p["walk"] ) == 1 ? true : false );
+					geometryDashed.Add(s.Walk);
+					if ( s.Walk )
+						geometryColor.Add( Color.FromArgb( 255, 0,0,0 ) );
+					else
+					{
+						geometryColor.Add( Color.FromArgb( 255, 127, 0, 255 ) );
+					}
 					if( swap )
 						s.BGColour = col1;
 					else
@@ -985,7 +993,7 @@ namespace Cyclestreets
 				for( int i = 0; i < count; i++ )
 				{
 					List<GeoCoordinate> coords = geometryCoords[i];
-					DrawMapMarker( coords.ToArray(), geometryColor[i] );
+					DrawMapMarker( coords.ToArray(), geometryColor[i], geometryDashed[i] );
 				}
 
 				//NavigationService.Navigate( new Uri( "/Pages/DirectionsResults.xaml", UriKind.Relative ) );
@@ -1039,12 +1047,13 @@ namespace Cyclestreets
 				return "Very Busy";
 		}
 
-		private void DrawMapMarker( GeoCoordinate[] coordinate, Color color )
+		private void DrawMapMarker( GeoCoordinate[] coordinate, Color color, bool dashed )
 		{
 			// Create a map marker
 			MapPolyline polygon = new MapPolyline();
 			polygon.StrokeColor = color;
 			polygon.StrokeThickness = 3;
+			polygon.StrokeDashed = dashed;
 			polygon.Path = new GeoCoordinateCollection();
 			for( int i = 0; i < coordinate.Length; i++ )
 			{
@@ -1370,6 +1379,43 @@ namespace Cyclestreets
 			NavigationService.Navigate( new Uri( "/Pages/Feedback.xaml", UriKind.Relative ) );
 		}
 
+		protected override void OnBackKeyPress(CancelEventArgs e)
+		{
+			if (currentStep >= 0)
+			{
+				currentStep = -1;
+
+				LocationRectangle rect = new LocationRectangle(min, max);
+				MyMap.SetView(rect);
+				MyMap.Pitch = 0;
+				MyMap.Heading = 0;
+
+				SetMapStyle();
+			}
+			else if( currentRouteData != null )
+			{
+				currentRouteData = null;
+
+				geometryCoords.Clear();
+				facts.Clear();
+				route.segments.Clear();
+				MyMap.MapElements.Clear();
+
+				max = new GeoCoordinate( 90, -180 );
+				min = new GeoCoordinate( -90, 180 );
+
+				currentStep = -1;
+
+				arrowLeft.Opacity = 50;
+				arrowRight.Opacity = 100;
+
+				route = null;
+
+				MyMap.Layers.Clear();
+			}
+			else
+				base.OnBackKeyPress(e);
+		}
 	}
 
 	public class MyPositionDataSource : INotifyPropertyChanged
