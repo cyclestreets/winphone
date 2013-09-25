@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Navigation;
 using System.Xml.Linq;
 using Cyclestreets;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Info;
+using Microsoft.Phone.Maps.Services;
 
 namespace CycleStreets.Util
 {
@@ -23,6 +25,34 @@ namespace CycleStreets.Util
 			return observableCollection;
 		}
 	}
+
+// 	public static class ReverseGeocodingExtensions
+// 	{
+// 		public static Task<T> ExecuteAsync<T>( this Query<T> query )
+// 		{
+// 			var taskSource = new TaskCompletionSource<T>();
+// 
+// 			EventHandler<QueryCompletedEventArgs<T>> handler = null;
+// 
+// 			handler = ( s, e ) =>
+// 			{
+// 				query.QueryCompleted -= handler;
+// 
+// 				if( e.Cancelled )
+// 					taskSource.SetCanceled();
+// 				else if( e.Error != null )
+// 					taskSource.SetException( e.Error );
+// 				else
+// 					taskSource.SetResult( e.Result );
+// 			};
+// 
+// 			query.QueryCompleted += handler;
+// 
+// 			query.QueryAsync();
+// 
+// 			return taskSource.Task;
+// 		}
+// 	}
 
 	class Util
 	{

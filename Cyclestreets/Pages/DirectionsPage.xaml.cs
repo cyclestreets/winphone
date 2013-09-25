@@ -807,7 +807,6 @@ namespace Cyclestreets
 			}
 			geometryCoords.Clear();
 			facts.Clear();
-			route.segments.Clear();
 			MyMap.MapElements.Clear();
 
 			max = new GeoCoordinate( 90, -180 );
@@ -1130,6 +1129,9 @@ namespace Cyclestreets
 				MyMap.Pitch = 0;
 				MyMap.Heading = 0;
 
+				float f = (float)route.distance * 0.000621371192f;
+				findLabel1.Text = f.ToString( "0.00" ) + "m\n" + UtilTime.secsToLongDHMS( route.timeInSeconds );
+
 				SetMapStyle();
 			}
 			else
@@ -1381,6 +1383,8 @@ namespace Cyclestreets
 
 		protected override void OnBackKeyPress(CancelEventArgs e)
 		{
+			base.OnBackKeyPress( e );
+
 			if (currentStep >= 0)
 			{
 				currentStep = -1;
@@ -1390,7 +1394,11 @@ namespace Cyclestreets
 				MyMap.Pitch = 0;
 				MyMap.Heading = 0;
 
+				float f = (float)route.distance * 0.000621371192f;
+				findLabel1.Text = f.ToString( "0.00" ) + "m\n" + UtilTime.secsToLongDHMS( route.timeInSeconds );
+
 				SetMapStyle();
+				e.Cancel = true;
 			}
 			else if( currentRouteData != null )
 			{
@@ -1400,6 +1408,7 @@ namespace Cyclestreets
 				facts.Clear();
 				route.segments.Clear();
 				MyMap.MapElements.Clear();
+				waypoints.Clear();
 
 				max = new GeoCoordinate( 90, -180 );
 				min = new GeoCoordinate( -90, 180 );
@@ -1411,10 +1420,48 @@ namespace Cyclestreets
 
 				route = null;
 
+				ExtendedVisualStateManager.GoToElementState( LayoutRoot, "RoutePlanner", true );
+
 				MyMap.Layers.Clear();
+
+				wayPointLayer = null;
+
+
+				e.Cancel = true;
 			}
-			else
-				base.OnBackKeyPress(e);
+		}
+
+		private async void MyMap_Tap( object sender, System.Windows.Input.GestureEventArgs ev )
+		{
+			Map map = sender as Map;
+			Point p = ev.GetPosition( map );
+			GeoCoordinate coord = map.ConvertViewportPointToGeoCoordinate( p );
+
+			if( revGeoQ.IsBusy )
+			{
+				return;
+			}
+
+			revGeoQ.GeoCoordinate = coord;
+			revGeoQ.QueryCompleted += tapMapReverseGeocode_QueryCompleted;
+			revGeoQ.QueryAsync();
+		}
+
+		private void tapMapReverseGeocode_QueryCompleted( object sender, QueryCompletedEventArgs<IList<MapLocation>> e )
+		{
+			revGeoQ.QueryCompleted -= tapMapReverseGeocode_QueryCompleted;
+
+			SmartDispatcher.BeginInvoke( () =>
+			{
+				if( e.Result != null && e.Result.Count > 0 )
+				{
+					MapLocation loc = e.Result[0];
+					
+					// Add a waypoint automatically
+					current = loc.GeoCoordinate;
+					confirmWaypoint_Click( null, null );
+				}
+			} );
 		}
 	}
 

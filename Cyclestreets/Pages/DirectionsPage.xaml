@@ -252,7 +252,7 @@
 			<ec:ExtendedVisualStateManager/>
 		</VisualStateManager.CustomVisualStateManager>
 		<ProgressBar x:Name="progress" Margin="0" VerticalAlignment="Top" IsIndeterminate="True" Foreground="White" Opacity="{Binding Opacity}"/>
-		<maps:Map x:Name="MyMap" Margin="0" Grid.Row="1" ZoomLevel="5.684" Loaded="MyMap_Loaded" LandmarksEnabled="True">
+		<maps:Map x:Name="MyMap" Margin="0" Grid.Row="1" ZoomLevel="5.684" Loaded="MyMap_Loaded" LandmarksEnabled="True" Tap="MyMap_Tap">
 			<maps:Map.Center>
 				<Location:GeoCoordinate Altitude="NaN" Course="NaN" HorizontalAccuracy="NaN" Longitude="-4.367" Latitude="55.551" Speed="NaN" VerticalAccuracy="NaN"/>
 			</maps:Map.Center>
