@@ -211,232 +211,37 @@ var MK = (function (mk) {
 
         },
         
-        /* forms */
-
-        inputFieldSelected: function (page, name) {
-
-            try {
-                client.inputFieldSelected(page, name);
-            } catch (e) {
-
-            }
-
-        },
-
-        inputFieldUnselected: function (page, name) {
-
-            try {
-                client.inputFieldUnselected(page, name);
-            } catch (e) {
-
-            }
-
-        },
-
-        inputFieldTextEntered: function (page, name) {
-
-            try {
-                client.inputFieldTextEntered(page, name);
-            } catch (e) {
-
-            }
-
-        },
-
-        inputFormSubmitted: function (page, name) {
-
-            try {
-                client.inputFormSubmitted(page, name);
-            } catch (e) {
-
-            }
-
-        },
-        
         /* commerce */
         
         //in-app purchase
-
-        inAppPurchaseOfferShown: function (product)
-        {
-            try {
-                if (product instanceof mk.InAppPurchase) {
-                    client.winJS_InAppPurchaseOfferShown(product);
-                } else if (typeof product === "string") {
-                    client.inAppPurchaseOfferShown(product);
-                }
-                
-            } catch (e) {
-
-            }
-        },
-
-        inAppPurchaseOfferDismissed: function (product)
-        {
-            try {
-                if (product instanceof mk.InAppPurchase) {
-                    client.winJS_InAppPurchaseOfferDismissed(product);
-                } else if (typeof product === "string") {
-                    client.inAppPurchaseOfferDismissed(product);
-                }
-            } catch (e) {
-
-            }
-        },
-
-        inAppPurchaseOfferSelected: function (product)
-        {
-            try {
-                if (product instanceof mk.InAppPurchase) {
-                    client.winJS_InAppPurchaseSelected(product);
-                } else if (typeof product === "string") {
-                    client.inAppPurchaseSelected(product);
-                }
-            } catch (e) {
-
-            }
-        },
 
         inAppPurchaseOfferCompleted: function (product)
         {
             try {
                 if (product instanceof mk.InAppPurchase) {
-                    client.winJS_InAppPurchaseComplete(product);
-                } else if(typeof product === "string") {
                     client.inAppPurchaseComplete(product);
+                } else if(typeof product === "string") {
+                    console.log("This method is deprecated. Please see markedup.com/docs for updated commerce methods.");
                 }
             } catch (e) {
 
             }
         },
 
-        inAppPurchaseOfferCancelled: function (product)
-        {
-            try {
-                if (product instanceof mk.InAppPurchase) {
-                    client.winJS_InAppPurchaseCancelled(product);
-                } else if (typeof product === "string") {
-                    client.inAppPurchaseOfferCancelled(product);
-                }
-            } catch (e) {
-
-            }
-        },
 
         //trial
-
-        trialConversionOfferShown: function (product)
-        {
-            try {
-                if (typeof (product) !== "undefined") {
-                    if (product instanceof mk.TrialConversion) {
-                        client.winJS_TrialConversionOfferShown(product);
-                    }
-                } else {
-                    client.trialConversionOfferShown();
-                }
-                
-            } catch (e) {
-
-            }
-        },
-
-        trialConversionOfferDismissed: function (product)
-        {
-            try {
-                if (typeof (product) !== "undefined") {
-                    if (product instanceof mk.TrialConversion) {
-                        client.winJS_TrialConversionOfferDismissed(product);
-                    }
-                } else {
-                    client.trialConversionOfferDismissed();
-                }
-                
-            } catch (e) {
-
-            }
-        },
-
-        trialConversionOfferSelected: function (product)
-        {
-            try {
-                if (typeof (product) !== "undefined") {
-                    if (product instanceof mk.TrialConversion) {
-                        client.winJS_TrialConversionOfferSelected(product);
-                    }
-                } else {
-                    client.trialConversionOfferSelected();
-                }
-               
-            } catch (e) {
-
-            }
-        },
-
+    
         trialConversionOfferCompleted: function (product)
         {
             try {
                 if (typeof (product) !== "undefined") {
                     if (product instanceof mk.TrialConversion) {
-                        client.winJS_TrialConversionComplete(product);
+                        client.trialConversionComplete(product);
                     }
                 } else {
-                    client.trialConversionComplete();
+                    console.log("This method is deprecated. Please see markedup.com/docs for updated commerce methods.");
                 }
                 
-            } catch (e) {
-
-            }
-        },
-
-        trialConversionOfferCancelled: function (product)
-        {
-            try {
-                if (typeof (product) !== "undefined") {
-                    if (product instanceof mk.TrialConversion) {
-                        client.winJS_TrialConversionCancelled(product);
-                    }
-                } else {
-                    client.trialConversionOfferCancelled();
-                }
-            } catch (e) {
-
-            }
-        },
-        
-        /* contracts */
-        
-        searchRequested: function(page, query)
-        {
-            try {
-                client.searchRequested(page, query);
-            } catch (e) {
-
-            }
-        },
-
-        shareStarted: function(page)
-        {
-            try {
-                client.shareStarted(page);
-            } catch (e) {
-
-            }
-        },
-
-        shareCompleted: function(page)
-        {
-            try {
-                client.shareCompleted(page);
-            } catch (e) {
-
-            }
-        },
-
-        shareCancelled: function(page)
-        {
-            try {
-                client.shareCancelled(page);
             } catch (e) {
 
             }

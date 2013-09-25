@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Device.Location;
+using System.Globalization;
 using System.Net;
 using System.Windows;
 using System.Windows.Navigation;
@@ -8,6 +9,7 @@ using System.Xml.Linq;
 using Cyclestreets.Pages;
 using Cyclestreets.Utils;
 using CycleStreets.Util;
+using MarkedUp;
 using Microsoft.Expression.Interactivity.Core;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Maps.Controls;
@@ -136,12 +138,10 @@ namespace Cyclestreets
 									}
 									else
 									{
-										MarkedUp.AnalyticClient.TrialConversionOfferShown();
 										MessageBoxResult result = MessageBox.Show( "Thank you for installing the CycleStreets trial. This trial lasts 24 hours and allows access to all the features of the full app. You can purchase the full version at any time from the action panel.", "Hello", MessageBoxButton.OK );
 										ApplicationBarMenuItem m = new ApplicationBarMenuItem( "buy full version" );
 										m.Click += m_Click;
 										ApplicationBar.MenuItems.Add( m );
-										MarkedUp.AnalyticClient.TrialConversionOfferDismissed();
 										SettingManager.instance.SetBoolValue( "appIsTrial", true );
 									}
 								}
@@ -160,7 +160,16 @@ namespace Cyclestreets
 				// Conversion tracking
 				if( SettingManager.instance.GetBoolValue( "appIsTrial", false ) )
 				{
-					MarkedUp.AnalyticClient.TrialConversionComplete();
+					var tc = new TrialConversion()
+					{
+						ProductId = "FreeToPaid",
+						ProductName = "Free Trial to Full version",
+						CurrentMarket = RegionInfo.CurrentRegion.TwoLetterISORegionName,
+						CommerceEngine = "Custom Engine",
+						Currency = RegionInfo.CurrentRegion.ISOCurrencySymbol,
+						Price = 0.99
+					};
+					MarkedUp.AnalyticClient.TrialConversionComplete( tc );
 					SettingManager.instance.SetBoolValue( "appIsTrial", false );
 				}
 
@@ -373,7 +382,7 @@ namespace Cyclestreets
 					break;
 			}
 			MyMap.TileSources.Clear();
-			if ( ts != null )
+			if( ts != null )
 				MyMap.TileSources.Add( ts );
 		}
 

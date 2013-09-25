@@ -305,9 +305,9 @@
     <Reference Include="FlurryWP8SDK">
       <HintPath>Resources\FlurryWP8SDK.dll</HintPath>
     </Reference>
-    <Reference Include="MarkedUp, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="MarkedUp, Version=1.0.7.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>packages\MarkedUp.1.0.3\lib\WindowsPhone8\MarkedUp.dll</HintPath>
+      <HintPath>packages\MarkedUp.1.0.7\lib\WindowsPhone8\MarkedUp.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Expression.Drawing" />
     <Reference Include="Microsoft.Expression.Interactions" />

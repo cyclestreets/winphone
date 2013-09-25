@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>MarkedUp</id>
-    <version>1.0.3</version>
+    <version>1.0.7</version>
     <title>MarkedUp Analytics SDK for .NET</title>
     <authors>Aaron Stannard</authors>
     <owners>Aaron Stannard</owners>
@@ -13,7 +13,6 @@
     <description>MarkedUp Analytics SDK for Windows 8 and Windows Phone 8 developers. Learn more at https://markedup.com/</description>
     <releaseNotes />
     <copyright />
-    <language />
-    <tags>analytics mobile markedup winrt metro win8 winjs logging logs</tags>
+    <tags>analytics mobile markedup winrt metro win8 wp8 windowsphone winjs logging logs</tags>
   </metadata>
 </package>
