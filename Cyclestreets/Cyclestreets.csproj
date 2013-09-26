@@ -96,6 +96,7 @@
     </Compile>
     <Compile Include="AsyncWebRequest.cs" />
     <Compile Include="Common\BindableBase.cs" />
+    <Compile Include="MyPositionDataSource.cs" />
     <Compile Include="Pages\TileSources.cs" />
     <Compile Include="Pages\Feedback.xaml.cs">
       <DependentUpon>Feedback.xaml</DependentUpon>

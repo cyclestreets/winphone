@@ -234,13 +234,13 @@ namespace Cyclestreets
 		private string currentRouteData;
 		private WebClient placeSearch;
 
+		private AsyncWebRequest _request;		// The request for directions
+
 		public DirectionsPage()
 		{
 			InitializeComponent();
 
 			progress.DataContext = App.networkStatus;
-
-			LocationManager.instance.trackingGeolocator.PositionChanged += positionChangedHandler;
 
 			// hack. See here http://stackoverflow.com/questions/5334574/applicationbariconbutton-is-null/5334703#5334703
 			myPosition = ApplicationBar.Buttons[0] as Microsoft.Phone.Shell.ApplicationBarIconButton;
@@ -280,6 +280,9 @@ namespace Cyclestreets
 			var sgs = ExtendedVisualStateManager.GetVisualStateGroups( LayoutRoot );
 			var sg = sgs[0] as VisualStateGroup;
 			ExtendedVisualStateManager.GoToElementState( LayoutRoot, "RoutePlanner", false );
+
+
+
 		}
 
 		private void StartPlaceSearch( string textEntry, object userObject )
@@ -317,11 +320,21 @@ namespace Cyclestreets
 			{
 				PhoneApplicationService.Current.State.Remove( "loadedRoute" );
 			}
+
+			LocationManager.instance.trackingGeolocator.PositionChanged -= positionChangedHandler;
+
+			//LocationManager.instance.StopTracking();
+			//LocationManager.instance.StartTracking();
 		}
 
 		protected override void OnNavigatedTo( System.Windows.Navigation.NavigationEventArgs e )
 		{
 			base.OnNavigatedTo( e );
+
+			LocationManager.instance.trackingGeolocator.PositionChanged += positionChangedHandler;
+
+			//LocationManager.instance.StopTracking();
+			//LocationManager.instance.StartTracking(PositionAccuracy.High, TimeSpan.FromSeconds( 30 ).TotalMilliseconds );
 
 			if( NavigationContext.QueryString.ContainsKey( "plan" ) )
 			{
@@ -384,8 +397,10 @@ namespace Cyclestreets
 				int speed = Util.getSpeedFromString( speedSetting );
 				int useDom = 0;		// 0=xml 1=gml
 
-				AsyncWebRequest _request = new AsyncWebRequest( "http://www.cyclestreets.net/api/journey.json?key=" + App.apiKey + "&plan=" + plan + "&itinerarypoints=" + itinerarypoints + "&speed=" + speed + "&useDom=" + useDom, RouteFound );
+				_request = new AsyncWebRequest( "http://www.cyclestreets.net/api/journey.json?key=" + App.apiKey + "&plan=" + plan + "&itinerarypoints=" + itinerarypoints + "&speed=" + speed + "&useDom=" + useDom, RouteFound );
 				_request.Start();
+				pleaseWait.IsOpen = true;
+				popupPanel.Width = Application.Current.Host.Content.ActualWidth;
 
 				Pushpin start = new Pushpin();
 				start.GeoCoordinate = CoordinateConverter.ConvertGeocoordinate( LocationManager.instance.MyGeoPosition.Coordinate );
@@ -751,7 +766,7 @@ namespace Cyclestreets
 		private void setCurrentPosition( GeoCoordinate c )
 		{
 			current = c;
-			if( c != null )
+			if( c != null && currentRouteData == null )
 				confirmWaypoint.IsEnabled = true;
 		}
 
@@ -774,8 +789,11 @@ namespace Cyclestreets
 			}
 			itinerarypoints = itinerarypoints.TrimEnd( '|' );
 
-			AsyncWebRequest _request = new AsyncWebRequest( "http://www.cyclestreets.net/api/journey.json?key=" + App.apiKey + "&plan=" + plan + "&itinerarypoints=" + itinerarypoints + "&speed=" + speed + "&useDom=" + useDom, RouteFound );
+			_request = new AsyncWebRequest( "http://www.cyclestreets.net/api/journey.json?key=" + App.apiKey + "&plan=" + plan + "&itinerarypoints=" + itinerarypoints + "&speed=" + speed + "&useDom=" + useDom, RouteFound );
 			_request.Start();
+
+			pleaseWait.IsOpen = true;
+			popupPanel.Width = Application.Current.Host.Content.ActualWidth;
 
 			App.networkStatus.networkIsBusy = true;
 		}
@@ -795,6 +813,13 @@ namespace Cyclestreets
 		private void RouteFound( string data )
 		{
 			currentRouteData = data;
+
+			if( pleaseWait.IsOpen )
+				pleaseWait.IsOpen = false;
+
+			confirmWaypoint.IsEnabled = false;
+			cursorPos.IsEnabled = false;
+			findRoute.IsEnabled = false;
 
 			JObject o = null;
 			if( currentRouteData != null )
@@ -891,7 +916,7 @@ namespace Cyclestreets
 							min.Longitude = longitude;
 					}
 					geometryCoords.Add( coords );
-					
+
 
 					RouteSegment s = new RouteSegment();
 					s.location = coords[0];
@@ -906,9 +931,9 @@ namespace Cyclestreets
 					totalTime += theLegOfTime;
 					s.Turn = (string)p["turn"];
 					s.Walk = ( int.Parse( (string)p["walk"] ) == 1 ? true : false );
-					geometryDashed.Add(s.Walk);
-					if ( s.Walk )
-						geometryColor.Add( Color.FromArgb( 255, 0,0,0 ) );
+					geometryDashed.Add( s.Walk );
+					if( s.Walk )
+						geometryColor.Add( Color.FromArgb( 255, 0, 0, 0 ) );
 					else
 					{
 						geometryColor.Add( Color.FromArgb( 255, 127, 0, 255 ) );
@@ -1102,8 +1127,10 @@ namespace Cyclestreets
 
 				MyMap.MapElements.Clear();
 
-				AsyncWebRequest _request = new AsyncWebRequest( "http://www.cyclestreets.net/api/journey.json?key=" + App.apiKey + "&plan=" + plan + "&itinerarypoints=" + itinerarypoints + "&speed=" + speed + "&useDom=" + useDom, RouteFound );
+				_request = new AsyncWebRequest( "http://www.cyclestreets.net/api/journey.json?key=" + App.apiKey + "&plan=" + plan + "&itinerarypoints=" + itinerarypoints + "&speed=" + speed + "&useDom=" + useDom, RouteFound );
 				_request.Start();
+				pleaseWait.IsOpen = true;
+				popupPanel.Width = Application.Current.Host.Content.ActualWidth;
 
 				App.networkStatus.networkIsBusy = true;
 			}
@@ -1259,7 +1286,7 @@ namespace Cyclestreets
 		private void SetMapStyle()
 		{
 			MyTileSource ts;
-			switch (SettingManager.instance.GetStringValue("mapStyle", MapStyle[0]))
+			switch( SettingManager.instance.GetStringValue( "mapStyle", MapStyle[0] ) )
 			{
 				case "OpenStreetMap":
 					ts = new OSMTileSource();
@@ -1272,8 +1299,8 @@ namespace Cyclestreets
 					break;
 			}
 			MyMap.TileSources.Clear();
-			if (ts != null)
-				MyMap.TileSources.Add(ts);
+			if( ts != null )
+				MyMap.TileSources.Add( ts );
 		}
 
 		private void startPoint_KeyUp( object sender, System.Windows.Input.KeyEventArgs e )
@@ -1381,16 +1408,31 @@ namespace Cyclestreets
 			NavigationService.Navigate( new Uri( "/Pages/Feedback.xaml", UriKind.Relative ) );
 		}
 
-		protected override void OnBackKeyPress(CancelEventArgs e)
+		private void btn_cancel_Click( object sender, RoutedEventArgs e )
+		{
+			pleaseWait.IsOpen = false;
+			App.networkStatus.networkIsBusy = false;
+			if( _request != null )
+			{
+				_request.Stop();
+			}
+		}
+
+		protected override void OnBackKeyPress( CancelEventArgs e )
 		{
 			base.OnBackKeyPress( e );
 
-			if (currentStep >= 0)
+			if( pleaseWait.IsOpen )
+			{
+				pleaseWait.IsOpen = false;
+				e.Cancel = true;
+			}
+			else if( currentStep >= 0 )
 			{
 				currentStep = -1;
 
-				LocationRectangle rect = new LocationRectangle(min, max);
-				MyMap.SetView(rect);
+				LocationRectangle rect = new LocationRectangle( min, max );
+				MyMap.SetView( rect );
 				MyMap.Pitch = 0;
 				MyMap.Heading = 0;
 
@@ -1419,6 +1461,8 @@ namespace Cyclestreets
 				arrowRight.Opacity = 100;
 
 				route = null;
+
+				cursorPos.IsEnabled = true;
 
 				ExtendedVisualStateManager.GoToElementState( LayoutRoot, "RoutePlanner", true );
 
@@ -1456,61 +1500,12 @@ namespace Cyclestreets
 				if( e.Result != null && e.Result.Count > 0 )
 				{
 					MapLocation loc = e.Result[0];
-					
+
 					// Add a waypoint automatically
 					current = loc.GeoCoordinate;
 					confirmWaypoint_Click( null, null );
 				}
 			} );
-		}
-	}
-
-	public class MyPositionDataSource : INotifyPropertyChanged
-	{
-		private Map MyMap;
-
-		public MyPositionDataSource( Map MyMap )
-		{
-			// TODO: Complete member initialization
-			this.MyMap = MyMap;
-			MyMap.ZoomLevelChanged += MyMap_ZoomLevelChanged;
-		}
-
-		private void MyMap_ZoomLevelChanged( object sender, MapZoomLevelChangedEventArgs e )
-		{
-			this.Visible = _isVisible;
-		}
-
-		private Visibility _isVisible = Visibility.Visible;
-		public Visibility Visible
-		{
-			set
-			{
-				if( MyMap.ZoomLevel > 12 && _isVisible == Visibility.Collapsed )
-				{
-					_isVisible = Visibility.Visible;
-					NotifyPropertyChanged( "Visible" );
-				}
-				else if( MyMap.ZoomLevel <= 12 && _isVisible == Visibility.Visible )
-				{
-					_isVisible = Visibility.Collapsed;
-					NotifyPropertyChanged( "Visible" );
-				}
-			}
-			get
-			{
-				return _isVisible;
-			}
-		}
-
-		public event PropertyChangedEventHandler PropertyChanged;
-		private void NotifyPropertyChanged( String propertyName )
-		{
-			PropertyChangedEventHandler handler = PropertyChanged;
-			if( null != handler )
-			{
-				handler( this, new PropertyChangedEventArgs( propertyName ) );
-			}
 		}
 	}
 }

@@ -4,7 +4,10 @@ using System.Device.Location;
 using System.Globalization;
 using System.Net;
 using System.Windows;
+using System.Windows.Data;
+using System.Windows.Media;
 using System.Windows.Navigation;
+using System.Windows.Shapes;
 using System.Xml.Linq;
 using Cyclestreets.Pages;
 using Cyclestreets.Utils;
@@ -73,6 +76,13 @@ namespace Cyclestreets
 		{
 			_marketPlaceDetailTask.Show();
 
+		}
+
+		protected override void OnNavigatingFrom( NavigatingCancelEventArgs e )
+		{
+			base.OnNavigatingFrom( e );
+
+			LocationManager.instance.trackingGeolocator.PositionChanged -= trackingGeolocator_PositionChanged;
 		}
 
 		protected override void OnNavigatedTo( System.Windows.Navigation.NavigationEventArgs e )
@@ -293,6 +303,53 @@ namespace Cyclestreets
 			{
 				NavigationService.Navigate( new Uri( "/pages/DirectionsPage.xaml", UriKind.Relative ) );
 			}
+
+			LocationManager.instance.trackingGeolocator.PositionChanged += trackingGeolocator_PositionChanged;
+		}
+
+		private MapOverlay myLocationOverlay = null;
+		void trackingGeolocator_PositionChanged( Windows.Devices.Geolocation.Geolocator sender, Windows.Devices.Geolocation.PositionChangedEventArgs args )
+		{
+			SmartDispatcher.BeginInvoke( () =>
+				{
+					if( LocationManager.instance.MyGeoPosition != null )
+					{
+
+						if( myLocationOverlay == null )
+						{
+							// 				Arc myArc = new Arc();
+							// 				myArc.ArcThickness = 5;
+							// 				myArc.ArcThicknessUnit = Microsoft.Expression.Media.UnitType.Pixel;
+							// 				myArc.EndAngle = 360;
+							// 				myArc.StartAngle = 0;
+							// 				myArc.Height = 30;
+							// Create a small circle to mark the current location.
+							Ellipse myCircle = new Ellipse();
+							myCircle.Fill = new SolidColorBrush( Colors.Black );
+							myCircle.Height = 20;
+							myCircle.Width = 20;
+							myCircle.Opacity = 30;
+							Binding myBinding = new Binding( "Visible" );
+							myBinding.Source = new MyPositionDataSource( MyMap );
+							myCircle.Visibility = Visibility.Visible;
+							myCircle.SetBinding( Ellipse.VisibilityProperty, myBinding );
+
+							// Create a MapOverlay to contain the circle.
+							myLocationOverlay = new MapOverlay();
+							myLocationOverlay.Content = myCircle;
+							myLocationOverlay.PositionOrigin = new Point( 0.5, 0.5 );
+							myLocationOverlay.GeoCoordinate = CoordinateConverter.ConvertGeocoordinate( LocationManager.instance.MyGeoPosition.Coordinate );
+
+							// Create a MapLayer to contain the MapOverlay.
+							MapLayer myLocationLayer = new MapLayer();
+							myLocationLayer.Add( myLocationOverlay );
+
+							MyMap.Layers.Add( myLocationLayer );
+						}
+
+						myLocationOverlay.GeoCoordinate = CoordinateConverter.ConvertGeocoordinate( LocationManager.instance.MyGeoPosition.Coordinate );
+					}
+				} );
 		}
 
 		private void poiTapped( object sender, System.Windows.Input.GestureEventArgs e )
