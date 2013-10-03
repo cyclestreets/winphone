@@ -28,6 +28,7 @@ namespace Cyclestreets
 	{
 		readonly Dictionary<Pushpin, POI> pinItems = new Dictionary<Pushpin, POI>();
 
+		ReverseGeocodeQuery revGeoQ = null;
 		private GeoCoordinate _selected;
 
 		private GeoCoordinate selected
@@ -64,8 +65,8 @@ namespace Cyclestreets
 				LocationManager l = new LocationManager( MyMap );
 			}
 
-			ReverseGeocodeQuery geoQ = new ReverseGeocodeQuery();
-			geoQ.QueryCompleted += geoQ_QueryCompleted;
+			revGeoQ = new ReverseGeocodeQuery();
+			revGeoQ.QueryCompleted += geoQ_QueryCompleted;
 
 			var sgs = VisualStateManager.GetVisualStateGroups( LayoutRoot );
 			var sg = sgs[0] as VisualStateGroup;
@@ -334,6 +335,20 @@ namespace Cyclestreets
 							myCircle.Visibility = Visibility.Visible;
 							myCircle.SetBinding( Ellipse.VisibilityProperty, myBinding );
 
+// 							Ellipse myCircle = new MapPo();
+// 							myCircle.Fill = new SolidColorBrush( Color.FromArgb(128, 0, 255, 0) );
+// 							MyMap.ConvertGeoCoordinateToViewportPoint()
+// 							myCircle.Height = LocationManager.instance.MyGeoPosition.Coordinate.Accuracy;
+// 							myCircle.Width = 20;
+// 							myCircle.Opacity = 30;
+// 							Binding myBinding = new Binding( "Visible" );
+// 							myBinding.Source = new MyPositionDataSource( MyMap );
+// 							myCircle.Visibility = Visibility.Visible;
+// 							myCircle.SetBinding( Ellipse.VisibilityProperty, myBinding );
+
+
+
+
 							// Create a MapOverlay to contain the circle.
 							myLocationOverlay = new MapOverlay();
 							myLocationOverlay.Content = myCircle;
@@ -371,7 +386,7 @@ namespace Cyclestreets
 
 		private void geoQ_QueryCompleted( object sender, QueryCompletedEventArgs<IList<MapLocation>> e )
 		{
-			throw new NotImplementedException();
+			
 		}
 
 
@@ -467,6 +482,65 @@ namespace Cyclestreets
 		private void loadRoute_Click( object sender, EventArgs e )
 		{
 			NavigationService.Navigate( new Uri( "/Pages/LoadRoute.xaml", UriKind.Relative ) );
+		}
+
+		private void MyMap_Tap( object sender, System.Windows.Input.GestureEventArgs e )
+		{
+			Map map = sender as Map;
+			Point p = e.GetPosition( map );
+			GeoCoordinate coord = map.ConvertViewportPointToGeoCoordinate( p );
+
+			if( revGeoQ.IsBusy )
+			{
+				return;
+			}
+
+			App.networkStatus.networkIsBusy = true;
+			revGeoQ.GeoCoordinate = coord;
+			revGeoQ.QueryCompleted += tapMapReverseGeocode_QueryCompleted;
+			revGeoQ.QueryAsync();
+		}
+
+		private void tapMapReverseGeocode_QueryCompleted( object sender, QueryCompletedEventArgs<IList<MapLocation>> e )
+		{
+			revGeoQ.QueryCompleted -= tapMapReverseGeocode_QueryCompleted;
+
+			SmartDispatcher.BeginInvoke( () =>
+			{
+				App.networkStatus.networkIsBusy = false;
+				if( poiLayer == null )
+				{
+					poiLayer = new MapLayer();
+
+					MyMap.Layers.Add( poiLayer );
+				}
+				else
+				{
+					poiLayer.Clear();
+				}
+
+				if( e.Result != null && e.Result.Count > 0 )
+				{
+					MapLocation loc = e.Result[0];
+
+					Pushpin pp = new Pushpin();
+					//pinItems.Add( pp, p );
+					if( string.IsNullOrWhiteSpace( loc.Information.Address.Street ) )
+						pp.Content = loc.Information.Address.City + ", " + loc.Information.Address.PostalCode;
+					else
+						pp.Content = loc.Information.Address.Street;
+					//pp.Tap += poiTapped;
+
+					selected = loc.GeoCoordinate;
+
+					MapOverlay overlay = new MapOverlay();
+					overlay.Content = pp;
+					pp.GeoCoordinate = loc.GeoCoordinate;
+					overlay.GeoCoordinate = loc.GeoCoordinate;
+					overlay.PositionOrigin = new Point( 0, 1.0 );
+					poiLayer.Add( overlay );
+				}
+			} );
 		}
 	}
 }

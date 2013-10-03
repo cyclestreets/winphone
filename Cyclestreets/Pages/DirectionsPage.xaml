@@ -99,7 +99,6 @@
 			</shell:ApplicationBar.MenuItems>
 			<shell:ApplicationBarIconButton x:Name="myPosition" IconUri="/Assets/icons/dark/appbar.location.circle.png" IsEnabled="True" Text="My Position" Click="myPosition_Click"/>
 			<shell:ApplicationBarIconButton x:Name="cursorPos" IconUri="/Assets/icons/dark/appbar.add.png" IsEnabled="True" Text="Cursor" Click="cursorPos_Click"/>
-			<shell:ApplicationBarIconButton x:Name="confirmWaypoint" IconUri="/Assets/icons/dark/appbar.location.add.png" IsEnabled="True" Text="confirm" Click="confirmWaypoint_Click"/>
 			<shell:ApplicationBarIconButton x:Name="findRoute" IconUri="/Assets/icons/dark/appbar.directions.png" IsEnabled="False" Text="Find Route" Click="findRoute_Click"/>
 		</shell:ApplicationBar>
 	</phone:PhoneApplicationPage.ApplicationBar>
@@ -281,7 +280,7 @@
 				</toolkit:AutoCompleteBox.ItemTemplate> -->
 			</toolkit:AutoCompleteBox>
 		</StackPanel>
-		
+
 		<Grid x:Name="routeType" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Grid.Row="1">
 			<Grid.Background>
 				<SolidColorBrush Color="{StaticResource PhoneChromeColor}"/>
@@ -316,10 +315,10 @@
 			<Image x:Name="arrowLeft" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Center" Source="/Assets/icons/dark/appbar.arrow.left.png" Stretch="None" Height="76" Width="76" Grid.ColumnSpan="2" Tap="arrowLeft_Tap"/>
 			<Image x:Name="arrowRight" HorizontalAlignment="Right" Margin="0" VerticalAlignment="Center" Source="/Assets/icons/dark/appbar.arrow.right.png" Grid.Column="1" Stretch="None" Grid.ColumnSpan="2" Height="76" Width="76" Tap="arrowRight_Tap"/>
 		</Grid>
-		<edc:Callout x:Name="routeTutorial1" AnchorPoint="0,1.2" CalloutStyle="Rectangle" Content="Tutorial: Tap these boxes to close and continue&#xA;&#xA;You can start, finish and add waypoints to your route in three ways. &#xA;&#xA;1. You can type in this box..." FontSize="14.666999816894531" HorizontalAlignment="Left" Height="174" Margin="137,0,0,50" Grid.Row="1" VerticalAlignment="Bottom" Width="248" Fill="Black" Cursor="Arrow" Padding="10,0" Tap="routeTutorial1_Tap" Visibility="Collapsed"/>
+		<edc:Callout x:Name="routeTutorial1" AnchorPoint="0,1.2" CalloutStyle="Rectangle" Content="Tutorial: Tap these boxes to close and continue&#xA;&#xA;You can add route markers in four ways. &#xA;&#xA;1. You can type in this box..." FontSize="14.666999816894531" HorizontalAlignment="Left" Height="174" Margin="137,0,0,50" Grid.Row="1" VerticalAlignment="Bottom" Width="248" Fill="Black" Cursor="Arrow" Padding="10,0" Tap="routeTutorial1_Tap" Visibility="Collapsed"/>
 		<edc:Callout x:Name="routeTutorial2" AnchorPoint="0.149,1.21" CalloutStyle="Rectangle" Content="2. Tap this option to select your current position..." FontSize="14.666999816894531" HorizontalAlignment="Left" Height="100" Margin="86,0,0,20" Grid.Row="1" VerticalAlignment="Bottom" Width="248" Fill="Black" Cursor="Arrow" Padding="10,0" Tap="routeTutorial2_Tap" Visibility="Collapsed"/>
 		<edc:Callout x:Name="routeTutorial3" AnchorPoint="0.149,1.21" CalloutStyle="Rectangle" Content="3. Tap this option to select the point on the map directly under the &quot;+&quot; cursor. You can drag the map around and pinch zoom to refine the position." FontSize="14.666999816894531" HorizontalAlignment="Left" Height="128" Margin="165,0,0,25" Grid.Row="1" VerticalAlignment="Bottom" Width="248" Fill="Black" Cursor="Arrow" Padding="10" Tap="routeTutorial3_Tap" Visibility="Collapsed"/>
-		<edc:Callout x:Name="routeTutorial4" AnchorPoint="0.5,1.211" CalloutStyle="Rectangle" Content="To confirm the point tap this button and a marker will be placed on the map. The first tap will add the start point. Subsequent taps add waypoints. The last tap becomes the end point." FontSize="14.666999816894531" HorizontalAlignment="Left" Height="128" Margin="98,0,0,25" Grid.Row="1" VerticalAlignment="Bottom" Width="352" Fill="Black" Cursor="Arrow" Padding="10" Tap="routeTutorial4_Tap" Visibility="Collapsed"/>
+		<edc:Callout x:Name="routeTutorial4" AnchorPoint="0.149,1.21" CalloutStyle="Rectangle" Content="4. You can tap anywhere on the map" FontSize="14.666999816894531" HorizontalAlignment="Left" Height="60" Margin="105,0,0,455" Grid.Row="1" VerticalAlignment="Bottom" Width="280" Fill="Black" Cursor="Arrow" Padding="10" Tap="routeTutorial3_Tap" Visibility="Collapsed"/>
 		<edc:Callout x:Name="routeTutorial5" AnchorPoint="0.597,1.231" CalloutStyle="Rectangle" Content="Once there are at least two markers on the map you can tap this button to find your route." FontSize="14.666999816894531" HorizontalAlignment="Left" Height="108" Margin="224,0,0,25" Grid.Row="1" VerticalAlignment="Bottom" Width="226" Fill="Black" Cursor="Arrow" Padding="10" Tap="routeTutorial5_Tap" Visibility="Collapsed"/>
 		<edc:Callout x:Name="routeTutorialPin" AnchorPoint="0.597,1.231" CalloutStyle="Rectangle" Content="You can remove a waypoint by tapping it." FontSize="14.666999816894531" HorizontalAlignment="Center" Height="63" Margin="127,237,127,392" Grid.Row="1" VerticalAlignment="Center" Width="226" Fill="Black" Cursor="Arrow" Padding="10" Tap="routeTutorialPin_Tap" Visibility="Collapsed"/>
 		<edc:Callout x:Name="routeTutorialRouteType" AnchorPoint="0.111,-0.444" CalloutStyle="Rectangle" Content="You can change the route type with this drop down list. Change the default in the Settings menu" FontSize="14.666999816894531" HorizontalAlignment="Left" Height="104" Margin="108,87,146,0" Grid.Row="1" VerticalAlignment="Top" Width="226" Fill="Black" Cursor="Arrow" Padding="10" Tap="routeTutorialRouteType_Tap" Visibility="Collapsed"/>

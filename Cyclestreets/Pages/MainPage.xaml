@@ -127,7 +127,7 @@
 			<ec:ExtendedVisualStateManager/>
 		</VisualStateManager.CustomVisualStateManager>
 		<!--Panorama control-->
-		<maps:Map x:Name="MyMap" PedestrianFeaturesEnabled="True" Margin="0" ZoomLevel="5.684" Loaded="MyMap_Loaded">
+		<maps:Map x:Name="MyMap" PedestrianFeaturesEnabled="True" Margin="0" ZoomLevel="5.684" Loaded="MyMap_Loaded" Tap="MyMap_Tap">
 			<maps:Map.Center>
 				<Location:GeoCoordinate Altitude="NaN" Course="NaN" HorizontalAccuracy="NaN" Longitude="-4.367" Latitude="55.551" Speed="NaN" VerticalAccuracy="NaN"/>
 			</maps:Map.Center>

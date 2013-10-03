@@ -30,7 +30,7 @@ namespace Cyclestreets
 			lockToMyPos = doLock;
 		}
 
-		public void StartTracking( PositionAccuracy accuracy = PositionAccuracy.High, double interval = 30000 )
+		public void StartTracking( uint accuracy = 30, double interval = 30000 )
 		{
 			if( this.trackingGeolocator != null )
 			{
@@ -39,7 +39,8 @@ namespace Cyclestreets
 
 			this.trackingGeolocator = new Geolocator();
 			this.trackingGeolocator.ReportInterval = (uint)interval;
-			this.trackingGeolocator.DesiredAccuracy = accuracy;
+			//this.trackingGeolocator.DesiredAccuracy = accuracy;
+			this.trackingGeolocator.DesiredAccuracyInMeters = accuracy;
 
 			// this implicitly starts the tracking operation
 			this.trackingGeolocator.PositionChanged += positionChangedHandler;

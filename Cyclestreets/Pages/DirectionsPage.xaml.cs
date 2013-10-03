@@ -245,8 +245,8 @@ namespace Cyclestreets
 			// hack. See here http://stackoverflow.com/questions/5334574/applicationbariconbutton-is-null/5334703#5334703
 			myPosition = ApplicationBar.Buttons[0] as Microsoft.Phone.Shell.ApplicationBarIconButton;
 			cursorPos = ApplicationBar.Buttons[1] as Microsoft.Phone.Shell.ApplicationBarIconButton;
-			confirmWaypoint = ApplicationBar.Buttons[2] as Microsoft.Phone.Shell.ApplicationBarIconButton;
-			findRoute = ApplicationBar.Buttons[3] as Microsoft.Phone.Shell.ApplicationBarIconButton;
+			//confirmWaypoint = ApplicationBar.Buttons[2] as Microsoft.Phone.Shell.ApplicationBarIconButton;
+			findRoute = ApplicationBar.Buttons[2] as Microsoft.Phone.Shell.ApplicationBarIconButton;
 			saveRoute = ApplicationBar.MenuItems[0] as Microsoft.Phone.Shell.ApplicationBarMenuItem;
 
 			findRoute.IsEnabled = false;
@@ -638,12 +638,14 @@ namespace Cyclestreets
 						MyMap.SetView( revGeoQ.GeoCoordinate, 16 );
 						//MyMap.Center = CoordinateConverter.ConvertGeocoordinate(MyGeoPosition.Coordinate);
 					} );
+
+					if ( currentRouteData == null )
+						confirmWaypoint_Click( sender, e );
 				}
 			}
 			else
 			{
 				Util.showLocationDialog();
-
 			}
 
 		}
@@ -662,6 +664,9 @@ namespace Cyclestreets
 					MyMap.SetView( revGeoQ.GeoCoordinate, 16 );
 					//MyMap.Center = CoordinateConverter.ConvertGeocoordinate(MyGeoPosition.Coordinate);
 				} );
+
+				if( currentRouteData == null )
+					confirmWaypoint_Click( sender, e );
 			}
 		}
 
@@ -760,14 +765,14 @@ namespace Cyclestreets
 		private void clearCurrentPosition()
 		{
 			current = null;
-			confirmWaypoint.IsEnabled = false;
+			//confirmWaypoint.IsEnabled = false;
 		}
 
 		private void setCurrentPosition( GeoCoordinate c )
 		{
 			current = c;
-			if( c != null && currentRouteData == null )
-				confirmWaypoint.IsEnabled = true;
+			//if( c != null && currentRouteData == null )
+			//	confirmWaypoint.IsEnabled = true;
 		}
 
 		private void findRoute_Click( object sender, EventArgs e )
@@ -817,7 +822,7 @@ namespace Cyclestreets
 			if( pleaseWait.IsOpen )
 				pleaseWait.IsOpen = false;
 
-			confirmWaypoint.IsEnabled = false;
+			//confirmWaypoint.IsEnabled = false;
 			cursorPos.IsEnabled = false;
 			findRoute.IsEnabled = false;
 
@@ -1486,6 +1491,7 @@ namespace Cyclestreets
 				return;
 			}
 
+			App.networkStatus.networkIsBusy = true;
 			revGeoQ.GeoCoordinate = coord;
 			revGeoQ.QueryCompleted += tapMapReverseGeocode_QueryCompleted;
 			revGeoQ.QueryAsync();
@@ -1497,6 +1503,7 @@ namespace Cyclestreets
 
 			SmartDispatcher.BeginInvoke( () =>
 			{
+				App.networkStatus.networkIsBusy = false;
 				if( e.Result != null && e.Result.Count > 0 )
 				{
 					MapLocation loc = e.Result[0];
