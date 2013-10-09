@@ -27,7 +27,7 @@
 			<TextBlock Text="feedback" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
 		</StackPanel>
 		<ScrollViewer x:Name="formScroller" Margin="0" Grid.Row="1">
-			<StackPanel x:Name="ContentPanel" Height="607" Width="456" >
+			<StackPanel x:Name="ContentPanel">
 				<TextBlock TextWrapping="Wrap" Text="Feedback Type" FontWeight="Light">
 					<TextBlock.Foreground>
 						<SolidColorBrush Color="{StaticResource PhoneDisabledColor}"/>
@@ -45,13 +45,13 @@
 						<SolidColorBrush Color="{StaticResource PhoneDisabledColor}"/>
 					</TextBlock.Foreground>
 				</TextBlock>
-				<TextBox x:Name="comments" Height="193" TextWrapping="Wrap" InputScope="Default"/>
+				<TextBox x:Name="comments" Height="193" TextWrapping="Wrap" InputScope="Text"/>
 				<TextBlock TextWrapping="Wrap" Text="Name (optional)" FontWeight="Light">
 					<TextBlock.Foreground>
 						<SolidColorBrush Color="{StaticResource PhoneDisabledColor}"/>
 					</TextBlock.Foreground>
 				</TextBlock>
-				<TextBox x:Name="name" Height="72" TextWrapping="Wrap" InputScope="Default"/>
+				<TextBox x:Name="name" Height="72" TextWrapping="Wrap" InputScope="PersonalFullName"/>
 				<TextBlock TextWrapping="Wrap" FontWeight="Light">
 					<TextBlock.Foreground>
 						<SolidColorBrush Color="{StaticResource PhoneDisabledColor}"/>
