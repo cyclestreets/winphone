@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>SlickThoughtTrialManager</id>
+    <version>1.0.0</version>
+    <title>SlickThought Trial Manager</title>
+    <authors>Jeff Brand</authors>
+    <owners>Jeff Brand</owners>
+    <projectUrl>http://www.slickthought.net/post/2010/08/30/Managing-Trial-Applications-for-Windows-Phone-7.aspx</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>TrialManager is a simple piece of code that you can add to any WP7 project to help manage the behavior of your trial apps.  TrialManager will also make it easier to simulate you application running in Trial mode when creating your apps.</description>
+    <releaseNotes>Initial release</releaseNotes>
+    <copyright>Copyright 2011 Jeff Brand</copyright>
+    <tags>trial manager windows phone 7</tags>
+  </metadata>
+</package>

@@ -12,6 +12,7 @@ using System.Xml.Linq;
 using Cyclestreets.Pages;
 using Cyclestreets.Utils;
 using CycleStreets.Util;
+using FeedbackHelperLib;
 using MarkedUp;
 using Microsoft.Expression.Interactivity.Core;
 using Microsoft.Phone.Controls;
@@ -184,7 +185,7 @@ namespace Cyclestreets
 					SettingManager.instance.SetBoolValue( "appIsTrial", false );
 				}
 
-				if( !SettingManager.instance.GetBoolValue( "RatedApp", false ) )
+				/*if( !SettingManager.instance.GetBoolValue( "RatedApp", false ) )
 				{
 					if( SettingManager.instance.GetIntValue( "LaunchCount", 0 ) > 0 && ( SettingManager.instance.GetIntValue( "LaunchCount", 0 ) % 5 ) == 0 )
 					{
@@ -222,7 +223,7 @@ namespace Cyclestreets
 						};
 						msg.Show();
 					}
-				}
+				}*/
 			}
 
 			if( SettingManager.instance.GetBoolValue( "LocationConsent", true ) )
@@ -490,6 +491,8 @@ namespace Cyclestreets
 			MyMap.TileSources.Clear();
 			if( ts != null )
 				MyMap.TileSources.Add( ts );
+
+			FeedbackHelper.Default.Initialise( "info@cyclestreets.net" );
 		}
 
 		private void privacy_Click( object sender, System.EventArgs e )

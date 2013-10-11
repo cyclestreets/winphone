@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Helpers.FeedbackHelperWP</id>
+    <version>1.0.0</version>
+    <title>Helpers.FeedbackHelper-WP</title>
+    <authors>Simon (darkside) Jackson</authors>
+    <owners>Simon (darkside) Jackson</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Helper library for Windows Phone Projects to request feedback and suggestions</description>
+    <summary>Helper library for Windows Phone Projects to request feedback and suggestions</summary>
+    <releaseNotes>Initial release for WP7 &amp; WP8
+XNA available as separate package</releaseNotes>
+    <copyright>CC</copyright>
+    <language>en</language>
+    <dependencies>
+      <group targetFramework="WindowsPhone8.0">
+        <dependency id="WPtoolkit" version="4.2013.08.16" />
+      </group>
+      <group targetFramework="WindowsPhone7.1">
+        <dependency id="WPtoolkit" version="4.2013.08.16" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>
