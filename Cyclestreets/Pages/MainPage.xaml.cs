@@ -309,15 +309,20 @@ namespace Cyclestreets
 		}
 
 		private MapOverlay myLocationOverlay = null;
+		private MapOverlay myLocationOverlay2 = null;
+		private Ellipse accuracyEllipse = null;
 		void trackingGeolocator_PositionChanged( Windows.Devices.Geolocation.Geolocator sender, Windows.Devices.Geolocation.PositionChangedEventArgs args )
 		{
 			SmartDispatcher.BeginInvoke( () =>
 				{
 					if( LocationManager.instance.MyGeoPosition != null )
 					{
+						double myAccuracy = LocationManager.instance.MyGeoPosition.Coordinate.Accuracy;
+						GeoCoordinate myCoordinate = CoordinateConverter.ConvertGeocoordinate( LocationManager.instance.MyGeoPosition.Coordinate );
 
 						if( myLocationOverlay == null )
 						{
+
 							// 				Arc myArc = new Arc();
 							// 				myArc.ArcThickness = 5;
 							// 				myArc.ArcThicknessUnit = Microsoft.Expression.Media.UnitType.Pixel;
@@ -335,16 +340,23 @@ namespace Cyclestreets
 							myCircle.Visibility = Visibility.Visible;
 							myCircle.SetBinding( Ellipse.VisibilityProperty, myBinding );
 
-// 							Ellipse myCircle = new MapPo();
-// 							myCircle.Fill = new SolidColorBrush( Color.FromArgb(128, 0, 255, 0) );
-// 							MyMap.ConvertGeoCoordinateToViewportPoint()
-// 							myCircle.Height = LocationManager.instance.MyGeoPosition.Coordinate.Accuracy;
-// 							myCircle.Width = 20;
-// 							myCircle.Opacity = 30;
-// 							Binding myBinding = new Binding( "Visible" );
-// 							myBinding.Source = new MyPositionDataSource( MyMap );
-// 							myCircle.Visibility = Visibility.Visible;
-// 							myCircle.SetBinding( Ellipse.VisibilityProperty, myBinding );
+							MyMap.ZoomLevelChanged += MyMap_ZoomLevelChanged;
+
+							accuracyEllipse = new Ellipse();
+							accuracyEllipse.Fill = new SolidColorBrush( Color.FromArgb( 75, 200, 0, 0 ) );
+							accuracyEllipse.Visibility = Visibility.Visible;
+							accuracyEllipse.SetBinding( Ellipse.VisibilityProperty, myBinding );
+
+							// 							Ellipse myCircle = new MapPo();
+							// 							myCircle.Fill = new SolidColorBrush( Color.FromArgb(128, 0, 255, 0) );
+							// 							MyMap.ConvertGeoCoordinateToViewportPoint()
+							// 							myCircle.Height = LocationManager.instance.MyGeoPosition.Coordinate.Accuracy;
+							// 							myCircle.Width = 20;
+							// 							myCircle.Opacity = 30;
+							// 							Binding myBinding = new Binding( "Visible" );
+							// 							myBinding.Source = new MyPositionDataSource( MyMap );
+							// 							myCircle.Visibility = Visibility.Visible;
+							// 							myCircle.SetBinding( Ellipse.VisibilityProperty, myBinding );
 
 
 
@@ -353,18 +365,40 @@ namespace Cyclestreets
 							myLocationOverlay = new MapOverlay();
 							myLocationOverlay.Content = myCircle;
 							myLocationOverlay.PositionOrigin = new Point( 0.5, 0.5 );
-							myLocationOverlay.GeoCoordinate = CoordinateConverter.ConvertGeocoordinate( LocationManager.instance.MyGeoPosition.Coordinate );
+							myLocationOverlay.GeoCoordinate = myCoordinate;
+
+							myLocationOverlay2 = new MapOverlay();
+							myLocationOverlay2.Content = accuracyEllipse;
+							myLocationOverlay2.PositionOrigin = new Point( 0.5, 0.5 );
+							myLocationOverlay2.GeoCoordinate = myCoordinate;
 
 							// Create a MapLayer to contain the MapOverlay.
 							MapLayer myLocationLayer = new MapLayer();
 							myLocationLayer.Add( myLocationOverlay );
+							myLocationLayer.Add( myLocationOverlay2 );
 
 							MyMap.Layers.Add( myLocationLayer );
 						}
 
-						myLocationOverlay.GeoCoordinate = CoordinateConverter.ConvertGeocoordinate( LocationManager.instance.MyGeoPosition.Coordinate );
+						myLocationOverlay.GeoCoordinate = myCoordinate;
+						myLocationOverlay2.GeoCoordinate = myCoordinate;
+
+						double metersPerPixels = ( Math.Cos( myCoordinate.Latitude * Math.PI / 180 ) * 2 * Math.PI * 6378137 ) / ( 256 * Math.Pow( 2, MyMap.ZoomLevel ) );
+						double radius = myAccuracy / metersPerPixels;
+						accuracyEllipse.Width = radius * 2;
+						accuracyEllipse.Height = radius * 2;
 					}
 				} );
+		}
+
+		void MyMap_ZoomLevelChanged( object sender, MapZoomLevelChangedEventArgs e )
+		{
+			double myAccuracy = LocationManager.instance.MyGeoPosition.Coordinate.Accuracy;
+			GeoCoordinate myCoordinate = CoordinateConverter.ConvertGeocoordinate( LocationManager.instance.MyGeoPosition.Coordinate );
+			double metersPerPixels = ( Math.Cos( myCoordinate.Latitude * Math.PI / 180 ) * 2 * Math.PI * 6378137 ) / ( 256 * Math.Pow( 2, MyMap.ZoomLevel ) );
+			double radius = myAccuracy / metersPerPixels;
+			accuracyEllipse.Width = radius * 2;
+			accuracyEllipse.Height = radius * 2;
 		}
 
 		private void poiTapped( object sender, System.Windows.Input.GestureEventArgs e )
@@ -386,7 +420,7 @@ namespace Cyclestreets
 
 		private void geoQ_QueryCompleted( object sender, QueryCompletedEventArgs<IList<MapLocation>> e )
 		{
-			
+
 		}
 
 

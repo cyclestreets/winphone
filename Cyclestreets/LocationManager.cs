@@ -1,5 +1,4 @@
-﻿using System;
-using Cyclestreets.Utils;
+﻿using Cyclestreets.Utils;
 using Microsoft.Phone.Maps.Controls;
 using Windows.Devices.Geolocation;
 
@@ -39,7 +38,7 @@ namespace Cyclestreets
 
 			this.trackingGeolocator = new Geolocator();
 			this.trackingGeolocator.ReportInterval = (uint)interval;
-			//this.trackingGeolocator.DesiredAccuracy = accuracy;
+			//this.trackingGeolocator.DesiredAccuracy = PositionAccuracy.High;
 			this.trackingGeolocator.DesiredAccuracyInMeters = accuracy;
 
 			// this implicitly starts the tracking operation

@@ -55,6 +55,12 @@ namespace Cyclestreets.Pages
 
 		private void submitButton_Tap( object sender, System.Windows.Input.GestureEventArgs e )
 		{
+			if( string.IsNullOrWhiteSpace( comments.Text ) )
+			{
+				MessageBox.Show( "Please enter some comments before pressing submit.", "No comments", MessageBoxButton.OK );
+				return;
+			}
+
 			var client = new RestClient( "https://www.cyclestreets.net/api/feedback.xml?key=" + App.apiKey );
 
 			feedbackType type = feedbackTypeDropdown.SelectedItem as feedbackType;
