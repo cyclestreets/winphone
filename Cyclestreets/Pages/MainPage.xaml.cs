@@ -11,8 +11,8 @@ using System.Windows.Shapes;
 using System.Xml.Linq;
 using Cyclestreets.Pages;
 using Cyclestreets.Utils;
+using CycleStreets.Helpers;
 using CycleStreets.Util;
-using FeedbackHelperLib;
 using MarkedUp;
 using Microsoft.Expression.Interactivity.Core;
 using Microsoft.Phone.Controls;
@@ -482,7 +482,7 @@ namespace Cyclestreets
 					ts = new OSMTileSource();
 					break;
 				case "OpenCycleMap":
-					ts = new OSMTileSource();
+					ts = new OCMTileSource();
 					break;
 				default:
 					ts = null;
@@ -492,7 +492,11 @@ namespace Cyclestreets
 			if( ts != null )
 				MyMap.TileSources.Add( ts );
 
-			FeedbackHelper.Default.Initialise( "info@cyclestreets.net" );
+			App app = App.Current as App;
+			
+			//FeedbackHelper.Default.AppName = "CycleStreets";
+			//FeedbackHelper.Default.IsTrial = app.IsTrial;
+			//FeedbackHelper.Default.Initialise( "info@cyclestreets.net" );
 		}
 
 		private void privacy_Click( object sender, System.EventArgs e )

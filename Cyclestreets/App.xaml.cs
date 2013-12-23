@@ -10,6 +10,7 @@ using Microsoft.Phone.Controls;
 using Microsoft.Phone.Marketplace;
 using Microsoft.Phone.Shell;
 using Microsoft.Phone.Tasks;
+using CycleStreets.Helpers;
 
 namespace Cyclestreets
 {
@@ -161,10 +162,14 @@ namespace Cyclestreets
 		// This code will not execute when the application is reactivated
 		private void Application_Launching( object sender, LaunchingEventArgs e )
 		{
+			CrittercismSDK.Crittercism.Init( "52b1be13d0d8f72067000007" );
 			FlurryWP8SDK.Api.StartSession( "JZSMBMX659NW78S35ZPR" );
 			MarkedUp.AnalyticClient.Initialize( "87c139ca-14a7-41ff-8b3b-095894a52bdf" );
 			MarkedUp.AnalyticClient.RegisterRootNavigationFrame( RootFrame );
 			CheckLicense();
+
+			// Call this on launch to initialise the feedback helper
+			FeedbackHelper.Default.Launching();
 
 			SettingManager.instance.SetIntValue( "LaunchCount", SettingManager.instance.GetIntValue( "LaunchCount", 0 ) + 1 );
 		}

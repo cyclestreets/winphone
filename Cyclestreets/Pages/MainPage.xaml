@@ -9,6 +9,7 @@
 	xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
 	xmlns:ec="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
 	xmlns:Location="clr-namespace:System.Device.Location;assembly=System.Device"
+	xmlns:UserControls="clr-namespace:CycleStreets.UserControls"
 	x:Class="Cyclestreets.MainPage"
 	mc:Ignorable="d"
 	FontFamily="{StaticResource PhoneFontFamilyNormal}"
@@ -65,7 +66,7 @@
 				<shell:ApplicationBarMenuItem x:Name="sendFeedback" IsEnabled="True" Text="send feedback" Click="sendFeedback_Click"/>
 			</shell:ApplicationBar.MenuItems>
 			<!-- <shell:ApplicationBarIconButton x:Name="findAppBar" IconUri="/Assets/icons/dark/appbar.magnify.png" IsEnabled="True" Text="Find"/> -->
-			<shell:ApplicationBarIconButton x:Name="directionsAppBar" IconUri="/Assets/icons/dark/appbar.directions.png" IsEnabled="True" Text="DirectionsPage" Click="ApplicationBarIconButton_Directions"/>
+			<shell:ApplicationBarIconButton x:Name="directionsAppBar" IconUri="/Assets/icons/dark/appbar.directions.png" IsEnabled="True" Text="Directions" Click="ApplicationBarIconButton_Directions"/>
 			<shell:ApplicationBarIconButton x:Name="navigateToAppBar" IconUri="/Assets/icons/dark/appbar.location.png" IsEnabled="False" Text="Navigate To" Click="ApplicationBarIconButton_NavigateTo"/>
 			<shell:ApplicationBarIconButton x:Name="leisureRouting" IconUri="/Assets/icons/dark/appbar.map.aerial.png" IsEnabled="True" Text="leisure" Click="leisureRouting_Click"/>
 		</shell:ApplicationBar>
@@ -132,7 +133,7 @@
 				<Location:GeoCoordinate Altitude="NaN" Course="NaN" HorizontalAccuracy="NaN" Longitude="-4.367" Latitude="55.551" Speed="NaN" VerticalAccuracy="NaN"/>
 			</maps:Map.Center>
 		</maps:Map>
-
+		<UserControls:FeedbackOverlay/>
 	</Grid>
 
 </phone:PhoneApplicationPage>

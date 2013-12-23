@@ -131,4 +131,55 @@
   <data name="SampleProperty" xml:space="preserve">
     <value>Sample Runtime Property Value</value>
   </data>
+  <data name="FeedbackBody" xml:space="preserve">
+    <value>[Your feedback here]
+
+
+---------------------------------
+Device Name: {0}
+Device Manufacturer: {1}
+Device Firmware Version: {2}
+Device Hardware Version: {3}
+Application Version: {4}
+---------------------------------</value>
+  </data>
+  <data name="FeedbackMessage1" xml:space="preserve">
+    <value>Sorry to hear you didn't want to rate CycleStreets.
+
+Tell us about your experience or suggest how we can make it even better.</value>
+  </data>
+  <data name="FeedbackNo" xml:space="preserve">
+    <value>no thanks</value>
+  </data>
+  <data name="FeedbackSubject" xml:space="preserve">
+    <value>CycleStreets Customer Feedback </value>
+  </data>
+  <data name="FeedbackTitle" xml:space="preserve">
+    <value>Can we make it better?</value>
+  </data>
+  <data name="FeedbackTo" xml:space="preserve">
+    <value>info@cyclestreets.net</value>
+  </data>
+  <data name="FeedbackYes" xml:space="preserve">
+    <value>give feedback</value>
+  </data>
+  <data name="RatingMessage1" xml:space="preserve">
+    <value>We'd love you to rate our app 5 stars
+
+Showing us some love on the store helps us to continue to work on the app and make things even better!</value>
+  </data>
+  <data name="RatingMessage2" xml:space="preserve">
+    <value>You look to be getting a lot of use out of our application!
+
+Why not give us a 5 star rating to show your appreciation?</value>
+  </data>
+  <data name="RatingNo" xml:space="preserve">
+    <value>no thanks</value>
+  </data>
+  <data name="RatingTitle" xml:space="preserve">
+    <value>Enjoying CycleStreets?</value>
+  </data>
+  <data name="RatingYes" xml:space="preserve">
+    <value>rate 5 stars</value>
+  </data>
 </root>

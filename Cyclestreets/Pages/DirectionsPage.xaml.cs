@@ -639,7 +639,7 @@ namespace Cyclestreets
 						//MyMap.Center = CoordinateConverter.ConvertGeocoordinate(MyGeoPosition.Coordinate);
 					} );
 
-					if ( currentRouteData == null )
+					if( currentRouteData == null )
 						confirmWaypoint_Click( sender, e );
 				}
 			}
@@ -1297,7 +1297,7 @@ namespace Cyclestreets
 					ts = new OSMTileSource();
 					break;
 				case "OpenCycleMap":
-					ts = new OSMTileSource();
+					ts = new OCMTileSource();
 					break;
 				default:
 					ts = null;
@@ -1314,6 +1314,10 @@ namespace Cyclestreets
 			{
 				AutoCompleteBox box = sender as AutoCompleteBox;
 				string text = box.Text;
+
+				if( string.IsNullOrWhiteSpace( text ) )
+					return;
+
 				if( text.Length == 6 || text.Length == 7 )
 				{
 					if( char.IsLetter( text[0] ) && char.IsLetter( text[text.Length - 1] ) && char.IsLetter( text[text.Length - 2] )

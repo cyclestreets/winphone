@@ -96,6 +96,8 @@
     </Compile>
     <Compile Include="AsyncWebRequest.cs" />
     <Compile Include="Common\BindableBase.cs" />
+    <Compile Include="Helpers\FeedbackHelper.cs" />
+    <Compile Include="Helpers\StorageHelper.cs" />
     <Compile Include="MyPositionDataSource.cs" />
     <Compile Include="Pages\TileSources.cs" />
     <Compile Include="Pages\Feedback.xaml.cs">
@@ -103,6 +105,9 @@
     </Compile>
     <Compile Include="Pages\ShareChoice.xaml.cs">
       <DependentUpon>ShareChoice.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\FeedbackOverlay.xaml.cs">
+      <DependentUpon>FeedbackOverlay.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\CoordinateConverter.cs" />
     <Compile Include="LocationManager.cs" />
@@ -219,6 +224,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UserControls\FeedbackOverlay.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -306,8 +315,8 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="FeedbackHelper">
-      <HintPath>packages\Helpers.FeedbackHelperWP.1.0.0\lib\wp8\FeedbackHelper.dll</HintPath>
+    <Reference Include="CrittercismWP8SDK">
+      <HintPath>packages\Crittercism.2.0.0\lib\WindowsPhone8\CrittercismWP8SDK.dll</HintPath>
     </Reference>
     <Reference Include="FlurryWP8SDK">
       <HintPath>Resources\FlurryWP8SDK.dll</HintPath>
@@ -325,11 +334,11 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>packages\Newtonsoft.Json.5.0.6\lib\portable-net45+wp80+win8\Newtonsoft.Json.dll</HintPath>
+      <HintPath>packages\Newtonsoft.Json.5.0.8\lib\portable-net45+wp80+win8\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="RestSharp.WindowsPhone, Version=104.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="RestSharp.WindowsPhone, Version=104.3.3.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>packages\RestSharp.104.2.0\lib\sl4-wp71\RestSharp.WindowsPhone.dll</HintPath>
+      <HintPath>packages\RestSharp.104.3.3\lib\sl4-wp71\RestSharp.WindowsPhone.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Interactivity" />
   </ItemGroup>
