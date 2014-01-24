@@ -70,6 +70,105 @@ namespace Cyclestreets.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to balanced route.
+        /// </summary>
+        public static string BalancedRoute {
+            get {
+                return ResourceManager.GetString("BalancedRoute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Busy.
+        /// </summary>
+        public static string Busy {
+            get {
+                return ResourceManager.GetString("Busy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Calories.
+        /// </summary>
+        public static string Calories {
+            get {
+                return ResourceManager.GetString("Calories", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CO2 avoided.
+        /// </summary>
+        public static string CO2Avoided {
+            get {
+                return ResourceManager.GetString("CO2Avoided", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not calculate route.
+        /// </summary>
+        public static string CouldNotCalculateRoute {
+            get {
+                return ResourceManager.GetString("CouldNotCalculateRoute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cursor.
+        /// </summary>
+        public static string Cursor {
+            get {
+                return ResourceManager.GetString("Cursor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} at {1} &amp;#xA;Continue for {2} m.
+        /// </summary>
+        public static string DirectionText {
+            get {
+                return ResourceManager.GetString("DirectionText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disabled.
+        /// </summary>
+        public static string Disabled {
+            get {
+                return ResourceManager.GetString("Disabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Distance.
+        /// </summary>
+        public static string Distance {
+            get {
+                return ResourceManager.GetString("Distance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enabled.
+        /// </summary>
+        public static string Enabled {
+            get {
+                return ResourceManager.GetString("Enabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to fastest route.
+        /// </summary>
+        public static string FastestRoute {
+            get {
+                return ResourceManager.GetString("FastestRoute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to [Your feedback here]
         ///
         ///
@@ -144,6 +243,178 @@ namespace Cyclestreets.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Find Route.
+        /// </summary>
+        public static string FindRoute {
+            get {
+                return ResourceManager.GetString("FindRoute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred getting data from .
+        /// </summary>
+        public static string GetDataError {
+            get {
+                return ResourceManager.GetString("GetDataError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Journey time.
+        /// </summary>
+        public static string JourneyTime {
+            get {
+                return ResourceManager.GetString("JourneyTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  kcal.
+        /// </summary>
+        public static string Kcal {
+            get {
+                return ResourceManager.GetString("Kcal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to load route.
+        /// </summary>
+        public static string LoadRoute {
+            get {
+                return ResourceManager.GetString("LoadRoute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to m
+        ///.
+        /// </summary>
+        public static string MetresShort {
+            get {
+                return ResourceManager.GetString("MetresShort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  miles.
+        /// </summary>
+        public static string Miles {
+            get {
+                return ResourceManager.GetString("Miles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to My Position.
+        /// </summary>
+        public static string MyPosition {
+            get {
+                return ResourceManager.GetString("MyPosition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Route.
+        /// </summary>
+        public static string NoRoute {
+            get {
+                return ResourceManager.GetString("NoRoute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No route found. Try another search.
+        /// </summary>
+        public static string NoRouteFoundTryAnotherSearch {
+            get {
+                return ResourceManager.GetString("NoRouteFoundTryAnotherSearch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No suggestions.
+        /// </summary>
+        public static string NoSuggestions {
+            get {
+                return ResourceManager.GetString("NoSuggestions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to please wait.
+        /// </summary>
+        public static string PleaseWait {
+            get {
+                return ResourceManager.GetString("PleaseWait", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please wait while we calculate your route..
+        /// </summary>
+        public static string PleaseWaitMsg {
+            get {
+                return ResourceManager.GetString("PleaseWaitMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Privacy Policy.
+        /// </summary>
+        public static string PrivacyPolicy {
+            get {
+                return ResourceManager.GetString("PrivacyPolicy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quiet.
+        /// </summary>
+        public static string Quiet {
+            get {
+                return ResourceManager.GetString("Quiet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to quietest route.
+        /// </summary>
+        public static string QuietestRoute {
+            get {
+                return ResourceManager.GetString("QuietestRoute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quietness.
+        /// </summary>
+        public static string Quietness {
+            get {
+                return ResourceManager.GetString("Quietness", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quite Busy.
+        /// </summary>
+        public static string QuiteBusy {
+            get {
+                return ResourceManager.GetString("QuiteBusy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quite Quiet.
+        /// </summary>
+        public static string QuiteQuiet {
+            get {
+                return ResourceManager.GetString("QuiteQuiet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to We&apos;d love you to rate our app 5 stars
         ///
         ///Showing us some love on the store helps us to continue to work on the app and make things even better!.
@@ -211,11 +482,191 @@ namespace Cyclestreets.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Route Number.
+        /// </summary>
+        public static string RouteNumber {
+            get {
+                return ResourceManager.GetString("RouteNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sample Runtime Property Value.
         /// </summary>
         public static string SampleProperty {
             get {
                 return ResourceManager.GetString("SampleProperty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to save route.
+        /// </summary>
+        public static string SaveRoute {
+            get {
+                return ResourceManager.GetString("SaveRoute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Send Feedback.
+        /// </summary>
+        public static string SendFeedback {
+            get {
+                return ResourceManager.GetString("SendFeedback", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        public static string Settings {
+            get {
+                return ResourceManager.GetString("Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Would you like us to guide you through how to use the app with a tutorial?.
+        /// </summary>
+        public static string ShowTutorialMsg {
+            get {
+                return ResourceManager.GetString("ShowTutorialMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Signaled Crossings.
+        /// </summary>
+        public static string SignaledCrossings {
+            get {
+                return ResourceManager.GetString("SignaledCrossings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Signaled Junctions.
+        /// </summary>
+        public static string SignaledJunctions {
+            get {
+                return ResourceManager.GetString("SignaledJunctions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your free trial has expired. Press OK to go to the store where you can download the full version of the app..
+        /// </summary>
+        public static string TrialExpiredMsg {
+            get {
+                return ResourceManager.GetString("TrialExpiredMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trial Expired.
+        /// </summary>
+        public static string TrialExpiredTitle {
+            get {
+                return ResourceManager.GetString("TrialExpiredTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tutorial.
+        /// </summary>
+        public static string Tutorial {
+            get {
+                return ResourceManager.GetString("Tutorial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tutorial: Tap these boxes to close and continue&amp;#xA;&amp;#xA;You can add route markers in four ways. &amp;#xA;&amp;#xA;1. You can type in this box....
+        /// </summary>
+        public static string Tutorial1 {
+            get {
+                return ResourceManager.GetString("Tutorial1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 2. Tap this option to select your current position....
+        /// </summary>
+        public static string Tutorial2 {
+            get {
+                return ResourceManager.GetString("Tutorial2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 3. Tap this option to select the point on the map directly under the &amp;quot;+&amp;quot; cursor. You can drag the map around and pinch zoom to refine the position..
+        /// </summary>
+        public static string Tutorial3 {
+            get {
+                return ResourceManager.GetString("Tutorial3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 4. You can tap anywhere on the map.
+        /// </summary>
+        public static string Tutorial4 {
+            get {
+                return ResourceManager.GetString("Tutorial4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Once there are at least two markers on the map you can tap this button to find your route..
+        /// </summary>
+        public static string Tutorial5 {
+            get {
+                return ResourceManager.GetString("Tutorial5", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You can remove a waypoint by tapping it..
+        /// </summary>
+        public static string Tutorial6 {
+            get {
+                return ResourceManager.GetString("Tutorial6", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You can change the route type with this drop down list. Change the default in the Settings menu.
+        /// </summary>
+        public static string Tutorial7 {
+            get {
+                return ResourceManager.GetString("Tutorial7", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This information button will open an additional menu with more information on your route..
+        /// </summary>
+        public static string Tutorial8 {
+            get {
+                return ResourceManager.GetString("Tutorial8", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TYPE LOCATION OR USE APP BAR.
+        /// </summary>
+        public static string TypeLocation {
+            get {
+                return ResourceManager.GetString("TypeLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Very Busy.
+        /// </summary>
+        public static string VeryBusy {
+            get {
+                return ResourceManager.GetString("VeryBusy", resourceCulture);
             }
         }
     }

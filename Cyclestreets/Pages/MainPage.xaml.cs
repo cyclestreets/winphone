@@ -150,7 +150,7 @@ namespace Cyclestreets
 									}
 									else
 									{
-										MessageBoxResult result = MessageBox.Show( "Thank you for installing the CycleStreets trial. This trial lasts 24 hours and allows access to all the features of the full app. You can purchase the full version at any time from the action panel.", "Hello", MessageBoxButton.OK );
+										MessageBoxResult result = MessageBox.Show( "Thank you for installing the CycleStreets trial. This trial lasts 72 hours and allows access to all the features of the full app. You can purchase the full version at any time from the app bar.", "Hello", MessageBoxButton.OK );
 										ApplicationBarMenuItem m = new ApplicationBarMenuItem( "buy full version" );
 										m.Click += m_Click;
 										ApplicationBar.MenuItems.Add( m );

@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Cyclestreets.Pages;
+using Cyclestreets.Resources;
 using Cyclestreets.Utils;
 using CycleStreets.Util;
 using Microsoft.Expression.Interactivity.Core;
@@ -228,9 +229,9 @@ namespace Cyclestreets
 		private int currentStep = -1;
 
 		public static String[] MapStyle = { "OpenStreetMap", "OpenCycleMap", "Nokia" };
-		public static String[] RouteType = { "balanced route", "fastest route", "quietest route" };
+		public static String[] RouteType = { AppResources.BalancedRoute, AppResources.FastestRoute, AppResources.QuietestRoute };
 		public static String[] CycleSpeed = { "10mph", "12mph", "15mph" };
-		public static String[] EnabledDisabled = { "Enabled", "Disabled" };
+		public static String[] EnabledDisabled = { AppResources.Enabled, AppResources.Disabled };
 		private string currentRouteData;
 		private WebClient placeSearch;
 
@@ -244,15 +245,19 @@ namespace Cyclestreets
 
 			// hack. See here http://stackoverflow.com/questions/5334574/applicationbariconbutton-is-null/5334703#5334703
 			myPosition = ApplicationBar.Buttons[0] as Microsoft.Phone.Shell.ApplicationBarIconButton;
+			myPosition.Text = AppResources.MyPosition;
 			cursorPos = ApplicationBar.Buttons[1] as Microsoft.Phone.Shell.ApplicationBarIconButton;
+			cursorPos.Text = AppResources.Cursor;
 			//confirmWaypoint = ApplicationBar.Buttons[2] as Microsoft.Phone.Shell.ApplicationBarIconButton;
 			findRoute = ApplicationBar.Buttons[2] as Microsoft.Phone.Shell.ApplicationBarIconButton;
+			findRoute.Text = AppResources.FindRoute;
 			saveRoute = ApplicationBar.MenuItems[0] as Microsoft.Phone.Shell.ApplicationBarMenuItem;
+			saveRoute.Text = AppResources.SaveRoute;
 
 			findRoute.IsEnabled = false;
 			saveRoute.IsEnabled = false;
 
-			string plan = SettingManager.instance.GetStringValue( "defaultRouteType", "balanced route" );
+			string plan = SettingManager.instance.GetStringValue( "defaultRouteType", AppResources.BalancedRoute );
 
 			routeTypePicker.ItemsSource = RouteType;
 			routeTypePicker.SelectedItem = plan;
@@ -280,9 +285,6 @@ namespace Cyclestreets
 			var sgs = ExtendedVisualStateManager.GetVisualStateGroups( LayoutRoot );
 			var sg = sgs[0] as VisualStateGroup;
 			ExtendedVisualStateManager.GoToElementState( LayoutRoot, "RoutePlanner", false );
-
-
-
 		}
 
 		private void StartPlaceSearch( string textEntry, object userObject )
@@ -359,7 +361,7 @@ namespace Cyclestreets
 
 				if( !shownTutorialQuestion )
 				{
-					MessageBoxResult result = MessageBox.Show( "Would you like us to guide you through how to use the app with a tutorial?", "Tutorial", MessageBoxButton.OKCancel );
+					MessageBoxResult result = MessageBox.Show( AppResources.ShowTutorialMsg, AppResources.Tutorial, MessageBoxButton.OKCancel );
 					if( result == MessageBoxResult.Cancel )
 					{
 						shownTutorial = true;
@@ -388,7 +390,7 @@ namespace Cyclestreets
 				center.Longitude = float.Parse( NavigationContext.QueryString["longitude"] );
 				center.Latitude = float.Parse( NavigationContext.QueryString["latitude"] );
 
-				string plan = SettingManager.instance.GetStringValue( "defaultRouteType", "balanced route" );
+				string plan = SettingManager.instance.GetStringValue( "defaultRouteType", AppResources.BalancedRoute );
 				plan = plan.Replace( " route", "" );
 
 				string speedSetting = SettingManager.instance.GetStringValue( "cycleSpeed", "12mph" );
@@ -502,7 +504,7 @@ namespace Cyclestreets
 				else
 				{
 					List<string> names = new List<string>();
-					names.Add( "No suggestions" );
+					names.Add( AppResources.NoSuggestions );
 
 					acb.ItemsSource = null;
 					acb.ItemsSource = names;
@@ -548,7 +550,7 @@ namespace Cyclestreets
 				{
 					string start = startPoint.SelectedItem as string;
 
-					if( !geoQ.IsBusy && !string.IsNullOrWhiteSpace( start ) && start != "No suggestions" )
+					if( !geoQ.IsBusy && !string.IsNullOrWhiteSpace( start ) && start != AppResources.NoSuggestions )
 					{
 						geoQ.SearchTerm = start;
 						geoQ.GeoCoordinate = MyMap.Center;
@@ -779,7 +781,7 @@ namespace Cyclestreets
 		{
 			this.Focus();
 
-			string plan = SettingManager.instance.GetStringValue( "defaultRouteType", "balanced route" );
+			string plan = SettingManager.instance.GetStringValue( "defaultRouteType", AppResources.BalancedRoute );
 			plan = plan.Replace( " route", "" );
 
 			string speedSetting = SettingManager.instance.GetStringValue( "cycleSpeed", "12mph" );
@@ -831,7 +833,7 @@ namespace Cyclestreets
 				o = JObject.Parse( currentRouteData.Trim() );
 			if( o == null || o["marker"] == null )
 			{
-				MessageBoxResult result = MessageBox.Show( "No route found. Try another search", "No Route", MessageBoxButton.OK );
+				MessageBoxResult result = MessageBox.Show( AppResources.NoRouteFoundTryAnotherSearch, AppResources.NoRoute, MessageBoxButton.OK );
 				NavigationService.GoBack();
 				return;
 			}
@@ -864,38 +866,38 @@ namespace Cyclestreets
 				{
 					route.routeIndex = int.Parse( (string)p["itinerary"] );
 					JourneyFactItem i = new JourneyFactItem( "Assets/picture.png" );
-					i.Caption = "Route Number";
+					i.Caption = AppResources.RouteNumber;
 					i.Value = "" + route.routeIndex;
 					facts.Add( i );
 					route.timeInSeconds = int.Parse( (string)p["time"] );
 					i = new JourneyFactItem( "Assets/clock.png" );
-					i.Caption = "Journey time";
+					i.Caption = AppResources.JourneyTime;
 					i.Value = UtilTime.secsToLongDHMS( route.timeInSeconds );
 					facts.Add( i );
 					route.quietness = float.Parse( (string)p["quietness"] );
 					i = new JourneyFactItem( "Assets/picture.png" );
-					i.Caption = "Quietness";
+					i.Caption = AppResources.Quietness;
 					i.Value = route.quietness + "% " + getQuietnessString( route.quietness );
 					facts.Add( i );
 					route.signalledJunctions = int.Parse( (string)p["signalledJunctions"] );
 					i = new JourneyFactItem( "Assets/traffic_signals.png" );
-					i.Caption = "Signalled Junctions";
+					i.Caption = AppResources.SignaledJunctions;
 					i.Value = "" + route.signalledJunctions;
 					facts.Add( i );
 					route.signalledCrossings = int.Parse( (string)p["signalledCrossings"] );
 					i = new JourneyFactItem( "Assets/traffic_signals.png" );
-					i.Caption = "Signalled Crossings";
+					i.Caption = AppResources.SignaledCrossings;
 					i.Value = "" + route.signalledCrossings;
 					facts.Add( i );
 					route.grammesCO2saved = int.Parse( (string)p["grammesCO2saved"] );
 					i = new JourneyFactItem( "Assets/world.png" );
-					i.Caption = "CO2 avoided";
+					i.Caption = AppResources.CO2Avoided;
 					i.Value = (float)route.grammesCO2saved / 1000f + " kg";
 					facts.Add( i );
 					route.calories = int.Parse( (string)p["calories"] );
 					i = new JourneyFactItem( "Assets/heart.png" );
-					i.Caption = "Calories";
-					i.Value = route.calories + " kcal";
+					i.Caption = AppResources.Calories;
+					i.Value = route.calories + AppResources.Kcal;
 					facts.Add( i );
 				}
 				else if( markerType == "segment" )
@@ -991,16 +993,16 @@ namespace Cyclestreets
 				}
 			}
 			JourneyFactItem item = new JourneyFactItem( "Assets/bullet_go.png" );
-			item.Caption = "Distance";
+			item.Caption = AppResources.Distance;
 			float dist = (float)route.distance * 0.000621371192f;
-			item.Value = dist.ToString( "0.00" ) + " miles";
+			item.Value = dist.ToString( "0.00" ) + AppResources.Miles;
 			facts.Add( item );
 
 			SmartDispatcher.BeginInvoke( () =>
 			{
 				if( geometryCoords.Count == 0 )
 				{
-					MessageBox.Show( "Could not calculate route" );
+					MessageBox.Show( AppResources.CouldNotCalculateRoute );
 					App.networkStatus.networkIsBusy = false;
 					return;
 				}
@@ -1034,7 +1036,7 @@ namespace Cyclestreets
 				App.networkStatus.networkIsBusy = false;
 
 				float f = (float)route.distance * 0.000621371192f;
-				findLabel1.Text = f.ToString( "0.00" ) + "m\n" + UtilTime.secsToLongDHMS( route.timeInSeconds );
+				findLabel1.Text = f.ToString( "0.00" ) + AppResources.MetresShort + UtilTime.secsToLongDHMS( route.timeInSeconds );
 
 				if( SettingManager.instance.GetBoolValue( "tutorialEnabled", true ) )
 				{
@@ -1065,15 +1067,15 @@ namespace Cyclestreets
 		private string getQuietnessString( float p )
 		{
 			if( p > 80 )
-				return "Quiet";
+				return AppResources.Quiet;
 			else if( p > 60 )
-				return "Quite Quiet";
+				return AppResources.QuiteQuiet;
 			else if( p > 40 )
-				return "Quite Busy";
+				return AppResources.QuiteBusy;
 			else if( p > 20 )
-				return "Busy";
+				return AppResources.Busy;
 			else
-				return "Very Busy";
+				return AppResources.VeryBusy;
 		}
 
 		private void DrawMapMarker( GeoCoordinate[] coordinate, Color color, bool dashed )
@@ -1162,7 +1164,7 @@ namespace Cyclestreets
 				MyMap.Heading = 0;
 
 				float f = (float)route.distance * 0.000621371192f;
-				findLabel1.Text = f.ToString( "0.00" ) + "m\n" + UtilTime.secsToLongDHMS( route.timeInSeconds );
+				findLabel1.Text = f.ToString( "0.00" ) + AppResources.MetresShort + UtilTime.secsToLongDHMS( route.timeInSeconds );
 
 				SetMapStyle();
 			}
@@ -1202,7 +1204,8 @@ namespace Cyclestreets
 				arrowRight.Opacity = 100;
 				MyMap.SetView( route.segments[currentStep].location, 20, route.segments[currentStep].Bearing, 75 );
 
-				findLabel1.Text = route.segments[currentStep].Turn + " at " + route.segments[currentStep].Name + "\n Continue for " + route.segments[currentStep].DistanceMetres + "m";
+
+				findLabel1.Text = string.Format(AppResources.DirectionText,route.segments[currentStep].Turn , route.segments[currentStep].Name , route.segments[currentStep].DistanceMetres);
 
 				MyMap.TileSources.Clear();
 			}
@@ -1471,7 +1474,7 @@ namespace Cyclestreets
 				MyMap.Heading = 0;
 
 				float f = (float)route.distance * 0.000621371192f;
-				findLabel1.Text = f.ToString( "0.00" ) + "m\n" + UtilTime.secsToLongDHMS( route.timeInSeconds );
+				findLabel1.Text = f.ToString( "0.00" ) + AppResources.MetresShort + UtilTime.secsToLongDHMS( route.timeInSeconds );
 
 				SetMapStyle();
 				e.Cancel = true;

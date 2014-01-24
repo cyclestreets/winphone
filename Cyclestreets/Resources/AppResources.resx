@@ -182,4 +182,156 @@ Why not give us a 5 star rating to show your appreciation?</value>
   <data name="RatingYes" xml:space="preserve">
     <value>rate 5 stars</value>
   </data>
+  <data name="TrialExpiredMsg" xml:space="preserve">
+    <value>Your free trial has expired. Press OK to go to the store where you can download the full version of the app.</value>
+  </data>
+  <data name="TrialExpiredTitle" xml:space="preserve">
+    <value>Trial Expired</value>
+  </data>
+  <data name="GetDataError" xml:space="preserve">
+    <value>An error occurred getting data from </value>
+  </data>
+  <data name="Cursor" xml:space="preserve">
+    <value>Cursor</value>
+  </data>
+  <data name="FindRoute" xml:space="preserve">
+    <value>Find Route</value>
+  </data>
+  <data name="LoadRoute" xml:space="preserve">
+    <value>load route</value>
+  </data>
+  <data name="MyPosition" xml:space="preserve">
+    <value>My Position</value>
+  </data>
+  <data name="PleaseWait" xml:space="preserve">
+    <value>please wait</value>
+  </data>
+  <data name="PleaseWaitMsg" xml:space="preserve">
+    <value>Please wait while we calculate your route.</value>
+  </data>
+  <data name="PrivacyPolicy" xml:space="preserve">
+    <value>Privacy Policy</value>
+  </data>
+  <data name="SaveRoute" xml:space="preserve">
+    <value>save route</value>
+  </data>
+  <data name="SendFeedback" xml:space="preserve">
+    <value>Send Feedback</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Tutorial1" xml:space="preserve">
+    <value>Tutorial: Tap these boxes to close and continue&amp;#xA;&amp;#xA;You can add route markers in four ways. &amp;#xA;&amp;#xA;1. You can type in this box...</value>
+  </data>
+  <data name="Tutorial2" xml:space="preserve">
+    <value>2. Tap this option to select your current position...</value>
+  </data>
+  <data name="Tutorial3" xml:space="preserve">
+    <value>3. Tap this option to select the point on the map directly under the &amp;quot;+&amp;quot; cursor. You can drag the map around and pinch zoom to refine the position.</value>
+  </data>
+  <data name="Tutorial4" xml:space="preserve">
+    <value>4. You can tap anywhere on the map</value>
+  </data>
+  <data name="Tutorial5" xml:space="preserve">
+    <value>Once there are at least two markers on the map you can tap this button to find your route.</value>
+  </data>
+  <data name="Tutorial6" xml:space="preserve">
+    <value>You can remove a waypoint by tapping it.</value>
+  </data>
+  <data name="Tutorial7" xml:space="preserve">
+    <value>You can change the route type with this drop down list. Change the default in the Settings menu</value>
+  </data>
+  <data name="Tutorial8" xml:space="preserve">
+    <value>This information button will open an additional menu with more information on your route.</value>
+  </data>
+  <data name="TypeLocation" xml:space="preserve">
+    <value>TYPE LOCATION OR USE APP BAR</value>
+  </data>
+  <data name="BalancedRoute" xml:space="preserve">
+    <value>balanced route</value>
+  </data>
+  <data name="FastestRoute" xml:space="preserve">
+    <value>fastest route</value>
+  </data>
+  <data name="QuietestRoute" xml:space="preserve">
+    <value>quietest route</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>Disabled</value>
+  </data>
+  <data name="ShowTutorialMsg" xml:space="preserve">
+    <value>Would you like us to guide you through how to use the app with a tutorial?</value>
+  </data>
+  <data name="Tutorial" xml:space="preserve">
+    <value>Tutorial</value>
+  </data>
+  <data name="NoSuggestions" xml:space="preserve">
+    <value>No suggestions</value>
+  </data>
+  <data name="NoRouteFoundTryAnotherSearch" xml:space="preserve">
+    <value>No route found. Try another search</value>
+  </data>
+  <data name="NoRoute" xml:space="preserve">
+    <value>No Route</value>
+  </data>
+  <data name="RouteNumber" xml:space="preserve">
+    <value>Route Number</value>
+  </data>
+  <data name="JourneyTime" xml:space="preserve">
+    <value>Journey time</value>
+  </data>
+  <data name="Quietness" xml:space="preserve">
+    <value>Quietness</value>
+  </data>
+  <data name="SignaledJunctions" xml:space="preserve">
+    <value>Signaled Junctions</value>
+  </data>
+  <data name="SignaledCrossings" xml:space="preserve">
+    <value>Signaled Crossings</value>
+  </data>
+  <data name="CO2Avoided" xml:space="preserve">
+    <value>CO2 avoided</value>
+  </data>
+  <data name="Calories" xml:space="preserve">
+    <value>Calories</value>
+  </data>
+  <data name="Kcal" xml:space="preserve">
+    <value> kcal</value>
+  </data>
+  <data name="Distance" xml:space="preserve">
+    <value>Distance</value>
+  </data>
+  <data name="Miles" xml:space="preserve">
+    <value> miles</value>
+  </data>
+  <data name="CouldNotCalculateRoute" xml:space="preserve">
+    <value>Could not calculate route</value>
+  </data>
+  <data name="MetresShort" xml:space="preserve">
+    <value>m
+</value>
+  </data>
+  <data name="Quiet" xml:space="preserve">
+    <value>Quiet</value>
+  </data>
+  <data name="QuiteQuiet" xml:space="preserve">
+    <value>Quite Quiet</value>
+  </data>
+  <data name="QuiteBusy" xml:space="preserve">
+    <value>Quite Busy</value>
+  </data>
+  <data name="Busy" xml:space="preserve">
+    <value>Busy</value>
+  </data>
+  <data name="VeryBusy" xml:space="preserve">
+    <value>Very Busy</value>
+  </data>
+  <data name="DirectionText" xml:space="preserve">
+    <value>{0} at {1} &amp;#xA;Continue for {2} m</value>
+    <comment>0 = turn 1 = Name 2 == distance</comment>
+  </data>
 </root>

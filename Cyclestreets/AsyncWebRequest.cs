@@ -6,6 +6,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Cyclestreets.Resources;
 using CycleStreets.Util;
 using Windows.UI.Popups;
 
@@ -73,8 +74,8 @@ namespace Cyclestreets
 			}
 			catch (System.Exception ex)
 			{
-				MessageBox.Show( "An error occurred getting data from "+url );
-				FlurryWP8SDK.Api.LogError("An error occurred getting data from " + url, ex);
+				MessageBox.Show( AppResources.GetDataError+url );
+				FlurryWP8SDK.Api.LogError(AppResources.GetDataError + url, ex);
 				return null;
 			}
             

@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using Cyclestreets.Resources;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using Microsoft.Phone.Tasks;
@@ -53,7 +54,7 @@ namespace Cyclestreets.Pages
 		{
 			if( e.AddedItems.Count > 0 )
 			{
-				bool enabled = e.AddedItems[0].Equals( "Enabled" );
+				bool enabled = e.AddedItems[0].Equals( AppResources.Enabled );
 				SettingManager.instance.SetBoolValue( "PreventSleep", enabled );
 				PhoneApplicationService.Current.UserIdleDetectionMode = enabled ? IdleDetectionMode.Disabled : IdleDetectionMode.Enabled;
 			}
@@ -64,7 +65,7 @@ namespace Cyclestreets.Pages
 			if( e.AddedItems.Count > 0 )
 			{
 				bool oldValue = SettingManager.instance.GetBoolValue( "tutorialEnabled", false );
-				bool enabled = e.AddedItems[0].Equals( "Enabled" );
+				bool enabled = e.AddedItems[0].Equals( AppResources.Enabled );
 				SettingManager.instance.SetBoolValue( "tutorialEnabled", enabled );
 
 				if( enabled && !oldValue )
@@ -102,7 +103,7 @@ namespace Cyclestreets.Pages
 		{
 			if( e.AddedItems.Count > 0 )
 			{
-				bool enabled = e.AddedItems[0].Equals( "Enabled" );
+				bool enabled = e.AddedItems[0].Equals( AppResources.Enabled );
 				SettingManager.instance.SetBoolValue( "LocationConsent", enabled );
 
 				if( enabled )

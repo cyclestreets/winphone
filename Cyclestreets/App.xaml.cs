@@ -11,6 +11,8 @@ using Microsoft.Phone.Marketplace;
 using Microsoft.Phone.Shell;
 using Microsoft.Phone.Tasks;
 using CycleStreets.Helpers;
+using System.Globalization;
+using System.Threading;
 
 namespace Cyclestreets
 {
@@ -149,7 +151,7 @@ namespace Cyclestreets
 		public bool trialExpired;
 		public MessageBoxResult showTrialExpiredMessage()
 		{
-			MessageBoxResult result = MessageBox.Show( "Your free trial has expired. Press OK to go to the store where you can download the full version of the app.", "Trial Expired", MessageBoxButton.OK );
+			MessageBoxResult result = MessageBox.Show( AppResources.TrialExpiredMsg, AppResources.TrialExpiredTitle, MessageBoxButton.OK );
 			if( result == MessageBoxResult.OK )
 			{
 				MarketplaceDetailTask _marketPlaceDetailTask = new MarketplaceDetailTask();
@@ -313,6 +315,9 @@ namespace Cyclestreets
 		{
 			try
 			{
+				Thread.CurrentThread.CurrentCulture = new CultureInfo( "qps-ploc" );
+				Thread.CurrentThread.CurrentUICulture = new CultureInfo( "qps-ploc" );
+
 				// Set the font to match the display language defined by the
 				// ResourceLanguage resource string for each supported language.
 				//
@@ -346,6 +351,7 @@ namespace Cyclestreets
 
 				throw;
 			}
+			
 		}
 	}
 }
