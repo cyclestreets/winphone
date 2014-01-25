@@ -124,6 +124,51 @@ namespace Cyclestreets.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Default Route Type.
+        /// </summary>
+        public static string DefaultRouteType {
+            get {
+                return ResourceManager.GetString("DefaultRouteType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to directions.
+        /// </summary>
+        public static string directions {
+            get {
+                return ResourceManager.GetString("directions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Route Feedback.
+        /// </summary>
+        public static string DirectionsResults_DirectionsResults_Route_Feedback {
+            get {
+                return ResourceManager.GetString("DirectionsResults_DirectionsResults_Route_Feedback", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
+        public static string DirectionsResults_DirectionsResults_Save {
+            get {
+                return ResourceManager.GetString("DirectionsResults_DirectionsResults_Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Share.
+        /// </summary>
+        public static string DirectionsResults_DirectionsResults_Share {
+            get {
+                return ResourceManager.GetString("DirectionsResults_DirectionsResults_Share", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} at {1} &amp;#xA;Continue for {2} m.
         /// </summary>
         public static string DirectionText {
@@ -165,6 +210,60 @@ namespace Cyclestreets.Resources {
         public static string FastestRoute {
             get {
                 return ResourceManager.GetString("FastestRoute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter some comments before pressing submit..
+        /// </summary>
+        public static string Feedback_enterComments {
+            get {
+                return ResourceManager.GetString("Feedback_enterComments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to App Feedback.
+        /// </summary>
+        public static string Feedback_feedbackTypes_App_Feedback {
+            get {
+                return ResourceManager.GetString("Feedback_feedbackTypes_App_Feedback", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bug Report.
+        /// </summary>
+        public static string Feedback_feedbackTypes_Bug_Report {
+            get {
+                return ResourceManager.GetString("Feedback_feedbackTypes_Bug_Report", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Other.
+        /// </summary>
+        public static string Feedback_feedbackTypes_Other {
+            get {
+                return ResourceManager.GetString("Feedback_feedbackTypes_Other", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Route Feedback.
+        /// </summary>
+        public static string Feedback_feedbackTypes_Route_Feedback {
+            get {
+                return ResourceManager.GetString("Feedback_feedbackTypes_Route_Feedback", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No comments.
+        /// </summary>
+        public static string Feedback_submitButton_Tap_No_comments {
+            get {
+                return ResourceManager.GetString("Feedback_submitButton_Tap_No_comments", resourceCulture);
             }
         }
         
@@ -261,6 +360,15 @@ namespace Cyclestreets.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to journey facts.
+        /// </summary>
+        public static string JourneyFacts {
+            get {
+                return ResourceManager.GetString("JourneyFacts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Journey time.
         /// </summary>
         public static string JourneyTime {
@@ -288,6 +396,69 @@ namespace Cyclestreets.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CycleStreets requires access to your location in order to provide navigation and mapping information. Do you want to allow this?.
+        /// </summary>
+        public static string LocationConsent {
+            get {
+                return ResourceManager.GetString("LocationConsent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Location Enabled.
+        /// </summary>
+        public static string LocationEnabled {
+            get {
+                return ResourceManager.GetString("LocationEnabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disable aerial view.
+        /// </summary>
+        public static string MainPage_ApplicationBarMenuItem_ToggleAerialView_Disable_aerial_view {
+            get {
+                return ResourceManager.GetString("MainPage_ApplicationBarMenuItem_ToggleAerialView_Disable_aerial_view", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable aerial view.
+        /// </summary>
+        public static string MainPage_ApplicationBarMenuItem_ToggleAerialView_Enable_aerial_view {
+            get {
+                return ResourceManager.GetString("MainPage_ApplicationBarMenuItem_ToggleAerialView_Enable_aerial_view", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hello.
+        /// </summary>
+        public static string MainPage_OnNavigatedTo_Hello {
+            get {
+                return ResourceManager.GetString("MainPage_OnNavigatedTo_Hello", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Location.
+        /// </summary>
+        public static string MainPage_OnNavigatedTo_Location {
+            get {
+                return ResourceManager.GetString("MainPage_OnNavigatedTo_Location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Map Style.
+        /// </summary>
+        public static string MapStyle {
+            get {
+                return ResourceManager.GetString("MapStyle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to m
         ///.
         /// </summary>
@@ -303,6 +474,15 @@ namespace Cyclestreets.Resources {
         public static string Miles {
             get {
                 return ResourceManager.GetString("Miles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to My Cycling Speed.
+        /// </summary>
+        public static string MyCyclingSpeed {
+            get {
+                return ResourceManager.GetString("MyCyclingSpeed", resourceCulture);
             }
         }
         
@@ -357,6 +537,15 @@ namespace Cyclestreets.Resources {
         public static string PleaseWaitMsg {
             get {
                 return ResourceManager.GetString("PleaseWaitMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Prevent Sleep.
+        /// </summary>
+        public static string PreventSleep {
+            get {
+                return ResourceManager.GetString("PreventSleep", resourceCulture);
             }
         }
         
@@ -572,6 +761,15 @@ namespace Cyclestreets.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Thank you for installing the CycleStreets trial. This trial lasts 72 hours and allows access to all the features of the full app. You can purchase the full version at any time from the app bar..
+        /// </summary>
+        public static string TrialWelcome {
+            get {
+                return ResourceManager.GetString("TrialWelcome", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tutorial.
         /// </summary>
         public static string Tutorial {
@@ -649,6 +847,15 @@ namespace Cyclestreets.Resources {
         public static string Tutorial8 {
             get {
                 return ResourceManager.GetString("Tutorial8", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tutorial Enabled.
+        /// </summary>
+        public static string TutorialEnabled {
+            get {
+                return ResourceManager.GetString("TutorialEnabled", resourceCulture);
             }
         }
         

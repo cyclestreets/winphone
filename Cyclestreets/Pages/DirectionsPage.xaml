@@ -11,7 +11,7 @@
     xmlns:edc="clr-namespace:Microsoft.Expression.Controls;assembly=Microsoft.Expression.Drawing" xmlns:em="clr-namespace:Microsoft.Expression.Media;assembly=Microsoft.Expression.Drawing"
     xmlns:Location="clr-namespace:System.Device.Location;assembly=System.Device"
     xmlns:es="clr-namespace:Microsoft.Expression.Shapes;assembly=Microsoft.Expression.Drawing"
-    x:Class="Cyclestreets.DirectionsPage"
+    x:Class="Cyclestreets.Pages.DirectionsPage"
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d"
     shell:SystemTray.IsVisible="True">

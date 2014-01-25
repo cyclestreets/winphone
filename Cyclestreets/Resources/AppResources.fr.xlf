@@ -107,6 +107,98 @@ Pourquoi ne pas nous donner une cote 5 étoiles pour montrer votre appréciation
           <target state="needs-review-translation" state-qualifier="mt-suggestion">{0} sur {1} %%amp;#xA ;Continuer sur {2} m</target>
           
         <note from="MultilingualBuild" annotates="source" priority="2">0 = turn 1 = Name 2 == distance</note></trans-unit>
+        <trans-unit translate="yes" id="Resx/MainPage_ApplicationBarMenuItem_ToggleAerialView_Disable_aerial_view" xml:space="preserve">
+          <source>Disable aerial view</source>
+          <target state="new">Disable aerial view</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/JourneyFacts" xml:space="preserve">
+          <source>journey facts</source>
+          <target state="new">journey facts</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/directions" xml:space="preserve">
+          <source>directions</source>
+          <target state="new">directions</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/DirectionsResults_DirectionsResults_Route_Feedback" xml:space="preserve">
+          <source>Route Feedback</source>
+          <target state="new">Route Feedback</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/DirectionsResults_DirectionsResults_Share" xml:space="preserve">
+          <source>Share</source>
+          <target state="new">Share</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/DirectionsResults_DirectionsResults_Save" xml:space="preserve">
+          <source>Save</source>
+          <target state="new">Save</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/TutorialEnabled" xml:space="preserve">
+          <source>Tutorial Enabled</source>
+          <target state="new">Tutorial Enabled</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/PreventSleep" xml:space="preserve">
+          <source>Prevent Sleep</source>
+          <target state="new">Prevent Sleep</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/MyCyclingSpeed" xml:space="preserve">
+          <source>My Cycling Speed</source>
+          <target state="new">My Cycling Speed</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/MapStyle" xml:space="preserve">
+          <source>Map Style</source>
+          <target state="new">Map Style</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/LocationEnabled" xml:space="preserve">
+          <source>Location Enabled</source>
+          <target state="new">Location Enabled</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/DefaultRouteType" xml:space="preserve">
+          <source>Default Route Type</source>
+          <target state="new">Default Route Type</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/MainPage_ApplicationBarMenuItem_ToggleAerialView_Enable_aerial_view" xml:space="preserve">
+          <source>Enable aerial view</source>
+          <target state="new">Enable aerial view</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/MainPage_OnNavigatedTo_Location" xml:space="preserve">
+          <source>Location</source>
+          <target state="new">Location</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/LocationConsent" xml:space="preserve">
+          <source>CycleStreets requires access to your location in order to provide navigation and mapping information. Do you want to allow this?</source>
+          <target state="new">CycleStreets requires access to your location in order to provide navigation and mapping information. Do you want to allow this?</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/MainPage_OnNavigatedTo_Hello" xml:space="preserve">
+          <source>Hello</source>
+          <target state="new">Hello</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/TrialWelcome" xml:space="preserve">
+          <source>Thank you for installing the CycleStreets trial. This trial lasts 72 hours and allows access to all the features of the full app. You can purchase the full version at any time from the app bar.</source>
+          <target state="new">Thank you for installing the CycleStreets trial. This trial lasts 72 hours and allows access to all the features of the full app. You can purchase the full version at any time from the app bar.</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/Feedback_submitButton_Tap_No_comments" xml:space="preserve">
+          <source>No comments</source>
+          <target state="new">No comments</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/Feedback_enterComments" xml:space="preserve">
+          <source>Please enter some comments before pressing submit.</source>
+          <target state="new">Please enter some comments before pressing submit.</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/Feedback_feedbackTypes_Other" xml:space="preserve">
+          <source>Other</source>
+          <target state="new">Other</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/Feedback_feedbackTypes_Bug_Report" xml:space="preserve">
+          <source>Bug Report</source>
+          <target state="new">Bug Report</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/Feedback_feedbackTypes_App_Feedback" xml:space="preserve">
+          <source>App Feedback</source>
+          <target state="new">App Feedback</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/Feedback_feedbackTypes_Route_Feedback" xml:space="preserve">
+          <source>Route Feedback</source>
+          <target state="new">Route Feedback</target>
+        </trans-unit>
         <trans-unit translate="yes" id="Resx/VeryBusy" xml:space="preserve">
           <source>Very Busy</source>
           <target state="needs-review-translation" state-qualifier="mt-suggestion">Très occupé</target>

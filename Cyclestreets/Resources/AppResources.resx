@@ -334,4 +334,73 @@ Why not give us a 5 star rating to show your appreciation?</value>
     <value>{0} at {1} &amp;#xA;Continue for {2} m</value>
     <comment>0 = turn 1 = Name 2 == distance</comment>
   </data>
+  <data name="Feedback_feedbackTypes_Route_Feedback" xml:space="preserve">
+    <value>Route Feedback</value>
+  </data>
+  <data name="Feedback_feedbackTypes_App_Feedback" xml:space="preserve">
+    <value>App Feedback</value>
+  </data>
+  <data name="Feedback_feedbackTypes_Bug_Report" xml:space="preserve">
+    <value>Bug Report</value>
+  </data>
+  <data name="Feedback_feedbackTypes_Other" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="Feedback_enterComments" xml:space="preserve">
+    <value>Please enter some comments before pressing submit.</value>
+  </data>
+  <data name="Feedback_submitButton_Tap_No_comments" xml:space="preserve">
+    <value>No comments</value>
+  </data>
+  <data name="TrialWelcome" xml:space="preserve">
+    <value>Thank you for installing the CycleStreets trial. This trial lasts 72 hours and allows access to all the features of the full app. You can purchase the full version at any time from the app bar.</value>
+  </data>
+  <data name="MainPage_OnNavigatedTo_Hello" xml:space="preserve">
+    <value>Hello</value>
+  </data>
+  <data name="LocationConsent" xml:space="preserve">
+    <value>CycleStreets requires access to your location in order to provide navigation and mapping information. Do you want to allow this?</value>
+  </data>
+  <data name="MainPage_OnNavigatedTo_Location" xml:space="preserve">
+    <value>Location</value>
+  </data>
+  <data name="MainPage_ApplicationBarMenuItem_ToggleAerialView_Enable_aerial_view" xml:space="preserve">
+    <value>Enable aerial view</value>
+  </data>
+  <data name="MainPage_ApplicationBarMenuItem_ToggleAerialView_Disable_aerial_view" xml:space="preserve">
+    <value>Disable aerial view</value>
+  </data>
+  <data name="DefaultRouteType" xml:space="preserve">
+    <value>Default Route Type</value>
+  </data>
+  <data name="LocationEnabled" xml:space="preserve">
+    <value>Location Enabled</value>
+  </data>
+  <data name="MapStyle" xml:space="preserve">
+    <value>Map Style</value>
+  </data>
+  <data name="MyCyclingSpeed" xml:space="preserve">
+    <value>My Cycling Speed</value>
+  </data>
+  <data name="PreventSleep" xml:space="preserve">
+    <value>Prevent Sleep</value>
+  </data>
+  <data name="TutorialEnabled" xml:space="preserve">
+    <value>Tutorial Enabled</value>
+  </data>
+  <data name="DirectionsResults_DirectionsResults_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="DirectionsResults_DirectionsResults_Share" xml:space="preserve">
+    <value>Share</value>
+  </data>
+  <data name="DirectionsResults_DirectionsResults_Route_Feedback" xml:space="preserve">
+    <value>Route Feedback</value>
+  </data>
+  <data name="directions" xml:space="preserve">
+    <value>directions</value>
+  </data>
+  <data name="JourneyFacts" xml:space="preserve">
+    <value>journey facts</value>
+  </data>
 </root>

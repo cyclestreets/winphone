@@ -39,7 +39,7 @@
 						<ColumnDefinition Width="179"/>
 						<ColumnDefinition/>
 					</Grid.ColumnDefinitions>
-					<TextBlock TextWrapping="Wrap" Margin="0" VerticalAlignment="Center" Text="Map Style "/>
+                    <TextBlock TextWrapping="Wrap" Margin="0" VerticalAlignment="Center" Text="{Binding Path=LocalizedResources.MapStyle, Source={StaticResource LocalizedStrings}}"/>
 					<toolkit:ListPicker x:Name="mapStyle" Margin="0" Grid.Column="1" SelectionChanged="mapStyle_SelectionChanged" />
 				</Grid>
 				<Grid>
@@ -47,7 +47,7 @@
 						<ColumnDefinition Width="179"/>
 						<ColumnDefinition/>
 					</Grid.ColumnDefinitions>
-					<TextBlock TextWrapping="Wrap" Margin="0" VerticalAlignment="Center" Text="Location Enabled "/>
+                    <TextBlock TextWrapping="Wrap" Margin="0" VerticalAlignment="Center" Text="{Binding Path=LocalizedResources.LocationEnabled, Source={StaticResource LocalizedStrings}}"/>
 					<toolkit:ListPicker x:Name="locationEnabled" Margin="0" Grid.Column="1" />
 				</Grid>
 				<Grid>
@@ -55,7 +55,7 @@
 						<ColumnDefinition Width="179"/>
 						<ColumnDefinition/>
 					</Grid.ColumnDefinitions>
-					<TextBlock TextWrapping="Wrap" Margin="0" VerticalAlignment="Center" Text="Tutorial Enabled"/>
+                    <TextBlock TextWrapping="Wrap" Margin="0" VerticalAlignment="Center" Text="{Binding Path=LocalizedResources.TutorialEnabled, Source={StaticResource LocalizedStrings}}"/>
 					<toolkit:ListPicker x:Name="tutorialEnabled" Margin="0" Grid.Column="1" />
 				</Grid>
 				<Grid>
@@ -63,7 +63,7 @@
 						<ColumnDefinition Width="179"/>
 						<ColumnDefinition/>
 					</Grid.ColumnDefinitions>
-					<TextBlock TextWrapping="Wrap" Margin="0" VerticalAlignment="Center" Text="Prevent Sleep"/>
+                    <TextBlock TextWrapping="Wrap" Margin="0" VerticalAlignment="Center" Text="{Binding Path=LocalizedResources.PreventSleep, Source={StaticResource LocalizedStrings}}"/>
 					<toolkit:ListPicker x:Name="preventSleep" Margin="0" Grid.Column="1" />
 				</Grid>
 				<Grid>
@@ -72,7 +72,7 @@
 						<ColumnDefinition Width="277*"/>
 					</Grid.ColumnDefinitions>
 					<TextBlock TextWrapping="Wrap" Margin="0" VerticalAlignment="Center">
-						<Run Text="Default Route Type"/>
+						<Run Text="{Binding Path=LocalizedResources.DefaultRouteType, Source={StaticResource LocalizedStrings}}"/>
 					</TextBlock>
 					<toolkit:ListPicker x:Name="defaultRouteType" Margin="0" Grid.Column="1" SelectionChanged="defaultRouteType_SelectionChanged"/>
 				</Grid>
@@ -81,7 +81,7 @@
 						<ColumnDefinition Width="179"/>
 						<ColumnDefinition/>
 					</Grid.ColumnDefinitions>
-					<TextBlock TextWrapping="Wrap" Margin="0" VerticalAlignment="Center" Text="My Cycling Speed "/>
+                    <TextBlock TextWrapping="Wrap" Margin="0" VerticalAlignment="Center" Text="{Binding Path=LocalizedResources.MyCyclingSpeed, Source={StaticResource LocalizedStrings}}"/>
 					<toolkit:ListPicker x:Name="cycleSpeed" Margin="0" Grid.Column="1" SelectionChanged="cycleSpeed_SelectionChanged"/>
 				</Grid>
 				<Button Content="Save" Click="Button_Click"/>

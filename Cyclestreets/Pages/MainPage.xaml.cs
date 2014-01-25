@@ -10,6 +10,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml.Linq;
 using Cyclestreets.Pages;
+using Cyclestreets.Resources;
 using Cyclestreets.Utils;
 using CycleStreets.Helpers;
 using CycleStreets.Util;
@@ -150,7 +151,7 @@ namespace Cyclestreets
 									}
 									else
 									{
-										MessageBoxResult result = MessageBox.Show( "Thank you for installing the CycleStreets trial. This trial lasts 72 hours and allows access to all the features of the full app. You can purchase the full version at any time from the app bar.", "Hello", MessageBoxButton.OK );
+										MessageBoxResult result = MessageBox.Show( AppResources.TrialWelcome, AppResources.MainPage_OnNavigatedTo_Hello, MessageBoxButton.OK );
 										ApplicationBarMenuItem m = new ApplicationBarMenuItem( "buy full version" );
 										m.Click += m_Click;
 										ApplicationBar.MenuItems.Add( m );
@@ -287,8 +288,8 @@ namespace Cyclestreets
 			else
 			{
 				MessageBoxResult result =
-					MessageBox.Show( "CycleStreets requires access to your location in order to provide navigation and mapping information. Do you want to allow this?",
-					"Location",
+					MessageBox.Show( AppResources.LocationConsent,
+					AppResources.MainPage_OnNavigatedTo_Location,
 					MessageBoxButton.OKCancel );
 
 				if( result == MessageBoxResult.OK )
@@ -438,12 +439,12 @@ namespace Cyclestreets
 			ApplicationBarMenuItem item = sender as ApplicationBarMenuItem;
 			if( MyMap.CartographicMode == MapCartographicMode.Hybrid )
 			{
-				item.Text = "Enable aerial view";
+				item.Text = AppResources.MainPage_ApplicationBarMenuItem_ToggleAerialView_Enable_aerial_view;
 				MyMap.CartographicMode = MapCartographicMode.Road;
 			}
 			else
 			{
-				item.Text = "Disable aerial view";
+				item.Text = AppResources.MainPage_ApplicationBarMenuItem_ToggleAerialView_Disable_aerial_view;
 				MyMap.CartographicMode = MapCartographicMode.Hybrid;
 			}
 		}

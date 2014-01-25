@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using Cyclestreets.Resources;
 using Microsoft.Phone.Controls;
 using RestSharp;
 
@@ -36,10 +37,10 @@ namespace Cyclestreets.Pages
 
 		private feedbackType[] feedbackTypes =
 		{
-			new feedbackType("Route Feedback", "route"),
-			new feedbackType("App Feedback", "mobile"),
-			new feedbackType("Bug Report", "bug"),
-			new feedbackType("Other", "other"),
+			new feedbackType(AppResources.Feedback_feedbackTypes_Route_Feedback, "route"),
+			new feedbackType(AppResources.Feedback_feedbackTypes_App_Feedback, "mobile"),
+			new feedbackType(AppResources.Feedback_feedbackTypes_Bug_Report, "bug"),
+			new feedbackType(AppResources.Feedback_feedbackTypes_Other, "other"),
 		};
 
 		protected override void OnNavigatedTo( System.Windows.Navigation.NavigationEventArgs e )
@@ -57,7 +58,7 @@ namespace Cyclestreets.Pages
 		{
 			if( string.IsNullOrWhiteSpace( comments.Text ) )
 			{
-				MessageBox.Show( "Please enter some comments before pressing submit.", "No comments", MessageBoxButton.OK );
+				MessageBox.Show( AppResources.Feedback_enterComments, AppResources.Feedback_submitButton_Tap_No_comments, MessageBoxButton.OK );
 				return;
 			}
 

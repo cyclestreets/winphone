@@ -107,6 +107,98 @@ Why not give us a 5 star rating to show your appreciation?</source>
           <target state="needs-review-translation" state-qualifier="mt-suggestion">[55287][!!_{0} ãτ {1} %%amp;#×Á;Ċôηţįиùè ƒôѓ {2} m_!!!!!!!!!!!!]</target>
           
         <note from="MultilingualBuild" annotates="source" priority="2">0 = turn 1 = Name 2 == distance</note></trans-unit>
+        <trans-unit translate="yes" id="Resx/MainPage_ApplicationBarMenuItem_ToggleAerialView_Disable_aerial_view" xml:space="preserve">
+          <source>Disable aerial view</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[3B28F][!!_ÐîšâБłê âêŕįáľ νíêẅ_!!!!!!]</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/JourneyFacts" xml:space="preserve">
+          <source>journey facts</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[1AA5B][!!_јóµřηéŷ ƒáċтŝ_!!]</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/directions" xml:space="preserve">
+          <source>directions</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[D283C][!!_đířêĉτįóйŝ_!!]</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/DirectionsResults_DirectionsResults_Route_Feedback" xml:space="preserve">
+          <source>Route Feedback</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[E6A2C][!!_Ŗôµтê ₣èęðъãčќ_!!!!]</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/DirectionsResults_DirectionsResults_Share" xml:space="preserve">
+          <source>Share</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[05945][!!_Şĥàřé_!!]</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/DirectionsResults_DirectionsResults_Save" xml:space="preserve">
+          <source>Save</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[11D0C][!!_Šãνè_!!]</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/TutorialEnabled" xml:space="preserve">
+          <source>Tutorial Enabled</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[9254F][!!_Τµτóѓįâľ Éиáьľęð_!!!!]</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/PreventSleep" xml:space="preserve">
+          <source>Prevent Sleep</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[2843D][!!_Þŗêνéηť Šłéêρ_!!]</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/MyCyclingSpeed" xml:space="preserve">
+          <source>My Cycling Speed</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[9B96A][!!_Мÿ ČУčĺíήġ Ŝρêèđ_!!!!]</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/MapStyle" xml:space="preserve">
+          <source>Map Style</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[44249][!!_Μáρ Şтýĺè_!!]</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/LocationEnabled" xml:space="preserve">
+          <source>Location Enabled</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[8E258][!!_Ĺòĉãтíõй ÈйàБĺêð_!!!!]</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/DefaultRouteType" xml:space="preserve">
+          <source>Default Route Type</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[1D55B][!!_Ðèƒâûĺţ Ŗõûτè Ťŷþé_!!!!!!]</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/MainPage_ApplicationBarMenuItem_ToggleAerialView_Enable_aerial_view" xml:space="preserve">
+          <source>Enable aerial view</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[18FA7][!!_Êйãъļê àęѓîâľ νìęẃ_!!!!!!]</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/MainPage_OnNavigatedTo_Location" xml:space="preserve">
+          <source>Location</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[2C34C][!!_Ĺóćáτîóй_!!]</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/LocationConsent" xml:space="preserve">
+          <source>CycleStreets requires access to your location in order to provide navigation and mapping information. Do you want to allow this?</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[CEC96][!!_ČŷċļêŜţѓéèτś ѓéqúìŕêš ãĉĉèśś τó ўôùŕ łôĉàτîôй îй ôѓðéѓ тô ρŗôνìďé иâνìĝàтîòи àηď мãþρíηĝ įήƒóѓмãţîôи. Ďô ýôµ ŵáйт тò àľľõẃ τђîś?_!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/MainPage_OnNavigatedTo_Hello" xml:space="preserve">
+          <source>Hello</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[372AD][!!_Нęĺļô_!!]</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/TrialWelcome" xml:space="preserve">
+          <source>Thank you for installing the CycleStreets trial. This trial lasts 72 hours and allows access to all the features of the full app. You can purchase the full version at any time from the app bar.</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[86F72][!!_Τĥâήĸ ÿôú ƒôŕ îиşτàľļįηğ τћé ČўĉľęŜťřéęťš τŗįâļ. Τнíš ţѓîáļ ļãšţş 72 ћòùřş áηð àľłôẃš áċċêśş ţõ àľł τћè ƒéâτûŕéš ôƒ ťђę ƒúłł àрρ. Ϋòû čâи þµѓĉђáśé ťћê ƒúľł νéŕşîóη âτ áйŷ ťįмê ƒřõм ţђę áþρ ъàŗ._!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/Feedback_submitButton_Tap_No_comments" xml:space="preserve">
+          <source>No comments</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[F8CA7][!!_Ñó ćõмméηтś_!!]</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/Feedback_enterComments" xml:space="preserve">
+          <source>Please enter some comments before pressing submit.</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[D9793][!!_Рľêâşé ęήтèŗ ŝòmę ćõmмêитŝ ьèƒóѓé рŗêššįйġ śµвmîţ._!!!!!!!!!!!!!!!!]</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/Feedback_feedbackTypes_Other" xml:space="preserve">
+          <source>Other</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[8006F][!!_Õтнęř_!!]</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/Feedback_feedbackTypes_Bug_Report" xml:space="preserve">
+          <source>Bug Report</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[3E3AC][!!_βúğ Ŕęрôŕţ_!!]</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/Feedback_feedbackTypes_App_Feedback" xml:space="preserve">
+          <source>App Feedback</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[6871C][!!_Ãþþ ₣éęďьãĉĸ_!!]</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/Feedback_feedbackTypes_Route_Feedback" xml:space="preserve">
+          <source>Route Feedback</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[43278][!!_Řôùτê ₣èèđьàćĸ_!!!!]</target>
+        </trans-unit>
         <trans-unit translate="yes" id="Resx/VeryBusy" xml:space="preserve">
           <source>Very Busy</source>
           <target state="needs-review-translation" state-qualifier="mt-suggestion">[C4C8D][!!_Vêŗÿ Βµśÿ_!!]</target>

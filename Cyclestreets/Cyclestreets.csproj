@@ -163,6 +163,7 @@
     <Compile Include="Utils\Stackish.cs" />
     <Compile Include="Utils\Util.cs" />
     <Compile Include="Utils\UtilTime.cs" />
+    <Compile Include="Utils\WMSTile.cs" />
     <Compile Include="ViewModels\ItemViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
   </ItemGroup>

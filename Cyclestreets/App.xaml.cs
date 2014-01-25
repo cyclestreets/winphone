@@ -45,6 +45,11 @@ namespace Cyclestreets
 
 	public partial class App : Application
 	{
+        // Locale to force CurrentCulture to in InitializeLanguage().
+        // Use "qps-PLOC" to deploy pseudolocalized strings.
+        // Use "" to let user Phone Language selection determine locale.
+        public static String appForceCulture = "qps-PLOC";
+
 		private static MainViewModel viewModel = null;
 
 		public static string hereAppID = "zgcciiZ696xHUiuoyJZi";
@@ -142,7 +147,7 @@ namespace Cyclestreets
 			// When debugging, we want to simulate a trial mode experience. The following conditional allows us to set the _isTrial 
 			// property to simulate trial mode being on or off. 
 #if DEBUG
-			_isTrial = false;
+			_isTrial = true;
 #else
 			_isTrial = _licenseInfo.IsTrial();
 #endif
@@ -315,8 +320,17 @@ namespace Cyclestreets
 		{
 			try
 			{
-				Thread.CurrentThread.CurrentCulture = new CultureInfo( "qps-ploc" );
-				Thread.CurrentThread.CurrentUICulture = new CultureInfo( "qps-ploc" );
+                // Force CurrentUICulture to locale defined by appForceCulture.
+                // An empty string allows the user's Phone Language setting to
+                // determine the locale.
+                if (Debugger.IsAttached &&
+                    String.IsNullOrWhiteSpace(appForceCulture) == false)
+                {
+                    Thread.CurrentThread.CurrentCulture =
+                        new CultureInfo(appForceCulture);
+                    Thread.CurrentThread.CurrentUICulture =
+                        new CultureInfo(appForceCulture);
+                }
 
 				// Set the font to match the display language defined by the
 				// ResourceLanguage resource string for each supported language.
