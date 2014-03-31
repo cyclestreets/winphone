@@ -255,6 +255,7 @@
     <Content Include="Assets\cyclestreets19586.jpg" />
     <Content Include="Assets\finish_wisp.png" />
     <Content Include="Assets\footprints.png" />
+    <Content Include="Assets\header.jpg" />
     <Content Include="Assets\heart.png" />
     <Content Include="Assets\icons\dark\appbar.add.png" />
     <Content Include="Assets\icons\dark\appbar.arrow.left.png" />
@@ -355,6 +356,9 @@
     <Reference Include="RestSharp.WindowsPhone, Version=104.3.3.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>packages\RestSharp.104.3.3\lib\sl4-wp71\RestSharp.WindowsPhone.dll</HintPath>
+    </Reference>
+    <Reference Include="Sparrow.Chart.WP8.45">
+      <HintPath>packages\Sparrow.Chart.WP8.13.1.0.113\lib\windowsphone8\Sparrow.Chart.WP8.45.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Interactivity" />
   </ItemGroup>

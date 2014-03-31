@@ -147,7 +147,7 @@ namespace Cyclestreets
 			// When debugging, we want to simulate a trial mode experience. The following conditional allows us to set the _isTrial 
 			// property to simulate trial mode being on or off. 
 #if DEBUG
-			_isTrial = true;
+			_isTrial = false;
 #else
 			_isTrial = _licenseInfo.IsTrial();
 #endif
