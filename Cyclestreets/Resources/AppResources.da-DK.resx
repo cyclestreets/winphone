@@ -1,0 +1,230 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ResourceFlowDirection" xml:space="preserve">
+    <value>LeftToRight</value>
+    <comment>Controls the FlowDirection for all elements in the RootFrame. Set to the traditional direction of this resource file's language</comment>
+  </data>
+  <data name="ResourceLanguage" xml:space="preserve">
+    <value>da-DK</value>
+    <comment>Controls the Language and ensures that the font for all elements in the RootFrame aligns with the app's language. Set to the language code of this resource file's language.</comment>
+  </data>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+<data name="ApplicationTitle" xml:space="preserve"><value>CycleStreets</value></data><data name="SampleProperty" xml:space="preserve"><value>Prøven Runtime egenskabsværdi</value></data><data name="FeedbackBody" xml:space="preserve"><value>[Din feedback her]
+
+
+---------------------------------
+Enhedens navn: {0}
+Enhedsproducenten: {1}
+Enhedens firmwareversion: {2}
+Enhedens Hardware Version: {3}
+Programversion: {4}
+---------------------------------</value></data><data name="FeedbackMessage1" xml:space="preserve"><value>Ked af at høre du ikke ønsker at sats CycleStreets.
+
+Fortæl os om dine erfaringer eller foreslå, hvordan vi kan gøre det endnu bedre.</value></data><data name="FeedbackNo" xml:space="preserve"><value>Nej tak</value></data><data name="FeedbackSubject" xml:space="preserve"><value>CycleStreets kundefeedback </value></data><data name="FeedbackTitle" xml:space="preserve"><value>Kan vi gøre det bedre?</value></data><data name="FeedbackTo" xml:space="preserve"><value>info@cyclestreets.net</value></data><data name="FeedbackYes" xml:space="preserve"><value>Giv feedback</value></data><data name="RatingMessage1" xml:space="preserve"><value>Vi ville elske dig til at vurdere vores app 5 stjerner
+
+Viser os nogle kærlighed på store hjælper os til at fortsætte med at arbejde på app og gøre tingene endnu bedre!</value></data><data name="RatingMessage2" xml:space="preserve"><value>Du ser for at få en masse brug ud af vores ansøgning!
+
+Hvorfor ikke give os et 5-stjernet rating til at vise din påskønnelse?</value></data><data name="RatingNo" xml:space="preserve"><value>Nej tak</value></data><data name="RatingTitle" xml:space="preserve"><value>Nyde CycleStreets?</value></data><data name="RatingYes" xml:space="preserve"><value>sats 5 stjerner</value></data><data name="TrialExpiredMsg" xml:space="preserve"><value>Din gratis prøveperiode er udløbet. Tryk på OK for at gå til den butik, hvor du kan downloade den fulde version af appen.</value></data><data name="TrialExpiredTitle" xml:space="preserve"><value>Prøveversionen er udløbet</value></data><data name="GetDataError" xml:space="preserve"><value>Der opstod en fejl ved at få data fra </value></data><data name="Cursor" xml:space="preserve"><value>markør</value></data><data name="FindRoute" xml:space="preserve"><value>Find rute</value></data><data name="LoadRoute" xml:space="preserve"><value>indlæse rute</value></data><data name="MyPosition" xml:space="preserve"><value>Min holdning</value></data><data name="PleaseWait" xml:space="preserve"><value>Vent et øjeblik...</value></data><data name="PleaseWaitMsg" xml:space="preserve"><value>Vent venligst mens vi beregne din rute.</value></data><data name="PrivacyPolicy" xml:space="preserve"><value>Erklæring om beskyttelse af personlige oplysninger</value></data><data name="SaveRoute" xml:space="preserve"><value>Gem rute</value></data><data name="SendFeedback" xml:space="preserve"><value>Send feedback</value></data><data name="Settings" xml:space="preserve"><value>Indstillinger</value></data><data name="Tutorial1" xml:space="preserve"><value>Tutorial: Tryk på disse kasser for at lukke og fortsætte&amp;#xA;&amp;#xA;Du kan tilføje rute markører på fire måder. &amp;#xA;&amp;#xA; 1. Du kan skrive i denne boks...</value></data><data name="Tutorial2" xml:space="preserve"><value>2. Tryk på denne mulighed for at vælge din nuværende position...</value></data><data name="Tutorial3" xml:space="preserve"><value>3. Tryk på denne mulighed for at vælge et punkt på kortet direkte under &amp;quot; +&amp;quot; markør. Du kan trække kortet rundt og knivspids zoom for at justere positionen.</value></data><data name="Tutorial4" xml:space="preserve"><value>4. Du kan indpasses overalt på kortet</value></data><data name="Tutorial5" xml:space="preserve"><value>Når der er mindst to markører på kortet kan du trykke på denne knap for at finde din rute.</value></data><data name="Tutorial6" xml:space="preserve"><value>Du kan fjerne et waypoint ved at trykke på den.</value></data><data name="Tutorial7" xml:space="preserve"><value>Du kan ændre Rutetype med denne rulleliste. Ændre standard i menuen Indstillinger</value></data><data name="Tutorial8" xml:space="preserve"><value>Denne information knap åbner en ekstra menu med flere oplysninger på din rute.</value></data><data name="TypeLocation" xml:space="preserve"><value>SKRIV PLACERING ELLER BRUG APP BAR</value></data><data name="BalancedRoute" xml:space="preserve"><value>afbalanceret rute</value></data><data name="FastestRoute" xml:space="preserve"><value>hurtigste rute</value></data><data name="QuietestRoute" xml:space="preserve"><value>roligste rute</value></data><data name="Enabled" xml:space="preserve"><value>Aktiveret</value></data><data name="Disabled" xml:space="preserve"><value>deaktiveret</value></data><data name="ShowTutorialMsg" xml:space="preserve"><value>Vil du have os til at guide dig gennem hvordan du bruger appen med en tutorial?</value></data><data name="Tutorial" xml:space="preserve"><value>Selvstudium</value></data><data name="NoSuggestions" xml:space="preserve"><value>(ingen forslag)</value></data><data name="NoRouteFoundTryAnotherSearch" xml:space="preserve"><value>Ingen rute fundet. Prøv en anden søgning</value></data><data name="NoRoute" xml:space="preserve"><value>Ingen rute</value></data><data name="RouteNumber" xml:space="preserve"><value>Rutenummer</value></data><data name="JourneyTime" xml:space="preserve"><value>Rejsetid</value></data><data name="Quietness" xml:space="preserve"><value>Stilhed</value></data><data name="SignaledJunctions" xml:space="preserve"><value>Signaleret vejkryds</value></data><data name="SignaledCrossings" xml:space="preserve"><value>Signaleret overfarter</value></data><data name="CO2Avoided" xml:space="preserve"><value>CO2 undgås</value></data><data name="Calories" xml:space="preserve"><value>Kalorier</value></data><data name="Kcal" xml:space="preserve"><value>kcal</value></data><data name="Distance" xml:space="preserve"><value>afstand</value></data><data name="Miles" xml:space="preserve"><value>Mil</value></data><data name="CouldNotCalculateRoute" xml:space="preserve"><value>Kunne ikke beregne ruten</value></data><data name="MetresShort" xml:space="preserve"><value>M</value></data><data name="Quiet" xml:space="preserve"><value>Stille</value></data><data name="QuiteQuiet" xml:space="preserve"><value>Helt stille</value></data><data name="QuiteBusy" xml:space="preserve"><value>Ganske travlt</value></data><data name="Busy" xml:space="preserve"><value>optaget</value></data><data name="VeryBusy" xml:space="preserve"><value>Meget travlt</value></data><data name="DirectionText" xml:space="preserve"><value>{0} på {1} &amp;#xA;Fortsæt til {2} m</value><comment>0 = turn 1 = Name 2 == distance</comment></data><data name="Feedback_feedbackTypes_Route_Feedback" xml:space="preserve"><value>Rute Feedback</value></data><data name="Feedback_feedbackTypes_App_Feedback" xml:space="preserve"><value>Feedback på app</value></data><data name="Feedback_feedbackTypes_Bug_Report" xml:space="preserve"><value>Fejlrapport</value></data><data name="Feedback_feedbackTypes_Other" xml:space="preserve"><value>Andet</value></data><data name="Feedback_enterComments" xml:space="preserve"><value>Indtast nogle kommentarer inden du trykker på Send.</value></data><data name="Feedback_submitButton_Tap_No_comments" xml:space="preserve"><value>Ingen kommentarer</value></data><data name="TrialWelcome" xml:space="preserve"><value>Tak for at installere prøveversionen af CycleStreets. Dette forsøg varer 72 timer og giver adgang til alle funktionerne i den fulde app. Du kan købe den fulde version på ethvert tidspunkt fra app bar.</value></data><data name="MainPage_OnNavigatedTo_Hello" xml:space="preserve"><value>Hej</value></data><data name="LocationConsent" xml:space="preserve"><value>CycleStreets kræver adgang til din placering for at give oplysninger om navigation og kortlægning. Vil du tillade det?</value></data><data name="MainPage_OnNavigatedTo_Location" xml:space="preserve"><value>placering</value></data><data name="MainPage_ApplicationBarMenuItem_ToggleAerialView_Enable_aerial_view" xml:space="preserve"><value>Aktivere Luftfoto</value></data><data name="MainPage_ApplicationBarMenuItem_ToggleAerialView_Disable_aerial_view" xml:space="preserve"><value>Deaktivere Luftfoto</value></data><data name="DefaultRouteType" xml:space="preserve"><value>Standard rutetype</value></data><data name="LocationEnabled" xml:space="preserve"><value>Placering aktiveret</value></data><data name="MapStyle" xml:space="preserve"><value>Kortlayout</value></data><data name="MyCyclingSpeed" xml:space="preserve"><value>Min cykel hastighed</value></data><data name="PreventSleep" xml:space="preserve"><value>Forhindre søvn</value></data><data name="TutorialEnabled" xml:space="preserve"><value>Tutorial aktiveret</value></data><data name="DirectionsResults_DirectionsResults_Save" xml:space="preserve"><value>Gem</value></data><data name="DirectionsResults_DirectionsResults_Share" xml:space="preserve"><value>Del</value></data><data name="DirectionsResults_DirectionsResults_Route_Feedback" xml:space="preserve"><value>Rute Feedback</value></data><data name="directions" xml:space="preserve"><value>rutevejledning</value></data><data name="JourneyFacts" xml:space="preserve"><value>rejse fakta</value></data></root>
