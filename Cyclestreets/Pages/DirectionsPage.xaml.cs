@@ -121,6 +121,7 @@ namespace Cyclestreets.Pages
             set;
         }
     }
+    public class RouteSegmentCollection : List<RouteSegment> { }
 
     public class RouteDetails
     {
@@ -312,7 +313,7 @@ namespace Cyclestreets.Pages
             myLocation = HttpUtility.UrlEncode(myLocation);
 
 #if DEBUG
-			Uri service = new Uri( "http://demo.places.nlp.nokia.com/places/v1/suggest?at=" + myLocation + "&q=" + prefix + "&app_id=" + App.hereAppID + "&app_code=" + App.hereAppToken + "&accept=application/json" );
+            Uri service = new Uri("http://demo.places.nlp.nokia.com/places/v1/suggest?at=" + myLocation + "&q=" + prefix + "&app_id=" + App.hereAppID + "&app_code=" + App.hereAppToken + "&accept=application/json");
 #else
             Uri service = new Uri("http://places.nlp.nokia.com/places/v1/suggest?at=" + myLocation + "&q=" + prefix + "&app_id=" + App.hereAppID + "&app_code=" + App.hereAppToken + "&accept=application/json");
 #endif
@@ -595,7 +596,7 @@ namespace Cyclestreets.Pages
                 myLocation = HttpUtility.UrlEncode(myLocation);
 
 #if DEBUG
-				Uri service = new Uri( "http://demo.places.nlp.nokia.com/places/v1/discover/search?at=" + myLocation + "&q=" + searchString + "&app_id=" + App.hereAppID + "&app_code=" + App.hereAppToken + "&accept=application%2Fjson" );
+                Uri service = new Uri("http://demo.places.nlp.nokia.com/places/v1/discover/search?at=" + myLocation + "&q=" + searchString + "&app_id=" + App.hereAppID + "&app_code=" + App.hereAppToken + "&accept=application%2Fjson");
 #else
                 Uri service = new Uri("http://places.nlp.nokia.com/places/v1/discover/search?at=" + myLocation + "&q=" + searchString + "&app_id=" + App.hereAppID + "&app_code=" + App.hereAppToken + "&accept=application%2Fjson");
 #endif

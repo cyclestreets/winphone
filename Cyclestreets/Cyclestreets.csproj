@@ -15,7 +15,7 @@
     <TargetFrameworkVersion>v8.0</TargetFrameworkVersion>
     <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
     <SilverlightApplication>true</SilverlightApplication>
-    <SupportedCultures>da-DK;fr;qps-ploc</SupportedCultures>
+    <SupportedCultures>fr;qps-ploc</SupportedCultures>
     <XapOutputs>true</XapOutputs>
     <GenerateSilverlightManifest>true</GenerateSilverlightManifest>
     <XapFilename>Cyclestreets_$(Configuration)_$(Platform).xap</XapFilename>
@@ -24,7 +24,7 @@
     <ValidateXaml>true</ValidateXaml>
     <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
     <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
-    <ExpressionBlendVersion>5.0.40218.0</ExpressionBlendVersion>
+    <ExpressionBlendVersion>12.0.41002.1</ExpressionBlendVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -109,11 +109,6 @@
     <Compile Include="Pages\ShareChoice.xaml.cs">
       <DependentUpon>ShareChoice.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Resources\AppResources.da-DK.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>AppResources.da-DK.resx</DependentUpon>
-    </Compile>
     <Compile Include="Resources\AppResources.fr.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -187,6 +182,9 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <DesignData Include="SampleData\RouteSegmentCollectionSampleData.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </DesignData>
     <Page Include="Pages\Feedback.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -329,14 +327,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\AppResources.da-DK.resx">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>AppResources.da-DK.xlf</DependentUpon>
-      <culture>da-DK</culture>
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>AppResources.da-DK.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Include="Resources\AppResources.fr.resx">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -396,10 +386,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <XliffResource Include="Resources\AppResources.da-DK.xlf">
-      <Generator>XliffResxGenerator</Generator>
-      <LastGenOutput>AppResources.da-DK.resx</LastGenOutput>
-    </XliffResource>
     <XliffResource Include="Resources\AppResources.fr.xlf">
       <Generator>XliffResxGenerator</Generator>
       <LastGenOutput>AppResources.fr.resx</LastGenOutput>
