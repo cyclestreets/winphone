@@ -7,7 +7,7 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:sparrow="clr-namespace:Sparrow.Chart;assembly=Sparrow.Chart.WP8.45"
 	xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
-	xmlns:local="clr-namespace:Cyclestreets.Pages"
+	xmlns:local="clr-namespace:Cyclestreets.Pages" x:Name="phoneApplicationPage"
 	x:Class="Cyclestreets.Pages.DirectionsResults"
 	mc:Ignorable="d"
 	SupportedOrientations="Portrait"  Orientation="Portrait"
@@ -93,21 +93,17 @@
 						<RowDefinition Height="103*"/>
 						<RowDefinition Height="104*"/>
 					</Grid.RowDefinitions>
-					<sparrow:SparrowChart>
-						<sparrow:SparrowChart.XAxis>
-							<sparrow:LinearXAxis/>
+					<sparrow:SparrowChart x:Name="heightChart">
+                        <sparrow:SparrowChart.DataContext>
+                            <local:RouteDetails/>
+                        </sparrow:SparrowChart.DataContext>
+                        <sparrow:SparrowChart.XAxis>
+							<sparrow:LinearXAxis ShowCrossLines="False"/>
 						</sparrow:SparrowChart.XAxis>
 						<sparrow:SparrowChart.YAxis>
-							<sparrow:LinearYAxis/>
+							<sparrow:LinearYAxis ShowCrossLines="False"/>
 						</sparrow:SparrowChart.YAxis>
-						<sparrow:LineSeries>
-							<sparrow:LineSeries.Points>
-								<sparrow:DoublePoint Data="0" Value="1"/>
-								<sparrow:DoublePoint Data="1" Value="2"/>
-								<sparrow:DoublePoint Data="2" Value="3"/>
-								<sparrow:DoublePoint Data="3" Value="4"/>
-							</sparrow:LineSeries.Points>
-						</sparrow:LineSeries>
+                        <sparrow:LineSeries PointsSource="{Binding HeightChart}" XPath="Data" YPath="Value" />
 					</sparrow:SparrowChart>
 					<phone:LongListSelector x:Name="factsList" HorizontalContentAlignment="Stretch" Foreground="#DEFFFFFF" Margin="0,0,36,-42" Grid.Row="1">
 						<phone:LongListSelector.ItemTemplate>

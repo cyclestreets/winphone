@@ -1,7 +1,11 @@
-﻿using Cyclestreets.Resources;
+﻿using System.Linq;
+using System.Windows.Input;
+using Cyclestreets.Resources;
 using Microsoft.Phone.Controls;
-using System;
 using Microsoft.Phone.Shell;
+using System;
+using System.Collections.ObjectModel;
+using Sparrow.Chart;
 
 namespace Cyclestreets.Pages
 {
@@ -9,7 +13,6 @@ namespace Cyclestreets.Pages
 
     public partial class DirectionsResults : PhoneApplicationPage
     {
-
         public DirectionsResults()
         {
             InitializeComponent();
@@ -24,6 +27,8 @@ namespace Cyclestreets.Pages
             share.Text = AppResources.DirectionsResults_DirectionsResults_Share;
             routeFeedback = ApplicationBar.Buttons[2] as ApplicationBarIconButton;
             routeFeedback.Text = AppResources.DirectionsResults_DirectionsResults_Route_Feedback;
+
+            heightChart.DataContext = DirectionsPage.route;
         }
 
         private void ApplicationBarIconButton_Click(object sender, EventArgs e)

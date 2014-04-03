@@ -1,6 +1,7 @@
 ﻿/// Satnav mode
 /// Prompt feedback
 
+using System.Linq;
 using Cyclestreets.Resources;
 using Cyclestreets.Utils;
 using CycleStreets.Util;
@@ -25,6 +26,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Windows.Devices.Geolocation;
+using System.Collections.ObjectModel;
+using Sparrow.Chart;
 
 namespace Cyclestreets.Pages
 {
@@ -168,6 +171,9 @@ namespace Cyclestreets.Pages
         }
 
         public List<RouteSegment> segments = new List<RouteSegment>();
+
+        ObservableCollection<DoublePoint> _heightChart = new ObservableCollection<DoublePoint>();
+        public ObservableCollection<DoublePoint> HeightChart { get { return _heightChart; } set { _heightChart = value; } }
 
         public int distance
         {
@@ -913,9 +919,9 @@ namespace Cyclestreets.Pages
                     string pointsText = (string)p["points"];
                     string[] points = pointsText.Split(' ');
                     List<GeoCoordinate> coords = new List<GeoCoordinate>();
-                    for (int i = 0; i < points.Length; i++)
+                    foreach (string t in points)
                     {
-                        string[] xy = points[i].Split(',');
+                        string[] xy = t.Split(',');
 
                         double longitude = double.Parse(xy[0]);
                         double latitude = double.Parse(xy[1]);
@@ -932,7 +938,9 @@ namespace Cyclestreets.Pages
                     }
                     geometryCoords.Add(coords);
 
-
+                    string elevationsText = (string)p["elevations"];
+                    string[] elevations = elevationsText.Split(',');
+                    
                     RouteSegment s = new RouteSegment();
                     s.location = coords[0];
                     s.Bearing = Geodesy.Bearing(coords[0].Latitude, coords[0].Longitude, coords[coords.Count - 1].Latitude, coords[coords.Count - 1].Longitude);
@@ -946,17 +954,14 @@ namespace Cyclestreets.Pages
                     totalTime += theLegOfTime;
                     s.Turn = (string)p["turn"];
                     s.Walk = (int.Parse((string)p["walk"]) == 1 ? true : false);
-                    geometryDashed.Add(s.Walk);
-                    if (s.Walk)
-                        geometryColor.Add(Color.FromArgb(255, 0, 0, 0));
-                    else
+                    if ( elevations.Length >= 1 )
                     {
-                        geometryColor.Add(Color.FromArgb(255, 127, 0, 255));
+                        DoublePoint dp = new DoublePoint {Data = route.distance, Value = Convert.ToDouble(elevations[0])};
+                        route.HeightChart.Add(dp);
                     }
-                    if (swap)
-                        s.BGColour = col1;
-                    else
-                        s.BGColour = col2;
+                    geometryDashed.Add(s.Walk);
+                    geometryColor.Add(s.Walk ? Color.FromArgb(255, 0, 0, 0) : Color.FromArgb(255, 127, 0, 255));
+                    s.BGColour = swap ? col1 : col2;
                     swap = !swap;
                     route.segments.Add(s);
                 }
