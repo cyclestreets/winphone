@@ -31,6 +31,11 @@ using Sparrow.Chart;
 
 namespace Cyclestreets.Pages
 {
+    public class ElevationPoint
+    {
+        public double Distance { get; set; }
+        public double Height { get; set; } 
+    }
     public class CSResult
     {
         public string resultName;
@@ -66,12 +71,8 @@ namespace Cyclestreets.Pages
         {
             get
             {
-                float f = (float)_distance * 0.000621371192f;
+                float f = (float)TotalDistance * 0.000621371192f;
                 return f.ToString("0.00") + AppResources.MetresShort;
-            }
-            set
-            {
-                _distance = int.Parse(value);
             }
         }
 
@@ -123,6 +124,8 @@ namespace Cyclestreets.Pages
             get;
             set;
         }
+
+        public double TotalDistance { get; set; }
     }
     public class RouteSegmentCollection : List<RouteSegment> { }
 
@@ -172,8 +175,8 @@ namespace Cyclestreets.Pages
 
         public List<RouteSegment> segments = new List<RouteSegment>();
 
-        ObservableCollection<DoublePoint> _heightChart = new ObservableCollection<DoublePoint>();
-        public ObservableCollection<DoublePoint> HeightChart { get { return _heightChart; } set { _heightChart = value; } }
+        ObservableCollection<ElevationPoint> _heightChart = new ObservableCollection<ElevationPoint>();
+        public ObservableCollection<ElevationPoint> HeightChart { get { return _heightChart; } set { _heightChart = value; } }
 
         public int distance
         {
@@ -872,6 +875,8 @@ namespace Cyclestreets.Pages
             string col2 = "#3F000000";
             bool swap = true;
             int totalTime = 0;
+            double totalDistanceMetres = 0;
+            int totalDistance = 0;
             foreach (JObject step in steps)
             {
                 JObject p = (JObject)step["@attributes"];
@@ -945,8 +950,10 @@ namespace Cyclestreets.Pages
                     s.location = coords[0];
                     s.Bearing = Geodesy.Bearing(coords[0].Latitude, coords[0].Longitude, coords[coords.Count - 1].Latitude, coords[coords.Count - 1].Longitude);
                     route.distance += (int)float.Parse((string)p["distance"]);
-                    s.Distance = "" + route.distance;// p.Attribute( "distance" ).Value;
                     s.DistanceMetres = (int)float.Parse((string)p["distance"]);
+                    totalDistanceMetres += s.DistanceMetres;
+                    totalDistance += route.distance;
+                    s.TotalDistance = totalDistance;
                     s.Name = (string)p["name"];
                     s.ProvisionName = (string)p["provisionName"];
                     int theLegOfTime = int.Parse((string)p["time"]);
@@ -956,7 +963,7 @@ namespace Cyclestreets.Pages
                     s.Walk = (int.Parse((string)p["walk"]) == 1 ? true : false);
                     if ( elevations.Length >= 1 )
                     {
-                        DoublePoint dp = new DoublePoint {Data = route.distance, Value = Convert.ToDouble(elevations[0])};
+                        ElevationPoint dp = new ElevationPoint { Distance = totalDistanceMetres, Height = float.Parse(elevations[0]) };
                         route.HeightChart.Add(dp);
                     }
                     geometryDashed.Add(s.Walk);
