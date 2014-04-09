@@ -87,21 +87,6 @@
 	<phone:PhoneApplicationPage.Foreground>
 		<StaticResource ResourceKey="PhoneForegroundBrush"/>
 	</phone:PhoneApplicationPage.Foreground>
-	<phone:PhoneApplicationPage.ApplicationBar>
-
-		<shell:ApplicationBar>
-			<shell:ApplicationBar.MenuItems>
-				<shell:ApplicationBarMenuItem x:Name="saveRoute" IsEnabled="True" Text="a" Click="saveRoute_Click"/>
-				<shell:ApplicationBarMenuItem x:Name="loadRoute" IsEnabled="True" Text="a" Click="loadRoute_Click"/>
-				<shell:ApplicationBarMenuItem x:Name="settings" IsEnabled="True" Text="a" Click="settings_Click"/>
-				<shell:ApplicationBarMenuItem x:Name="privacy" IsEnabled="True" Text="a" Click="privacy_Click"/>
-				<shell:ApplicationBarMenuItem x:Name="sendFeedback" IsEnabled="True" Text="a" Click="sendFeedback_Click"/>
-			</shell:ApplicationBar.MenuItems>
-			<shell:ApplicationBarIconButton x:Name="myPosition" IconUri="/Assets/icons/dark/appbar.location.circle.png" IsEnabled="True" Text="a" Click="myPosition_Click"/>
-			<shell:ApplicationBarIconButton x:Name="cursorPos" IconUri="/Assets/icons/dark/appbar.add.png" IsEnabled="True" Text="a" Click="cursorPos_Click"/>
-			<shell:ApplicationBarIconButton x:Name="findRoute" IconUri="/Assets/icons/dark/appbar.directions.png" IsEnabled="False" Text="a" Click="findRoute_Click"/>
-		</shell:ApplicationBar>
-	</phone:PhoneApplicationPage.ApplicationBar>
 	<!--LayoutRoot is the root grid where all page content is placed-->
 	<Grid x:Name="LayoutRoot" Background="Transparent">
 		<Grid.RowDefinitions>
@@ -250,7 +235,6 @@
 		<VisualStateManager.CustomVisualStateManager>
 			<ec:ExtendedVisualStateManager/>
 		</VisualStateManager.CustomVisualStateManager>
-		<ProgressBar x:Name="progress" Margin="0" VerticalAlignment="Top" IsIndeterminate="True" Foreground="White" Opacity="{Binding Opacity}"/>
 		<maps:Map x:Name="MyMap" Margin="0" Grid.Row="1" ZoomLevel="5.684" Loaded="MyMap_Loaded" LandmarksEnabled="True" Tap="MyMap_Tap">
 			<maps:Map.Center>
 				<Location:GeoCoordinate Altitude="NaN" Course="NaN" HorizontalAccuracy="NaN" Longitude="-4.367" Latitude="55.551" Speed="NaN" VerticalAccuracy="NaN"/>
@@ -384,6 +368,33 @@
 				</Border>
 			</StackPanel>
 		</Popup>
+		<Grid x:Name="fakeAppBar" VerticalAlignment="Bottom" Margin="0" RenderTransformOrigin="0.5,0.5" Grid.Row="1" Height="60">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition/>
+				<ColumnDefinition/>
+				<ColumnDefinition Width="60"/>
+			</Grid.ColumnDefinitions>
+			<Grid.Background>
+				<SolidColorBrush Color="#FF008B00"/>
+			</Grid.Background>
+			<Grid.RenderTransform>
+				<CompositeTransform/>
+			</Grid.RenderTransform>
+			<Border x:Name="openSettingsBorder" BorderBrush="#FF017001" BorderThickness="1,0,0,0" Grid.Column="2" Margin="0" Background="#FF008B00" Tap="openSettingsBorder_Tap"/>
+			<TextBlock Grid.Column="2" HorizontalAlignment="Center" Margin="17,3,16,3" TextWrapping="Wrap" Text="..." VerticalAlignment="Center" FontSize="40"/>
+			<Border x:Name="myLocationBorder" BorderBrush="#FF017001" BorderThickness="0,0,1,0" Margin="0" Background="#FF008B00" Tap="myLocationBorder_Tap">
+			<StackPanel x:Name="myLocation" VerticalAlignment="Center" Height="60" HorizontalAlignment="Center" Orientation="Horizontal">
+				<Image HorizontalAlignment="Left" Margin="0" VerticalAlignment="Center" Source="/Assets/icons/dark/appbar.location.circle.png"/>
+				<TextBlock HorizontalAlignment="Left" Text="my location" TextWrapping="Wrap" VerticalAlignment="Center" FontWeight="Light"/>
+			</StackPanel>
+				</Border>
+			<Border x:Name="planRouteBorder" BorderBrush="#FF017001" BorderThickness="0,0,1,0" Margin="0" Background="#FF004200" Grid.Column="1" Tap="planRouteBorder_Tap">
+				<StackPanel x:Name="planRoute" VerticalAlignment="Center" Height="60" HorizontalAlignment="Center" Orientation="Horizontal" Margin="0" Grid.Column="1">
+					<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" FontWeight="Light" Text="plan route" Foreground="#33FFFFFF"/>
+					<Image HorizontalAlignment="Left" Margin="0" VerticalAlignment="Center" Source="/Assets/icons/dark/appbar.arrow.right.png" Opacity="0.2"/>
+				</StackPanel>
+			</Border>
+		</Grid>
 	</Grid>
 
 </phone:PhoneApplicationPage>

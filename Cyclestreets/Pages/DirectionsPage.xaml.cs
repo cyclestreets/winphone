@@ -249,9 +249,9 @@ namespace Cyclestreets.Pages
         {
             InitializeComponent();
 
-            progress.DataContext = App.networkStatus;
+            //progress.DataContext = App.networkStatus;
 
-            // hack. See here http://stackoverflow.com/questions/5334574/applicationbariconbutton-is-null/5334703#5334703
+           /* // hack. See here http://stackoverflow.com/questions/5334574/applicationbariconbutton-is-null/5334703#5334703
             myPosition = ApplicationBar.Buttons[0] as ApplicationBarIconButton;
             myPosition.Text = AppResources.MyPosition;
             cursorPos = ApplicationBar.Buttons[1] as ApplicationBarIconButton;
@@ -268,16 +268,16 @@ namespace Cyclestreets.Pages
             privacy = ApplicationBar.MenuItems[3] as ApplicationBarMenuItem;
             privacy.Text = AppResources.PrivacyPolicy;
             sendFeedback = ApplicationBar.MenuItems[4] as ApplicationBarMenuItem;
-            sendFeedback.Text = AppResources.FindRoute;
+            sendFeedback.Text = AppResources.FindRoute;*/
 
 
-            findRoute.IsEnabled = false;
-            saveRoute.IsEnabled = false;
+            //findRoute.IsEnabled = false;
+            //saveRoute.IsEnabled = false;
 
             string plan = SettingManager.instance.GetStringValue("defaultRouteType", AppResources.BalancedRoute);
 
             routeTypePicker.ItemsSource = RouteType;
-            routeTypePicker.SelectedItem = plan;
+			routeTypePicker.SelectedIndex = 0;//Item = plan;		// FIXME: localisation
 
             revGeoQ = new ReverseGeocodeQuery();
             revGeoQ.QueryCompleted += revGeoQ_QueryCompleted;
@@ -641,34 +641,6 @@ namespace Cyclestreets.Pages
             this.Focus();
         }
 
-        private void myPosition_Click(object sender, EventArgs e)
-        {
-            if (LocationManager.instance.MyGeoPosition != null)
-            {
-                if (!revGeoQ.IsBusy)
-                {
-                    revGeoQ.GeoCoordinate = CoordinateConverter.ConvertGeocoordinate(LocationManager.instance.MyGeoPosition.Coordinate);
-                    revGeoQ.QueryAsync();
-
-                    setCurrentPosition(revGeoQ.GeoCoordinate);
-
-                    SmartDispatcher.BeginInvoke(() =>
-                    {
-                        MyMap.SetView(revGeoQ.GeoCoordinate, 16);
-                        //MyMap.Center = CoordinateConverter.ConvertGeocoordinate(MyGeoPosition.Coordinate);
-                    });
-
-                    if (currentRouteData == null)
-                        confirmWaypoint_Click(sender, e);
-                }
-            }
-            else
-            {
-                Util.showLocationDialog();
-            }
-
-        }
-
         private void cursorPos_Click(object sender, EventArgs e)
         {
             if (!revGeoQ.IsBusy)
@@ -766,19 +738,19 @@ namespace Cyclestreets.Pages
         private void addWaypoint(Pushpin pp)
         {
             waypoints.Push(pp);
-            if (waypoints.Count >= 2)
-                findRoute.IsEnabled = true;
-            else
-                findRoute.IsEnabled = false;
+//             if (waypoints.Count >= 2)
+//                 findRoute.IsEnabled = true;
+//             else
+//                 findRoute.IsEnabled = false;
         }
 
         private void removeWaypoint(Pushpin pp)
         {
             waypoints.Remove(pp);
-            if (waypoints.Count >= 2)
-                findRoute.IsEnabled = true;
-            else
-                findRoute.IsEnabled = false;
+//             if (waypoints.Count >= 2)
+//                 findRoute.IsEnabled = true;
+//             else
+//                 findRoute.IsEnabled = false;
         }
 
         private void clearCurrentPosition()
@@ -792,34 +764,6 @@ namespace Cyclestreets.Pages
             current = c;
             //if( c != null && currentRouteData == null )
             //	confirmWaypoint.IsEnabled = true;
-        }
-
-        private void findRoute_Click(object sender, EventArgs e)
-        {
-            this.Focus();
-
-            string plan = SettingManager.instance.GetStringValue("defaultRouteType", AppResources.BalancedRoute);
-            plan = plan.Replace(" route", "");
-
-            string speedSetting = SettingManager.instance.GetStringValue("cycleSpeed", "12mph");
-
-            string itinerarypoints = "";// = "-1.2487100362777,53.00143068427369,NG16+1HH|-1.1430546045303,52.95200365149319,NG1+1LL";
-            int speed = Util.getSpeedFromString(speedSetting);
-            int useDom = 0;		// 0=xml 1=gml
-
-            foreach (Pushpin p in waypoints)
-            {
-                itinerarypoints = itinerarypoints + p.GeoCoordinate.Longitude + "," + p.GeoCoordinate.Latitude + "|";
-            }
-            itinerarypoints = itinerarypoints.TrimEnd('|');
-
-            _request = new AsyncWebRequest("http://www.cyclestreets.net/api/journey.json?key=" + App.apiKey + "&plan=" + plan + "&itinerarypoints=" + itinerarypoints + "&speed=" + speed + "&useDom=" + useDom, RouteFound);
-            _request.Start();
-
-            pleaseWait.IsOpen = true;
-            popupPanel.Width = Application.Current.Host.Content.ActualWidth;
-
-            App.networkStatus.networkIsBusy = true;
         }
 
         private void RouteFound(byte[] data)
@@ -842,8 +786,8 @@ namespace Cyclestreets.Pages
                 pleaseWait.IsOpen = false;
 
             //confirmWaypoint.IsEnabled = false;
-            cursorPos.IsEnabled = false;
-            findRoute.IsEnabled = false;
+            //cursorPos.IsEnabled = false;
+            //findRoute.IsEnabled = false;
 
             JObject o = null;
             if (currentRouteData != null)
@@ -1066,7 +1010,7 @@ namespace Cyclestreets.Pages
                 }
             });
 
-            saveRoute.IsEnabled = true;
+            //saveRoute.IsEnabled = true;
         }
 
         private void poiTapped(object sender, System.Windows.Input.GestureEventArgs e)
@@ -1140,7 +1084,7 @@ namespace Cyclestreets.Pages
             ListPicker picker = sender as ListPicker;
             string plan = (string)picker.SelectedItem;
             plan = plan.Replace(" route", "");
-            if (saveRoute.IsEnabled && !hideRouteOptions)
+            if (/*saveRoute.IsEnabled*/false && !hideRouteOptions)
             {
                 string itinerarypoints = "";// = "-1.2487100362777,53.00143068427369,NG16+1HH|-1.1430546045303,52.95200365149319,NG1+1LL";
                 int speed = 20;		//16 = 10mph 20 = 12mph 24 = 15mph
@@ -1519,7 +1463,7 @@ namespace Cyclestreets.Pages
 
                 route = null;
 
-                cursorPos.IsEnabled = true;
+                //cursorPos.IsEnabled = true;
 
                 ExtendedVisualStateManager.GoToElementState(LayoutRoot, "RoutePlanner", true);
 
@@ -1565,6 +1509,66 @@ namespace Cyclestreets.Pages
                     confirmWaypoint_Click(null, null);
                 }
             });
+        }
+
+        private void openSettingsBorder_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+        	// TODO: Add event handler implementation here.
+        }
+
+        private void planRouteBorder_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+			this.Focus();
+
+			string plan = SettingManager.instance.GetStringValue( "defaultRouteType", AppResources.BalancedRoute );
+			plan = plan.Replace( " route", "" );
+
+			string speedSetting = SettingManager.instance.GetStringValue( "cycleSpeed", "12mph" );
+
+			string itinerarypoints = "";// = "-1.2487100362777,53.00143068427369,NG16+1HH|-1.1430546045303,52.95200365149319,NG1+1LL";
+			int speed = Util.getSpeedFromString( speedSetting );
+			int useDom = 0;		// 0=xml 1=gml
+
+			foreach( Pushpin p in waypoints )
+			{
+				itinerarypoints = itinerarypoints + p.GeoCoordinate.Longitude + "," + p.GeoCoordinate.Latitude + "|";
+			}
+			itinerarypoints = itinerarypoints.TrimEnd( '|' );
+
+			_request = new AsyncWebRequest( "http://www.cyclestreets.net/api/journey.json?key=" + App.apiKey + "&plan=" + plan + "&itinerarypoints=" + itinerarypoints + "&speed=" + speed + "&useDom=" + useDom, RouteFound );
+			_request.Start();
+
+			pleaseWait.IsOpen = true;
+			popupPanel.Width = Application.Current.Host.Content.ActualWidth;
+
+			App.networkStatus.networkIsBusy = true;
+        }
+
+        private void myLocationBorder_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+			if( LocationManager.instance.MyGeoPosition != null )
+			{
+				if( !revGeoQ.IsBusy )
+				{
+					revGeoQ.GeoCoordinate = CoordinateConverter.ConvertGeocoordinate( LocationManager.instance.MyGeoPosition.Coordinate );
+					revGeoQ.QueryAsync();
+
+					setCurrentPosition( revGeoQ.GeoCoordinate );
+
+					SmartDispatcher.BeginInvoke( () =>
+					{
+						MyMap.SetView( revGeoQ.GeoCoordinate, 16 );
+						//MyMap.Center = CoordinateConverter.ConvertGeocoordinate(MyGeoPosition.Coordinate);
+					} );
+
+					if( currentRouteData == null )
+						confirmWaypoint_Click( sender, e );
+				}
+			}
+			else
+			{
+				Util.showLocationDialog();
+			}
         }
     }
 }
