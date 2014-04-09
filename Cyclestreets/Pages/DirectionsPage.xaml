@@ -122,7 +122,7 @@
 							</DoubleAnimationUsingKeyFrames>
 							<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="locationEntry">
 								<EasingDoubleKeyFrame KeyTime="0" Value="0"/>
-								<EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="180"/>
+								<EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="-130"/>
 							</DoubleAnimationUsingKeyFrames>
 							<DoubleAnimation Duration="0:0:0.2" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="routeDetails">
 								<DoubleAnimation.EasingFunction>
@@ -142,7 +142,7 @@
 							</DoubleAnimationUsingKeyFrames>
 							<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="locationEntry">
 								<EasingDoubleKeyFrame KeyTime="0" Value="0"/>
-								<EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="180"/>
+								<EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="-131"/>
 							</DoubleAnimationUsingKeyFrames>
 							<DoubleAnimation Duration="0:0:0.2" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="routeDetails">
 								<DoubleAnimation.EasingFunction>
@@ -163,7 +163,7 @@
 						</VisualTransition.GeneratedEasingFunction>
 						<Storyboard>
 							<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="locationEntry">
-								<EasingDoubleKeyFrame KeyTime="0" Value="180"/>
+								<EasingDoubleKeyFrame KeyTime="0" Value="-130"/>
 								<EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
 							</DoubleAnimationUsingKeyFrames>
 							<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="arrowRight" d:IsOptimized="True"/>
@@ -176,8 +176,8 @@
 						</VisualTransition.GeneratedEasingFunction>
 						<Storyboard>
 							<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="locationEntry">
-								<EasingDoubleKeyFrame KeyTime="0" Value="0"/>
-								<EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="180"/>
+								<EasingDoubleKeyFrame KeyTime="0" Value="-145"/>
+								<EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
 							</DoubleAnimationUsingKeyFrames>
 							<DoubleAnimation Duration="0" To="150" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="routeDetails">
 								<DoubleAnimation.EasingFunction>
@@ -213,7 +213,7 @@
 							<CircleEase EasingMode="EaseOut"/>
 						</VisualTransition.GeneratedEasingFunction>
 						<Storyboard>
-							<DoubleAnimation Duration="0" To="180" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="locationEntry">
+							<DoubleAnimation Duration="0" To="-130" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="locationEntry">
 								<DoubleAnimation.EasingFunction>
 									<CircleEase EasingMode="EaseOut"/>
 								</DoubleAnimation.EasingFunction>
@@ -238,7 +238,7 @@
 				</VisualState>
 				<VisualState x:Name="RouteFoundState">
 					<Storyboard>
-						<DoubleAnimation Duration="0" To="180" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="locationEntry" d:IsOptimized="True"/>
+						<DoubleAnimation Duration="0" To="-130" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="locationEntry" d:IsOptimized="True"/>
 						<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="routeType" d:IsOptimized="True"/>
 						<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="routeDetails" d:IsOptimized="True"/>
 					</Storyboard>
@@ -256,20 +256,19 @@
 				<Location:GeoCoordinate Altitude="NaN" Course="NaN" HorizontalAccuracy="NaN" Longitude="-4.367" Latitude="55.551" Speed="NaN" VerticalAccuracy="NaN"/>
 			</maps:Map.Center>
 		</maps:Map>
-		<Image HorizontalAlignment="Center" VerticalAlignment="Center" Source="/Assets/icons/dark/appbar.add.png" Height="76" Width="76" Grid.Row="1"/>
-		<StackPanel x:Name="locationEntry" VerticalAlignment="Bottom" Margin="0" RenderTransformOrigin="0.5,0.5" Grid.Row="1">
-			<StackPanel.Background>
+		<Image x:Name="crosshair" HorizontalAlignment="Center" VerticalAlignment="Center" Source="/Cyclestreets;component/Assets/crosshair.png" Height="150" Width="150" Grid.Row="1"/>
+		<Grid x:Name="locationEntry" VerticalAlignment="Top" Margin="0" RenderTransformOrigin="0.5,0.5" Grid.Row="1">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="59*"/>
+				<ColumnDefinition Width="21*"/>
+			</Grid.ColumnDefinitions>
+			<Grid.Background>
 				<SolidColorBrush Color="{StaticResource PhoneChromeColor}"/>
-			</StackPanel.Background>
-			<StackPanel.RenderTransform>
+			</Grid.Background>
+			<Grid.RenderTransform>
 				<CompositeTransform/>
-			</StackPanel.RenderTransform>
-			<TextBlock x:Name="findLabel" Text="{Binding Path=LocalizedResources.TypeLocation, Source={StaticResource LocalizedStrings}}" Padding="10,0,0,0">
-				<TextBlock.Foreground>
-					<SolidColorBrush Color="{StaticResource PhoneContrastBackgroundColor}"/>
-				</TextBlock.Foreground>
-			</TextBlock>
-			<toolkit:AutoCompleteBox x:Name="startPoint" MinimumPrefixLength="3" SelectionChanged="startPoint_SelectionChanged" VerticalAlignment="Top" Margin="0" FontSize="20" Height="65" KeyUp="startPoint_KeyUp" FilterMode="None" Populated="startPoint_Populated" IsDropDownOpen="True">
+			</Grid.RenderTransform>
+			<toolkit:AutoCompleteBox x:Name="startPoint" MinimumPrefixLength="3" SelectionChanged="startPoint_SelectionChanged" VerticalAlignment="Top" Margin="0" FontSize="20" Height="65" KeyUp="startPoint_KeyUp" FilterMode="None" Populated="startPoint_Populated" IsDropDownOpen="True" Padding="6,0,6,4">
 				<!-- <toolkit:AutoCompleteBox.ItemTemplate>
 					<DataTemplate>
 						<StackPanel>
@@ -279,7 +278,13 @@
 					</DataTemplate>
 				</toolkit:AutoCompleteBox.ItemTemplate> -->
 			</toolkit:AutoCompleteBox>
-		</StackPanel>
+			<Image HorizontalAlignment="Right" VerticalAlignment="Center" Source="/Cyclestreets;component/Assets/AppBar/search.png" Width="30" Margin="0,0,20,0"/>
+			<Button Background="#FF008B00" BorderBrush="#FF008B00" Foreground="#DEFFFFFF" BorderThickness="0" Grid.Column="1" Click="cursorPos_Click">
+				<Button.Content>
+					<Image Source="/Cyclestreets;component/Assets/crosshair_button.png" Width="30"/>
+				</Button.Content>
+			</Button>
+		</Grid>
 
 		<Grid x:Name="routeType" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Grid.Row="1">
 			<Grid.Background>
