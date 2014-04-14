@@ -26,7 +26,7 @@
         <TextBlock HorizontalAlignment="Left" Margin="0,0,0,4.203" TextWrapping="Wrap" VerticalAlignment="Bottom" FontSize="40" FontWeight="Light" Padding="18,0,0,0" Foreground="#DEFFFFFF" Grid.RowSpan="2" Text="Journey Information"/>
         <Border BorderBrush="Black" BorderThickness="0" Margin="0" Grid.Row="1" Background="#FF008B00"/>
         <ProgressBar x:Name="progress" VerticalAlignment="Top" Padding="0" IsIndeterminate="True" Foreground="White" Opacity="{Binding Opacity}"/>
-        <phone:Pivot Margin="0" Grid.Row="2" Title="" Style="{StaticResource MyPivotStyle}" FontSize="20" HeaderTemplate="{StaticResource PivotHeader}">
+        <phone:Pivot Margin="0,12,0,0" Grid.Row="2" Title="" Style="{StaticResource MyPivotStyle}" FontSize="20" HeaderTemplate="{StaticResource PivotHeader}">
             <phone:PivotItem CacheMode="{x:Null}" Header="nearest poi" FontSize="20">
                 <ScrollViewer>
 					<phone:LongListSelector x:Name="poiList" HorizontalContentAlignment="Stretch" Width="420" SelectionChanged="poiList_SelectionChanged" Foreground="#DEFFFFFF">

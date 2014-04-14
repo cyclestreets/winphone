@@ -23,7 +23,7 @@
         <Image VerticalAlignment="Top" Source="/Assets/header.jpg"/>
         <TextBlock HorizontalAlignment="Left" Margin="0" TextWrapping="Wrap" Text="Save Route" VerticalAlignment="Bottom" FontSize="40" FontWeight="Light" Padding="18,0,0,0" Foreground="#DEFFFFFF"/>
         <Border BorderBrush="Black" BorderThickness="0" Margin="0" Grid.Row="1" Background="#FF008B00"/>
-        <StackPanel x:Name="ContentPanel" Margin="12,0,12,0" Grid.Row="2" >
+        <StackPanel x:Name="ContentPanel" Margin="12,12,12,0" Grid.Row="2" >
 			<Grid Height="73">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="107*"/>

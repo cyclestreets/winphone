@@ -208,7 +208,19 @@ namespace Cyclestreets.Pages
         }
     }
 
-    public partial class DirectionsPage : PhoneApplicationPage
+    public class ListBoxPair
+    {
+        public string DisplayName { get; set; }
+        public string Value { get; set; }
+
+        public ListBoxPair(string displayName, string value)
+        {
+            DisplayName = displayName;
+            Value = value;
+        }
+    }
+
+    public partial class DirectionsPage
     {
         readonly ReverseGeocodeQuery revGeoQ = null;
         GeocodeQuery geoQ = null;
@@ -235,7 +247,12 @@ namespace Cyclestreets.Pages
         private int currentStep = -1;
 
         public static String[] MapStyle = { "OpenStreetMap", "OpenCycleMap", "Nokia" };
-        public static String[] RouteType = { AppResources.BalancedRoute, AppResources.FastestRoute, AppResources.QuietestRoute };
+        public static ListBoxPair[] RouteType = 
+        { 
+            new ListBoxPair(AppResources.BalancedRoute, "balanced"),
+            new ListBoxPair(AppResources.FastestRoute, "fastest"), 
+            new ListBoxPair(AppResources.QuietestRoute, "quietest") 
+        };
         public static String[] CycleSpeed = { "10mph", "12mph", "15mph" };
         public static String[] EnabledDisabled = { AppResources.Enabled, AppResources.Disabled };
         private string currentRouteData;
@@ -263,10 +280,11 @@ namespace Cyclestreets.Pages
 
             saveRoute.IsEnabled = false;
 
-            string plan = SettingManager.instance.GetStringValue("defaultRouteType", AppResources.BalancedRoute);
+            string plan = SettingManager.instance.GetStringValue("defaultRouteType", "balanced");
 
             routeTypePicker.ItemsSource = RouteType;
-            routeTypePicker.SelectedIndex = 0;//Item = plan;		// FIXME: localisation
+            routeTypePicker.DisplayMemberPath = "DisplayName";
+            routeTypePicker.SelectedIndex = Array.FindIndex(RouteType, v => v.Value.Equals(plan));
 
             revGeoQ = new ReverseGeocodeQuery();
             revGeoQ.QueryCompleted += revGeoQ_QueryCompleted;
@@ -396,7 +414,7 @@ namespace Cyclestreets.Pages
                 center.Longitude = float.Parse(NavigationContext.QueryString["longitude"]);
                 center.Latitude = float.Parse(NavigationContext.QueryString["latitude"]);
 
-                string plan = SettingManager.instance.GetStringValue("defaultRouteType", AppResources.BalancedRoute);
+                string plan = SettingManager.instance.GetStringValue("defaultRouteType", "balanced");
                 plan = plan.Replace(" route", "");
 
                 string speedSetting = SettingManager.instance.GetStringValue("cycleSpeed", "12mph");
@@ -729,7 +747,7 @@ namespace Cyclestreets.Pages
             planRouteAvailable = available;
             if (available)
             {
-                planRouteBorder.Background = new SolidColorBrush(Color.FromArgb(255,0,139,0));
+                planRouteBorder.Background = new SolidColorBrush(Color.FromArgb(255, 0, 139, 0));
                 planRouteText.Foreground = new SolidColorBrush(Colors.White);
                 planRouteImage.Opacity = 1.0;
             }
@@ -744,13 +762,13 @@ namespace Cyclestreets.Pages
         private void addWaypoint(Pushpin pp)
         {
             waypoints.Push(pp);
-            SetPlanRouteAvailability( waypoints.Count >= 2 );
+            SetPlanRouteAvailability(waypoints.Count >= 2);
         }
 
         private void removeWaypoint(Pushpin pp)
         {
             waypoints.Remove(pp);
-            SetPlanRouteAvailability( waypoints.Count >= 2 );
+            SetPlanRouteAvailability(waypoints.Count >= 2);
         }
 
         private void clearCurrentPosition()
@@ -787,7 +805,7 @@ namespace Cyclestreets.Pages
 
             //confirmWaypoint.IsEnabled = false;
             //cursorPos.IsEnabled = false;
-            SetPlanRouteAvailability( false );
+            SetPlanRouteAvailability(false);
 
             JObject o = null;
             if (currentRouteData != null)
@@ -1082,8 +1100,8 @@ namespace Cyclestreets.Pages
         private void routeTypePicker_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             ListPicker picker = sender as ListPicker;
-            string plan = (string)picker.SelectedItem;
-            plan = plan.Replace(" route", "");
+            string plan = ((ListBoxPair)picker.SelectedItem).Value;
+
             if (saveRoute.IsEnabled && !hideRouteOptions)
             {
                 string itinerarypoints = "";// = "-1.2487100362777,53.00143068427369,NG16+1HH|-1.1430546045303,52.95200365149319,NG1+1LL";
@@ -1518,7 +1536,7 @@ namespace Cyclestreets.Pages
             {
                 this.Focus();
 
-                string plan = SettingManager.instance.GetStringValue("defaultRouteType", AppResources.BalancedRoute);
+                string plan = SettingManager.instance.GetStringValue("defaultRouteType", "balanced");
                 plan = plan.Replace(" route", "");
 
                 string speedSetting = SettingManager.instance.GetStringValue("cycleSpeed", "12mph");

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using Cyclestreets.Resources;
 using Microsoft.Phone.Controls;
@@ -17,9 +18,10 @@ namespace Cyclestreets.Pages
 			mapStyle.ItemsSource = DirectionsPage.MapStyle;
 			mapStyle.SelectedItem = defaultMapStyleSetting;
 
-			string defaultRouteTypeSetting = SettingManager.instance.GetStringValue( "defaultRouteType", DirectionsPage.RouteType[0] );
+			string defaultRouteTypeSetting = SettingManager.instance.GetStringValue( "defaultRouteType", DirectionsPage.RouteType[0].Value );
 			defaultRouteType.ItemsSource = DirectionsPage.RouteType;
-			defaultRouteType.SelectedItem = defaultRouteTypeSetting;
+            defaultRouteType.DisplayMemberPath = "DisplayName";
+            defaultRouteType.SelectedIndex = Array.FindIndex(DirectionsPage.RouteType, v => v.Value.Equals(defaultRouteTypeSetting));
 
 			string cycleSpeedSetting = SettingManager.instance.GetStringValue( "cycleSpeed", DirectionsPage.CycleSpeed[0] );
 			cycleSpeed.ItemsSource = DirectionsPage.CycleSpeed;
@@ -87,7 +89,7 @@ namespace Cyclestreets.Pages
 		{
 			if( e.AddedItems.Count > 0 )
 			{
-				SettingManager.instance.SetStringValue( "defaultRouteType", (string)e.AddedItems[0] );
+				SettingManager.instance.SetStringValue( "defaultRouteType", ((ListBoxPair)e.AddedItems[0]).Value );
 			}
 		}
 
@@ -115,7 +117,7 @@ namespace Cyclestreets.Pages
 
 		private void Button_Click( object sender, RoutedEventArgs e )
 		{
-			string plan = (string)defaultRouteType.SelectedItem;
+			string plan = ((ListBoxPair)defaultRouteType.SelectedItem).Value;
 
 			SettingManager.instance.SetStringValue( "defaultRouteType", plan );
 
