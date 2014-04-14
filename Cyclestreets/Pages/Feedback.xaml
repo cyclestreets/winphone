@@ -14,60 +14,57 @@
     mc:Ignorable="d"
     shell:SystemTray.IsVisible="True">
 
-	<!--LayoutRoot is the root grid where all page content is placed-->
-	<Grid x:Name="LayoutRoot" Background="Transparent">
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="*"/>
-		</Grid.RowDefinitions>
-
-		<!--TitlePanel contains the name of the application and page title-->
-		<StackPanel Grid.Row="0" Margin="12,17,0,28">
-			<TextBlock Text="CycleStreets" Style="{StaticResource PhoneTextNormalStyle}"/>
-			<TextBlock Text="feedback" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
-		</StackPanel>
-		<ScrollViewer x:Name="formScroller" Margin="0" Grid.Row="1">
-			<StackPanel x:Name="ContentPanel">
-				<TextBlock TextWrapping="Wrap" Text="Feedback Type" FontWeight="Light">
-					<TextBlock.Foreground>
-						<SolidColorBrush Color="{StaticResource PhoneDisabledColor}"/>
-					</TextBlock.Foreground>
-				</TextBlock>
-				<toolkit:ListPicker x:Name="feedbackTypeDropdown" Margin="13,0" Grid.Column="1" SelectionChanged="feedbackType_SelectionChanged" Padding="0"/>
-				<TextBlock x:Name="itineraryHead" TextWrapping="Wrap" Text="Itinerary ID" FontWeight="Light">
-					<TextBlock.Foreground>
-						<SolidColorBrush Color="{StaticResource PhoneDisabledColor}"/>
-					</TextBlock.Foreground>
-				</TextBlock>
-				<TextBox x:Name="itinerary" Height="72" TextWrapping="Wrap" InputScope="Number"/>
-				<TextBlock TextWrapping="Wrap" Text="Comments" FontWeight="Light">
-					<TextBlock.Foreground>
-						<SolidColorBrush Color="{StaticResource PhoneDisabledColor}"/>
-					</TextBlock.Foreground>
-				</TextBlock>
-				<TextBox x:Name="comments" Height="193" TextWrapping="Wrap" InputScope="Text"/>
-				<TextBlock TextWrapping="Wrap" Text="Name (optional)" FontWeight="Light">
-					<TextBlock.Foreground>
-						<SolidColorBrush Color="{StaticResource PhoneDisabledColor}"/>
-					</TextBlock.Foreground>
-				</TextBlock>
-				<TextBox x:Name="name" Height="72" TextWrapping="Wrap" InputScope="PersonalFullName"/>
-				<TextBlock TextWrapping="Wrap" FontWeight="Light">
-					<TextBlock.Foreground>
-						<SolidColorBrush Color="{StaticResource PhoneDisabledColor}"/>
-					</TextBlock.Foreground>
+    <!--LayoutRoot is the root grid where all page content is placed-->
+    <Grid x:Name="LayoutRoot" Background="Black">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Image VerticalAlignment="Top" Source="/Assets/header.jpg"/>
+        <TextBlock HorizontalAlignment="Left" Margin="0,0,0,4.203" TextWrapping="Wrap" Text="Feedback" VerticalAlignment="Bottom" FontSize="40" FontWeight="Light" Padding="18,0,0,0" Foreground="#DEFFFFFF" Grid.RowSpan="2"/>
+        <Border BorderBrush="Black" BorderThickness="0" Margin="0" Grid.Row="1" Background="#FF008B00"/>
+        <ScrollViewer x:Name="formScroller" Margin="0" Grid.Row="2">
+            <StackPanel x:Name="ContentPanel">
+                <TextBlock TextWrapping="Wrap" Text="Feedback Type" FontWeight="Light">
+                    <TextBlock.Foreground>
+                        <SolidColorBrush Color="{StaticResource PhoneDisabledColor}"/>
+                    </TextBlock.Foreground>
+                </TextBlock>
+                <toolkit:ListPicker x:Name="feedbackTypeDropdown" Margin="13,0" Grid.Column="1" SelectionChanged="feedbackType_SelectionChanged" Padding="0"/>
+                <TextBlock x:Name="itineraryHead" TextWrapping="Wrap" Text="Itinerary ID" FontWeight="Light">
+                    <TextBlock.Foreground>
+                        <SolidColorBrush Color="{StaticResource PhoneDisabledColor}"/>
+                    </TextBlock.Foreground>
+                </TextBlock>
+                <TextBox x:Name="itinerary" Height="72" TextWrapping="Wrap" InputScope="Number"/>
+                <TextBlock TextWrapping="Wrap" Text="Comments" FontWeight="Light">
+                    <TextBlock.Foreground>
+                        <SolidColorBrush Color="{StaticResource PhoneDisabledColor}"/>
+                    </TextBlock.Foreground>
+                </TextBlock>
+                <TextBox x:Name="comments" Height="193" TextWrapping="Wrap" InputScope="Text"/>
+                <TextBlock TextWrapping="Wrap" Text="Name (optional)" FontWeight="Light">
+                    <TextBlock.Foreground>
+                        <SolidColorBrush Color="{StaticResource PhoneDisabledColor}"/>
+                    </TextBlock.Foreground>
+                </TextBlock>
+                <TextBox x:Name="name" Height="72" TextWrapping="Wrap" InputScope="PersonalFullName"/>
+                <TextBlock TextWrapping="Wrap" FontWeight="Light">
+                    <TextBlock.Foreground>
+                        <SolidColorBrush Color="{StaticResource PhoneDisabledColor}"/>
+                    </TextBlock.Foreground>
 					<Run Text="Email"/>
 					<Run Text=" (optional)"/>
-				</TextBlock>
-				<TextBox x:Name="email" Height="72" TextWrapping="Wrap" InputScope="EmailUserName"/>
-				<Button x:Name="submitButton" Content="Submit" Tap="submitButton_Tap"/>
-			</StackPanel>
-		</ScrollViewer>
-		<Grid x:Name="feedbackResult" Margin="0" Grid.Row="1" Visibility="Collapsed">
-			<TextBlock HorizontalAlignment="Center" Margin="0" TextWrapping="Wrap" Text="Thank you for submitting this feedback. We will get back to you when we have checked this out." VerticalAlignment="Center"/>
-		</Grid>
-
-		<!--ContentPanel - place additional content here-->
-	</Grid>
+                </TextBlock>
+                <TextBox x:Name="email" Height="72" TextWrapping="Wrap" InputScope="EmailUserName"/>
+                <Button x:Name="submitButton" Content="Submit" Tap="submitButton_Tap"/>
+            </StackPanel>
+        </ScrollViewer>
+        <Grid x:Name="feedbackResult" Margin="0" Grid.Row="2" Visibility="Collapsed">
+            <TextBlock HorizontalAlignment="Center" Margin="0" TextWrapping="Wrap" Text="Thank you for submitting this feedback. We will get back to you when we have checked this out." VerticalAlignment="Center"/>
+        </Grid>
+        <!--ContentPanel - place additional content here-->
+    </Grid>
 
 </phone:PhoneApplicationPage>

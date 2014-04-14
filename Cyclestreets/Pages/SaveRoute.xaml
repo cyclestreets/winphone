@@ -14,18 +14,16 @@
     shell:SystemTray.IsVisible="True">
 
 	<!--LayoutRoot is the root grid where all page content is placed-->
-	<Grid x:Name="LayoutRoot" Background="Transparent">
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="*"/>
-		</Grid.RowDefinitions>
-
-		<!--TitlePanel contains the name of the application and page title-->
-		<StackPanel Grid.Row="0" Margin="12,17,0,28">
-			<TextBlock Text="CycleStreets" Style="{StaticResource PhoneTextNormalStyle}"/>
-			<TextBlock Text="save route" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
-		</StackPanel>
-		<StackPanel x:Name="ContentPanel" Margin="12,0,12,0" Grid.Row="1" >
+    <Grid x:Name="LayoutRoot" Background="Black">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Image VerticalAlignment="Top" Source="/Assets/header.jpg"/>
+        <TextBlock HorizontalAlignment="Left" Margin="0" TextWrapping="Wrap" Text="Save Route" VerticalAlignment="Bottom" FontSize="40" FontWeight="Light" Padding="18,0,0,0" Foreground="#DEFFFFFF"/>
+        <Border BorderBrush="Black" BorderThickness="0" Margin="0" Grid.Row="1" Background="#FF008B00"/>
+        <StackPanel x:Name="ContentPanel" Margin="12,0,12,0" Grid.Row="2" >
 			<Grid Height="73">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="107*"/>

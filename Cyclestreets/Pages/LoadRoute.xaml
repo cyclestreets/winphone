@@ -14,20 +14,18 @@
     shell:SystemTray.IsVisible="True">
 
     <!--LayoutRoot is the root grid where all page content is placed-->
-    <Grid x:Name="LayoutRoot" Background="Transparent">
+    <Grid x:Name="LayoutRoot" Background="Black">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
-
-        <!--TitlePanel contains the name of the application and page title-->
-        <StackPanel Grid.Row="0" Margin="12,17,0,28">
-            <TextBlock Text="CycleStreets" Style="{StaticResource PhoneTextNormalStyle}"/>
-            <TextBlock Text="load route" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
-        </StackPanel>
+        <Image VerticalAlignment="Top" Source="/Assets/header.jpg"/>
+        <TextBlock HorizontalAlignment="Left" Margin="0,0,0,4.203" TextWrapping="Wrap" VerticalAlignment="Bottom" FontSize="40" FontWeight="Light" Padding="18,0,0,0" Foreground="#DEFFFFFF" Grid.RowSpan="2" Text="Load Route"/>
+        <Border BorderBrush="Black" BorderThickness="0" Margin="0" Grid.Row="1" Background="#FF008B00"/>
 
         <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
+        <Grid x:Name="ContentPanel" Grid.Row="2" Margin="12,0,12,0">
 			<ScrollViewer Margin="0">
 				<phone:LongListSelector x:Name="saveFiles" FontSize="{StaticResource PhoneFontSizeLarge}" SelectionChanged="saveFiles_SelectionChanged"/>
 			</ScrollViewer>

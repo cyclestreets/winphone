@@ -87,6 +87,18 @@
 	<phone:PhoneApplicationPage.Foreground>
 		<StaticResource ResourceKey="PhoneForegroundBrush"/>
 	</phone:PhoneApplicationPage.Foreground>
+	<phone:PhoneApplicationPage.ApplicationBar>
+
+		<shell:ApplicationBar Mode="Minimized" BackgroundColor="#FF008B00">
+			<shell:ApplicationBar.MenuItems>
+				<shell:ApplicationBarMenuItem x:Name="saveRoute" IsEnabled="True" Text="a" Click="saveRoute_Click"/>
+				<shell:ApplicationBarMenuItem x:Name="loadRoute" IsEnabled="True" Text="a" Click="loadRoute_Click"/>
+				<shell:ApplicationBarMenuItem x:Name="settings" IsEnabled="True" Text="a" Click="settings_Click"/>
+				<shell:ApplicationBarMenuItem x:Name="privacy" IsEnabled="True" Text="a" Click="privacy_Click"/>
+				<shell:ApplicationBarMenuItem x:Name="sendFeedback" IsEnabled="True" Text="a" Click="sendFeedback_Click"/>
+			</shell:ApplicationBar.MenuItems>
+        </shell:ApplicationBar>
+	</phone:PhoneApplicationPage.ApplicationBar>
 	<!--LayoutRoot is the root grid where all page content is placed-->
 	<Grid x:Name="LayoutRoot" Background="Transparent">
 		<Grid.RowDefinitions>
@@ -109,7 +121,7 @@
 								<EasingDoubleKeyFrame KeyTime="0" Value="0"/>
 								<EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="-130"/>
 							</DoubleAnimationUsingKeyFrames>
-							<DoubleAnimation Duration="0:0:0.2" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="routeDetails">
+							<DoubleAnimation Duration="0:0:0.2" To="-60" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="routeDetails">
 								<DoubleAnimation.EasingFunction>
 									<CircleEase EasingMode="EaseOut"/>
 								</DoubleAnimation.EasingFunction>
@@ -129,7 +141,7 @@
 								<EasingDoubleKeyFrame KeyTime="0" Value="0"/>
 								<EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="-131"/>
 							</DoubleAnimationUsingKeyFrames>
-							<DoubleAnimation Duration="0:0:0.2" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="routeDetails">
+							<DoubleAnimation Duration="0:0:0.2" To="-60" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="routeDetails">
 								<DoubleAnimation.EasingFunction>
 									<CircleEase EasingMode="EaseOut"/>
 								</DoubleAnimation.EasingFunction>
@@ -186,7 +198,12 @@
 									<CircleEase EasingMode="EaseOut"/>
 								</DoubleAnimation.EasingFunction>
 							</DoubleAnimation>
-							<DoubleAnimation Duration="0:0:0.2" To="150" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="routeDetails">
+							<DoubleAnimation Duration="0:0:0.2" To="150" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="routeDetails" From="-60">
+								<DoubleAnimation.EasingFunction>
+									<CircleEase EasingMode="EaseOut"/>
+								</DoubleAnimation.EasingFunction>
+							</DoubleAnimation>
+							<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.GlobalOffsetY)" Storyboard.TargetName="routeDetails">
 								<DoubleAnimation.EasingFunction>
 									<CircleEase EasingMode="EaseOut"/>
 								</DoubleAnimation.EasingFunction>
@@ -208,7 +225,12 @@
 									<CircleEase EasingMode="EaseOut"/>
 								</DoubleAnimation.EasingFunction>
 							</DoubleAnimation>
-							<DoubleAnimation Duration="0:0:0.2" To="150" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="routeDetails">
+							<DoubleAnimation Duration="0:0:0.2" To="150" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="routeDetails" From="-60">
+								<DoubleAnimation.EasingFunction>
+									<CircleEase EasingMode="EaseOut"/>
+								</DoubleAnimation.EasingFunction>
+							</DoubleAnimation>
+							<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.GlobalOffsetY)" Storyboard.TargetName="routeDetails">
 								<DoubleAnimation.EasingFunction>
 									<CircleEase EasingMode="EaseOut"/>
 								</DoubleAnimation.EasingFunction>
@@ -225,7 +247,9 @@
 					<Storyboard>
 						<DoubleAnimation Duration="0" To="-130" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="locationEntry" d:IsOptimized="True"/>
 						<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="routeType" d:IsOptimized="True"/>
-						<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="routeDetails" d:IsOptimized="True"/>
+						<DoubleAnimation Duration="0" To="-60" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="routeDetails" d:IsOptimized="True"/>
+						<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationY)" Storyboard.TargetName="routeDetails" d:IsOptimized="True"/>
+						<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.GlobalOffsetY)" Storyboard.TargetName="routeDetails" d:IsOptimized="True"/>
 					</Storyboard>
 				</VisualState>
 			</VisualStateGroup>
@@ -284,10 +308,10 @@
 			<toolkit:ListPicker x:Name="routeTypePicker" SelectionChanged="routeTypePicker_SelectionChanged" Margin="10,5,0,10" Padding="0"/>
 			<Image Source="/Assets/icons/dark/appbar.information.circle.png" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="None" Margin="0" Grid.Column="1" Tap="Image_Tap_1"/>
 		</Grid>
-		<Grid x:Name="routeDetails" VerticalAlignment="Bottom" Margin="0" RenderTransformOrigin="0.5,0.5" Grid.Row="1">
-			<Grid.Background>
-				<SolidColorBrush Color="{StaticResource PhoneChromeColor}"/>
-			</Grid.Background>
+		<Grid x:Name="routeDetails" VerticalAlignment="Bottom" Margin="0" RenderTransformOrigin="0.5,0.5" Grid.Row="1" Background="#FF008B00">
+			<Grid.Projection>
+				<PlaneProjection/>
+			</Grid.Projection>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="72*"/>
 				<ColumnDefinition Width="337*"/>
@@ -353,7 +377,7 @@
 		<Popup x:Name="pleaseWait" IsOpen="False" VerticalAlignment="Top" VerticalOffset="200">
 			<StackPanel x:Name="popupPanel">
 				<StackPanel.Background>
-					<SolidColorBrush Color="{StaticResource PhoneBackgroundColor}"/>
+					<SolidColorBrush Color="#FF008B00"/>
 				</StackPanel.Background>
 				<TextBlock Text="{Binding Path=LocalizedResources.PleaseWait, Source={StaticResource LocalizedStrings}}" TextAlignment="Center" FontSize="40" Margin="10,0" />
 				<TextBlock FontSize="21" Margin="10,0" TextWrapping="Wrap" TextAlignment="Center" >
@@ -372,26 +396,23 @@
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition/>
 				<ColumnDefinition/>
-				<ColumnDefinition Width="60"/>
-			</Grid.ColumnDefinitions>
+            </Grid.ColumnDefinitions>
 			<Grid.Background>
 				<SolidColorBrush Color="#FF008B00"/>
 			</Grid.Background>
 			<Grid.RenderTransform>
 				<CompositeTransform/>
 			</Grid.RenderTransform>
-			<Border x:Name="openSettingsBorder" BorderBrush="#FF017001" BorderThickness="1,0,0,0" Grid.Column="2" Margin="0" Background="#FF008B00" Tap="openSettingsBorder_Tap"/>
-			<TextBlock Grid.Column="2" HorizontalAlignment="Center" Margin="17,3,16,3" TextWrapping="Wrap" Text="..." VerticalAlignment="Center" FontSize="40"/>
-			<Border x:Name="myLocationBorder" BorderBrush="#FF017001" BorderThickness="0,0,1,0" Margin="0" Background="#FF008B00" Tap="myLocationBorder_Tap">
+            <Border x:Name="myLocationBorder" BorderBrush="#FF017001" BorderThickness="0,1,1,1" Margin="0" Background="#FF008B00" Tap="myLocationBorder_Tap">
 			<StackPanel x:Name="myLocation" VerticalAlignment="Center" Height="60" HorizontalAlignment="Center" Orientation="Horizontal">
 				<Image HorizontalAlignment="Left" Margin="0" VerticalAlignment="Center" Source="/Assets/icons/dark/appbar.location.circle.png"/>
 				<TextBlock HorizontalAlignment="Left" Text="my location" TextWrapping="Wrap" VerticalAlignment="Center" FontWeight="Light"/>
 			</StackPanel>
 				</Border>
-			<Border x:Name="planRouteBorder" BorderBrush="#FF017001" BorderThickness="0,0,1,0" Margin="0" Background="#FF004200" Grid.Column="1" Tap="planRouteBorder_Tap">
+			<Border x:Name="planRouteBorder" BorderBrush="#FF017001" BorderThickness="0,1,1,1" Margin="0" Background="#FF004200" Grid.Column="1" Tap="planRouteBorder_Tap">
 				<StackPanel x:Name="planRoute" VerticalAlignment="Center" Height="60" HorizontalAlignment="Center" Orientation="Horizontal" Margin="0" Grid.Column="1">
-					<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" FontWeight="Light" Text="plan route" Foreground="#33FFFFFF"/>
-					<Image HorizontalAlignment="Left" Margin="0" VerticalAlignment="Center" Source="/Assets/icons/dark/appbar.arrow.right.png" Opacity="0.2"/>
+					<TextBlock x:Name="planRouteText" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" FontWeight="Light" Text="plan route" Foreground="#33FFFFFF"/>
+					<Image x:Name="planRouteImage" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Center" Source="/Assets/icons/dark/appbar.arrow.right.png" Opacity="0.2"/>
 				</StackPanel>
 			</Border>
 		</Grid>

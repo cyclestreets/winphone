@@ -16,16 +16,19 @@
 	</phone:PhoneApplicationPage.Background>
 
 	<!--LayoutRoot contains the root grid where all other page content is placed-->
-	<Grid x:Name="LayoutRoot">
-		<Grid.Background>
-			<ImageBrush Stretch="UniformToFill" ImageSource="/Assets/cyclestreets19586.jpg"/>
-		</Grid.Background>
-		<ProgressBar x:Name="progress" VerticalAlignment="Top" Padding="0" IsIndeterminate="True" Foreground="White" Opacity="{Binding Opacity}"/>
-		<phone:Panorama Title="journey information" Foreground="#DEFFFFFF">
-
-			<!--Panorama item one-->
-			<phone:PanoramaItem Header="nearest poi">
-				<ScrollViewer>
+    <Grid x:Name="LayoutRoot" Background="Black">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Image VerticalAlignment="Top" Source="/Assets/header.jpg"/>
+        <TextBlock HorizontalAlignment="Left" Margin="0,0,0,4.203" TextWrapping="Wrap" VerticalAlignment="Bottom" FontSize="40" FontWeight="Light" Padding="18,0,0,0" Foreground="#DEFFFFFF" Grid.RowSpan="2" Text="Journey Information"/>
+        <Border BorderBrush="Black" BorderThickness="0" Margin="0" Grid.Row="1" Background="#FF008B00"/>
+        <ProgressBar x:Name="progress" VerticalAlignment="Top" Padding="0" IsIndeterminate="True" Foreground="White" Opacity="{Binding Opacity}"/>
+        <phone:Pivot Margin="0" Grid.Row="2" Title="" Style="{StaticResource MyPivotStyle}" FontSize="20" HeaderTemplate="{StaticResource PivotHeader}">
+            <phone:PivotItem CacheMode="{x:Null}" Header="nearest poi" FontSize="20">
+                <ScrollViewer>
 					<phone:LongListSelector x:Name="poiList" HorizontalContentAlignment="Stretch" Width="420" SelectionChanged="poiList_SelectionChanged" Foreground="#DEFFFFFF">
 						<phone:LongListSelector.ItemTemplate>
 							<DataTemplate>
@@ -49,10 +52,10 @@
 						</phone:LongListSelector.ItemTemplate>
 					</phone:LongListSelector>
 				</ScrollViewer>
-			</phone:PanoramaItem>
+			</phone:PivotItem>
 
 			<!--Panorama item two-->
-		</phone:Panorama>
+		</phone:Pivot>
 	</Grid>
 
 </phone:PhoneApplicationPage>
