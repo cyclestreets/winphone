@@ -2,7 +2,6 @@
 <Deployment xmlns="http://schemas.microsoft.com/windowsphone/2012/deployment" AppPlatformVersion="8.0">
   <DefaultLanguage xmlns="" code="en-GB" />
   <Languages xmlns="">
-    <Language code="fr" />
     <Language code="qps-ploc" />
   </Languages>
   <App xmlns="" ProductID="{823e41bf-889c-4102-863f-11cfee11f652}" Title="CycleStreets" RuntimeType="Silverlight" Version="1.4.0.0" Genre="apps.normal" Author="RW::Software" Description="UK-wide cycle journey planner CycleStreets on your mobile device! Cycle journey planner for cyclists, by cyclists.&#xD;&#xA;" Publisher="CycleStreets Ltd" PublisherID="{c62b52a7-eb58-47be-bdaf-af581f416bc1}">
@@ -27,13 +26,18 @@
           <Count>0</Count>
           <BackgroundImageURI IsRelative="true" IsResource="false">Assets\Tiles\FlipCycleTileMedium.png</BackgroundImageURI>
           <Title>CycleStreets</Title>
-          <BackContent></BackContent>
-          <BackBackgroundImageURI></BackBackgroundImageURI>
-          <BackTitle></BackTitle>
+          <BackContent>
+          </BackContent>
+          <BackBackgroundImageURI>
+          </BackBackgroundImageURI>
+          <BackTitle>
+          </BackTitle>
           <LargeBackgroundImageURI IsRelative="true" IsResource="false">Assets\Tiles\FlipCycleTileLarge.png</LargeBackgroundImageURI>
           <LargeBackContent />
-          <LargeBackBackgroundImageURI IsRelative="true" IsResource="false"></LargeBackBackgroundImageURI>
-          <DeviceLockImageURI></DeviceLockImageURI>
+          <LargeBackBackgroundImageURI IsRelative="true" IsResource="false">
+          </LargeBackBackgroundImageURI>
+          <DeviceLockImageURI>
+          </DeviceLockImageURI>
           <HasLarge>True</HasLarge>
         </TemplateFlip>
       </PrimaryToken>

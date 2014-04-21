@@ -211,13 +211,7 @@
             </phone:PivotItem>
             <phone:PivotItem CacheMode="{x:Null}" Header="waypoints" FontSize="20">
                 <Grid>
-                    <ScrollViewer Margin="0">
-                        <phone:LongListSelector x:Name="poiList" ItemTemplate="{StaticResource POIItem}" Margin="0" Height="379" Width="420">
-                            <phone:LongListSelector.Foreground>
-                                <SolidColorBrush Color="White"/>
-                            </phone:LongListSelector.Foreground>
-                        </phone:LongListSelector>
-                    </ScrollViewer>
+                    <phone:LongListSelector x:Name="poiList" ItemTemplate="{StaticResource POIItem}" Margin="0" Foreground="White"/>
                 </Grid>
             </phone:PivotItem>
         </phone:Pivot>
