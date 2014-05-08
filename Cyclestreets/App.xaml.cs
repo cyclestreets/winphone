@@ -48,7 +48,7 @@ namespace Cyclestreets
         // Locale to force CurrentCulture to in InitializeLanguage().
         // Use "qps-PLOC" to deploy pseudolocalized strings.
         // Use "" to let user Phone Language selection determine locale.
-        public static String appForceCulture = "qps-PLOC";
+        public static String appForceCulture = "";//"qps-PLOC";
 
 		private static MainViewModel viewModel = null;
 

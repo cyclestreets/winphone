@@ -4,7 +4,7 @@
   <Languages xmlns="">
     <Language code="qps-ploc" />
   </Languages>
-  <App xmlns="" ProductID="{823e41bf-889c-4102-863f-11cfee11f652}" Title="CycleStreets" RuntimeType="Silverlight" Version="1.4.0.0" Genre="apps.normal" Author="RW::Software" Description="UK-wide cycle journey planner CycleStreets on your mobile device! Cycle journey planner for cyclists, by cyclists.&#xD;&#xA;" Publisher="CycleStreets Ltd" PublisherID="{c62b52a7-eb58-47be-bdaf-af581f416bc1}">
+  <App xmlns="" ProductID="{823e41bf-889c-4102-863f-11cfee11f652}" Title="CycleStreets" RuntimeType="Silverlight" Version="1.4.0.2" Genre="apps.normal" Author="RW::Software" Description="UK-wide cycle journey planner CycleStreets on your mobile device! Cycle journey planner for cyclists, by cyclists.&#xD;&#xA;" Publisher="CycleStreets Ltd" PublisherID="{c62b52a7-eb58-47be-bdaf-af581f416bc1}">
     <IconPath IsRelative="true" IsResource="false">Assets\ApplicationIcon.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_NETWORKING" />

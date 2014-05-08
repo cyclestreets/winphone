@@ -26,6 +26,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Windows.Devices.Geolocation;
+using System.Windows.Controls;
 
 namespace Cyclestreets.Pages
 {
@@ -230,6 +231,8 @@ namespace Cyclestreets.Pages
         Dictionary<Pushpin, POI> pinItems = new Dictionary<Pushpin, POI>();
         private MapLayer poiLayer;
 
+        public ObservableCollection<ApplicationBarMenuItem> menuItems = new ObservableCollection<ApplicationBarMenuItem>();
+
         List<List<GeoCoordinate>> geometryCoords = new List<List<GeoCoordinate>>();
         List<Color> geometryColor = new List<Color>();
         List<bool> geometryDashed = new List<bool>();
@@ -284,7 +287,8 @@ namespace Cyclestreets.Pages
 
             routeTypePicker.ItemsSource = RouteType;
             routeTypePicker.DisplayMemberPath = "DisplayName";
-            routeTypePicker.SelectedIndex = Array.FindIndex(RouteType, v => v.Value.Equals(plan));
+            int idx = Array.FindIndex(RouteType, v => v.Value.Equals(plan));
+            routeTypePicker.SelectedIndex = idx == -1 ? 0 : idx;
 
             revGeoQ = new ReverseGeocodeQuery();
             revGeoQ.QueryCompleted += revGeoQ_QueryCompleted;
@@ -452,7 +456,16 @@ namespace Cyclestreets.Pages
             if (acb != null && e.Error == null && !e.Cancelled && !string.IsNullOrEmpty(e.Result))
             {
                 System.Diagnostics.Debug.WriteLine(e.Result);
-                JObject o = JObject.Parse(e.Result);
+                JObject o = null;
+                try
+                {
+                    o = JObject.Parse(e.Result);
+                }
+                catch(Exception ex)
+                {
+                    MarkedUp.AnalyticClient.Error("Could not parse JSON " + e.Result + " " +ex.Message);
+                    MessageBox.Show("Could not parse location data information from server. Please let us know about this error with what you were typing in the search box to cause this problem.");
+                }
                 JArray suggestions = (JArray)o["suggestions"];
                 List<string> names = new List<string>();
                 if (suggestions.Count > 0)
@@ -496,7 +509,16 @@ namespace Cyclestreets.Pages
             if (acb != null && e.Error == null && !e.Cancelled && !string.IsNullOrEmpty(e.Result))
             {
                 System.Diagnostics.Debug.WriteLine(e.Result);
-                JObject o = JObject.Parse(e.Result);
+                JObject o = null;
+                try
+                {
+                    o = JObject.Parse(e.Result);
+                }
+                catch (Exception ex)
+                {
+                    MarkedUp.AnalyticClient.Error("Could not parse JSON " + e.Result + " " + ex.Message);
+                    MessageBox.Show("Could not parse route data information from server. Please let us know about this error with the route you were trying to plan");
+                }
                 JArray suggestions = null;
 
                 if (o["results"] != null && o["results"]["result"] != null)
@@ -539,6 +561,9 @@ namespace Cyclestreets.Pages
 
         private LocationRectangle GetMapBounds()
         {
+            if (MyMap == null)
+                return new LocationRectangle();
+
             GeoCoordinate topLeft = MyMap.ConvertViewportPointToGeoCoordinate(new Point(0, 0));
             GeoCoordinate bottomRight = MyMap.ConvertViewportPointToGeoCoordinate(new Point(MyMap.ActualWidth, MyMap.ActualHeight));
 
@@ -628,7 +653,16 @@ namespace Cyclestreets.Pages
             if (e.Error == null && !e.Cancelled && !string.IsNullOrEmpty(e.Result))
             {
                 System.Diagnostics.Debug.WriteLine(e.Result);
-                JObject o = JObject.Parse(e.Result);
+                JObject o = null;
+                try
+                {
+                    o = JObject.Parse(e.Result);
+                }
+                catch (Exception ex)
+                {
+                    MarkedUp.AnalyticClient.Error("Could not parse JSON " + e.Result + " " + ex.Message);
+                    MessageBox.Show("Could not parse route data information from server. Please let us know about this error with the route you were trying to plan");
+                }
                 JArray suggestions = (JArray)o["results"]["items"];
                 if (suggestions.Count > 0)
                 {
@@ -809,7 +843,18 @@ namespace Cyclestreets.Pages
 
             JObject o = null;
             if (currentRouteData != null)
-                o = JObject.Parse(currentRouteData.Trim());
+            { 
+                try
+                {
+                    o = JObject.Parse(currentRouteData.Trim());
+                }
+                catch (Exception ex)
+                {
+                    MarkedUp.AnalyticClient.Error("Could not parse JSON " + currentRouteData.Trim() + " " + ex.Message);
+                    MessageBox.Show("Could not parse route data information from server. Please let us know about this error with the route you were trying to plan");
+                }
+            }
+
             if (o == null || o["marker"] == null)
             {
                 MessageBoxResult result = MessageBox.Show(AppResources.NoRouteFoundTryAnotherSearch, AppResources.NoRoute, MessageBoxButton.OK);
@@ -1316,11 +1361,13 @@ namespace Cyclestreets.Pages
                 }
                 StartPlaceSearch(box.Text, box);
 
-                geoQ.SearchTerm = box.Text;
-                geoQ.GeoCoordinate = MyMap.Center;
-                geoQ.QueryAsync();
-                App.networkStatus.networkIsBusy = true;
-
+                if (!geoQ.IsBusy && !string.IsNullOrWhiteSpace(box.Text) && box.Text != AppResources.NoSuggestions)
+                {
+                    geoQ.SearchTerm = box.Text;
+                    geoQ.GeoCoordinate = MyMap.Center;
+                    geoQ.QueryAsync();
+                    App.networkStatus.networkIsBusy = true;
+                }
                 this.Focus();
             }
         }
@@ -1501,7 +1548,7 @@ namespace Cyclestreets.Pages
             Point p = ev.GetPosition(map);
             GeoCoordinate coord = map.ConvertViewportPointToGeoCoordinate(p);
 
-            if (revGeoQ.IsBusy)
+            if (revGeoQ.IsBusy || coord == null )
             {
                 return;
             }

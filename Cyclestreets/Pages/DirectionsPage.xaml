@@ -11,58 +11,60 @@
     xmlns:edc="clr-namespace:Microsoft.Expression.Controls;assembly=Microsoft.Expression.Drawing" xmlns:em="clr-namespace:Microsoft.Expression.Media;assembly=Microsoft.Expression.Drawing"
     xmlns:Location="clr-namespace:System.Device.Location;assembly=System.Device"
     xmlns:es="clr-namespace:Microsoft.Expression.Shapes;assembly=Microsoft.Expression.Drawing"
+    xmlns:SampleData="clr-namespace:Expression.Blend.SampleData.AppBarData"
+    xmlns:System="clr-namespace:System;assembly=mscorlib"
     x:Class="Cyclestreets.Pages.DirectionsPage"
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d"
     shell:SystemTray.IsVisible="True">
-	<phone:PhoneApplicationPage.Resources>
-		<Style x:Key="Start" TargetType="Toolkit:Pushpin">
-			<Setter Property="Template">
-				<Setter.Value>
-					<ControlTemplate TargetType="Toolkit:Pushpin">
-						<Grid x:Name="ContentGrid" FlowDirection="LeftToRight">
-							<StackPanel Orientation="Vertical">
-								<!--<Grid Background="{Binding Background, RelativeSource={RelativeSource TemplatedParent}}" HorizontalAlignment="Left" MinWidth="29" MinHeight="31">
+    <phone:PhoneApplicationPage.Resources>
+        <Style x:Key="Start" TargetType="Toolkit:Pushpin">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Toolkit:Pushpin">
+                        <Grid x:Name="ContentGrid" FlowDirection="LeftToRight">
+                            <StackPanel Orientation="Vertical">
+                                <!--<Grid Background="{Binding Background, RelativeSource={RelativeSource TemplatedParent}}" HorizontalAlignment="Left" MinWidth="29" MinHeight="31">
 									<ContentPresenter x:Name="Presenter" Content="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}" FlowDirection="{Binding FlowDirection, RelativeSource={RelativeSource TemplatedParent}}" Margin="4"/>
 								</Grid>-->
-								<Image Height="75" Source="/Assets/start_wisp.png"/>
-							</StackPanel>
-						</Grid>
-					</ControlTemplate>
-				</Setter.Value>
-			</Setter>
-			<Setter Property="PositionOrigin" Value="0,1"/>
-			<Setter Property="Background" Value="Black"/>
-			<Setter Property="Foreground" Value="White"/>
-			<Setter Property="FontSize" Value="18"/>
-		</Style>
-		<Style x:Key="Finish" TargetType="Toolkit:Pushpin">
-			<Setter Property="Template">
-				<Setter.Value>
-					<ControlTemplate TargetType="Toolkit:Pushpin">
-						<Grid x:Name="ContentGrid" FlowDirection="LeftToRight">
-							<StackPanel Orientation="Vertical">
-								<!--<Grid Background="{Binding Background, RelativeSource={RelativeSource TemplatedParent}}" HorizontalAlignment="Left" MinWidth="29" MinHeight="31">
+                                <Image Height="75" Source="/Assets/start_wisp.png"/>
+                            </StackPanel>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="PositionOrigin" Value="0,1"/>
+            <Setter Property="Background" Value="Black"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="18"/>
+        </Style>
+        <Style x:Key="Finish" TargetType="Toolkit:Pushpin">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Toolkit:Pushpin">
+                        <Grid x:Name="ContentGrid" FlowDirection="LeftToRight">
+                            <StackPanel Orientation="Vertical">
+                                <!--<Grid Background="{Binding Background, RelativeSource={RelativeSource TemplatedParent}}" HorizontalAlignment="Left" MinWidth="29" MinHeight="31">
 									<ContentPresenter x:Name="Presenter" Content="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}" FlowDirection="{Binding FlowDirection, RelativeSource={RelativeSource TemplatedParent}}" Margin="4"/>
 								</Grid>-->
-								<Image Height="75" Source="/Assets/finish_wisp.png"/>
-							</StackPanel>
-						</Grid>
-					</ControlTemplate>
-				</Setter.Value>
-			</Setter>
-			<Setter Property="PositionOrigin" Value="0,1"/>
-			<Setter Property="Background" Value="Black"/>
-			<Setter Property="Foreground" Value="White"/>
-			<Setter Property="FontSize" Value="18"/>
-		</Style>
-		<Style x:Key="Intermediate" TargetType="Toolkit:Pushpin">
-			<Setter Property="Template">
-				<Setter.Value>
-					<ControlTemplate TargetType="Toolkit:Pushpin">
-						<Grid x:Name="ContentGrid" FlowDirection="LeftToRight">
-							<Grid Height="75">
-								<!--<Grid Background="{Binding Background, RelativeSource={RelativeSource TemplatedParent}}" HorizontalAlignment="Left" MinWidth="29" MinHeight="31">
+                                <Image Height="75" Source="/Assets/finish_wisp.png"/>
+                            </StackPanel>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="PositionOrigin" Value="0,1"/>
+            <Setter Property="Background" Value="Black"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="18"/>
+        </Style>
+        <Style x:Key="Intermediate" TargetType="Toolkit:Pushpin">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Toolkit:Pushpin">
+                        <Grid x:Name="ContentGrid" FlowDirection="LeftToRight">
+                            <Grid Height="75">
+                                <!--<Grid Background="{Binding Background, RelativeSource={RelativeSource TemplatedParent}}" HorizontalAlignment="Left" MinWidth="29" MinHeight="31">
 									<ContentPresenter x:Name="Presenter" Content="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}" FlowDirection="{Binding FlowDirection, RelativeSource={RelativeSource TemplatedParent}}" Margin="4"/>
 								</Grid>-->
 								<Image Height="75" Source="/Assets/intermediate_wisp.png" HorizontalAlignment="Left"/>
@@ -285,14 +287,14 @@
 						</StackPanel>
 					</DataTemplate>
 				</toolkit:AutoCompleteBox.ItemTemplate> -->
-			</toolkit:AutoCompleteBox>
-			<Image HorizontalAlignment="Right" VerticalAlignment="Center" Source="/Cyclestreets;component/Assets/AppBar/search.png" Width="30" Margin="0,0,20,0"/>
-			<Button Background="#FF008B00" BorderBrush="#FF008B00" Foreground="#DEFFFFFF" BorderThickness="0" Grid.Column="1" Click="cursorPos_Click">
+            </toolkit:AutoCompleteBox>
+            <Image HorizontalAlignment="Right" VerticalAlignment="Center" Source="/Cyclestreets;component/Assets/AppBar/search.png" Width="30" Margin="0,0,20,0"/>
+            <Button Background="#FF008B00" BorderBrush="#FF008B00" Foreground="#DEFFFFFF" BorderThickness="0" Grid.Column="1" Click="cursorPos_Click">
 				<Button.Content>
-					<Image Source="/Cyclestreets;component/Assets/crosshair_button.png" Width="30"/>
+                <Image Source="/Cyclestreets;component/Assets/crosshair_button.png" Width="30"/>
 				</Button.Content>
-			</Button>
-		</Grid>
+            </Button>
+        </Grid>
 
 		<Grid x:Name="routeType" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Grid.Row="1">
 			<Grid.Background>
