@@ -11,12 +11,14 @@ using Microsoft.Phone.Maps.Services;
 using Microsoft.Phone.Maps.Toolkit;
 using Microsoft.Phone.Shell;
 using Microsoft.Phone.Tasks;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Device.Location;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Windows;
@@ -26,7 +28,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Windows.Devices.Geolocation;
-using System.Windows.Controls;
 
 namespace Cyclestreets.Pages
 {
@@ -37,12 +38,12 @@ namespace Cyclestreets.Pages
     }
     public class CSResult
     {
-        public string resultName;
-        public GeoCoordinate coord;
+        public string ResultName;
+        public GeoCoordinate Coord;
 
         public override string ToString()
         {
-            return resultName;
+            return ResultName;
         }
     }
 
@@ -65,7 +66,7 @@ namespace Cyclestreets.Pages
                 _time = int.Parse(value);
             }
         }
-        private int _distance;
+
         public string Distance
         {
             get
@@ -107,13 +108,13 @@ namespace Cyclestreets.Pages
             get;
             set;
         }
-        public string BGColour
+        public string BgColour
         {
             get;
             set;
         }
 
-        public GeoCoordinate location
+        public GeoCoordinate Location
         {
             get;
             set;
@@ -461,9 +462,9 @@ namespace Cyclestreets.Pages
                 {
                     o = JObject.Parse(e.Result);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
-                    MarkedUp.AnalyticClient.Error("Could not parse JSON " + e.Result + " " +ex.Message);
+                    MarkedUp.AnalyticClient.Error("Could not parse JSON " + e.Result + " " + ex.Message);
                     MessageBox.Show("Could not parse location data information from server. Please let us know about this error with what you were typing in the search box to cause this problem.");
                 }
                 JArray suggestions = (JArray)o["suggestions"];
@@ -536,10 +537,10 @@ namespace Cyclestreets.Pages
                         foreach (JObject s in suggestions)
                         {
                             CSResult res = new CSResult();
-                            res.coord = new GeoCoordinate(double.Parse(s["latitude"].ToString()), double.Parse(s["longitude"].ToString()));
-                            res.resultName = s["name"].ToString();
+                            res.Coord = new GeoCoordinate(double.Parse(s["latitude"].ToString()), double.Parse(s["longitude"].ToString()));
+                            res.ResultName = s["name"].ToString();
                             if (!string.IsNullOrWhiteSpace(s["near"].ToString()))
-                                res.resultName += ", " + s["near"].ToString();
+                                res.ResultName += ", " + s["near"].ToString();
                             names.Add(res);
                         }
                         acb.ItemsSource = null;
@@ -585,11 +586,11 @@ namespace Cyclestreets.Pages
                 if (startPoint.SelectedItem is CSResult)
                 {
                     CSResult res = startPoint.SelectedItem as CSResult;
-                    setCurrentPosition(res.coord);
+                    setCurrentPosition(res.Coord);
 
                     SmartDispatcher.BeginInvoke(() =>
                     {
-                        MyMap.SetView(res.coord, 16);
+                        MyMap.SetView(res.Coord, 16);
                         this.Focus();
                         //MyMap.Center = CoordinateConverter.ConvertGeocoordinate(MyGeoPosition.Coordinate);
                     });
@@ -725,6 +726,8 @@ namespace Cyclestreets.Pages
             else
                 pp.Style = Resources["Finish"] as Style;
 
+            pp.BorderBrush = new SolidColorBrush(Colors.Red);
+            pp.BorderThickness = new Thickness(200);
             pp.Tap += pinTapped;
 
             MapOverlay overlay = new MapOverlay();
@@ -832,248 +835,302 @@ namespace Cyclestreets.Pages
 
         private void RouteFound(string data)
         {
-            currentRouteData = data;
-
-            if (pleaseWait.IsOpen)
-                pleaseWait.IsOpen = false;
-
-            //confirmWaypoint.IsEnabled = false;
-            //cursorPos.IsEnabled = false;
-            SetPlanRouteAvailability(false);
-
-            JObject o = null;
-            if (currentRouteData != null)
-            { 
-                try
-                {
-                    o = JObject.Parse(currentRouteData.Trim());
-                }
-                catch (Exception ex)
-                {
-                    MarkedUp.AnalyticClient.Error("Could not parse JSON " + currentRouteData.Trim() + " " + ex.Message);
-                    MessageBox.Show("Could not parse route data information from server. Please let us know about this error with the route you were trying to plan");
-                }
-            }
-
-            if (o == null || o["marker"] == null)
+            try
             {
-                MessageBoxResult result = MessageBox.Show(AppResources.NoRouteFoundTryAnotherSearch, AppResources.NoRoute, MessageBoxButton.OK);
-                NavigationService.GoBack();
-                return;
-            }
-            geometryCoords.Clear();
-            facts.Clear();
-            MyMap.MapElements.Clear();
 
-            max = new GeoCoordinate(90, -180);
-            min = new GeoCoordinate(-90, 180);
 
-            currentStep = -1;
+                currentRouteData = data;
 
-            arrowLeft.Opacity = 50;
-            arrowRight.Opacity = 100;
+                if (pleaseWait.IsOpen)
+                    pleaseWait.IsOpen = false;
 
-            route = new RouteDetails();
+                //confirmWaypoint.IsEnabled = false;
+                //cursorPos.IsEnabled = false;
+                SetPlanRouteAvailability(false);
 
-            List<RouteManeuver> manouvers = new List<RouteManeuver>();
-            JArray steps = o["marker"] as JArray;
-            JArray pois = o["poi"] as JArray;
-            string col1 = "#7F000000";
-            string col2 = "#3F000000";
-            bool swap = true;
-            int totalTime = 0;
-            double totalDistanceMetres = 0;
-            int totalDistance = 0;
-            foreach (JObject step in steps)
-            {
-                JObject p = (JObject)step["@attributes"];
-                string markerType = (string)p["type"];
-                if (markerType == "route")
+                JObject o = null;
+                if (currentRouteData != null)
                 {
-                    route.routeIndex = int.Parse((string)p["itinerary"]);
-                    JourneyFactItem i = new JourneyFactItem("Assets/picture.png");
-                    i.Caption = AppResources.RouteNumber;
-                    i.Value = "" + route.routeIndex;
-                    facts.Add(i);
-                    route.timeInSeconds = int.Parse((string)p["time"]);
-                    i = new JourneyFactItem("Assets/clock.png");
-                    i.Caption = AppResources.JourneyTime;
-                    i.Value = UtilTime.secsToLongDHMS(route.timeInSeconds);
-                    facts.Add(i);
-                    route.quietness = float.Parse((string)p["quietness"]);
-                    i = new JourneyFactItem("Assets/picture.png");
-                    i.Caption = AppResources.Quietness;
-                    i.Value = route.quietness + "% " + getQuietnessString(route.quietness);
-                    facts.Add(i);
-                    route.signalledJunctions = int.Parse((string)p["signalledJunctions"]);
-                    i = new JourneyFactItem("Assets/traffic_signals.png");
-                    i.Caption = AppResources.SignaledJunctions;
-                    i.Value = "" + route.signalledJunctions;
-                    facts.Add(i);
-                    route.signalledCrossings = int.Parse((string)p["signalledCrossings"]);
-                    i = new JourneyFactItem("Assets/traffic_signals.png");
-                    i.Caption = AppResources.SignaledCrossings;
-                    i.Value = "" + route.signalledCrossings;
-                    facts.Add(i);
-                    route.grammesCO2saved = int.Parse((string)p["grammesCO2saved"]);
-                    i = new JourneyFactItem("Assets/world.png");
-                    i.Caption = AppResources.CO2Avoided;
-                    i.Value = (float)route.grammesCO2saved / 1000f + " kg";
-                    facts.Add(i);
-                    route.calories = int.Parse((string)p["calories"]);
-                    i = new JourneyFactItem("Assets/heart.png");
-                    i.Caption = AppResources.Calories;
-                    i.Value = route.calories + AppResources.Kcal;
-                    facts.Add(i);
-                }
-                else if (markerType == "segment")
-                {
-                    string pointsText = (string)p["points"];
-                    string[] points = pointsText.Split(' ');
-                    List<GeoCoordinate> coords = new List<GeoCoordinate>();
-                    foreach (string t in points)
+                    try
                     {
-                        string[] xy = t.Split(',');
-
-                        double longitude = double.Parse(xy[0]);
-                        double latitude = double.Parse(xy[1]);
-                        coords.Add(new GeoCoordinate(latitude, longitude));
-
-                        if (max.Latitude > latitude)
-                            max.Latitude = latitude;
-                        if (min.Latitude < latitude)
-                            min.Latitude = latitude;
-                        if (max.Longitude < longitude)
-                            max.Longitude = longitude;
-                        if (min.Longitude > longitude)
-                            min.Longitude = longitude;
+                        o = JObject.Parse(currentRouteData.Trim());
                     }
-                    geometryCoords.Add(coords);
-
-                    string elevationsText = (string)p["elevations"];
-                    string[] elevations = elevationsText.Split(',');
-
-                    RouteSegment s = new RouteSegment();
-                    s.location = coords[0];
-                    s.Bearing = Geodesy.Bearing(coords[0].Latitude, coords[0].Longitude, coords[coords.Count - 1].Latitude, coords[coords.Count - 1].Longitude);
-                    route.distance += (int)float.Parse((string)p["distance"]);
-                    s.DistanceMetres = (int)float.Parse((string)p["distance"]);
-                    totalDistanceMetres += s.DistanceMetres;
-                    totalDistance += route.distance;
-                    s.TotalDistance = totalDistance;
-                    s.Name = (string)p["name"];
-                    s.ProvisionName = (string)p["provisionName"];
-                    int theLegOfTime = int.Parse((string)p["time"]);
-                    s.Time = "" + (totalTime + theLegOfTime);
-                    totalTime += theLegOfTime;
-                    s.Turn = (string)p["turn"];
-                    s.Walk = (int.Parse((string)p["walk"]) == 1 ? true : false);
-                    if (elevations.Length >= 1)
+                    catch (Exception ex)
                     {
-                        ElevationPoint dp = new ElevationPoint { Distance = totalDistanceMetres, Height = float.Parse(elevations[0]) };
-                        route.HeightChart.Add(dp);
+                        MarkedUp.AnalyticClient.Error("Could not parse JSON " + currentRouteData.Trim() + " " + ex.Message);
+                        MessageBox.Show("Could not parse route data information from server. Please let us know about this error with the route you were trying to plan");
                     }
-                    geometryDashed.Add(s.Walk);
-                    geometryColor.Add(s.Walk ? Color.FromArgb(255, 0, 0, 0) : Color.FromArgb(255, 127, 0, 255));
-                    s.BGColour = swap ? col1 : col2;
-                    swap = !swap;
-                    route.segments.Add(s);
                 }
-            }
-            if (poiLayer == null)
-            {
-                poiLayer = new MapLayer();
 
-                MyMap.Layers.Add(poiLayer);
-            }
-            else
-            {
-                poiLayer.Clear();
-            }
-            int id = 0;
-            if (pois != null)
-            {
-                foreach (JObject poi in pois)
+                if (o == null || o["marker"] == null)
                 {
-                    JObject p = (JObject)poi["@attributes"];
-                    POI poiItem = new POI();
-                    poiItem.Name = (string)p["name"];
-                    GeoCoordinate g = new GeoCoordinate();
-                    g.Longitude = float.Parse((string)p["longitude"]);
-                    g.Latitude = float.Parse((string)p["latitude"]);
-                    poiItem.Position = g;
-
-                    poiItem.PinID = "" + (id++);
-
-                    Pushpin pp = new Pushpin();
-                    pp.Content = poiItem.PinID;
-                    pp.Tap += poiTapped;
-
-                    pinItems.Add(pp, poiItem);
-
-                    MapOverlay overlay = new MapOverlay();
-                    overlay.Content = pp;
-                    pp.GeoCoordinate = poiItem.GetGeoCoordinate();
-                    overlay.GeoCoordinate = poiItem.GetGeoCoordinate();
-                    overlay.PositionOrigin = new Point(0, 1.0);
-                    poiLayer.Add(overlay);
-                }
-            }
-            JourneyFactItem item = new JourneyFactItem("Assets/bullet_go.png");
-            item.Caption = AppResources.Distance;
-            float dist = (float)route.distance * 0.000621371192f;
-            item.Value = dist.ToString("0.00") + AppResources.Miles;
-            facts.Add(item);
-
-            SmartDispatcher.BeginInvoke(() =>
-            {
-                if (geometryCoords.Count == 0)
-                {
-                    MessageBox.Show(AppResources.CouldNotCalculateRoute);
-                    App.networkStatus.networkIsBusy = false;
+                    MessageBoxResult result = MessageBox.Show(AppResources.NoRouteFoundTryAnotherSearch, AppResources.NoRoute, MessageBoxButton.OK);
+                    NavigationService.GoBack();
                     return;
                 }
+                geometryCoords.Clear();
+                facts.Clear();
+                MyMap.MapElements.Clear();
 
-                LocationRectangle rect;
-                try
+                max = new GeoCoordinate(90, -180);
+                min = new GeoCoordinate(-90, 180);
+
+                currentStep = -1;
+
+                arrowLeft.Opacity = 50;
+                arrowRight.Opacity = 100;
+
+                route = new RouteDetails();
+
+                JArray steps = o["marker"] as JArray;
+                JArray pois = o["poi"] as JArray;
+                const string col1 = "#7F000000";
+                const string col2 = "#3F000000";
+                bool swap = true;
+                int totalTime = 0;
+                double totalDistanceMetres = 0;
+                int totalDistance = 0;
+                foreach (var jToken in steps)
                 {
-                    rect = new LocationRectangle(min, max);
-                    MyMap.SetView(rect);
+                    var step = (JObject)jToken;
+                    JObject p = (JObject)step["@attributes"];
+                    string markerType = (string)p["type"];
+                    switch (markerType)
+                    {
+                        case "route":
+                            {
+                                route.routeIndex = JsonGetPropertyHelper<int>(p, "itinerary");
+                                JourneyFactItem i = new JourneyFactItem("Assets/picture.png")
+                                {
+                                    Caption = AppResources.RouteNumber,
+                                    Value = "" + route.routeIndex
+                                };
+                                facts.Add(i);
+
+                                route.timeInSeconds = JsonGetPropertyHelper<int>(p, "time");
+                                i = new JourneyFactItem("Assets/clock.png")
+                                {
+                                    Caption = AppResources.JourneyTime,
+                                    Value = UtilTime.secsToLongDHMS(route.timeInSeconds)
+                                };
+                                facts.Add(i);
+
+                                route.quietness = JsonGetPropertyHelper<float>(p, "quietness");
+                                i = new JourneyFactItem("Assets/picture.png")
+                                {
+                                    Caption = AppResources.Quietness,
+                                    Value = route.quietness + "% " + getQuietnessString(route.quietness)
+                                };
+                                facts.Add(i);
+
+                                route.signalledJunctions = JsonGetPropertyHelper<int>(p, "signalledJunctions");
+                                i = new JourneyFactItem("Assets/traffic_signals.png")
+                                {
+                                    Caption = AppResources.SignaledJunctions,
+                                    Value = "" + route.signalledJunctions
+                                };
+                                facts.Add(i);
+
+                                route.signalledCrossings = JsonGetPropertyHelper<int>(p, "signalledCrossings");
+                                i = new JourneyFactItem("Assets/traffic_signals.png")
+                                {
+                                    Caption = AppResources.SignaledCrossings,
+                                    Value = "" + route.signalledCrossings
+                                };
+                                facts.Add(i);
+
+                                route.grammesCO2saved = JsonGetPropertyHelper<int>(p, "grammesCO2saved");
+                                i = new JourneyFactItem("Assets/world.png")
+                                {
+                                    Caption = AppResources.CO2Avoided,
+                                    Value = (float)route.grammesCO2saved / 1000f + " kg"
+                                };
+                                facts.Add(i);
+
+                                route.calories = JsonGetPropertyHelper<int>(p, "calories");
+                                i = new JourneyFactItem("Assets/heart.png")
+                                {
+                                    Caption = AppResources.Calories,
+                                    Value = route.calories + AppResources.Kcal
+                                };
+                                facts.Add(i);
+                                break;
+                            }
+                        case "segment":
+                            {
+                                string pointsText = (string)p["points"];
+                                string[] points = pointsText.Split(' ');
+                                List<GeoCoordinate> coords = new List<GeoCoordinate>();
+                                foreach (string t in points)
+                                {
+                                    string[] xy = t.Split(',');
+
+                                    double longitude = double.Parse(xy[0]);
+                                    double latitude = double.Parse(xy[1]);
+                                    coords.Add(new GeoCoordinate(latitude, longitude));
+
+                                    if (max.Latitude > latitude)
+                                        max.Latitude = latitude;
+                                    if (min.Latitude < latitude)
+                                        min.Latitude = latitude;
+                                    if (max.Longitude < longitude)
+                                        max.Longitude = longitude;
+                                    if (min.Longitude > longitude)
+                                        min.Longitude = longitude;
+                                }
+                                geometryCoords.Add(coords);
+
+                                string elevationsText = (string)p["elevations"];
+                                string[] elevations = elevationsText.Split(',');
+
+                                RouteSegment s = new RouteSegment
+                                {
+                                    Location = coords[0],
+                                    Bearing =
+                                        Geodesy.Bearing(coords[0].Latitude, coords[0].Longitude,
+                                            coords[coords.Count - 1].Latitude, coords[coords.Count - 1].Longitude)
+                                };
+                                route.distance += (int)float.Parse((string)p["distance"]);
+                                s.DistanceMetres = (int)float.Parse((string)p["distance"]);
+                                totalDistanceMetres += s.DistanceMetres;
+                                totalDistance += route.distance;
+                                s.TotalDistance = totalDistance;
+                                s.Name = (string)p["name"];
+                                s.ProvisionName = (string)p["provisionName"];
+                                int theLegOfTime = int.Parse((string)p["time"]);
+                                s.Time = "" + (totalTime + theLegOfTime);
+                                totalTime += theLegOfTime;
+                                s.Turn = (string)p["turn"];
+                                s.Walk = (int.Parse((string)p["walk"]) == 1 ? true : false);
+                                if (elevations.Length >= 1)
+                                {
+                                    ElevationPoint dp = new ElevationPoint { Distance = totalDistanceMetres, Height = float.Parse(elevations[0]) };
+                                    route.HeightChart.Add(dp);
+                                }
+                                geometryDashed.Add(s.Walk);
+                                geometryColor.Add(s.Walk ? Color.FromArgb(255, 0, 0, 0) : Color.FromArgb(255, 127, 0, 255));
+                                s.BgColour = swap ? col1 : col2;
+                                swap = !swap;
+                                route.segments.Add(s);
+                                break;
+                            }
+                    }
                 }
-                catch (System.Exception ex)
+                if (poiLayer == null)
                 {
-                    System.Diagnostics.Debug.WriteLine(@"Invalid box");
+                    poiLayer = new MapLayer();
+
+                    MyMap.Layers.Add(poiLayer);
                 }
-
-                //MyMap.Center = new GeoCoordinate(min.Latitude + ((max.Latitude - min.Latitude) / 2f), min.Longitude + ((max.Longitude - min.Longitude) / 2f));
-                //MyMap.ZoomLevel = 10;
-                int count = geometryCoords.Count;
-                for (int i = 0; i < count; i++)
+                else
                 {
-                    List<GeoCoordinate> coords = geometryCoords[i];
-                    DrawMapMarker(coords.ToArray(), geometryColor[i], geometryDashed[i]);
+                    poiLayer.Clear();
                 }
-
-                //NavigationService.Navigate( new Uri( "/Pages/DirectionsResults.xaml", UriKind.Relative ) );
-                var sgs = ExtendedVisualStateManager.GetVisualStateGroups(LayoutRoot);
-                var sg = sgs[0] as VisualStateGroup;
-                //ExtendedVisualStateManager.GoToElementState( LayoutRoot, "RouteFoundState", true );
-                VisualStateManager.GoToState(this, "RouteFoundState", true);
-
-                App.networkStatus.networkIsBusy = false;
-
-                float f = (float)route.distance * 0.000621371192f;
-                findLabel1.Text = f.ToString("0.00") + AppResources.MetresShort + UtilTime.secsToLongDHMS(route.timeInSeconds);
-
-                if (SettingManager.instance.GetBoolValue("tutorialEnabled", true))
+                int id = 0;
+                if (pois != null)
                 {
+                    foreach (var jToken in pois)
+                    {
+                        var poi = (JObject)jToken;
+                        JObject p = (JObject)poi["@attributes"];
+                        POI poiItem = new POI { Name = (string)p["name"] };
+                        GeoCoordinate g = new GeoCoordinate
+                        {
+                            Longitude = float.Parse((string)p["longitude"]),
+                            Latitude = float.Parse((string)p["latitude"])
+                        };
+                        poiItem.Position = g;
+
+                        poiItem.PinID = "" + (id++);
+
+                        Pushpin pp = new Pushpin { Content = poiItem.PinID };
+                        pp.Tap += poiTapped;
+
+                        pinItems.Add(pp, poiItem);
+
+                        MapOverlay overlay = new MapOverlay { Content = pp };
+                        pp.GeoCoordinate = poiItem.GetGeoCoordinate();
+                        overlay.GeoCoordinate = poiItem.GetGeoCoordinate();
+                        overlay.PositionOrigin = new Point(0, 1.0);
+                        poiLayer.Add(overlay);
+                    }
+                }
+                JourneyFactItem item = new JourneyFactItem("Assets/bullet_go.png") { Caption = AppResources.Distance };
+                float dist = route.distance * 0.000621371192f;
+                item.Value = dist.ToString("0.00") + AppResources.Miles;
+                facts.Add(item);
+
+                SmartDispatcher.BeginInvoke(() =>
+                {
+                    if (geometryCoords.Count == 0)
+                    {
+                        MessageBox.Show(AppResources.CouldNotCalculateRoute);
+                        App.networkStatus.networkIsBusy = false;
+                        return;
+                    }
+
+                    try
+                    {
+                        LocationRectangle rect = new LocationRectangle(min, max);
+                        MyMap.SetView(rect);
+                    }
+                    catch (Exception)
+                    {
+                        System.Diagnostics.Debug.WriteLine(@"Invalid box");
+                    }
+
+                    //MyMap.Center = new GeoCoordinate(min.Latitude + ((max.Latitude - min.Latitude) / 2f), min.Longitude + ((max.Longitude - min.Longitude) / 2f));
+                    //MyMap.ZoomLevel = 10;
+                    int count = geometryCoords.Count;
+                    for (int i = 0; i < count; i++)
+                    {
+                        List<GeoCoordinate> coords = geometryCoords[i];
+                        DrawMapMarker(coords.ToArray(), geometryColor[i], geometryDashed[i]);
+                    }
+
+                    //NavigationService.Navigate( new Uri( "/Pages/DirectionsResults.xaml", UriKind.Relative ) );
+                    var sgs = ExtendedVisualStateManager.GetVisualStateGroups(LayoutRoot);
+                    var sg = sgs[0] as VisualStateGroup;
+                    //ExtendedVisualStateManager.GoToElementState( LayoutRoot, "RouteFoundState", true );
+                    VisualStateManager.GoToState(this, "RouteFoundState", true);
+
+                    App.networkStatus.networkIsBusy = false;
+
+                    float f = (float)route.distance * 0.000621371192f;
+                    findLabel1.Text = f.ToString("0.00") + AppResources.MetresShort + UtilTime.secsToLongDHMS(route.timeInSeconds);
+
+                    if (!SettingManager.instance.GetBoolValue("tutorialEnabled", true)) return;
                     bool shownTutorial = SettingManager.instance.GetBoolValue("shownTutorialRouteType", false);
                     if (!shownTutorial)
                         routeTutorialRouteType.Visibility = Visibility.Visible;
-                }
-            });
+                });
 
-            saveRoute.IsEnabled = true;
+                saveRoute.IsEnabled = true;
+            }
+            catch (Exception e)
+            {
+                MarkedUp.AnalyticClient.Error("Could not parse direction results " + e.Message);
+                MessageBox.Show(
+                    "There was a problem reading the direction data. Please pass this message on to info@cyclestreets.net. " +
+                    e.Message);
+            }
+        }
+
+        private static T JsonGetPropertyHelper<T>(JObject p, string key)
+        {
+
+            if (p[key] == null)
+                throw new JsonException("Missing key " + key + " from result");
+
+            try
+            {
+                return p.Value<T>(key);
+            }
+            catch (Exception)
+            {
+                throw new JsonException(string.Format("Unexpected value for {0} {1}", key, p[key]));
+            }
+
         }
 
         private void poiTapped(object sender, System.Windows.Input.GestureEventArgs e)
@@ -1145,29 +1202,26 @@ namespace Cyclestreets.Pages
         private void routeTypePicker_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             ListPicker picker = sender as ListPicker;
-            string plan = ((ListBoxPair)picker.SelectedItem).Value;
-
-            if (saveRoute.IsEnabled && !hideRouteOptions)
+            if (picker != null)
             {
-                string itinerarypoints = "";// = "-1.2487100362777,53.00143068427369,NG16+1HH|-1.1430546045303,52.95200365149319,NG1+1LL";
-                int speed = 20;		//16 = 10mph 20 = 12mph 24 = 15mph
-                int useDom = 0;		// 0=xml 1=gml
+                string plan = ((ListBoxPair)picker.SelectedItem).Value;
 
-                foreach (Pushpin p in waypoints)
-                {
-                    itinerarypoints = itinerarypoints + p.GeoCoordinate.Longitude + "," + p.GeoCoordinate.Latitude + "|";
-                }
+                if (!saveRoute.IsEnabled || hideRouteOptions) return;
+                const int speed = 20; //16 = 10mph 20 = 12mph 24 = 15mph
+                const int useDom = 0; // 0=xml 1=gml
+
+                string itinerarypoints = waypoints.Aggregate("", (current1, p) => current1 + p.GeoCoordinate.Longitude + "," + p.GeoCoordinate.Latitude + "|");// = "-1.2487100362777,53.00143068427369,NG16+1HH|-1.1430546045303,52.95200365149319,NG1+1LL";
                 itinerarypoints = itinerarypoints.TrimEnd('|');
 
                 MyMap.MapElements.Clear();
 
                 _request = new AsyncWebRequest("http://www.cyclestreets.net/api/journey.json?key=" + App.apiKey + "&plan=" + plan + "&itinerarypoints=" + itinerarypoints + "&speed=" + speed + "&useDom=" + useDom, RouteFound);
-                _request.Start();
-                pleaseWait.IsOpen = true;
-                popupPanel.Width = Application.Current.Host.Content.ActualWidth;
-
-                App.networkStatus.networkIsBusy = true;
             }
+            _request.Start();
+            pleaseWait.IsOpen = true;
+            popupPanel.Width = Application.Current.Host.Content.ActualWidth;
+
+            App.networkStatus.networkIsBusy = true;
         }
 
         private void Image_Tap_1(object sender, System.Windows.Input.GestureEventArgs e)
@@ -1199,7 +1253,7 @@ namespace Cyclestreets.Pages
             {
                 arrowLeft.Opacity = 100;
 
-                MyMap.SetView(route.segments[currentStep].location, 20, route.segments[currentStep].Bearing, 75);
+                MyMap.SetView(route.segments[currentStep].Location, 20, route.segments[currentStep].Bearing, 75);
 
                 MyMap.TileSources.Clear();
             }
@@ -1229,7 +1283,7 @@ namespace Cyclestreets.Pages
             else
             {
                 arrowRight.Opacity = 100;
-                MyMap.SetView(route.segments[currentStep].location, 20, route.segments[currentStep].Bearing, 75);
+                MyMap.SetView(route.segments[currentStep].Location, 20, route.segments[currentStep].Bearing, 75);
 
 
                 findLabel1.Text = string.Format(AppResources.DirectionText, route.segments[currentStep].Turn, route.segments[currentStep].Name, route.segments[currentStep].DistanceMetres);
@@ -1548,7 +1602,7 @@ namespace Cyclestreets.Pages
             Point p = ev.GetPosition(map);
             GeoCoordinate coord = map.ConvertViewportPointToGeoCoordinate(p);
 
-            if (revGeoQ.IsBusy || coord == null )
+            if (revGeoQ.IsBusy || coord == null)
             {
                 return;
             }
