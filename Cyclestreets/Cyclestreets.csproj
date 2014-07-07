@@ -249,8 +249,6 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Cyclestreets_2013_05_06_08_40_51.sap" />
-    <None Include="Cyclestreets_2014_04_14_21_42_05.sap" />
-    <None Include="Cyclestreets_2014_04_14_21_47_02.sap" />
     <None Include="packages.config" />
     <None Include="Properties\AppManifest.xml">
       <SubType>Designer</SubType>
@@ -260,6 +258,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\AppBar\appbar.directions.png" />
     <Content Include="Assets\AppBar\feature.email.png" />
     <Content Include="Assets\AppBar\save.png" />
     <Content Include="Assets\AppBar\share.png" />
@@ -302,7 +301,6 @@
     </Content>
     <Content Include="Assets\traffic_signals.png" />
     <Content Include="Assets\world.png" />
-    <Content Include="README_FIRST.txt" />
     <Content Include="Toolkit.Content\ApplicationBar.Add.png" />
     <Content Include="Toolkit.Content\ApplicationBar.Cancel.png" />
     <Content Include="Toolkit.Content\ApplicationBar.Check.png" />

@@ -1091,8 +1091,8 @@ namespace Cyclestreets.Pages
                     //NavigationService.Navigate( new Uri( "/Pages/DirectionsResults.xaml", UriKind.Relative ) );
                     var sgs = ExtendedVisualStateManager.GetVisualStateGroups(LayoutRoot);
                     var sg = sgs[0] as VisualStateGroup;
-                    //ExtendedVisualStateManager.GoToElementState( LayoutRoot, "RouteFoundState", true );
-                    VisualStateManager.GoToState(this, "RouteFoundState", true);
+                    bool res = ExtendedVisualStateManager.GoToElementState( LayoutRoot, "RouteFoundState", true );
+                    //VisualStateManager.GoToState(this, "RouteFoundState", true);
 
                     App.networkStatus.networkIsBusy = false;
 

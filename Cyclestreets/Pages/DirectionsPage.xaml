@@ -11,6 +11,7 @@
     xmlns:edc="clr-namespace:Microsoft.Expression.Controls;assembly=Microsoft.Expression.Drawing" xmlns:em="clr-namespace:Microsoft.Expression.Media;assembly=Microsoft.Expression.Drawing"
     xmlns:Location="clr-namespace:System.Device.Location;assembly=System.Device"
     xmlns:es="clr-namespace:Microsoft.Expression.Shapes;assembly=Microsoft.Expression.Drawing"
+    xmlns:System="clr-namespace:System;assembly=mscorlib"
     x:Class="Cyclestreets.Pages.DirectionsPage"
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d"
@@ -149,6 +150,14 @@
 									<CircleEase EasingMode="EaseOut"/>
 								</DoubleAnimation.EasingFunction>
 							</DoubleAnimation>
+							<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Grid.RowSpan)" Storyboard.TargetName="findLabel1">
+								<DiscreteObjectKeyFrame KeyTime="0:0:0.2">
+									<DiscreteObjectKeyFrame.Value>
+										<System:Int32>2</System:Int32>
+									</DiscreteObjectKeyFrame.Value>
+								</DiscreteObjectKeyFrame>
+							</ObjectAnimationUsingKeyFrames>
+							<DoubleAnimation Duration="0:0:0.2" To="18.667" Storyboard.TargetProperty="(TextBlock.FontSize)" Storyboard.TargetName="findLabel1" d:IsOptimized="True"/>
 						</Storyboard>
 					</VisualTransition>
 					<VisualTransition GeneratedDuration="0">
@@ -262,11 +271,14 @@
 		<VisualStateManager.CustomVisualStateManager>
 			<ec:ExtendedVisualStateManager/>
 		</VisualStateManager.CustomVisualStateManager>
-		<es:Arc x:Name="myLocationIndicator" ArcThickness="5" ArcThicknessUnit="Pixel" EndAngle="360" HorizontalAlignment="Left" Height="31.985" Margin="0" Grid.Row="1" Stretch="None" Stroke="Black" StartAngle="0" UseLayoutRounding="False" VerticalAlignment="Bottom" Width="31.985" Visibility="Collapsed">
-			<es:Arc.Fill>
-				<SolidColorBrush Color="#FF000000"/>
-			</es:Arc.Fill>
-		</es:Arc>
+		<Rectangle Fill="#FF3232A2" Stroke="Black" Grid.Row="1" Visibility="Collapsed"/>
+		<maps:Map x:Name="MyMap" Margin="0" Grid.Row="1" ZoomLevel="5.684" Loaded="MyMap_Loaded" LandmarksEnabled="True" Tap="MyMap_Tap">
+			<maps:Map.Center>
+				<Location:GeoCoordinate Altitude="NaN" Course="NaN" HorizontalAccuracy="NaN" Longitude="-4.367" Latitude="55.551" Speed="NaN" VerticalAccuracy="NaN"/>
+			</maps:Map.Center>
+		</maps:Map>
+		<Image x:Name="crosshair" HorizontalAlignment="Center" VerticalAlignment="Center" Source="/Cyclestreets;component/Assets/crosshair.png" Height="150" Width="150" Grid.Row="1"/>
+		<es:Arc x:Name="myLocationIndicator" ArcThickness="5" ArcThicknessUnit="Pixel" EndAngle="360" HorizontalAlignment="Left" Height="31.985" Margin="0" Grid.Row="1" Stretch="None" Stroke="Black" StartAngle="0" UseLayoutRounding="False" VerticalAlignment="Bottom" Width="31.985" Visibility="Collapsed" Fill="#FF000000"/>
 		<Grid x:Name="routeType" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Grid.Row="1">
 			<Grid.Background>
 				<SolidColorBrush Color="{StaticResource PhoneChromeColor}"/>
@@ -282,31 +294,34 @@
 			<Image Source="/Assets/icons/dark/appbar.information.circle.png" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="None" Margin="0" Grid.Column="1" Tap="Image_Tap_1"/>
 		</Grid>
 		<Grid x:Name="routeDetails" VerticalAlignment="Bottom" Margin="0" RenderTransformOrigin="0.5,0.5" Grid.Row="1" Background="#FF008B00">
+			<Grid.RowDefinitions>
+				<RowDefinition/>
+				<RowDefinition Height="Auto"/>
+			</Grid.RowDefinitions>
 			<Grid.Projection>
 				<PlaneProjection/>
 			</Grid.Projection>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="72*"/>
-				<ColumnDefinition Width="337*"/>
+				<ColumnDefinition Width="258*"/>
+				<ColumnDefinition Width="71*"/>
 				<ColumnDefinition Width="71*"/>
 			</Grid.ColumnDefinitions>
 			<Grid.RenderTransform>
 				<CompositeTransform TranslateY="150"/>
 			</Grid.RenderTransform>
-			<TextBlock x:Name="findLabel1" Text="{Binding LocalizedResources.TypeLocation, Source={StaticResource LocalizedStrings}}" Padding="10,0,0,0" Margin="0,0,0,38" Grid.Column="1" TextAlignment="Center" FontSize="20" TextWrapping="Wrap">
+			<TextBlock x:Name="findLabel1" Text="{Binding LocalizedResources.TypeLocation, Source={StaticResource LocalizedStrings}}" Padding="10,0,0,0" Grid.Column="1" TextAlignment="Center" FontSize="20" TextWrapping="Wrap">
 				<TextBlock.Foreground>
 					<SolidColorBrush Color="{StaticResource PhoneContrastBackgroundColor}"/>
 				</TextBlock.Foreground>
 			</TextBlock>
-			<Image x:Name="arrowLeft" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Center" Source="/Assets/icons/dark/appbar.arrow.left.png" Stretch="None" Height="76" Width="76" Grid.ColumnSpan="2" Tap="arrowLeft_Tap"/>
-			<Image x:Name="arrowRight" HorizontalAlignment="Right" Margin="0" VerticalAlignment="Center" Source="/Assets/icons/dark/appbar.arrow.right.png" Grid.Column="1" Stretch="None" Grid.ColumnSpan="2" Height="76" Width="76" Tap="arrowRight_Tap"/>
+			<Image x:Name="arrowLeft" HorizontalAlignment="Left" VerticalAlignment="Center" Source="/Assets/icons/dark/appbar.arrow.left.png" Stretch="None" Height="76" Width="76" Tap="arrowLeft_Tap"/>
+			<Image x:Name="arrowRight" HorizontalAlignment="Right" VerticalAlignment="Center" Source="/Assets/icons/dark/appbar.arrow.right.png" Grid.Column="2" Stretch="None" Height="76" Width="76" Tap="arrowRight_Tap"/>
+			<Image x:Name="liveRide" Grid.Column="3" Height="70" Width="70" Source="/Assets/icons/dark/appbar.directions.png"/>
+			<TextBlock TextWrapping="Wrap" Text="Step Back" Grid.Row="1" FontSize="14.667" HorizontalAlignment="Center"/>
+			<TextBlock TextWrapping="Wrap" Text="Step Next" Grid.Row="1" FontSize="14.667" Grid.Column="2" HorizontalAlignment="Center"/>
+			<TextBlock TextWrapping="Wrap" Text="Live Ride" Grid.Row="1" FontSize="14.667" Grid.Column="3" HorizontalAlignment="Center"/>
 		</Grid>
-		<maps:Map x:Name="MyMap" Margin="0" Grid.Row="1" ZoomLevel="5.684" Loaded="MyMap_Loaded" LandmarksEnabled="True" Tap="MyMap_Tap">
-			<maps:Map.Center>
-				<Location:GeoCoordinate Altitude="NaN" Course="NaN" HorizontalAccuracy="NaN" Longitude="-4.367" Latitude="55.551" Speed="NaN" VerticalAccuracy="NaN"/>
-			</maps:Map.Center>
-		</maps:Map>
-		<Image x:Name="crosshair" HorizontalAlignment="Center" VerticalAlignment="Center" Source="/Cyclestreets;component/Assets/crosshair.png" Height="150" Width="150" Grid.Row="1"/>
 		<Grid x:Name="locationEntry" VerticalAlignment="Top" Margin="0" RenderTransformOrigin="0.5,0.5" Grid.Row="1">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="59*"/>
@@ -335,13 +350,10 @@
 		</Grid>
 
 		<Popup x:Name="pleaseWait" IsOpen="False" VerticalAlignment="Top" VerticalOffset="200">
-			<StackPanel x:Name="popupPanel">
-				<StackPanel.Background>
-					<SolidColorBrush Color="#FF008B00"/>
-				</StackPanel.Background>
-				<TextBlock Text="{Binding Path=LocalizedResources.PleaseWait, Source={StaticResource LocalizedStrings}}" TextAlignment="Center" FontSize="40" Margin="10,0" />
+			<StackPanel x:Name="popupPanel" Background="#FF008B00">
+				<TextBlock Text="{Binding LocalizedResources.PleaseWait, Source={StaticResource LocalizedStrings}}" TextAlignment="Center" FontSize="40" Margin="10,0" />
 				<TextBlock FontSize="21" Margin="10,0" TextWrapping="Wrap" TextAlignment="Center" >
-					<Run Text="{Binding Path=LocalizedResources.PleaseWaitMsg, Source={StaticResource LocalizedStrings}}"/>
+					<Run Text="{Binding LocalizedResources.PleaseWaitMsg, Source={StaticResource LocalizedStrings}}"/>
 				</TextBlock>
 				<ProgressBar Height="10" Foreground="White" HorizontalContentAlignment="Stretch" IsIndeterminate="True"/>
 				<Button x:Name="btn_cancel"    Content="cancel"   Width="215" Click="btn_cancel_Click"/>
@@ -352,23 +364,20 @@
 				</Border>
 			</StackPanel>
 		</Popup>
-		<Grid x:Name="fakeAppBar" VerticalAlignment="Bottom" Margin="0" RenderTransformOrigin="0.5,0.5" Grid.Row="1" Height="60">
+		<Grid x:Name="fakeAppBar" VerticalAlignment="Bottom" Margin="0" RenderTransformOrigin="0.5,0.5" Grid.Row="1" Height="60" Background="#FF008B00">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition/>
 				<ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-			<Grid.Background>
-				<SolidColorBrush Color="#FF008B00"/>
-			</Grid.Background>
+			</Grid.ColumnDefinitions>
 			<Grid.RenderTransform>
 				<CompositeTransform/>
 			</Grid.RenderTransform>
-            <Border x:Name="myLocationBorder" BorderBrush="#FF017001" BorderThickness="0,1,1,1" Margin="0" Background="#FF008B00" Tap="myLocationBorder_Tap">
-			<StackPanel x:Name="myLocation" VerticalAlignment="Center" Height="60" HorizontalAlignment="Center" Orientation="Horizontal">
-				<Image HorizontalAlignment="Left" Margin="0" VerticalAlignment="Center" Source="/Assets/icons/dark/appbar.location.circle.png"/>
-				<TextBlock HorizontalAlignment="Left" Text="my location" TextWrapping="Wrap" VerticalAlignment="Center" FontWeight="Light"/>
-			</StackPanel>
-				</Border>
+			<Border x:Name="myLocationBorder" BorderBrush="#FF017001" BorderThickness="0,1,1,1" Margin="0" Background="#FF008B00" Tap="myLocationBorder_Tap">
+				<StackPanel x:Name="myLocation" VerticalAlignment="Center" Height="60" HorizontalAlignment="Center" Orientation="Horizontal">
+					<Image HorizontalAlignment="Left" Margin="0" VerticalAlignment="Center" Source="/Assets/icons/dark/appbar.location.circle.png"/>
+					<TextBlock HorizontalAlignment="Left" Text="my location" TextWrapping="Wrap" VerticalAlignment="Center" FontWeight="Light"/>
+				</StackPanel>
+			</Border>
 			<Border x:Name="planRouteBorder" BorderBrush="#FF017001" BorderThickness="0,1,1,1" Margin="0" Background="#FF004200" Grid.Column="1" Tap="planRouteBorder_Tap">
 				<StackPanel x:Name="planRoute" VerticalAlignment="Center" Height="60" HorizontalAlignment="Center" Orientation="Horizontal" Margin="0" Grid.Column="1">
 					<TextBlock x:Name="planRouteText" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" FontWeight="Light" Text="plan route" Foreground="#33FFFFFF"/>

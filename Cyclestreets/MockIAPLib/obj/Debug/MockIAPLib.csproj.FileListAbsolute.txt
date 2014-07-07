@@ -10,3 +10,7 @@ D:\Data\cyclestreets\Cyclestreets\MockIAPLib\Bin\Debug\MockIAPLib.dll
 D:\Data\cyclestreets\Cyclestreets\MockIAPLib\Bin\Debug\MockIAPLib.pdb
 D:\Data\cyclestreets\Cyclestreets\MockIAPLib\obj\Debug\MockIAPLib.dll
 D:\Data\cyclestreets\Cyclestreets\MockIAPLib\obj\Debug\MockIAPLib.pdb
+D:\Data\Documents\CycleStreets\MockIAPLib\Bin\Debug\MockIAPLib.dll
+D:\Data\Documents\CycleStreets\MockIAPLib\Bin\Debug\MockIAPLib.pdb
+D:\Data\Documents\CycleStreets\MockIAPLib\obj\Debug\MockIAPLib.dll
+D:\Data\Documents\CycleStreets\MockIAPLib\obj\Debug\MockIAPLib.pdb
