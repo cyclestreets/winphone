@@ -228,7 +228,7 @@ namespace Cyclestreets.Pages
         GeocodeQuery geoQ = null;
         //List<GeoCoordinate> waypoints = new List<GeoCoordinate>();
         MapLayer wayPointLayer = null;
-        Stackish<Pushpin> waypoints = new Stackish<Pushpin>();
+        
         Dictionary<Pushpin, POI> pinItems = new Dictionary<Pushpin, POI>();
         private MapLayer poiLayer;
 

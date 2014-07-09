@@ -101,6 +101,7 @@
     <Compile Include="Common\BindableBase.cs" />
     <Compile Include="Helpers\FeedbackHelper.cs" />
     <Compile Include="Helpers\StorageHelper.cs" />
+    <Compile Include="Managers\RouteManager.cs" />
     <Compile Include="MyPositionDataSource.cs" />
     <Compile Include="Pages\TileSources.cs" />
     <Compile Include="Pages\Feedback.xaml.cs">
@@ -174,8 +175,9 @@
     <Compile Include="Utils\Util.cs" />
     <Compile Include="Utils\UtilTime.cs" />
     <Compile Include="Utils\WMSTile.cs" />
-    <Compile Include="ViewModels\ItemViewModel.cs" />
-    <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModel\DirectionsPageViewModel.cs" />
+    <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\ViewModelLocator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -356,12 +358,21 @@
     <Reference Include="CrittercismWP8SDK">
       <HintPath>packages\Crittercism.2.0.0\lib\WindowsPhone8\CrittercismWP8SDK.dll</HintPath>
     </Reference>
+    <Reference Include="FeedbackHelper">
+      <HintPath>packages\Helpers.FeedbackHelperWP.1.0.2\lib\wp8\FeedbackHelper.dll</HintPath>
+    </Reference>
     <Reference Include="FlurryWP8SDK">
       <HintPath>Resources\FlurryWP8SDK.dll</HintPath>
     </Reference>
-    <Reference Include="MarkedUp, Version=1.0.7.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="GalaSoft.MvvmLight.Extras.WP8">
+      <HintPath>packages\MvvmLightLibs.4.3.31.1\lib\wp8\GalaSoft.MvvmLight.Extras.WP8.dll</HintPath>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.WP8">
+      <HintPath>packages\MvvmLightLibs.4.3.31.1\lib\wp8\GalaSoft.MvvmLight.WP8.dll</HintPath>
+    </Reference>
+    <Reference Include="MarkedUp, Version=1.3.5.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>packages\MarkedUp.1.0.7\lib\WindowsPhone8\MarkedUp.dll</HintPath>
+      <HintPath>packages\MarkedUp.1.3.5\lib\WindowsPhone8\MarkedUp.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Expression.Drawing" />
     <Reference Include="Microsoft.Expression.Interactions" />
@@ -370,18 +381,23 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>packages\WPtoolkit.4.2013.08.16\lib\wp8\Microsoft.Phone.Controls.Toolkit.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>packages\Newtonsoft.Json.5.0.8\lib\portable-net45+wp80+win8\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Microsoft.Practices.ServiceLocation">
+      <HintPath>packages\MvvmLightLibs.4.3.31.1\lib\wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
-    <Reference Include="RestSharp.WindowsPhone, Version=104.3.3.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>packages\RestSharp.104.3.3\lib\sl4-wp71\RestSharp.WindowsPhone.dll</HintPath>
+      <HintPath>packages\Newtonsoft.Json.6.0.3\lib\portable-net45+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp.WindowsPhone, Version=104.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>packages\RestSharp.104.4.0\lib\sl4-wp71\RestSharp.WindowsPhone.dll</HintPath>
     </Reference>
     <Reference Include="Sparrow.Chart.WP8.45">
       <HintPath>packages\Sparrow.Chart.WP8.13.1.0.113\lib\windowsphone8\Sparrow.Chart.WP8.45.dll</HintPath>
     </Reference>
-    <Reference Include="System.Windows.Interactivity" />
+    <Reference Include="System.Windows.Interactivity, Version=3.9.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\MvvmLightLibs.4.3.31.1\lib\wp8\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="MockIAPLib\MockIAPLib.csproj">
