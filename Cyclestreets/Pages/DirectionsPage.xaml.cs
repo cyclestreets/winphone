@@ -1,9 +1,11 @@
 ﻿/// Satnav mode
 /// Prompt feedback
 
+using Cyclestreets.Managers;
 using Cyclestreets.Resources;
 using Cyclestreets.Utils;
 using CycleStreets.Util;
+using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Expression.Interactivity.Core;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Maps.Controls;
@@ -18,7 +20,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Device.Location;
-using System.Linq;
 using System.Net;
 using System.Text;
 using System.Windows;
@@ -228,7 +229,7 @@ namespace Cyclestreets.Pages
         GeocodeQuery geoQ = null;
         //List<GeoCoordinate> waypoints = new List<GeoCoordinate>();
         MapLayer wayPointLayer = null;
-        
+
         Dictionary<Pushpin, POI> pinItems = new Dictionary<Pushpin, POI>();
         private MapLayer poiLayer;
 
@@ -362,6 +363,8 @@ namespace Cyclestreets.Pages
         {
             base.OnNavigatedTo(e);
 
+            SetPlanRouteAvailability(true);
+
             LocationManager.instance.trackingGeolocator.PositionChanged += positionChangedHandler;
 
             //LocationManager.instance.StopTracking();
@@ -413,7 +416,7 @@ namespace Cyclestreets.Pages
                 }
             }
 
-            if (NavigationContext.QueryString.ContainsKey("longitude"))
+            /*if (NavigationContext.QueryString.ContainsKey("longitude"))
             {
                 GeoCoordinate center = new GeoCoordinate();
                 center.Longitude = float.Parse(NavigationContext.QueryString["longitude"]);
@@ -441,7 +444,7 @@ namespace Cyclestreets.Pages
                 waypoints.Add(end);
 
                 App.networkStatus.networkIsBusy = true;
-            }
+            }*/
 
             if (hideRouteOptions)
                 routeTypePicker.Visibility = Visibility.Collapsed;
@@ -705,7 +708,10 @@ namespace Cyclestreets.Pages
 
         private void confirmWaypoint_Click(object sender, EventArgs e)
         {
-            if (wayPointLayer == null)
+            RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
+            rm.AddWaypoint(current);
+
+            /*if (wayPointLayer == null)
             {
                 wayPointLayer = new MapLayer();
 
@@ -748,35 +754,35 @@ namespace Cyclestreets.Pages
             // Clear box
             startPoint.Text = "";
 
-            clearCurrentPosition();
+            clearCurrentPosition();*/
         }
 
         private void pinTapped(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            removeWaypoint(sender as Pushpin);
+            /* removeWaypoint(sender as Pushpin);
 
-            wayPointLayer.Clear();
+             wayPointLayer.Clear();
 
-            for (int i = 0; i < waypoints.Count; i++)
-            {
-                MapOverlay overlay = new MapOverlay();
-                overlay.Content = waypoints[i];
-                overlay.GeoCoordinate = waypoints[i].GeoCoordinate;
-                overlay.PositionOrigin = new Point(0.3, 1.0);
-                wayPointLayer.Add(overlay);
+             for (int i = 0; i < waypoints.Count; i++)
+             {
+                 MapOverlay overlay = new MapOverlay();
+                 overlay.Content = waypoints[i];
+                 overlay.GeoCoordinate = waypoints[i].GeoCoordinate;
+                 overlay.PositionOrigin = new Point(0.3, 1.0);
+                 wayPointLayer.Add(overlay);
 
-                // Set pin styles
-                Pushpin pp = waypoints[i];
-                if (i == 0)
-                    pp.Style = Resources["Start"] as Style;
-                else if (i == waypoints.Count - 1)
-                    pp.Style = Resources["Finish"] as Style;
-                else
-                {
-                    pp.Style = Resources["Intermediate"] as Style;
-                    pp.Content = "" + i;
-                }
-            }
+                 // Set pin styles
+                 Pushpin pp = waypoints[i];
+                 if (i == 0)
+                     pp.Style = Resources["Start"] as Style;
+                 else if (i == waypoints.Count - 1)
+                     pp.Style = Resources["Finish"] as Style;
+                 else
+                 {
+                     pp.Style = Resources["Intermediate"] as Style;
+                     pp.Content = "" + i;
+                 }
+             }*/
         }
 
         private void SetPlanRouteAvailability(bool available)
@@ -798,14 +804,14 @@ namespace Cyclestreets.Pages
 
         private void addWaypoint(Pushpin pp)
         {
-            waypoints.Push(pp);
-            SetPlanRouteAvailability(waypoints.Count >= 2);
+            //waypoints.Push(pp);
+            //SetPlanRouteAvailability(waypoints.Count >= 2);
         }
 
         private void removeWaypoint(Pushpin pp)
         {
-            waypoints.Remove(pp);
-            SetPlanRouteAvailability(waypoints.Count >= 2);
+            //waypoints.Remove(pp);
+            //SetPlanRouteAvailability(waypoints.Count >= 2);
         }
 
         private void clearCurrentPosition()
@@ -1091,7 +1097,7 @@ namespace Cyclestreets.Pages
                     //NavigationService.Navigate( new Uri( "/Pages/DirectionsResults.xaml", UriKind.Relative ) );
                     var sgs = ExtendedVisualStateManager.GetVisualStateGroups(LayoutRoot);
                     var sg = sgs[0] as VisualStateGroup;
-                    bool res = ExtendedVisualStateManager.GoToElementState( LayoutRoot, "RouteFoundState", true );
+                    bool res = ExtendedVisualStateManager.GoToElementState(LayoutRoot, "RouteFoundState", true);
                     //VisualStateManager.GoToState(this, "RouteFoundState", true);
 
                     App.networkStatus.networkIsBusy = false;
@@ -1201,7 +1207,7 @@ namespace Cyclestreets.Pages
 
         private void routeTypePicker_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            ListPicker picker = sender as ListPicker;
+            /*ListPicker picker = sender as ListPicker;
             if (picker != null)
             {
                 string plan = ((ListBoxPair)picker.SelectedItem).Value;
@@ -1221,7 +1227,7 @@ namespace Cyclestreets.Pages
             pleaseWait.IsOpen = true;
             popupPanel.Width = Application.Current.Host.Content.ActualWidth;
 
-            App.networkStatus.networkIsBusy = true;
+            App.networkStatus.networkIsBusy = true;*/
         }
 
         private void Image_Tap_1(object sender, System.Windows.Input.GestureEventArgs e)
@@ -1543,7 +1549,7 @@ namespace Cyclestreets.Pages
         {
             base.OnBackKeyPress(e);
 
-            if (pleaseWait.IsOpen)
+            /*if (pleaseWait.IsOpen)
             {
                 pleaseWait.IsOpen = false;
                 e.Cancel = true;
@@ -1593,7 +1599,7 @@ namespace Cyclestreets.Pages
 
 
                 e.Cancel = true;
-            }
+            }*/
         }
 
         private async void MyMap_Tap(object sender, System.Windows.Input.GestureEventArgs ev)
@@ -1631,38 +1637,20 @@ namespace Cyclestreets.Pages
             });
         }
 
-        private void planRouteBorder_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        private async void planRouteBorder_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            if (planRouteAvailable)
+            RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
+            bool result = await rm.FindRoute();
+            if (!result)
             {
-                this.Focus();
+                MarkedUp.AnalyticClient.Error("Route Planning Error");
 
-                string plan = SettingManager.instance.GetStringValue("defaultRouteType", "balanced");
-                plan = plan.Replace(" route", "");
+                MessageBox.Show(
+                    "Could not parse route data information from server. Please let us know about this error with the route you were trying to plan");
+            }
+            else
+            {
 
-                string speedSetting = SettingManager.instance.GetStringValue("cycleSpeed", "12mph");
-
-                string itinerarypoints = "";
-                // = "-1.2487100362777,53.00143068427369,NG16+1HH|-1.1430546045303,52.95200365149319,NG1+1LL";
-                int speed = Util.getSpeedFromString(speedSetting);
-                int useDom = 0; // 0=xml 1=gml
-
-                foreach (Pushpin p in waypoints)
-                {
-                    itinerarypoints = itinerarypoints + p.GeoCoordinate.Longitude + "," + p.GeoCoordinate.Latitude + "|";
-                }
-                itinerarypoints = itinerarypoints.TrimEnd('|');
-
-                _request =
-                    new AsyncWebRequest(
-                        "http://www.cyclestreets.net/api/journey.json?key=" + App.apiKey + "&plan=" + plan +
-                        "&itinerarypoints=" + itinerarypoints + "&speed=" + speed + "&useDom=" + useDom, RouteFound);
-                _request.Start();
-
-                pleaseWait.IsOpen = true;
-                popupPanel.Width = Application.Current.Host.Content.ActualWidth;
-
-                App.networkStatus.networkIsBusy = true;
             }
         }
 

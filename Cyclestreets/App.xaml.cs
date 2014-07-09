@@ -4,8 +4,10 @@ using System.Windows;
 using System.Windows.Markup;
 using System.Windows.Navigation;
 using Cyclestreets.Common;
+using Cyclestreets.Managers;
 using Cyclestreets.Resources;
-using Cyclestreets.ViewModels;
+using Cyclestreets.ViewModel;
+using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Marketplace;
 using Microsoft.Phone.Shell;
@@ -50,8 +52,6 @@ namespace Cyclestreets
         // Use "" to let user Phone Language selection determine locale.
         public static String appForceCulture = "";//"qps-PLOC";
 
-		private static MainViewModel viewModel = null;
-
 		public static string hereAppID = "zgcciiZ696xHUiuoyJZi";
 		public static string hereAppToken = "tH8mLbASkG9oz6j8DuXn7A";
 
@@ -68,23 +68,7 @@ namespace Cyclestreets
 				return _isTrial;
 			}
 		}
-
-		/// <summary>
-		/// A static ViewModel used by the views to bind against.
-		/// </summary>
-		/// <returns>The MainViewModel object.</returns>
-		public static MainViewModel ViewModel
-		{
-			get
-			{
-				// Delay creation of the view model until necessary
-				if( viewModel == null )
-					viewModel = new MainViewModel();
-
-				return viewModel;
-			}
-		}
-
+        
 		/// <summary>
 		/// Provides easy access to the root frame of the Phone Application.
 		/// </summary>
@@ -111,6 +95,8 @@ namespace Cyclestreets
 
 			// Language display initialization
 			InitializeLanguage();
+
+            SimpleIoc.Default.Register<RouteManager>();
 
 			// Show graphics profiling information while debugging.
 			/*if( Debugger.IsAttached )
@@ -189,11 +175,6 @@ namespace Cyclestreets
 			MarkedUp.AnalyticClient.Initialize( "87c139ca-14a7-41ff-8b3b-095894a52bdf" );
 			//MarkedUp.AnalyticClient.RegisterRootNavigationFrame( RootFrame );
 
-			// Ensure that application state is restored appropriately
-			if( !App.ViewModel.IsDataLoaded )
-			{
-				App.ViewModel.LoadData();
-			}
 			CheckLicense();
 		}
 

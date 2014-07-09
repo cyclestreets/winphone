@@ -11,7 +11,7 @@ using GalaSoft.MvvmLight;
 using Microsoft.Phone.Maps.Toolkit;
 namespace Cyclestreets.ViewModel
 {
-	class DirectionsPageViewModel : ViewModelBase
+	public class DirectionsPageViewModel : ViewModelBase
 	{
 		
 		public DirectionsPageViewModel()
