@@ -170,6 +170,7 @@
       <DependentUpon>TrialExpired.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\Geodesy.cs" />
+    <Compile Include="Utils\GeoUtils.cs" />
     <Compile Include="Utils\POIItem.cs" />
     <Compile Include="Utils\Stackish.cs" />
     <Compile Include="Utils\Util.cs" />
