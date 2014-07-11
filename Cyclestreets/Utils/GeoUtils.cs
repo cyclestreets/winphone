@@ -14,10 +14,10 @@ namespace Cyclestreets.Utils
     public static class GeoUtils
     {
         // Find geo coord 
-        static readonly ReverseGeocodeQuery _revGeoQ = null;
+        static readonly ReverseGeocodeQuery _revGeoQ = new ReverseGeocodeQuery();
         
         // extension method for async await ReverseGeoCode
-        public static Task<IList<MapLocation>> QuerryTaskAsync(this ReverseGeocodeQuery reverseGeocode)
+        public static Task<IList<MapLocation>> QueryTaskAsync(this ReverseGeocodeQuery reverseGeocode)
         {
             TaskCompletionSource<IList<MapLocation> > tcs=new TaskCompletionSource<IList<MapLocation>>();
             EventHandler<QueryCompletedEventArgs<IList<MapLocation>>> queryCompleted = null;
@@ -67,7 +67,7 @@ namespace Cyclestreets.Utils
 
 
             var client = new RestClient("http://www.cyclestreets.net/api/places/v1/");
-#endif
+
             var request = new RestRequest("suggest", Method.GET);
             request.AddParameter("at", myLocation);
             request.AddParameter("q", searchTermSafe);
@@ -124,7 +124,7 @@ namespace Cyclestreets.Utils
         }
 
 
-        public static Task<MapLocation> StartReverseGeocode(GeoCoordinate center)
+        public async static Task<MapLocation> StartReverseGeocode(GeoCoordinate center)
         {
             if (!_revGeoQ.IsBusy)
             {
@@ -132,6 +132,7 @@ namespace Cyclestreets.Utils
                 IList<MapLocation> results = await _revGeoQ.QueryTaskAsync();
                 return results.FirstOrDefault();
             }
+			return null;
         }
 
         

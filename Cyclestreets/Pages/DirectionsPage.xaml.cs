@@ -291,9 +291,6 @@ namespace Cyclestreets.Pages
             int idx = Array.FindIndex(RouteType, v => v.Value.Equals(plan));
             routeTypePicker.SelectedIndex = idx == -1 ? 0 : idx;
 
-            _revGeoQ = new ReverseGeocodeQuery();
-            _revGeoQ.QueryCompleted += revGeoQ_QueryCompleted;
-
             _geoQ = new GeocodeQuery();
             _geoQ.QueryCompleted += geoQ_QueryCompleted;
 
@@ -554,12 +551,6 @@ namespace Cyclestreets.Pages
             {
                 GeoCoordinate g = e.Result[0].GeoCoordinate;
                 setCurrentPosition(g);
-
-                SmartDispatcher.BeginInvoke(() =>
-                {
-                    MyMap.SetView(g, 16);
-                    //MyMap.Center = CoordinateConverter.ConvertGeocoordinate(MyGeoPosition.Coordinate);
-                });
                 App.networkStatus.networkIsBusy = false;
                 this.Focus();
             }
@@ -607,11 +598,6 @@ namespace Cyclestreets.Pages
                     GeoCoordinate g = new GeoCoordinate((double)pos[0], (double)pos[1]);
                     setCurrentPosition(g);
 
-                    SmartDispatcher.BeginInvoke(() =>
-                    {
-                        MyMap.SetView(g, 16);
-                        //MyMap.Center = CoordinateConverter.ConvertGeocoordinate(MyGeoPosition.Coordinate);
-                    });
                     App.networkStatus.networkIsBusy = false;
                 }
             }
@@ -619,32 +605,25 @@ namespace Cyclestreets.Pages
             this.Focus();
         }
 
-        private void cursorPos_Click(object sender, EventArgs e)
+        private async void cursorPos_Click(object sender, EventArgs e)
         {
-            if (!_revGeoQ.IsBusy)
-            {
-                _revGeoQ.GeoCoordinate = MyMap.Center;
-                _revGeoQ.QueryAsync();
+			MapLocation loc = await GeoUtils.StartReverseGeocode( MyMap.Center );
+            setCurrentPosition(loc);
 
-                setCurrentPosition(_revGeoQ.GeoCoordinate);
+            
 
-                SmartDispatcher.BeginInvoke(() =>
-                {
-                    MyMap.SetView(_revGeoQ.GeoCoordinate, 16);
-                    //MyMap.Center = CoordinateConverter.ConvertGeocoordinate(MyGeoPosition.Coordinate);
-                });
-
-                if (currentRouteData == null)
-                    confirmWaypoint_Click(sender, e);
-            }
+            confirmWaypoint_Click(sender, e);
         }
 
         private void confirmWaypoint_Click(object sender, EventArgs e)
         {
+			if( currentRouteData != null )
+				return;
+
             RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
             rm.AddWaypoint(_current);
 
-            /*if (wayPointLayer == null)
+			if (wayPointLayer == null)
             {
                 wayPointLayer = new MapLayer();
 
@@ -652,15 +631,15 @@ namespace Cyclestreets.Pages
             }
 
             // Change last push pin from finish to intermediate
-            if (waypoints.Count > 1)
+            if (_waypoints.Count > 1)
             {
-                Pushpin last = waypoints.Peek();
+                Pushpin last = _waypoints.Peek();
                 last.Style = Resources["Intermediate"] as Style;
-                last.Content = "" + (waypoints.Count - 1);
+                last.Content = "" + (_waypoints.Count - 1);
             }
 
             Pushpin pp = new Pushpin();
-            if (waypoints.Count == 0)
+            if (_waypoints.Count == 0)
                 pp.Style = Resources["Start"] as Style;
             else
                 pp.Style = Resources["Finish"] as Style;
@@ -671,8 +650,8 @@ namespace Cyclestreets.Pages
 
             MapOverlay overlay = new MapOverlay();
             overlay.Content = pp;
-            pp.GeoCoordinate = current;
-            overlay.GeoCoordinate = current;
+            pp.GeoCoordinate = _current;
+            overlay.GeoCoordinate = _current;
             overlay.PositionOrigin = new Point(0.3, 1.0);
             wayPointLayer.Add(overlay);
 
@@ -687,7 +666,7 @@ namespace Cyclestreets.Pages
             // Clear box
             startPoint.Text = "";
 
-            clearCurrentPosition();*/
+            clearCurrentPosition();
         }
 
         private void pinTapped(object sender, System.Windows.Input.GestureEventArgs e)
@@ -737,8 +716,8 @@ namespace Cyclestreets.Pages
 
         private void addWaypoint(Pushpin pp)
         {
-            //waypoints.Push(pp);
-            //SetPlanRouteAvailability(waypoints.Count >= 2);
+            _waypoints.Push(pp);
+            SetPlanRouteAvailability(_waypoints.Count >= 2);
         }
 
         private void removeWaypoint(Pushpin pp)
@@ -753,14 +732,29 @@ namespace Cyclestreets.Pages
             //confirmWaypoint.IsEnabled = false;
         }
 
-        private void setCurrentPosition(GeoCoordinate c)
+        private void setCurrentPosition(MapLocation loc)
         {
-            _current = c;
-            //if( c != null && currentRouteData == null )
-            //	confirmWaypoint.IsEnabled = true;
+			setCurrentPosition( loc.GeoCoordinate );
+
+			SmartDispatcher.BeginInvoke( () =>
+			{
+				// Set the name in the box without looking it up
+				startPoint.Populating -= StartPointOnPopulating;
+				startPoint.Text = loc.Information.Name + " " + loc.Information.Address.Street + ", " + loc.Information.Address.City + ", " + loc.Information.Address.PostalCode;
+				startPoint.Populating += StartPointOnPopulating;
+			} );
         }
 
-        private void RouteFound(byte[] data)
+		private void setCurrentPosition(GeoCoordinate c)
+		{
+			_current = c;
+			SmartDispatcher.BeginInvoke( () =>
+			{
+				MyMap.SetView( _current, 16 );
+			} );
+		}
+
+        /*private void RouteFound(byte[] data)
         {
             if (data == null)
             {
@@ -1053,7 +1047,7 @@ namespace Cyclestreets.Pages
                     "There was a problem reading the direction data. Please pass this message on to info@cyclestreets.net. " +
                     e.Message);
             }
-        }
+        }*/
 
         private static T JsonGetPropertyHelper<T>(JObject p, string key)
         {
@@ -1165,14 +1159,14 @@ namespace Cyclestreets.Pages
 
         private void Image_Tap_1(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            PhoneApplicationService.Current.State["route"] = currentRouteData;
-            PhoneApplicationService.Current.State["routeIndex"] = route.routeIndex;
-            NavigationService.Navigate(new Uri("/Pages/DirectionsResults.xaml", UriKind.Relative));
+            //PhoneApplicationService.Current.State["route"] = currentRouteData;
+           // PhoneApplicationService.Current.State["routeIndex"] = route.routeIndex;
+           // NavigationService.Navigate(new Uri("/Pages/DirectionsResults.xaml", UriKind.Relative));
         }
 
         private void arrowLeft_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            _currentStep--;
+            /*_currentStep--;
             if (_currentStep < 0)
             {
                 arrowLeft.Opacity = 50;
@@ -1199,14 +1193,14 @@ namespace Cyclestreets.Pages
             if (_currentStep >= route.segments.Count)
                 arrowRight.Opacity = 50;
             else
-                arrowRight.Opacity = 100;
+                arrowRight.Opacity = 100;*/
 
 
         }
 
         private void arrowRight_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            _currentStep++;
+           /* _currentStep++;
             if (_currentStep < 0)
                 arrowLeft.Opacity = 50;
             else
@@ -1228,7 +1222,7 @@ namespace Cyclestreets.Pages
                 findLabel1.Text = string.Format(AppResources.DirectionText, route.segments[_currentStep].Turn, route.segments[_currentStep].Name, route.segments[_currentStep].DistanceMetres);
 
                 MyMap.TileSources.Clear();
-            }
+            }*/
         }
 
         private void routeTutorial1_Tap(object sender, System.Windows.Input.GestureEventArgs e)
@@ -1300,7 +1294,8 @@ namespace Cyclestreets.Pages
             {
                 string routeData = (string)PhoneApplicationService.Current.State["loadedRoute"];
                 _hideRouteOptions = true;
-                RouteFound(routeData);
+				RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
+                rm.ParseRouteData(routeData);
                 PhoneApplicationService.Current.State["loadedRoute"] = null;
             }
 
@@ -1352,7 +1347,7 @@ namespace Cyclestreets.Pages
                         box.Text = newPostcodeStart + " " + newPostcodeEnd;
                     }
                 }
-                StartPlaceSearch(box.Text, box);
+                //StartPointOnPopulating(box.Text, box);
 
                 if (!_geoQ.IsBusy && !string.IsNullOrWhiteSpace(box.Text) && box.Text != AppResources.NoSuggestions)
                 {
@@ -1392,6 +1387,7 @@ namespace Cyclestreets.Pages
         private MapOverlay myLocationOverlay2 = null;
         private Ellipse accuracyEllipse = null;
         private bool planRouteAvailable;
+		private MapLayer wayPointLayer;
         private void positionChangedHandler(Geolocator sender, PositionChangedEventArgs args)
         {
             SmartDispatcher.BeginInvoke(() =>
@@ -1541,33 +1537,18 @@ namespace Cyclestreets.Pages
             Point p = ev.GetPosition(map);
             GeoCoordinate coord = map.ConvertViewportPointToGeoCoordinate(p);
 
-            if (_revGeoQ.IsBusy || coord == null)
+            if (coord == null)
             {
                 return;
             }
 
             App.networkStatus.networkIsBusy = true;
-            _revGeoQ.GeoCoordinate = coord;
-            _revGeoQ.QueryCompleted += tapMapReverseGeocode_QueryCompleted;
-            _revGeoQ.QueryAsync();
-        }
 
-        private void tapMapReverseGeocode_QueryCompleted(object sender, QueryCompletedEventArgs<IList<MapLocation>> e)
-        {
-            _revGeoQ.QueryCompleted -= tapMapReverseGeocode_QueryCompleted;
+			MapLocation loc = await GeoUtils.StartReverseGeocode( coord );
 
-            SmartDispatcher.BeginInvoke(() =>
-            {
-                App.networkStatus.networkIsBusy = false;
-                if (e.Result != null && e.Result.Count > 0)
-                {
-                    MapLocation loc = e.Result[0];
-
-                    // Add a waypoint automatically
-                    _current = loc.GeoCoordinate;
-                    confirmWaypoint_Click(null, null);
-                }
-            });
+			// Add a waypoint automatically
+			_current = loc.GeoCoordinate;
+			confirmWaypoint_Click( null, null );
         }
 
         private async void planRouteBorder_Tap(object sender, System.Windows.Input.GestureEventArgs e)
@@ -1583,30 +1564,32 @@ namespace Cyclestreets.Pages
             }
             else
             {
-
+				PlotCachedRoute();
             }
         }
 
-        private void myLocationBorder_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+		private void PlotCachedRoute()
+		{
+			RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
+			_geometryCoords.Clear();
+			MyMap.MapElements.Clear();
+			_max = new GeoCoordinate( 90, -180 );
+			_min = new GeoCoordinate( -90, 180 );
+			_currentStep = -1;
+
+			List<RouteSection> sections = rm.GetRouteSections();
+		}
+
+        private async void myLocationBorder_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             if (LocationManager.instance.MyGeoPosition != null)
             {
-                if (!_revGeoQ.IsBusy)
-                {
-                    _revGeoQ.GeoCoordinate = CoordinateConverter.ConvertGeocoordinate(LocationManager.instance.MyGeoPosition.Coordinate);
-                    _revGeoQ.QueryAsync();
+				GeoCoordinate geo = CoordinateConverter.ConvertGeocoordinate(LocationManager.instance.MyGeoPosition.Coordinate);
+                MapLocation loc = await GeoUtils.StartReverseGeocode(geo);
+                
+				setCurrentPosition(loc);
 
-                    setCurrentPosition(_revGeoQ.GeoCoordinate);
-
-                    SmartDispatcher.BeginInvoke(() =>
-                    {
-                        MyMap.SetView(_revGeoQ.GeoCoordinate, 16);
-                        //MyMap.Center = CoordinateConverter.ConvertGeocoordinate(MyGeoPosition.Coordinate);
-                    });
-
-                    if (currentRouteData == null)
-                        confirmWaypoint_Click(sender, e);
-                }
+                confirmWaypoint_Click(sender, e);
             }
             else
             {

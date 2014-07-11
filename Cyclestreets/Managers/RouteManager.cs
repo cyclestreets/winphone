@@ -1,11 +1,4 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
-
-using Cyclestreets.Common;
-using Cyclestreets.Objects;
+﻿using Cyclestreets.Common;
 using Cyclestreets.Resources;
 using Cyclestreets.Utils;
 using CycleStreets.Util;
@@ -15,12 +8,14 @@ using System;
 using System.Device.Location;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Collections.Generic;
+using Cyclestreets.Pages;
 namespace Cyclestreets.Managers
 {
     public class RouteManager : BindableBase
     {
         private readonly Stackish<GeoCoordinate> _waypoints = new Stackish<GeoCoordinate>();
-
+		private List<RouteSection> cachedRouteData = null;
         private bool _isBusy = false;
         public bool IsBusy
         {
@@ -50,6 +45,9 @@ namespace Cyclestreets.Managers
         {
             TaskCompletionSource<bool> tcs1 = new TaskCompletionSource<bool>();
             Task<bool> t1 = tcs1.Task;
+
+			// Clear the cache
+			cachedRouteData = null;
 
             string plan = SettingManager.instance.GetStringValue("defaultRouteType", "balanced");
             plan = plan.Replace(" route", "");
@@ -81,16 +79,16 @@ namespace Cyclestreets.Managers
             {
                 string result = r.Content;
 
-                bool r = ParseJSON(result);
+                bool res = ParseRouteData(result);
 
                 IsBusy = false;
-                tcs1.SetResult(r);
+                tcs1.SetResult(res);
             });
 
             return t1;
         }
 
-        private bool ParseJSON(string currentRouteData)
+        public bool ParseRouteData(string currentRouteData)
         {
             _journeyObject = null;
             if (currentRouteData != null)
@@ -114,5 +112,24 @@ namespace Cyclestreets.Managers
 
             return true;
         }
-    }
+
+		internal List<RouteSection> GetRouteSections()
+		{
+			if( _journeyObject == null )
+				return null;
+
+			if ( cachedRouteData != null )
+				return cachedRouteData;
+
+			List<RouteSection> result = new List<RouteSection>();
+			foreach (var marker in _journeyObject.marker)
+			{
+				if( marker["@attributes"].type == "segment" )
+				{
+					RouteSection section = new RouteSection();
+					section.c
+				}
+			}
+		}
+	}
 }

@@ -103,6 +103,7 @@
     <Compile Include="Helpers\StorageHelper.cs" />
     <Compile Include="Managers\RouteManager.cs" />
     <Compile Include="MyPositionDataSource.cs" />
+    <Compile Include="Objects\RouteSection.cs" />
     <Compile Include="Pages\TileSources.cs" />
     <Compile Include="Pages\Feedback.xaml.cs">
       <DependentUpon>Feedback.xaml</DependentUpon>
@@ -417,9 +418,7 @@
       <SubType>Designer</SubType>
     </XliffResource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Objects\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Multilingual App Toolkit\Microsoft.Multilingual.ResxResources.targets" Label="MultilingualAppToolkit" />

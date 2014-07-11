@@ -17,7 +17,7 @@ namespace Cyclestreets.Pages
         {
             InitializeComponent();
 
-            DirectionList.ItemsSource = DirectionsPage.route.segments;
+            //DirectionList.ItemsSource = DirectionsPage.route.segments;
             factsList.ItemsSource = DirectionsPage.Facts;
 
             // hack. See here http://stackoverflow.com/questions/5334574/applicationbariconbutton-is-null/5334703#5334703
@@ -28,7 +28,7 @@ namespace Cyclestreets.Pages
             routeFeedback = ApplicationBar.Buttons[2] as ApplicationBarIconButton;
             routeFeedback.Text = AppResources.DirectionsResults_DirectionsResults_Route_Feedback;
 
-            heightChart.DataContext = DirectionsPage.route;
+            //heightChart.DataContext = DirectionsPage.route;
         }
 
         private void ApplicationBarIconButton_Click(object sender, EventArgs e)
@@ -44,7 +44,7 @@ namespace Cyclestreets.Pages
 
         private void routeFeedback_Click(object sender, EventArgs e)
         {
-            NavigationService.Navigate(new Uri("/Pages/Feedback.xaml?routeID=" + DirectionsPage.route.routeIndex, UriKind.Relative));
+            //NavigationService.Navigate(new Uri("/Pages/Feedback.xaml?routeID=" + DirectionsPage.route.routeIndex, UriKind.Relative));
         }
 
 
