@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ResourceFlowDirection" xml:space="preserve">
+    <value>LeftToRight</value>
+    <comment>Controls the FlowDirection for all elements in the RootFrame. Set to the traditional direction of this resource file's language</comment>
+  </data>
+  <data name="ResourceLanguage" xml:space="preserve">
+    <value>fr</value>
+    <comment>Controls the Language and ensures that the font for all elements in the RootFrame aligns with the app's language. Set to the language code of this resource file's language.</comment>
+  </data>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+<data name="SampleProperty" xml:space="preserve"><value>Valeur de propriété d'exécution d'échantillon</value></data><data name="FeedbackBody" xml:space="preserve"><value>[Vos commentaires ici]
+
+
+---------------------------------
+Nom du périphérique : {0}
+Fabricant du périphérique : {1}
+Appareil Firmware Version : {2}
+Dispositif Hardware Version : {3}
+Version d'application : {4}
+---------------------------------</value></data><data name="FeedbackMessage1" xml:space="preserve"><value>Désolé d'entendre que vous ne voulez pas au taux de CycleStreets.
+
+Parlez-nous de votre expérience ou de suggérer comment nous pouvons faire encore mieux.</value></data><data name="FeedbackNo" xml:space="preserve"><value>Non merci</value></data><data name="FeedbackSubject" xml:space="preserve"><value>Commentaires de clients CycleStreets </value></data><data name="FeedbackTitle" xml:space="preserve"><value>Pouvons nous faire mieux ?</value></data><data name="FeedbackYes" xml:space="preserve"><value>donner vos commentaires</value></data><data name="RatingMessage1" xml:space="preserve"><value>Nous serions ravis de vous évaluer nos étoiles app 5
+
+Nous montrant peu d'amour sur le magasin nous aide à continuer à travailler sur l'app et rendre les choses encore mieux !</value></data><data name="RatingMessage2" xml:space="preserve"><value>Vous regardez pour obtenir beaucoup de l'utilisation de notre application !
+
+Pourquoi ne pas nous donner une cote 5 étoiles pour montrer votre appréciation ?</value></data><data name="RatingNo" xml:space="preserve"><value>Non merci</value></data><data name="RatingTitle" xml:space="preserve"><value>Bénéficiant de CycleStreets ?</value></data><data name="RatingYes" xml:space="preserve"><value>Note 5 étoiles</value></data><data name="DirectionText" xml:space="preserve"><value>{0} sur {1} &amp;#xA ;Continuer sur {2} m</value><comment>0 = turn 1 = Name 2 == distance</comment></data><data name="VeryBusy" xml:space="preserve"><value>Très occupé</value></data><data name="Busy" xml:space="preserve"><value>Occupé</value></data><data name="QuiteBusy" xml:space="preserve"><value>Très occupé</value></data><data name="QuiteQuiet" xml:space="preserve"><value>Tout à fait tranquille</value></data><data name="Quiet" xml:space="preserve"><value>Au calme</value></data><data name="MetresShort" xml:space="preserve"><value>m
+</value></data><data name="CouldNotCalculateRoute" xml:space="preserve"><value>Ne peut pas calculer itinéraire</value></data><data name="Miles" xml:space="preserve"><value> km</value></data><data name="Distance" xml:space="preserve"><value>Distance</value></data><data name="Kcal" xml:space="preserve"><value> kcal</value></data><data name="Calories" xml:space="preserve"><value>Calories</value></data><data name="CO2Avoided" xml:space="preserve"><value>CO2 évité</value></data><data name="SignaledCrossings" xml:space="preserve"><value>Passages signalés</value></data><data name="SignaledJunctions" xml:space="preserve"><value>Jonctions signalées</value></data><data name="Quietness" xml:space="preserve"><value>Calme</value></data><data name="JourneyTime" xml:space="preserve"><value>Temps de trajet</value></data><data name="RouteNumber" xml:space="preserve"><value>Numéro de l'itinéraire</value></data><data name="NoRoute" xml:space="preserve"><value>Aucun itinéraire</value></data><data name="NoRouteFoundTryAnotherSearch" xml:space="preserve"><value>Aucun itinéraire trouvé. Essayez une autre recherche</value></data><data name="NoSuggestions" xml:space="preserve"><value>Aucune suggestion</value></data><data name="Tutorial" xml:space="preserve"><value>Tutoriel</value></data><data name="ShowTutorialMsg" xml:space="preserve"><value>Vous souhaitez vous guider à travers la façon d'utiliser l'application avec un tutoriel ?</value></data><data name="Disabled" xml:space="preserve"><value>Handicapés</value></data><data name="Enabled" xml:space="preserve"><value>Activé</value></data><data name="QuietestRoute" xml:space="preserve"><value>Itinéraire plus silencieux</value></data><data name="FastestRoute" xml:space="preserve"><value>Itinéraire le plus rapide</value></data><data name="BalancedRoute" xml:space="preserve"><value>Itinéraire équilibré</value></data><data name="TypeLocation" xml:space="preserve"><value>TAPEZ L'EMPLACEMENT OU UTILISATION APP BAR</value></data><data name="Tutorial8" xml:space="preserve"><value>Ce bouton d'information ouvrira un menu supplémentaire avec plus d'informations sur votre itinéraire.</value></data><data name="Tutorial7" xml:space="preserve"><value>Vous pouvez modifier le type de route avec cette liste déroulante. Changer la valeur par défaut dans le menu paramètres</value></data><data name="Tutorial6" xml:space="preserve"><value>Vous pouvez supprimer un waypoint en appuyant dessus.</value></data><data name="Tutorial5" xml:space="preserve"><value>Une fois qu'il y a au moins deux marqueurs sur la carte vous pouvez touchez ce bouton pour trouver votre route.</value></data><data name="Tutorial4" xml:space="preserve"><value>4. Vous pouvez taper n'importe où sur la carte</value></data><data name="Tutorial3" xml:space="preserve"><value>3. Appuyez sur cette option pour sélectionner le point sur la carte directement sous le &amp;quot; +&amp;quot ; curseur. Vous pouvez faire glisser la carte autour et pincer le zoom pour affiner la position.</value></data><data name="Tutorial2" xml:space="preserve"><value>2. Appuyez sur cette option pour sélectionner votre position actuelle...</value></data><data name="Tutorial1" xml:space="preserve"><value>Tutoriel : Tapez sur ces boîtes pour fermer et continuer&amp;#xA ;&amp;#xA ;Vous pouvez ajouter des marqueurs de l'itinéraire de quatre façons. &amp;#xA ;&amp;#xA; 1. Vous pouvez tapez dans cette zone...</value></data><data name="Settings" xml:space="preserve"><value>Paramètres</value></data><data name="SendFeedback" xml:space="preserve"><value>Envoyez vos commentaires</value></data><data name="SaveRoute" xml:space="preserve"><value>sauver route</value></data><data name="PrivacyPolicy" xml:space="preserve"><value>Politique de confidentialité</value></data><data name="PleaseWaitMsg" xml:space="preserve"><value>Veuillez patienter, nous calculons votre itinéraire.</value></data><data name="PleaseWait" xml:space="preserve"><value>Veuillez patienter</value></data><data name="MyPosition" xml:space="preserve"><value>Ma Position</value></data><data name="LoadRoute" xml:space="preserve"><value>Charger itinéraire</value></data><data name="FindRoute" xml:space="preserve"><value>Trouver l'itinéraire</value></data><data name="Cursor" xml:space="preserve"><value>Curseur</value></data><data name="GetDataError" xml:space="preserve"><value>Une erreur s'est produite l'obtention de données de </value></data><data name="TrialExpiredTitle" xml:space="preserve"><value>Épreuve périmé</value></data><data name="TrialExpiredMsg" xml:space="preserve"><value>Votre essai gratuit a expiré. Appuyez sur OK pour accéder à la boutique où vous pouvez télécharger la version complète de l'app.</value></data><data name="MainPage_ApplicationBarMenuItem_ToggleAerialView_Disable_aerial_view" xml:space="preserve"><value>Désactiver la vue aérienne</value></data><data name="JourneyFacts" xml:space="preserve"><value>faits de voyage</value></data><data name="directions" xml:space="preserve"><value>directions</value></data><data name="DirectionsResults_DirectionsResults_Route_Feedback" xml:space="preserve"><value>Itinéraire retour</value></data><data name="DirectionsResults_DirectionsResults_Share" xml:space="preserve"><value>Partager</value></data><data name="DirectionsResults_DirectionsResults_Save" xml:space="preserve"><value>Enregistrer</value></data><data name="TutorialEnabled" xml:space="preserve"><value>Tutoriel activé</value></data><data name="PreventSleep" xml:space="preserve"><value>Empêcher le sommeil</value></data><data name="MyCyclingSpeed" xml:space="preserve"><value>Ma vitesse de cyclisme</value></data><data name="MapStyle" xml:space="preserve"><value>Carte Style</value></data><data name="LocationEnabled" xml:space="preserve"><value>Emplacement activé</value></data><data name="DefaultRouteType" xml:space="preserve"><value>Type d'itinéraire par défaut</value></data><data name="MainPage_ApplicationBarMenuItem_ToggleAerialView_Enable_aerial_view" xml:space="preserve"><value>Activez la vue aérienne</value></data><data name="MainPage_OnNavigatedTo_Location" xml:space="preserve"><value>Emplacement</value></data><data name="LocationConsent" xml:space="preserve"><value>CycleStreets requiert l'accès à votre emplacement afin de fournir des informations de navigation et de cartographie. Vous voulez permettre cela ?</value></data><data name="MainPage_OnNavigatedTo_Hello" xml:space="preserve"><value>Salut</value></data><data name="TrialWelcome" xml:space="preserve"><value>Je vous remercie pour l'installation du procès CycleStreets. Ce procès dure 72 heures et permet d'accéder à toutes les fonctionnalités de l'application complète. Vous pouvez acheter la version complète à partir de la barre de l'app.</value></data><data name="Feedback_submitButton_Tap_No_comments" xml:space="preserve"><value>Pas de commentaire</value></data><data name="Feedback_enterComments" xml:space="preserve"><value>S'il vous plaît entrer quelques commentaires avant d'appuyer sur soumettre.</value></data><data name="Feedback_feedbackTypes_Other" xml:space="preserve"><value>Autres</value></data><data name="Feedback_feedbackTypes_Bug_Report" xml:space="preserve"><value>Rapport de bogue</value></data><data name="Feedback_feedbackTypes_App_Feedback" xml:space="preserve"><value>App Feedback</value></data><data name="Feedback_feedbackTypes_Route_Feedback" xml:space="preserve"><value>Itinéraire retour</value></data></root>

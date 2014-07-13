@@ -1,0 +1,130 @@
+﻿<phone:PhoneApplicationPage
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+	xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:sparrow="clr-namespace:Sparrow.Chart;assembly=Sparrow.Chart.WP8.45"
+	xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+	xmlns:local="clr-namespace:Cyclestreets.Pages" x:Name="phoneApplicationPage"
+	x:Class="Cyclestreets.Pages.DirectionsResults"
+	mc:Ignorable="d"
+	SupportedOrientations="Portrait"  Orientation="Portrait"
+	shell:SystemTray.IsVisible="False" d:DataContext="{d:DesignData /SampleData/RouteSegmentCollectionSampleData.xaml}">
+    <phone:PhoneApplicationPage.FontFamily>
+        <StaticResource ResourceKey="PhoneFontFamilyNormal"/>
+    </phone:PhoneApplicationPage.FontFamily>
+    <phone:PhoneApplicationPage.FontSize>
+        <StaticResource ResourceKey="PhoneFontSizeNormal"/>
+    </phone:PhoneApplicationPage.FontSize>
+    <phone:PhoneApplicationPage.Foreground>
+        <StaticResource ResourceKey="PhoneForegroundBrush"/>
+    </phone:PhoneApplicationPage.Foreground>
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar>
+            <shell:ApplicationBarIconButton x:Name="saveButton" IconUri="/Assets/AppBar/save.png" IsEnabled="True" Text="Save" Click="ApplicationBarIconButton_Click"/>
+            <shell:ApplicationBarIconButton x:Name="share" IconUri="/Assets/AppBar/share.png" IsEnabled="True" Text="Share" Click="share_Click"/>
+            <shell:ApplicationBarIconButton x:Name="routeFeedback" IconUri="/Assets/AppBar/feature.email.png" IsEnabled="True" Text="Route Feedback" Click="routeFeedback_Click"/>
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
+    <phone:PhoneApplicationPage.Background>
+        <ImageBrush Stretch="Fill" ImageSource="/Assets/cyclestreets19586.jpg"/>
+    </phone:PhoneApplicationPage.Background>
+
+    <!--LayoutRoot contains the root grid where all other page content is placed-->
+    <Grid x:Name="LayoutRoot" Background="Black">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Image VerticalAlignment="Top" Source="/Assets/header.jpg"/>
+        <TextBlock HorizontalAlignment="Left" Margin="0" TextWrapping="Wrap" Text="Route Information" VerticalAlignment="Bottom" FontSize="40" FontWeight="Light" Padding="18,0,0,0" Foreground="#DEFFFFFF"/>
+        <Border BorderBrush="Black" BorderThickness="0" Margin="0" Grid.Row="1" Background="#FF008B00"/>
+        <phone:Pivot Margin="0" Grid.Row="2" Title="" Style="{StaticResource MyPivotStyle}" FontSize="20" HeaderTemplate="{StaticResource PivotHeader}">
+            <phone:PivotItem CacheMode="{x:Null}" Header="directions" FontSize="20">
+                <Grid Margin="10,0,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="53*"/>
+                        <ColumnDefinition Width="175*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="31*"/>
+                        <RowDefinition Height="524*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Margin="0" TextWrapping="Wrap" Text="Time" VerticalAlignment="Center" FontWeight="Light" Foreground="#DEFFFFFF"/>
+                    <TextBlock Margin="0,2.2,0,1.8" TextWrapping="Wrap" Text="Distance" VerticalAlignment="Center" FontWeight="Light" Grid.Column="1" HorizontalAlignment="Right" Foreground="#DEFFFFFF"/>
+                    <ScrollViewer Margin="0" Grid.ColumnSpan="2" Grid.Row="1">
+                        <phone:LongListSelector x:Name="DirectionList" HorizontalContentAlignment="Stretch" Foreground="#DEFFFFFF" ItemsSource="{Binding Mode=OneWay}" DataContext="{Binding}">
+                            <phone:LongListSelector.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0" Background="{Binding BGColour}">
+                                        <!-- Main List Item Template Here -->
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="34"/>
+                                            <RowDefinition Height="13*"/>
+                                            <RowDefinition Height="10*"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Border BorderBrush="Black" BorderThickness="1" Grid.ColumnSpan="2" Background="#33008B00"/>
+                                        <TextBlock x:Name="time" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Time}" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="20" FontWeight="SemiBold" FontFamily="Segoe UI" Width="130"/>
+                                        <TextBlock x:Name="distance" HorizontalAlignment="Right" TextWrapping="Wrap" Text="{Binding Distance}" VerticalAlignment="Center" Margin="0" Grid.Column="1" FontSize="20" FontWeight="SemiBold" FontFamily="Segoe UI" Height="27" Padding="0,0,10,0"/>
+                                        <StackPanel Grid.ColumnSpan="2" Grid.Row="1">
+                                            <TextBlock x:Name="turn" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Turn}" VerticalAlignment="Center" FontSize="15" Margin="10,0,0,0"/>
+                                            <TextBlock x:Name="streets" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Name}" VerticalAlignment="Center" Padding="0" FontSize="15" FontWeight="SemiBold" Margin="10,0,0,0"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal" Grid.Row="2" Margin="10,5,0,5" Height="20" Width="263">
+                                            <Image x:Name="type" HorizontalAlignment="Center" VerticalAlignment="Center" Source="/Assets/bike_white.png" Margin="0,0,10,0"/>
+                                            <TextBlock x:Name="surface" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding ProvisionName}" VerticalAlignment="Center" Margin="0" FontSize="15"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </DataTemplate>
+                            </phone:LongListSelector.ItemTemplate>
+                        </phone:LongListSelector>
+                    </ScrollViewer>
+                </Grid>
+            </phone:PivotItem>
+            <phone:PivotItem CacheMode="{x:Null}" Header="facts">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="173"/>
+                        <RowDefinition Height="23"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <sparrow:SparrowChart x:Name="heightChart" Margin="0,0,10,0">
+                        <sparrow:SparrowChart.Foreground>
+                            <SolidColorBrush Color="White"/>
+                        </sparrow:SparrowChart.Foreground>
+                        <sparrow:SparrowChart.DataContext>
+                            <local:RouteDetails/>
+                        </sparrow:SparrowChart.DataContext>
+                        <sparrow:SparrowChart.XAxis>
+                            <sparrow:LinearXAxis ShowCrossLines="False"/>
+                        </sparrow:SparrowChart.XAxis>
+                        <sparrow:SparrowChart.YAxis>
+                            <sparrow:LinearYAxis ShowCrossLines="False" Margin="0" ZoomOffset="1"/>
+                        </sparrow:SparrowChart.YAxis>
+                        <sparrow:LineSeries PointsSource="{Binding HeightChart}" XPath="Distance" YPath="Height" Foreground="White" />
+                    </sparrow:SparrowChart>
+                    <TextBlock Margin="0" Grid.Row="1" TextWrapping="Wrap" Text="Elevation Chart. Distance and height in metres." Foreground="#DEFFFFFF" FontWeight="Light" FontSize="15" TextAlignment="Center" Grid.RowSpan="2"/>
+                    <phone:LongListSelector x:Name="factsList" HorizontalContentAlignment="Stretch" Foreground="#DEFFFFFF" Margin="0" Grid.Row="2">
+                        <phone:LongListSelector.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Background="#3F000000" Margin="0" Orientation="Horizontal" >
+                                    <Image Source="{Binding ItemImage}"/>
+                                    <TextBlock Text="{Binding Caption}" Margin="10,0"/>
+                                    <TextBlock Text="{Binding Value}" FontWeight="Bold"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </phone:LongListSelector.ItemTemplate>
+                    </phone:LongListSelector>
+                </Grid>
+            </phone:PivotItem>
+        </phone:Pivot>
+    </Grid>
+
+</phone:PhoneApplicationPage>
