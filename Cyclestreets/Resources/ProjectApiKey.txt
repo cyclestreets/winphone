@@ -1,2 +1,0 @@
-Project: Cyclestreets
-API Key: JZSMBMX659NW78S35ZPR

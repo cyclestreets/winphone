@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Cyclestreets.Common;
+﻿using Cyclestreets.Common;
 using Cyclestreets.Pages;
 using Cyclestreets.Resources;
 using Cyclestreets.Utils;
@@ -9,6 +8,7 @@ using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Device.Location;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -17,8 +17,9 @@ namespace Cyclestreets.Managers
     public class RouteManager : BindableBase
     {
         private readonly Stackish<GeoCoordinate> _waypoints = new Stackish<GeoCoordinate>();
-        private List<RouteSection> cachedRouteData = null;
-        private bool _isBusy = false;
+        private List<RouteSection> _cachedRouteData;
+        private bool _isBusy;
+        private Dictionary<string, dynamic> _journeyMap = new Dictionary<string, dynamic>();
         public bool IsBusy
         {
             get
@@ -31,11 +32,9 @@ namespace Cyclestreets.Managers
             }
         }
 
-        private dynamic _journeyObject;
-
-        public RouteManager()
+        public bool ReadyToPlanRoute
         {
-
+            get { return _waypoints.Count >= 2; }
         }
 
         public void AddWaypoint(GeoCoordinate c)
@@ -43,16 +42,24 @@ namespace Cyclestreets.Managers
             _waypoints.Push(c);
         }
 
-        public Task<bool> FindRoute()
+        public void RemoveWaypoint(GeoCoordinate geoCoordinate)
+        {
+            _waypoints.Remove(geoCoordinate);
+        }
+
+        public Task<bool> FindRoute(string routeType, bool newRoute = true)
         {
             TaskCompletionSource<bool> tcs1 = new TaskCompletionSource<bool>();
             Task<bool> t1 = tcs1.Task;
 
             // Clear the cache
-            cachedRouteData = null;
+            _cachedRouteData = null;
 
-            string plan = SettingManager.instance.GetStringValue("defaultRouteType", "balanced");
-            plan = plan.Replace(" route", "");
+            if ((!newRoute && _journeyMap.ContainsKey(routeType)))
+            {
+                tcs1.SetResult(true);
+                return t1;
+            }
 
             string speedSetting = SettingManager.instance.GetStringValue("cycleSpeed", "12mph");
 
@@ -65,7 +72,7 @@ namespace Cyclestreets.Managers
             var client = new RestClient("http://www.cyclestreets.net/api");
             var request = new RestRequest("journey.json", Method.GET);
             request.AddParameter("key", App.apiKey);
-            request.AddParameter("plan", plan);
+            request.AddParameter("plan", routeType);
             request.AddParameter("itinerarypoints", itinerarypoints);
             request.AddParameter("speed", speed);
             request.AddParameter("useDom", useDom);
@@ -77,7 +84,7 @@ namespace Cyclestreets.Managers
             {
                 string result = r.Content;
 
-                bool res = ParseRouteData(result);
+                bool res = ParseRouteData(result, routeType, newRoute);
 
                 IsBusy = false;
                 tcs1.SetResult(res);
@@ -86,14 +93,19 @@ namespace Cyclestreets.Managers
             return t1;
         }
 
-        public bool ParseRouteData(string currentRouteData)
+        public bool ParseRouteData(string currentRouteData, string routeType, bool newRoute)
         {
-            _journeyObject = null;
+            if (newRoute)
+                _journeyMap.Clear();
+
+            dynamic journeyObject = null;
             if (currentRouteData != null)
             {
                 try
                 {
-                    _journeyObject = (dynamic)JObject.Parse(currentRouteData);
+                    journeyObject = JObject.Parse(currentRouteData);
+                    if (journeyObject != null)
+                        _journeyMap.Add(routeType, journeyObject);
                 }
                 catch (Exception ex)
                 {
@@ -102,25 +114,22 @@ namespace Cyclestreets.Managers
                 }
             }
 
-            if (_journeyObject == null || _journeyObject.marker == null)
-            {
-                MessageBox.Show(AppResources.NoRouteFoundTryAnotherSearch, AppResources.NoRoute, MessageBoxButton.OK);
-                return false;
-            }
-
-            return true;
+            if (journeyObject != null && journeyObject.marker != null) return true;
+            MessageBox.Show(AppResources.NoRouteFoundTryAnotherSearch, AppResources.NoRoute, MessageBoxButton.OK);
+            return false;
         }
 
-        internal IEnumerable<RouteSection> GetRouteSections()
+        internal IEnumerable<RouteSection> GetRouteSections(string routeType)
         {
-            if (_journeyObject == null)
+            if (!_journeyMap.ContainsKey(routeType))
                 return null;
 
-            if (cachedRouteData != null)
-                return cachedRouteData;
+            if (_cachedRouteData != null)
+                return _cachedRouteData;
 
             List<RouteSection> result = new List<RouteSection>();
-            foreach (var marker in _journeyObject.marker)
+            dynamic journeyObject = _journeyMap[routeType];
+            foreach (var marker in journeyObject.marker)
             {
                 if (marker["@attributes"].type != "segment") continue;
                 var section = marker["@attributes"];
@@ -140,12 +149,14 @@ namespace Cyclestreets.Managers
                 temp = section.distances.ToString().Split(',');
                 convertedItems = Util.ConvertAll(temp, int.Parse);
                 sectionObj.Distance = new List<int>(convertedItems);
-                sectionObj.Walking = int.Parse(section.walk.ToString())==1?true:false;
+                sectionObj.Walking = int.Parse(section.walk.ToString()) == 1;
                 result.Add(sectionObj);
             }
 
-            cachedRouteData = result;
+            _cachedRouteData = result;
             return result;
         }
+
+
     }
 }
