@@ -21,6 +21,7 @@ namespace Cyclestreets.Managers
         private List<RouteSection> _cachedRouteData;
         private bool _isBusy;
         private Dictionary<string, dynamic> _journeyMap = new Dictionary<string, dynamic>();
+
         public bool IsBusy
         {
             get
@@ -46,6 +47,24 @@ namespace Cyclestreets.Managers
         public void RemoveWaypoint(GeoCoordinate geoCoordinate)
         {
             _waypoints.Remove(geoCoordinate);
+        }
+
+        private int _currentStep;
+        private int CurrentStep
+        {
+            get { return _currentStep; }
+            set { _currentStep = value; }
+        }
+
+        public string CurrentStepText
+        {
+            get
+            {
+                if (_cachedRouteData != null)
+                {
+                    _cachedRouteData[CurrentStep].Description;
+                }
+            }
         }
 
         public Task<bool> FindRoute(string routeType, bool newRoute = true)
@@ -144,26 +163,41 @@ namespace Cyclestreets.Managers
             dynamic journeyObject = _journeyMap[routeType];
             foreach (var marker in journeyObject.marker)
             {
-                if (marker["@attributes"].type != "segment") continue;
-                var section = marker["@attributes"];
-                RouteSection sectionObj = new RouteSection();
-                string[] points = section.points.ToString().Split(' ');
-                foreach (string t in points)
+                if (marker["@attributes"].type == "route")
                 {
-                    string[] xy = t.Split(',');
-
-                    double longitude = double.Parse(xy[0]);
-                    double latitude = double.Parse(xy[1]);
+                    var section = marker["@attributes"];
+                    RouteSection sectionObj = new RouteSection();
+                    double longitude = double.Parse(section.start_longitude.ToString());
+                    double latitude = double.Parse(section.start_latitude.ToString());
                     sectionObj.Points.Add(new GeoCoordinate(latitude, longitude));
+                    sectionObj.Description = "Start " + section.start;
+
+                    result.Add(sectionObj);
                 }
-                string[] temp = section.elevations.ToString().Split(',');
-                int[] convertedItems = Util.ConvertAll(temp, int.Parse);
-                sectionObj.Height = new List<int>(convertedItems);
-                temp = section.distances.ToString().Split(',');
-                convertedItems = Util.ConvertAll(temp, int.Parse);
-                sectionObj.Distance = new List<int>(convertedItems);
-                sectionObj.Walking = int.Parse(section.walk.ToString()) == 1;
-                result.Add(sectionObj);
+                else if (marker["@attributes"].type == "segment")
+                {
+                    var section = marker["@attributes"];
+                    RouteSection sectionObj = new RouteSection();
+                    string[] points = section.points.ToString().Split(' ');
+                    foreach (string t in points)
+                    {
+                        string[] xy = t.Split(',');
+
+                        double longitude = double.Parse(xy[0]);
+                        double latitude = double.Parse(xy[1]);
+                        sectionObj.Points.Add(new GeoCoordinate(latitude, longitude));
+                    }
+                    string[] temp = section.elevations.ToString().Split(',');
+                    int[] convertedItems = Util.ConvertAll(temp, int.Parse);
+                    sectionObj.Height = new List<int>(convertedItems);
+                    temp = section.distances.ToString().Split(',');
+                    convertedItems = Util.ConvertAll(temp, int.Parse);
+                    sectionObj.Distances = new List<int>(convertedItems);
+                    sectionObj.Walking = int.Parse(section.walk.ToString()) == 1;
+                    sectionObj.Description = section.turn.ToString() + " " + section.start;
+                    sectionObj.Distance = int.Parse(section.distance);
+                    result.Add(sectionObj);
+                }
             }
 
             _cachedRouteData = result;

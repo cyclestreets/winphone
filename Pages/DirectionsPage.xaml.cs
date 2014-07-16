@@ -297,6 +297,8 @@ namespace Cyclestreets.Pages
 
             clearCurrentPosition();
 
+            pleaseWait.Width = Application.Current.Host.Content.ActualWidth;
+
             startPoint.Populating += StartPointOnPopulating;
 
             ExtendedVisualStateManager.GoToElementState(LayoutRoot, @"RoutePlanner", false);
