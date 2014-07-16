@@ -3,6 +3,7 @@ using Cyclestreets.Pages;
 using Cyclestreets.Resources;
 using Cyclestreets.Utils;
 using CycleStreets.Util;
+using Microsoft.Phone.Maps.Controls;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using System;
@@ -91,6 +92,18 @@ namespace Cyclestreets.Managers
             });
 
             return t1;
+        }
+
+        public LocationRectangle GetRouteBounds()
+        {
+            List<GeoCoordinate> allPoints = new List<GeoCoordinate>();
+
+            foreach (var segment in _cachedRouteData)
+            {
+                allPoints.AddRange(segment.Points);
+            }
+
+            return LocationRectangle.CreateBoundingRectangle(allPoints.ToArray());
         }
 
         public bool ParseRouteData(string currentRouteData, string routeType, bool newRoute)

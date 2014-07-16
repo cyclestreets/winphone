@@ -707,33 +707,14 @@ namespace Cyclestreets.Pages
             }
         }
 
-        private void SetPlanRouteAvailability(bool available)
-        {
-            planRouteAvailable = available;
-            if (available)
-            {
-                planRouteBorder.Background = new SolidColorBrush(Color.FromArgb(255, 0, 139, 0));
-                planRouteText.Foreground = new SolidColorBrush(Colors.White);
-                planRouteImage.Opacity = 1.0;
-            }
-            else
-            {
-                planRouteBorder.Background = new SolidColorBrush(Color.FromArgb(255, 1, 112, 1));
-                planRouteText.Foreground = new SolidColorBrush(Color.FromArgb(128, 255, 255, 255));
-                planRouteImage.Opacity = 0.2;
-            }
-        }
-
         private void addWaypoint(Pushpin pp)
         {
             _waypoints.Push(pp);
-            SetPlanRouteAvailability(_waypoints.Count >= 2);
         }
 
         private void removeWaypoint(Pushpin pp)
         {
-            //waypoints.Remove(pp);
-            //SetPlanRouteAvailability(waypoints.Count >= 2);
+            _waypoints.Remove(pp);
         }
 
         private void clearCurrentPosition()
@@ -1600,7 +1581,7 @@ namespace Cyclestreets.Pages
             }
             ExtendedVisualStateManager.GoToElementState(LayoutRoot, "RouteFoundState", true);
 
-            App.networkStatus.networkIsBusy = false;
+            MyMap.SetView(rm.GetRouteBounds());
 
             if (!SettingManager.instance.GetBoolValue("tutorialEnabled", true)) return;
             bool shownTutorial = SettingManager.instance.GetBoolValue("shownTutorialRouteType", false);
