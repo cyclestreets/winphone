@@ -9,10 +9,19 @@ using System.Device.Location;
 using Cyclestreets.Utils;
 using GalaSoft.MvvmLight;
 using Microsoft.Phone.Maps.Toolkit;
+using Cyclestreets.Managers;
+using GalaSoft.MvvmLight.Ioc;
 namespace Cyclestreets.ViewModel
 {
 	public class DirectionsPageViewModel : ViewModelBase
 	{
+        public RouteManager RouteManagerPtr
+        {
+            get 
+            {
+                return SimpleIoc.Default.GetInstance<RouteManager>();
+            }
+        }
 		
 		public DirectionsPageViewModel()
 		{
