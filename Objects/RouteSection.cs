@@ -6,8 +6,11 @@ namespace Cyclestreets.Pages
     class RouteSection
     {
         public List<GeoCoordinate> Points = new List<GeoCoordinate>();
-        public List<int> Distance = new List<int>();
+        public List<int> Distances = new List<int>();
         public List<int> Height = new List<int>();
+
+        public string Description;
+        public dynamic Distance;
         public bool Walking { get; set; }
     }
 }
