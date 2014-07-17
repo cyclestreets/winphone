@@ -1164,63 +1164,33 @@ namespace Cyclestreets.Pages
 
         private void arrowLeft_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            /*_currentStep--;
-            if (_currentStep < 0)
+            RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
+            rm.CurrentStep--;
+            if (rm.CurrentStep <= 0)
             {
-                arrowLeft.Opacity = 50;
-                _currentStep++;
-
-                LocationRectangle rect = new LocationRectangle(_min, _max);
-                MyMap.SetView(rect);
+                MyMap.SetView(rm.GetRouteBounds());
                 MyMap.Pitch = 0;
                 MyMap.Heading = 0;
-
-                float f = (float)route.distance * 0.000621371192f;
-                findLabel1.Text = f.ToString("0.00") + AppResources.MetresShort + UtilTime.secsToLongDHMS(route.timeInSeconds);
 
                 SetMapStyle();
             }
             else
             {
-                arrowLeft.Opacity = 100;
-
-                MyMap.SetView(route.segments[_currentStep].Location, 20, route.segments[_currentStep].Bearing, 75);
+                MyMap.SetView(rm.CurrentGeoCoordinate, 20, rm.CurrentBearing, 75);
 
                 MyMap.TileSources.Clear();
             }
-            if (_currentStep >= route.segments.Count)
-                arrowRight.Opacity = 50;
-            else
-                arrowRight.Opacity = 100;*/
-
 
         }
 
         private void arrowRight_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            /* _currentStep++;
-             if (_currentStep < 0)
-                 arrowLeft.Opacity = 50;
-             else
-                 arrowLeft.Opacity = 100;
-             if (_currentStep >= route.segments.Count)
-             {
-                 arrowRight.Opacity = 50;
-                 _currentStep--;
-                 // 				LocationRectangle rect = new LocationRectangle( min, max );
-                 // 				MyMap.SetView( rect );
-                 // 				MyMap.Pitch = 0;
-             }
-             else
-             {
-                 arrowRight.Opacity = 100;
-                 MyMap.SetView(route.segments[_currentStep].Location, 20, route.segments[_currentStep].Bearing, 75);
+            RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
+            rm.CurrentStep++;
+            
+            MyMap.SetView(rm.CurrentGeoCoordinate, 20, rm.CurrentBearing, 75);
 
-
-                 findLabel1.Text = string.Format(AppResources.DirectionText, route.segments[_currentStep].Turn, route.segments[_currentStep].Name, route.segments[_currentStep].DistanceMetres);
-
-                 MyMap.TileSources.Clear();
-             }*/
+            MyMap.TileSources.Clear();
         }
 
         private void routeTutorial1_Tap(object sender, System.Windows.Input.GestureEventArgs e)

@@ -50,10 +50,17 @@ namespace Cyclestreets.Managers
         }
 
         private int _currentStep;
-        private int CurrentStep
+        public int CurrentStep
         {
             get { return _currentStep; }
-            set { _currentStep = value; }
+            set
+            {
+                if (_cachedRouteData != null && value < _cachedRouteData.Count && value >= 0 )
+                {
+                    _currentStep = value;
+                    OnPropertyChanged("CurrentStepText");
+                }
+            }
         }
 
         public string CurrentStepText
@@ -62,8 +69,33 @@ namespace Cyclestreets.Managers
             {
                 if (_cachedRouteData != null)
                 {
-                    _cachedRouteData[CurrentStep].Description;
+                    return _cachedRouteData[CurrentStep].Description;
                 }
+                return "";
+            }
+        }
+
+        public GeoCoordinate CurrentGeoCoordinate
+        {
+            get
+            {
+                if (_cachedRouteData != null && _cachedRouteData[CurrentStep].Points.Count > 0 )
+                {
+                    return _cachedRouteData[CurrentStep].Points[0];
+                }
+                return null;
+            }
+        }
+
+        public double CurrentBearing
+        {
+            get
+            {
+                if (_cachedRouteData != null )
+                {
+                    return _cachedRouteData[CurrentStep].Bearing;
+                }
+                return 0;
             }
         }
 
@@ -194,8 +226,9 @@ namespace Cyclestreets.Managers
                     convertedItems = Util.ConvertAll(temp, int.Parse);
                     sectionObj.Distances = new List<int>(convertedItems);
                     sectionObj.Walking = int.Parse(section.walk.ToString()) == 1;
-                    sectionObj.Description = section.turn.ToString() + " " + section.start;
-                    sectionObj.Distance = int.Parse(section.distance);
+                    sectionObj.Description = section.turn.ToString() + " " + section.name;
+                    sectionObj.Distance = int.Parse(section.distance.ToString());
+                    sectionObj.Bearing = double.Parse(section.startBearing.ToString());
                     result.Add(sectionObj);
                 }
             }
