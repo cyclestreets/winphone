@@ -11,6 +11,7 @@ namespace Cyclestreets.Pages
 
         public string Description;
         public dynamic Distance;
+        public dynamic Bearing;
         public bool Walking { get; set; }
     }
 }
