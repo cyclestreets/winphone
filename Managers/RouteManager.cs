@@ -60,6 +60,7 @@ namespace Cyclestreets.Managers
                 SetProperty(ref _cachedRouteData, value);
 
                 OnPropertyChanged("HeightChart");
+                OnPropertyChanged("HorizontalLabelInterval");
             }
         }
 
@@ -77,7 +78,7 @@ namespace Cyclestreets.Managers
             }
         }
 
-        public IEnumerable<HeightData> HeightChart
+        public List<HeightData> HeightChart
         {
             get
             {
@@ -88,7 +89,7 @@ namespace Cyclestreets.Managers
                     //for(int i=0; i < routeSection.Distances.Count; i++)
                     if ( routeSection.Distances.Count > 0 )
                     {
-                        runningDistance += routeSection.Distances[0];
+                        runningDistance += routeSection.Distance;
                         HeightData h = new HeightData
                         {
                             Distance = runningDistance,
@@ -98,7 +99,16 @@ namespace Cyclestreets.Managers
                     }
                     
                 }
+                
                 return result;
+            }
+        }
+
+        public int HorizontalLabelInterval
+        {
+            get
+            {
+                return (int)((float)HeightChart.Count / 10f);
             }
         }
 

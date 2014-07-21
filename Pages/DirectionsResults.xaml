@@ -140,7 +140,7 @@
                             <telerikChart:LinearAxis LineStroke="{StaticResource PhoneDisabledBrush}" LineThickness="2" RangeExtendDirection="Positive" MajorStep="10" FontSize="15" LabelInterval="2"/>
                         </telerikChart:RadCartesianChart.VerticalAxis>
                         <telerikChart:RadCartesianChart.HorizontalAxis>
-                            <telerikChart:CategoricalAxis LineStroke="{StaticResource PhoneDisabledBrush}" LineThickness="2" LabelInterval="4" LabelFitMode="Rotate" MajorTickInterval="2" FontSize="15"/>
+                            <telerikChart:CategoricalAxis LineStroke="{StaticResource PhoneDisabledBrush}" LineThickness="2" LabelInterval="{Binding RouteManagerPtr.HorizontalLabelInterval, Mode=OneWay}" LabelFitMode="Rotate" MajorTickInterval="2" FontSize="15"/>
                         </telerikChart:RadCartesianChart.HorizontalAxis>
                         <telerikChart:SplineAreaSeries CategoryBinding="Distance"
                                   ValueBinding="Height"
