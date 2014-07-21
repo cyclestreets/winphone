@@ -55,20 +55,22 @@
                                             <RowDefinition Height="10*"/>
                                         </Grid.RowDefinitions>
                                         <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="80"/>
                                             <ColumnDefinition/>
                                             <ColumnDefinition/>
                                         </Grid.ColumnDefinitions>
-                                        <Border BorderBrush="Black" BorderThickness="1" Grid.ColumnSpan="2" Background="#33008B00"/>
-                                        <TextBlock x:Name="time" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding TimeString, Mode=OneWay}" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="20" FontWeight="SemiBold" FontFamily="Segoe UI" Width="130"/>
-                                        <TextBlock x:Name="distance" HorizontalAlignment="Right" TextWrapping="Wrap" Text="{Binding Distance}" VerticalAlignment="Center" Margin="0" Grid.Column="1" FontSize="20" FontWeight="SemiBold" FontFamily="Segoe UI" Height="27" Padding="0,0,10,0"/>
-                                        <StackPanel Grid.ColumnSpan="2" Grid.Row="1">
+                                        <Border BorderBrush="Black" BorderThickness="1" Grid.ColumnSpan="2" Background="#33008B00" Grid.Column="1"/>
+                                        <TextBlock x:Name="time" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding TimeString, Mode=OneWay}" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="20" FontWeight="SemiBold" FontFamily="Segoe UI" Width="130" Grid.Column="1"/>
+                                        <TextBlock x:Name="distance" HorizontalAlignment="Right" TextWrapping="Wrap" Text="{Binding Distance}" VerticalAlignment="Center" Margin="0" Grid.Column="2" FontSize="20" FontWeight="SemiBold" FontFamily="Segoe UI" Height="27" Padding="0,0,10,0"/>
+                                        <StackPanel Grid.ColumnSpan="2" Grid.Row="1" Grid.Column="1">
                                             <TextBlock x:Name="turn" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Turn}" VerticalAlignment="Center" FontSize="15" Margin="10,0,0,0"/>
                                             <TextBlock x:Name="streets" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Description}" VerticalAlignment="Center" Padding="0" FontSize="15" FontWeight="SemiBold" Margin="10,0,0,0"/>
                                         </StackPanel>
-                                        <StackPanel Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal" Grid.Row="2" Margin="10,5,0,5" Height="20" Width="263">
+                                        <StackPanel Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal" Grid.Row="2" Margin="10,5,0,5" Height="20" Width="263" Grid.Column="1">
                                             <Image x:Name="type" HorizontalAlignment="Center" VerticalAlignment="Center" Source="/Assets/bike_white.png" Margin="0,0,10,0"/>
                                             <TextBlock x:Name="surface" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding ProvisionName}" VerticalAlignment="Center" Margin="0" FontSize="15"/>
                                         </StackPanel>
+                                        <Image Grid.RowSpan="3" Source="{Binding TurnImage, Mode=OneWay}"/>
                                     </Grid>
                                 </DataTemplate>
                             </phone:LongListSelector.ItemTemplate>

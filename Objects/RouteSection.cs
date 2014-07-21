@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Device.Location;
+using System.Windows.Media.Imaging;
 using Cyclestreets.Common;
 
 namespace Cyclestreets.Pages
@@ -15,6 +16,29 @@ namespace Cyclestreets.Pages
         public dynamic Distance;
         public dynamic Bearing;
         private int _time;
+        private string _turn;
+
+        public string Turn
+        {
+            get { return _turn; }
+            set
+            {
+                SetProperty(ref _turn, value);
+                OnPropertyChanged("TurnImage");
+            }
+        }
+
+        public BitmapImage TurnImage
+        {
+            get
+            {
+                if (Turn == null)
+                    return null;
+
+                string filename = Turn.Replace(' ', '_');
+                return new BitmapImage(new Uri("/Assets/navigation/" + filename + ".png", UriKind.RelativeOrAbsolute));
+            }
+        }
 
         public int Time
         {

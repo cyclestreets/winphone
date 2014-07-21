@@ -302,6 +302,23 @@
     <Content Include="Assets\icons\dark\appbar.map.satellite.png" />
     <Content Include="Assets\icons\dark\appbar.map.treasure.png" />
     <Content Include="Assets\intermediate_wisp.png" />
+    <Content Include="Assets\navigation\bear_left.png" />
+    <Content Include="Assets\navigation\bear_right.png" />
+    <Content Include="Assets\navigation\double-back.png" />
+    <Content Include="Assets\navigation\fifth_exit.png" />
+    <Content Include="Assets\navigation\first_exit.png" />
+    <Content Include="Assets\navigation\fourth_exit.png" />
+    <Content Include="Assets\navigation\join_roundabout.png" />
+    <Content Include="Assets\navigation\second_exit.png" />
+    <Content Include="Assets\navigation\seventh_exit.png" />
+    <Content Include="Assets\navigation\sharp_left.png" />
+    <Content Include="Assets\navigation\sharp_right.png" />
+    <Content Include="Assets\navigation\sixth_exit.png" />
+    <Content Include="Assets\navigation\straight_on.png" />
+    <Content Include="Assets\navigation\third_exit.png" />
+    <Content Include="Assets\navigation\turn_left.png" />
+    <Content Include="Assets\navigation\turn_right.png" />
+    <Content Include="Assets\navigation\unknown.png" />
     <Content Include="Assets\picture.png" />
     <Content Include="Assets\start_wisp.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -108,7 +108,7 @@ namespace Cyclestreets.Managers
         {
             get
             {
-                return (int)((float)HeightChart.Count / 10f);
+                return 1;//(int)((float)HeightChart.Count / 10f);
             }
         }
 
@@ -290,6 +290,7 @@ namespace Cyclestreets.Managers
                     sectionObj.Distance = int.Parse(section.distance.ToString());
                     sectionObj.Bearing = double.Parse(section.startBearing.ToString());
                     sectionObj.Time = int.Parse(section.time.ToString());
+                    sectionObj.Turn = section.turn.ToString();
                     result.Add(sectionObj);
                 }
             }

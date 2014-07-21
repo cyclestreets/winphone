@@ -1157,8 +1157,8 @@ namespace Cyclestreets.Pages
 
         private void routeInfo_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            PhoneApplicationService.Current.State["route"] = currentRouteData;
-            PhoneApplicationService.Current.State["routeIndex"] = route.routeIndex;
+            //PhoneApplicationService.Current.State["route"] = currentRouteData;
+            //PhoneApplicationService.Current.State["routeIndex"] = route.routeIndex;
             NavigationService.Navigate(new Uri("/Pages/DirectionsResults.xaml", UriKind.Relative));
         }
 
