@@ -306,13 +306,13 @@ Why not give us a 5 star rating to show your appreciation?</value>
     <value>Distance</value>
   </data>
   <data name="Miles" xml:space="preserve">
-    <value> miles</value>
+    <value>{0} miles</value>
   </data>
   <data name="CouldNotCalculateRoute" xml:space="preserve">
     <value>Could not calculate route</value>
   </data>
   <data name="MetresShort" xml:space="preserve">
-    <value>m
+    <value>{0}m
 </value>
   </data>
   <data name="Quiet" xml:space="preserve">

@@ -1,4 +1,5 @@
 ﻿using Cyclestreets.Common;
+using Cyclestreets.Objects;
 using Cyclestreets.Pages;
 using Cyclestreets.Resources;
 using Cyclestreets.Utils;
@@ -20,7 +21,9 @@ namespace Cyclestreets.Managers
         private readonly Stackish<GeoCoordinate> _waypoints = new Stackish<GeoCoordinate>();
         private List<RouteSection> _cachedRouteData;
         private bool _isBusy;
-        private Dictionary<string, dynamic> _journeyMap = new Dictionary<string, dynamic>();
+        private readonly Dictionary<string, dynamic> _journeyMap = new Dictionary<string, dynamic>();
+
+        public RouteOverview overview { get; set; }
 
         public bool IsBusy
         {
@@ -49,17 +52,53 @@ namespace Cyclestreets.Managers
             _waypoints.Remove(geoCoordinate);
         }
 
+        public List<RouteSection> CurrentRoute
+        {
+            get { return _cachedRouteData; }
+            set
+            {
+                SetProperty(ref _cachedRouteData, value);
+
+                OnPropertyChanged("HeightChart");
+            }
+        }
+
         private int _currentStep;
         public int CurrentStep
         {
             get { return _currentStep; }
             set
             {
-                if (_cachedRouteData != null && value < _cachedRouteData.Count && value >= 0 )
+                if (_cachedRouteData != null && value < _cachedRouteData.Count && value >= 0)
                 {
                     _currentStep = value;
                     OnPropertyChanged("CurrentStepText");
                 }
+            }
+        }
+
+        public IEnumerable<HeightData> HeightChart
+        {
+            get
+            {
+                List<HeightData> result = new List<HeightData>();
+                int runningDistance = 0;
+                foreach (var routeSection in _cachedRouteData)
+                {
+                    //for(int i=0; i < routeSection.Distances.Count; i++)
+                    if ( routeSection.Distances.Count > 0 )
+                    {
+                        runningDistance += routeSection.Distances[0];
+                        HeightData h = new HeightData
+                        {
+                            Distance = runningDistance,
+                            Height = routeSection.Height[0]
+                        };
+                        result.Add(h);
+                    }
+                    
+                }
+                return result;
             }
         }
 
@@ -79,7 +118,7 @@ namespace Cyclestreets.Managers
         {
             get
             {
-                if (_cachedRouteData != null && _cachedRouteData[CurrentStep].Points.Count > 0 )
+                if (_cachedRouteData != null && _cachedRouteData[CurrentStep].Points.Count > 0)
                 {
                     return _cachedRouteData[CurrentStep].Points[0];
                 }
@@ -91,7 +130,7 @@ namespace Cyclestreets.Managers
         {
             get
             {
-                if (_cachedRouteData != null )
+                if (_cachedRouteData != null)
                 {
                     return _cachedRouteData[CurrentStep].Bearing;
                 }
@@ -204,6 +243,17 @@ namespace Cyclestreets.Managers
                     sectionObj.Points.Add(new GeoCoordinate(latitude, longitude));
                     sectionObj.Description = "Start " + section.start;
 
+                    overview = new RouteOverview
+                    {
+                        Quietness = int.Parse(section.quietness.ToString()),
+                        RouteNumber = int.Parse(section.itinerary.ToString()),
+                        RouteLength = int.Parse(section.length.ToString()),
+                        signalledJunctions = int.Parse(section.signalledJunctions.ToString()),
+                        signalledCrossings = int.Parse(section.signalledCrossings.ToString()),
+                        grammesCO2saved = int.Parse(section.grammesCO2saved.ToString()),
+                        calories = int.Parse(section.calories.ToString())
+                    };
+
                     result.Add(sectionObj);
                 }
                 else if (marker["@attributes"].type == "segment")
@@ -229,11 +279,12 @@ namespace Cyclestreets.Managers
                     sectionObj.Description = section.turn.ToString() + " " + section.name;
                     sectionObj.Distance = int.Parse(section.distance.ToString());
                     sectionObj.Bearing = double.Parse(section.startBearing.ToString());
+                    sectionObj.Time = int.Parse(section.time.ToString());
                     result.Add(sectionObj);
                 }
             }
 
-            _cachedRouteData = result;
+            CurrentRoute = result;
             return result;
         }
 

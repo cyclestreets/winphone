@@ -296,7 +296,7 @@
 				<ColumnDefinition Width="29*"/>
 			</Grid.ColumnDefinitions>
 			<toolkit:ListPicker x:Name="routeTypePicker" SelectionChanged="routeTypePicker_SelectionChanged" Margin="10,5,0,10" Padding="0"/>
-			<Image Source="/Assets/icons/dark/appbar.information.circle.png" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="None" Margin="0" Grid.Column="1" Tap="Image_Tap_1"/>
+			<Image x:Name="routeInfo" Source="/Assets/icons/dark/appbar.information.circle.png" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="None" Margin="0" Grid.Column="1" Tap="routeInfo_Tap"/>
 		</Grid>
 		<Grid x:Name="routeDetails" VerticalAlignment="Bottom" Margin="0" RenderTransformOrigin="0.5,0.5" Grid.Row="1">
 			<Grid.Background>

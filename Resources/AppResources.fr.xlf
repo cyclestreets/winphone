@@ -220,18 +220,18 @@ Pourquoi ne pas nous donner une cote 5 étoiles pour montrer votre appréciation
           <target state="needs-review-translation" state-qualifier="mt-suggestion">Au calme</target>
         </trans-unit>
         <trans-unit translate="yes" id="Resx/MetresShort" xml:space="preserve">
-          <source>m
+          <source>{0}m
 </source>
           <target state="needs-review-translation" state-qualifier="mt-suggestion">m
-</target>
+</target><note from="MultilingualUpdate" priority="2" annotates="source">Please verify the translation’s accuracy as the source string was updated after it was translated.</note>
         </trans-unit>
         <trans-unit translate="yes" id="Resx/CouldNotCalculateRoute" xml:space="preserve">
           <source>Could not calculate route</source>
           <target state="needs-review-translation" state-qualifier="mt-suggestion">Ne peut pas calculer itinéraire</target>
         </trans-unit>
         <trans-unit translate="yes" id="Resx/Miles" xml:space="preserve">
-          <source> miles</source>
-          <target state="needs-review-translation" state-qualifier="mt-suggestion"> km</target>
+          <source>{0} miles</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion"> km</target><note from="MultilingualUpdate" priority="2" annotates="source">Please verify the translation’s accuracy as the source string was updated after it was translated.</note>
         </trans-unit>
         <trans-unit translate="yes" id="Resx/Distance" xml:space="preserve">
           <source>Distance</source>

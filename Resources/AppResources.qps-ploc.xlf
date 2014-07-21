@@ -220,18 +220,18 @@ Why not give us a 5 star rating to show your appreciation?</source>
           <target state="needs-review-translation" state-qualifier="mt-suggestion">[8536F][!!_Qúìęť_!!]</target>
         </trans-unit>
         <trans-unit translate="yes" id="Resx/MetresShort" xml:space="preserve">
-          <source>m
+          <source>{0}m
 </source>
           <target state="needs-review-translation" state-qualifier="mt-suggestion">[AA64E][!!_м
-_!!]</target>
+_!!]</target><note from="MultilingualUpdate" priority="2" annotates="source">Please verify the translation’s accuracy as the source string was updated after it was translated.</note>
         </trans-unit>
         <trans-unit translate="yes" id="Resx/CouldNotCalculateRoute" xml:space="preserve">
           <source>Could not calculate route</source>
           <target state="needs-review-translation" state-qualifier="mt-suggestion">[FFC0C][!!_Ĉõµłð йõт čâłćµļãтè ѓõûţé_!!!!!!!!]</target>
         </trans-unit>
         <trans-unit translate="yes" id="Resx/Miles" xml:space="preserve">
-          <source> miles</source>
-          <target state="needs-review-translation" state-qualifier="mt-suggestion">[CC25E][!!_ мįľêŝ_!!]</target>
+          <source>{0} miles</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[CC25E][!!_ мįľêŝ_!!]</target><note from="MultilingualUpdate" priority="2" annotates="source">Please verify the translation’s accuracy as the source string was updated after it was translated.</note>
         </trans-unit>
         <trans-unit translate="yes" id="Resx/Distance" xml:space="preserve">
           <source>Distance</source>

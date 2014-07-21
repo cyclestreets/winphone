@@ -18,7 +18,7 @@ namespace Cyclestreets.Pages
             InitializeComponent();
 
             //DirectionList.ItemsSource = DirectionsPage.route.segments;
-            factsList.ItemsSource = DirectionsPage.Facts;
+            //  factsList.ItemsSource = DirectionsPage.Facts;
 
             // hack. See here http://stackoverflow.com/questions/5334574/applicationbariconbutton-is-null/5334703#5334703
             saveButton = ApplicationBar.Buttons[0] as ApplicationBarIconButton;

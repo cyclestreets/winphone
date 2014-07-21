@@ -7,20 +7,11 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:sparrow="clr-namespace:Sparrow.Chart;assembly=Sparrow.Chart.WP8.45"
 	xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
-	xmlns:local="clr-namespace:Cyclestreets.Pages" x:Name="phoneApplicationPage"
+	xmlns:local="clr-namespace:Cyclestreets.Pages" xmlns:telerikChart="clr-namespace:Telerik.Windows.Controls;assembly=Telerik.Windows.Controls.Chart" xmlns:Charting="clr-namespace:Telerik.Charting;assembly=Telerik.Windows.Controls.Chart" x:Name="phoneApplicationPage"
 	x:Class="Cyclestreets.Pages.DirectionsResults"
 	mc:Ignorable="d"
 	SupportedOrientations="Portrait"  Orientation="Portrait"
-	shell:SystemTray.IsVisible="False" d:DataContext="{d:DesignData /SampleData/RouteSegmentCollectionSampleData.xaml}">
-    <phone:PhoneApplicationPage.FontFamily>
-        <StaticResource ResourceKey="PhoneFontFamilyNormal"/>
-    </phone:PhoneApplicationPage.FontFamily>
-    <phone:PhoneApplicationPage.FontSize>
-        <StaticResource ResourceKey="PhoneFontSizeNormal"/>
-    </phone:PhoneApplicationPage.FontSize>
-    <phone:PhoneApplicationPage.Foreground>
-        <StaticResource ResourceKey="PhoneForegroundBrush"/>
-    </phone:PhoneApplicationPage.Foreground>
+	shell:SystemTray.IsVisible="False" DataContext="{Binding DirectionsPage, Mode=OneWay, Source={StaticResource Locator}}" FontFamily="{StaticResource PhoneFontFamilyNormal}" FontSize="{StaticResource PhoneFontSizeNormal}" Foreground="{StaticResource PhoneForegroundBrush}">
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar>
             <shell:ApplicationBarIconButton x:Name="saveButton" IconUri="/Assets/AppBar/save.png" IsEnabled="True" Text="Save" Click="ApplicationBarIconButton_Click"/>
@@ -28,9 +19,6 @@
             <shell:ApplicationBarIconButton x:Name="routeFeedback" IconUri="/Assets/AppBar/feature.email.png" IsEnabled="True" Text="Route Feedback" Click="routeFeedback_Click"/>
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>
-    <phone:PhoneApplicationPage.Background>
-        <ImageBrush Stretch="Fill" ImageSource="/Assets/cyclestreets19586.jpg"/>
-    </phone:PhoneApplicationPage.Background>
 
     <!--LayoutRoot contains the root grid where all other page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Black">
@@ -56,7 +44,7 @@
                     <TextBlock Margin="0" TextWrapping="Wrap" Text="Time" VerticalAlignment="Center" FontWeight="Light" Foreground="#DEFFFFFF"/>
                     <TextBlock Margin="0,2.2,0,1.8" TextWrapping="Wrap" Text="Distance" VerticalAlignment="Center" FontWeight="Light" Grid.Column="1" HorizontalAlignment="Right" Foreground="#DEFFFFFF"/>
                     <ScrollViewer Margin="0" Grid.ColumnSpan="2" Grid.Row="1">
-                        <phone:LongListSelector x:Name="DirectionList" HorizontalContentAlignment="Stretch" Foreground="#DEFFFFFF" ItemsSource="{Binding Mode=OneWay}" DataContext="{Binding}">
+                        <phone:LongListSelector x:Name="DirectionList" HorizontalContentAlignment="Stretch" Foreground="#DEFFFFFF" ItemsSource="{Binding RouteManagerPtr.CurrentRoute}" DataContext="{Binding}">
                             <phone:LongListSelector.ItemTemplate>
                                 <DataTemplate>
                                     <Grid Margin="0" Background="{Binding BGColour}">
@@ -71,11 +59,11 @@
                                             <ColumnDefinition/>
                                         </Grid.ColumnDefinitions>
                                         <Border BorderBrush="Black" BorderThickness="1" Grid.ColumnSpan="2" Background="#33008B00"/>
-                                        <TextBlock x:Name="time" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Time}" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="20" FontWeight="SemiBold" FontFamily="Segoe UI" Width="130"/>
+                                        <TextBlock x:Name="time" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding TimeString, Mode=OneWay}" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="20" FontWeight="SemiBold" FontFamily="Segoe UI" Width="130"/>
                                         <TextBlock x:Name="distance" HorizontalAlignment="Right" TextWrapping="Wrap" Text="{Binding Distance}" VerticalAlignment="Center" Margin="0" Grid.Column="1" FontSize="20" FontWeight="SemiBold" FontFamily="Segoe UI" Height="27" Padding="0,0,10,0"/>
                                         <StackPanel Grid.ColumnSpan="2" Grid.Row="1">
                                             <TextBlock x:Name="turn" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Turn}" VerticalAlignment="Center" FontSize="15" Margin="10,0,0,0"/>
-                                            <TextBlock x:Name="streets" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Name}" VerticalAlignment="Center" Padding="0" FontSize="15" FontWeight="SemiBold" Margin="10,0,0,0"/>
+                                            <TextBlock x:Name="streets" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Description}" VerticalAlignment="Center" Padding="0" FontSize="15" FontWeight="SemiBold" Margin="10,0,0,0"/>
                                         </StackPanel>
                                         <StackPanel Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal" Grid.Row="2" Margin="10,5,0,5" Height="20" Width="263">
                                             <Image x:Name="type" HorizontalAlignment="Center" VerticalAlignment="Center" Source="/Assets/bike_white.png" Margin="0,0,10,0"/>
@@ -88,40 +76,77 @@
                     </ScrollViewer>
                 </Grid>
             </phone:PivotItem>
-            <phone:PivotItem CacheMode="{x:Null}" Header="facts">
+            <phone:PivotItem CacheMode="{x:Null}" Header="facts" >
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="173"/>
                         <RowDefinition Height="23"/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <sparrow:SparrowChart x:Name="heightChart" Margin="0,0,10,0">
-                        <sparrow:SparrowChart.Foreground>
-                            <SolidColorBrush Color="White"/>
-                        </sparrow:SparrowChart.Foreground>
-                        <sparrow:SparrowChart.DataContext>
-                            <local:RouteDetails/>
-                        </sparrow:SparrowChart.DataContext>
-                        <sparrow:SparrowChart.XAxis>
-                            <sparrow:LinearXAxis ShowCrossLines="False"/>
-                        </sparrow:SparrowChart.XAxis>
-                        <sparrow:SparrowChart.YAxis>
-                            <sparrow:LinearYAxis ShowCrossLines="False" Margin="0" ZoomOffset="1"/>
-                        </sparrow:SparrowChart.YAxis>
-                        <sparrow:LineSeries PointsSource="{Binding HeightChart}" XPath="Distance" YPath="Height" Foreground="White" />
-                    </sparrow:SparrowChart>
                     <TextBlock Margin="0" Grid.Row="1" TextWrapping="Wrap" Text="Elevation Chart. Distance and height in metres." Foreground="#DEFFFFFF" FontWeight="Light" FontSize="15" TextAlignment="Center" Grid.RowSpan="2"/>
-                    <phone:LongListSelector x:Name="factsList" HorizontalContentAlignment="Stretch" Foreground="#DEFFFFFF" Margin="0" Grid.Row="2">
-                        <phone:LongListSelector.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Background="#3F000000" Margin="0" Orientation="Horizontal" >
-                                    <Image Source="{Binding ItemImage}"/>
-                                    <TextBlock Text="{Binding Caption}" Margin="10,0"/>
-                                    <TextBlock Text="{Binding Value}" FontWeight="Bold"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </phone:LongListSelector.ItemTemplate>
-                    </phone:LongListSelector>
+                    <StackPanel Grid.Row="2">
+                        <Grid Height="40">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="9*"/>
+                                <ColumnDefinition Width="67*"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Source="/Assets/clock.png" Height="25"/>
+                            <TextBlock Grid.Column="1"/>
+                        </Grid>
+                        <Grid Height="40">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="9*"/>
+                                <ColumnDefinition Width="67*"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Source="/Assets/bullet_go.png" Height="25"/>
+                            <TextBlock Grid.Column="1" Text="{Binding RouteManagerPtr.overview.RouteLengthString, Mode=OneWay}"/>
+                        </Grid>
+                        <Grid Height="40">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="9*"/>
+                                <ColumnDefinition Width="67*"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Source="/Assets/heart.png" Height="25"/>
+                            <TextBlock Grid.Column="1" Text="{Binding RouteManagerPtr.overview.calories}"/>
+                        </Grid>
+                        <Grid Height="40">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="9*"/>
+                                <ColumnDefinition Width="67*"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Source="/Assets/world.png" Height="25"/>
+                            <TextBlock Grid.Column="1" Text="{Binding RouteManagerPtr.overview.grammesCO2saved}"/>
+                        </Grid>
+                        <Grid Height="40">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="9*"/>
+                                <ColumnDefinition Width="67*"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Source="/Assets/picture.png" Height="25"/>
+                            <TextBlock Grid.Column="1" Text="{Binding RouteManagerPtr.overview.QuietnessString, Mode=OneWay}"/>
+                        </Grid>
+                    </StackPanel>
+                    <telerikChart:RadCartesianChart HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" >
+                        <telerikChart:RadCartesianChart.Grid>
+                            <telerikChart:CartesianChartGrid MajorYLineDashArray="5, 5" MajorLinesVisibility="Y">
+                                <telerikChart:CartesianChartGrid.MajorYLineStyle>
+                                    <Style TargetType="Line">
+                                        <Setter Property="Stroke" Value="Gray"/>
+                                    </Style>
+                                </telerikChart:CartesianChartGrid.MajorYLineStyle>
+                            </telerikChart:CartesianChartGrid>
+                        </telerikChart:RadCartesianChart.Grid>
+                        <telerikChart:RadCartesianChart.VerticalAxis>
+                            <telerikChart:LinearAxis LineStroke="{StaticResource PhoneDisabledBrush}" LineThickness="2" RangeExtendDirection="Positive" MajorStep="10" FontSize="15" LabelInterval="2"/>
+                        </telerikChart:RadCartesianChart.VerticalAxis>
+                        <telerikChart:RadCartesianChart.HorizontalAxis>
+                            <telerikChart:CategoricalAxis LineStroke="{StaticResource PhoneDisabledBrush}" LineThickness="2" LabelInterval="4" LabelFitMode="Rotate" MajorTickInterval="2" FontSize="15"/>
+                        </telerikChart:RadCartesianChart.HorizontalAxis>
+                        <telerikChart:SplineAreaSeries CategoryBinding="Distance"
+                                  ValueBinding="Height"
+                                  ItemsSource="{Binding RouteManagerPtr.HeightChart, Mode=OneWay}">
+                        </telerikChart:SplineAreaSeries>
+                    </telerikChart:RadCartesianChart>
                 </Grid>
             </phone:PivotItem>
         </phone:Pivot>
