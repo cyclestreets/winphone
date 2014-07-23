@@ -115,6 +115,22 @@ Pourquoi ne pas nous donner une cote 5 étoiles pour montrer votre appréciation
           <source>journey facts</source>
           <target state="needs-review-translation" state-qualifier="mt-suggestion">faits de voyage</target>
         </trans-unit>
+        <trans-unit id="Resx/UnknownStreet" translate="yes" xml:space="preserve">
+          <source>Unknown street</source>
+          <target state="new">Unknown street</target>
+        </trans-unit>
+        <trans-unit id="Resx/VoiceDescription" translate="yes" xml:space="preserve">
+          <source>After {0} {1} onto {2}</source>
+          <target state="new">After {0} {1} onto {2}</target>
+        </trans-unit>
+        <trans-unit id="Resx/VoiceDescriptionEnd" translate="yes" xml:space="preserve">
+          <source>After {0} you will reach your destination.</source>
+          <target state="new">After {0} you will reach your destination.</target>
+        </trans-unit>
+        <trans-unit id="Resx/VoiceDescriptionStart" translate="yes" xml:space="preserve">
+          <source>Start at {0}</source>
+          <target state="new">Start at {0}</target>
+        </trans-unit>
         <trans-unit translate="yes" id="Resx/directions" xml:space="preserve">
           <source>directions</source>
           <target state="needs-review-translation" state-qualifier="mt-suggestion">directions</target>
@@ -220,8 +236,7 @@ Pourquoi ne pas nous donner une cote 5 étoiles pour montrer votre appréciation
           <target state="needs-review-translation" state-qualifier="mt-suggestion">Au calme</target>
         </trans-unit>
         <trans-unit translate="yes" id="Resx/MetresShort" xml:space="preserve">
-          <source>{0}m
-</source>
+          <source>{0} metres</source>
           <target state="needs-review-translation" state-qualifier="mt-suggestion">m
 </target><note from="MultilingualUpdate" priority="2" annotates="source">Please verify the translation’s accuracy as the source string was updated after it was translated.</note>
         </trans-unit>

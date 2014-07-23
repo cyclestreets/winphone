@@ -459,8 +459,7 @@ namespace Cyclestreets.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0}m
-        ///.
+        ///   Looks up a localized string similar to {0} metres.
         /// </summary>
         public static string MetresShort {
             get {
@@ -869,11 +868,47 @@ namespace Cyclestreets.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unknown street.
+        /// </summary>
+        public static string UnknownStreet {
+            get {
+                return ResourceManager.GetString("UnknownStreet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Very Busy.
         /// </summary>
         public static string VeryBusy {
             get {
                 return ResourceManager.GetString("VeryBusy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to After {0} {1} onto {2}.
+        /// </summary>
+        public static string VoiceDescription {
+            get {
+                return ResourceManager.GetString("VoiceDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to After {0} you will reach your destination..
+        /// </summary>
+        public static string VoiceDescriptionEnd {
+            get {
+                return ResourceManager.GetString("VoiceDescriptionEnd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start at {0}.
+        /// </summary>
+        public static string VoiceDescriptionStart {
+            get {
+                return ResourceManager.GetString("VoiceDescriptionStart", resourceCulture);
             }
         }
     }

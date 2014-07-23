@@ -1,11 +1,29 @@
-﻿using System;
+﻿using Cyclestreets.Common;
+using Cyclestreets.Resources;
+using System;
 using System.Collections.Generic;
 using System.Device.Location;
 using System.Windows.Media.Imaging;
-using Cyclestreets.Common;
 
 namespace Cyclestreets.Pages
 {
+
+    public class StartPoint : RouteSection
+    {
+        public override string VoiceDescription
+        {
+            get { return string.Format(AppResources.VoiceDescriptionStart, Description ); }
+        }
+    }
+
+    public class EndPoint : RouteSection
+    {
+        public override string VoiceDescription
+        {
+            get { return string.Format(AppResources.VoiceDescriptionEnd, DistanceString); }
+        }
+    }
+
     public class RouteSection : BindableBase
     {
         public readonly List<GeoCoordinate> Points = new List<GeoCoordinate>();
@@ -13,7 +31,20 @@ namespace Cyclestreets.Pages
         public List<int> Height = new List<int>();
 
         public string Description { get; set; }
-        public dynamic Distance;
+
+        public virtual string VoiceDescription
+        {
+            get { return string.Format(AppResources.VoiceDescription, DistanceString, Turn, Description); }
+        }
+
+        public string DistanceString
+        {
+            get
+            {
+                return Distance < 1000 ? String.Format(AppResources.MetresShort, Distance) : String.Format(AppResources.Miles, (int)(Distance * 0.00062137));
+            }
+        }
+        public int Distance;
         public dynamic Bearing;
         private int _time;
         private string _turn;
@@ -50,7 +81,7 @@ namespace Cyclestreets.Pages
         {
             get
             {
-                TimeSpan t = TimeSpan.FromSeconds( Time );
+                TimeSpan t = TimeSpan.FromSeconds(Time);
 
                 return t.Hours > 0 ? string.Format("{0}h {1:D2}m {2:D2}s", t.Hours, t.Minutes, t.Seconds) : string.Format("{0}m {1:D2}s:", t.Minutes, t.Seconds);
             }

@@ -115,6 +115,22 @@ Why not give us a 5 star rating to show your appreciation?</source>
           <source>journey facts</source>
           <target state="needs-review-translation" state-qualifier="mt-suggestion">[1AA5B][!!_јóµřηéŷ ƒáċтŝ_!!]</target>
         </trans-unit>
+        <trans-unit id="Resx/UnknownStreet" translate="yes" xml:space="preserve">
+          <source>Unknown street</source>
+          <target state="new">Unknown street</target>
+        </trans-unit>
+        <trans-unit id="Resx/VoiceDescription" translate="yes" xml:space="preserve">
+          <source>After {0} {1} onto {2}</source>
+          <target state="new">After {0} {1} onto {2}</target>
+        </trans-unit>
+        <trans-unit id="Resx/VoiceDescriptionEnd" translate="yes" xml:space="preserve">
+          <source>After {0} you will reach your destination.</source>
+          <target state="new">After {0} you will reach your destination.</target>
+        </trans-unit>
+        <trans-unit id="Resx/VoiceDescriptionStart" translate="yes" xml:space="preserve">
+          <source>Start at {0}</source>
+          <target state="new">Start at {0}</target>
+        </trans-unit>
         <trans-unit translate="yes" id="Resx/directions" xml:space="preserve">
           <source>directions</source>
           <target state="needs-review-translation" state-qualifier="mt-suggestion">[D283C][!!_đířêĉτįóйŝ_!!]</target>
@@ -220,8 +236,7 @@ Why not give us a 5 star rating to show your appreciation?</source>
           <target state="needs-review-translation" state-qualifier="mt-suggestion">[8536F][!!_Qúìęť_!!]</target>
         </trans-unit>
         <trans-unit translate="yes" id="Resx/MetresShort" xml:space="preserve">
-          <source>{0}m
-</source>
+          <source>{0} metres</source>
           <target state="needs-review-translation" state-qualifier="mt-suggestion">[AA64E][!!_м
 _!!]</target><note from="MultilingualUpdate" priority="2" annotates="source">Please verify the translation’s accuracy as the source string was updated after it was translated.</note>
         </trans-unit>

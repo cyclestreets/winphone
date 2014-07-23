@@ -87,7 +87,7 @@ namespace Cyclestreets.Managers
                 foreach (var routeSection in _cachedRouteData)
                 {
                     //for(int i=0; i < routeSection.Distances.Count; i++)
-                    if ( routeSection.Distances.Count > 0 )
+                    if (routeSection.Distances.Count > 0)
                     {
                         runningDistance += routeSection.Distance;
                         HeightData h = new HeightData
@@ -97,9 +97,9 @@ namespace Cyclestreets.Managers
                         };
                         result.Add(h);
                     }
-                    
+
                 }
-                
+
                 return result;
             }
         }
@@ -242,16 +242,19 @@ namespace Cyclestreets.Managers
 
             List<RouteSection> result = new List<RouteSection>();
             dynamic journeyObject = _journeyMap[routeType];
+            int lastDistance = 0;
+            GeoCoordinate endPoint = null;
             foreach (var marker in journeyObject.marker)
             {
                 if (marker["@attributes"].type == "route")
                 {
                     var section = marker["@attributes"];
-                    RouteSection sectionObj = new RouteSection();
-                    double longitude = double.Parse(section.start_longitude.ToString());
-                    double latitude = double.Parse(section.start_latitude.ToString());
-                    sectionObj.Points.Add(new GeoCoordinate(latitude, longitude));
-                    sectionObj.Description = "Start " + section.start;
+                    //RouteSection sectionObj = new RouteSection();
+                    double longitude = double.Parse(section.finish_longitude.ToString());
+                    double latitude = double.Parse(section.finish_latitude.ToString());
+                    endPoint = new GeoCoordinate(latitude, longitude);
+                    // sectionObj.Points.Add(new GeoCoordinate(latitude, longitude));
+                    //sectionObj.Description = "Start " + section.start;
 
                     overview = new RouteOverview
                     {
@@ -264,12 +267,13 @@ namespace Cyclestreets.Managers
                         calories = int.Parse(section.calories.ToString())
                     };
 
-                    result.Add(sectionObj);
+                    //result.Add(sectionObj);
                 }
                 else if (marker["@attributes"].type == "segment")
                 {
                     var section = marker["@attributes"];
-                    RouteSection sectionObj = new RouteSection();
+                    RouteSection sectionObj = null;
+                    sectionObj = result.Count == 0 ? new StartPoint() : new RouteSection();
                     string[] points = section.points.ToString().Split(' ');
                     foreach (string t in points)
                     {
@@ -286,14 +290,23 @@ namespace Cyclestreets.Managers
                     convertedItems = Util.ConvertAll(temp, int.Parse);
                     sectionObj.Distances = new List<int>(convertedItems);
                     sectionObj.Walking = int.Parse(section.walk.ToString()) == 1;
-                    sectionObj.Description = section.turn.ToString() + " " + section.name;
-                    sectionObj.Distance = int.Parse(section.distance.ToString());
+                    sectionObj.Description = section.name.ToString().Equals("lcn?") ? AppResources.UnknownStreet : section.name;
+                    sectionObj.Distance = lastDistance;
+                    lastDistance = int.Parse(section.distance.ToString());
                     sectionObj.Bearing = double.Parse(section.startBearing.ToString());
                     sectionObj.Time = int.Parse(section.time.ToString());
                     sectionObj.Turn = section.turn.ToString();
                     result.Add(sectionObj);
                 }
             }
+
+            EndPoint ep = new EndPoint
+            {
+                Distance = lastDistance,
+                Turn = "straight on",
+            };
+            ep.Points.Add(endPoint);
+            result.Add(ep);
 
             CurrentRoute = result;
             return result;
