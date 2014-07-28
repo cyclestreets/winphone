@@ -25,6 +25,11 @@ namespace Cyclestreets.Managers
 
         public RouteOverview overview { get; set; }
 
+        public Dictionary<string, dynamic> RouteCacheForSaving
+        {
+            get { return _journeyMap; }
+        }
+
         public bool IsBusy
         {
             get

@@ -1187,7 +1187,7 @@ namespace Cyclestreets.Pages
         {
             RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
             rm.CurrentStep++;
-            
+
             MyMap.SetView(rm.CurrentGeoCoordinate, 20, rm.CurrentBearing, 75);
 
             MyMap.TileSources.Clear();
@@ -1330,7 +1330,6 @@ namespace Cyclestreets.Pages
 
         private void saveRoute_Click(object sender, EventArgs e)
         {
-            PhoneApplicationService.Current.State["route"] = currentRouteData;
             NavigationService.Navigate(new Uri("/Pages/SaveRoute.xaml", UriKind.Relative));
         }
 
