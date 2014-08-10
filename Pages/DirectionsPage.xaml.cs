@@ -1,6 +1,7 @@
 ﻿/// Satnav mode
 /// Prompt feedback
 
+using System.Windows.Navigation;
 using Cyclestreets.Managers;
 using Cyclestreets.Resources;
 using Cyclestreets.Utils;
@@ -330,20 +331,34 @@ namespace Cyclestreets.Pages
             //LocationManager.instance.StartTracking();
         }
 
-        protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
-            LocationManager.instance.trackingGeolocator.PositionChanged += positionChangedHandler;
+            if (e.NavigationMode == NavigationMode.New)
+            {
+                LocationManager.instance.trackingGeolocator.PositionChanged += positionChangedHandler;
+                SetupTutorial();
+
+                if (LocationManager.instance.MyGeoPosition != null)
+                {
+                    MyMap.Center = CoordinateConverter.ConvertGeocoordinate(LocationManager.instance.MyGeoPosition.Coordinate);
+                }
+            }
 
             if (NavigationContext.QueryString.ContainsKey(@"plan"))
             {
                 _hideRouteOptions = (NavigationContext.QueryString[@"plan"].Equals(@"leisure"));
             }
 
-            SetupTutorial();
-
             routeTypePicker.Visibility = _hideRouteOptions ? Visibility.Collapsed : Visibility.Visible;
+
+            RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
+            var newplan = rm.HasCachedRoute(currentPlan);
+            if (newplan == null) return;
+
+            rm.IsBusy = true;
+            pleaseWait.Width = this.Width;
         }
 
         private void SetupTutorial()
@@ -522,7 +537,7 @@ namespace Cyclestreets.Pages
                 if (startPoint.SelectedItem is CSResult)
                 {
                     CSResult res = startPoint.SelectedItem as CSResult;
-                    setCurrentPosition(res.Coord);
+                    SetCurrentPosition(res.Coord);
 
                     SmartDispatcher.BeginInvoke(() =>
                     {
@@ -553,7 +568,7 @@ namespace Cyclestreets.Pages
             if (e.Result.Count > 0)
             {
                 GeoCoordinate g = e.Result[0].GeoCoordinate;
-                setCurrentPosition(g);
+                SetCurrentPosition(g);
                 App.networkStatus.networkIsBusy = false;
                 this.Focus();
             }
@@ -599,7 +614,7 @@ namespace Cyclestreets.Pages
                 {
                     JArray pos = (JArray)suggestions[0]["position"];
                     GeoCoordinate g = new GeoCoordinate((double)pos[0], (double)pos[1]);
-                    setCurrentPosition(g);
+                    SetCurrentPosition(g);
 
                     App.networkStatus.networkIsBusy = false;
                 }
@@ -611,7 +626,7 @@ namespace Cyclestreets.Pages
         private async void cursorPos_Click(object sender, EventArgs e)
         {
             MapLocation loc = await GeoUtils.StartReverseGeocode(MyMap.Center);
-            setCurrentPosition(loc);
+            SetCurrentPosition(loc);
 
 
 
@@ -725,7 +740,7 @@ namespace Cyclestreets.Pages
             //confirmWaypoint.IsEnabled = false;
         }
 
-        private void setCurrentPosition(MapLocation loc)
+        private void SetCurrentPosition(MapLocation loc)
         {
             if (loc == null)
             {
@@ -733,7 +748,7 @@ namespace Cyclestreets.Pages
                     "Could not find location. Please try again", MessageBoxButton.OK);
                 return;
             }
-            setCurrentPosition(loc.GeoCoordinate);
+            SetCurrentPosition(loc.GeoCoordinate);
 
             SmartDispatcher.BeginInvoke(() =>
             {
@@ -744,13 +759,10 @@ namespace Cyclestreets.Pages
             });
         }
 
-        private void setCurrentPosition(GeoCoordinate c)
+        private void SetCurrentPosition(GeoCoordinate c)
         {
             _current = c;
-            SmartDispatcher.BeginInvoke(() =>
-            {
-                MyMap.SetView(_current, 16);
-            });
+            SmartDispatcher.BeginInvoke(() => MyMap.SetView(_current, 16));
         }
 
         /*private void RouteFound(byte[] data)
@@ -1248,21 +1260,20 @@ namespace Cyclestreets.Pages
 
         private void privacy_Click(object sender, System.EventArgs e)
         {
-            WebBrowserTask url = new WebBrowserTask();
-            url.Uri = new System.Uri("http://www.cyclestreets.net/privacy/");
+            WebBrowserTask url = new WebBrowserTask {Uri = new Uri("http://www.cyclestreets.net/privacy/")};
             url.Show();
         }
 
-        private void MyMap_Loaded(object sender, RoutedEventArgs e)
+        private async void MyMap_Loaded(object sender, RoutedEventArgs e)
         {
             Microsoft.Phone.Maps.MapsSettings.ApplicationContext.ApplicationId = "823e41bf-889c-4102-863f-11cfee11f652";
             Microsoft.Phone.Maps.MapsSettings.ApplicationContext.AuthenticationToken = "xrQJghWalYn52fTfnUhWPQ";
-
+ 
+            RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
             if (PhoneApplicationService.Current.State.ContainsKey("loadedRoute") && PhoneApplicationService.Current.State["loadedRoute"] != null)
             {
                 string routeData = (string)PhoneApplicationService.Current.State["loadedRoute"];
                 _hideRouteOptions = true;
-                RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
                 rm.ParseRouteData(routeData, currentPlan, false);
                 PhoneApplicationService.Current.State["loadedRoute"] = null;
             }
@@ -1272,6 +1283,26 @@ namespace Cyclestreets.Pages
             positionChangedHandler(null, null);
 
             SetMapStyle();
+
+           
+            var newplan = rm.HasCachedRoute(currentPlan);
+            if (newplan == null) return;
+            currentPlan = newplan;
+            bool result = await rm.FindRoute(newplan, false);
+            if (!result)
+            {
+                MarkedUp.AnalyticClient.Error("Route Planning Error");
+
+                MessageBox.Show(
+                    "Could not parse route data information from server. Please let us know about this error with the route you were trying to plan");
+            }
+            else
+            {
+                PlotCachedRoute();
+
+                rm.IsBusy = false;
+                pleaseWait.Width = this.Width;
+            }
         }
 
         private void SetMapStyle()
@@ -1552,7 +1583,7 @@ namespace Cyclestreets.Pages
             }
             ExtendedVisualStateManager.GoToElementState(LayoutRoot, "RouteFoundState", true);
 
-            MyMap.SetView(rm.GetRouteBounds());
+            SmartDispatcher.BeginInvoke(() => MyMap.SetView(rm.GetRouteBounds()));
 
             if (!SettingManager.instance.GetBoolValue("tutorialEnabled", true)) return;
             bool shownTutorial = SettingManager.instance.GetBoolValue("shownTutorialRouteType", false);
@@ -1567,7 +1598,7 @@ namespace Cyclestreets.Pages
                 GeoCoordinate geo = CoordinateConverter.ConvertGeocoordinate(LocationManager.instance.MyGeoPosition.Coordinate);
                 MapLocation loc = await GeoUtils.StartReverseGeocode(geo);
 
-                setCurrentPosition(loc);
+                SetCurrentPosition(loc);
 
                 confirmWaypoint_Click(sender, e);
             }

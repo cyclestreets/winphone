@@ -101,7 +101,7 @@
                                 <ColumnDefinition Width="67*"/>
                             </Grid.ColumnDefinitions>
                             <Image Source="/Assets/bullet_go.png" Height="25"/>
-                            <TextBlock Grid.Column="1" Text="{Binding RouteManagerPtr.overview.RouteLengthString, Mode=OneWay}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding RouteManagerPtr.Overview.RouteLengthString, Mode=OneWay}"/>
                         </Grid>
                         <Grid Height="40">
                             <Grid.ColumnDefinitions>
@@ -109,7 +109,7 @@
                                 <ColumnDefinition Width="67*"/>
                             </Grid.ColumnDefinitions>
                             <Image Source="/Assets/heart.png" Height="25"/>
-                            <TextBlock Grid.Column="1" Text="{Binding RouteManagerPtr.overview.calories}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding RouteManagerPtr.Overview.calories}"/>
                         </Grid>
                         <Grid Height="40">
                             <Grid.ColumnDefinitions>
@@ -117,7 +117,7 @@
                                 <ColumnDefinition Width="67*"/>
                             </Grid.ColumnDefinitions>
                             <Image Source="/Assets/world.png" Height="25"/>
-                            <TextBlock Grid.Column="1" Text="{Binding RouteManagerPtr.overview.grammesCO2saved}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding RouteManagerPtr.Overview.grammesCO2saved}"/>
                         </Grid>
                         <Grid Height="40">
                             <Grid.ColumnDefinitions>
@@ -125,7 +125,7 @@
                                 <ColumnDefinition Width="67*"/>
                             </Grid.ColumnDefinitions>
                             <Image Source="/Assets/picture.png" Height="25"/>
-                            <TextBlock Grid.Column="1" Text="{Binding RouteManagerPtr.overview.QuietnessString, Mode=OneWay}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding RouteManagerPtr.Overview.QuietnessString, Mode=OneWay}"/>
                         </Grid>
                     </StackPanel>
                     <telerikChart:RadCartesianChart HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" >

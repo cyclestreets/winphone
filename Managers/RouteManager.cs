@@ -21,13 +21,15 @@ namespace Cyclestreets.Managers
         private readonly Stackish<GeoCoordinate> _waypoints = new Stackish<GeoCoordinate>();
         private List<RouteSection> _cachedRouteData;
         private bool _isBusy;
-        private readonly Dictionary<string, dynamic> _journeyMap = new Dictionary<string, dynamic>();
+        private dynamic _currentParsedRoute;
+        private Dictionary<string, string> _journeyMap = new Dictionary<string, string>();
 
-        public RouteOverview overview { get; set; }
+        public RouteOverview Overview { get; set; }
 
-        public Dictionary<string, dynamic> RouteCacheForSaving
+        public Dictionary<string, string> RouteCacheForSaving
         {
             get { return _journeyMap; }
+            set { _journeyMap = value; }
         }
 
         public bool IsBusy
@@ -216,14 +218,13 @@ namespace Cyclestreets.Managers
             if (newRoute)
                 _journeyMap.Clear();
 
-            dynamic journeyObject = null;
             if (currentRouteData != null)
             {
                 try
                 {
-                    journeyObject = JObject.Parse(currentRouteData);
-                    if (journeyObject != null)
-                        _journeyMap.Add(routeType, journeyObject);
+                    _currentParsedRoute = JObject.Parse(currentRouteData);
+                    if (_currentParsedRoute != null && !_journeyMap.ContainsKey(routeType))
+                        _journeyMap.Add(routeType, currentRouteData);
                 }
                 catch (Exception ex)
                 {
@@ -232,7 +233,9 @@ namespace Cyclestreets.Managers
                 }
             }
 
-            if (journeyObject != null && journeyObject.marker != null) return true;
+            if (_currentParsedRoute != null && _currentParsedRoute.marker != null)
+                return true;
+
             MessageBox.Show(AppResources.NoRouteFoundTryAnotherSearch, AppResources.NoRoute, MessageBoxButton.OK);
             return false;
         }
@@ -246,7 +249,9 @@ namespace Cyclestreets.Managers
                 return _cachedRouteData;
 
             List<RouteSection> result = new List<RouteSection>();
-            dynamic journeyObject = _journeyMap[routeType];
+            if (!ParseRouteData(_journeyMap[routeType], routeType, false))
+                return null;
+            dynamic journeyObject = _currentParsedRoute;
             int lastDistance = 0;
             GeoCoordinate endPoint = null;
             foreach (var marker in journeyObject.marker)
@@ -261,7 +266,7 @@ namespace Cyclestreets.Managers
                     // sectionObj.Points.Add(new GeoCoordinate(latitude, longitude));
                     //sectionObj.Description = "Start " + section.start;
 
-                    overview = new RouteOverview
+                    Overview = new RouteOverview
                     {
                         Quietness = int.Parse(section.quietness.ToString()),
                         RouteNumber = int.Parse(section.itinerary.ToString()),
@@ -317,6 +322,11 @@ namespace Cyclestreets.Managers
             return result;
         }
 
-
+        internal string HasCachedRoute(string defaultPlan)
+        {
+            if (_journeyMap.ContainsKey(defaultPlan))
+                return defaultPlan;
+            return _journeyMap.Count > 0 ? _journeyMap.First().Key : null;
+        }
     }
 }

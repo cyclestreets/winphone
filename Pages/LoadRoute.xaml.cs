@@ -1,47 +1,56 @@
-﻿using System.IO;
+﻿using Cyclestreets.Managers;
+using GalaSoft.MvvmLight.Ioc;
+using Microsoft.Phone.Controls;
+using Polenter.Serialization;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.IO.IsolatedStorage;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
-using Microsoft.Phone.Controls;
-using Microsoft.Phone.Shell;
 
 namespace Cyclestreets.Pages
 {
-	public partial class LoadRoute : PhoneApplicationPage
-	{
-		public LoadRoute()
-		{
-			InitializeComponent();
-		}
+    public partial class LoadRoute : PhoneApplicationPage
+    {
+        public LoadRoute()
+        {
+            InitializeComponent();
+        }
 
-		protected override void OnNavigatedTo( System.Windows.Navigation.NavigationEventArgs e )
-		{
-			base.OnNavigatedTo( e );
+        protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
 
-			string[] names = IsolatedStorageFile.GetUserStoreForApplication().GetFileNames( "*.route" );
-			saveFiles.ItemsSource = names;
-		}
+            string[] names = IsolatedStorageFile.GetUserStoreForApplication().GetFileNames("*.route");
+            saveFiles.ItemsSource = names;
 
-		private void saveFiles_SelectionChanged( object sender, SelectionChangedEventArgs e )
-		{
-			IsolatedStorageFile myFile = IsolatedStorageFile.GetUserStoreForApplication();
-			string sFile = e.AddedItems[ 0 ].ToString();
+            NavigationService.RemoveBackEntry();
+        }
 
-			if( !myFile.FileExists( sFile ) )
-			{
-				MessageBoxResult result = MessageBox.Show( "Save file not found.", "Error", MessageBoxButton.OK );
-				return;
-			}
+        private void saveFiles_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
 
-			//Reading and loading data
-			StreamReader reader = new StreamReader( new IsolatedStorageFileStream( sFile, FileMode.Open, myFile ) );
-			string rawData = reader.ReadToEnd();
-			reader.Close();
+            IsolatedStorageFile myFile = IsolatedStorageFile.GetUserStoreForApplication();
+            var stream = new IsolatedStorageFileStream(e.AddedItems[0].ToString(), FileMode.Open, myFile);
 
-			PhoneApplicationService.Current.State[ "loadedRoute" ] = rawData;
-			NavigationService.GoBack();
+            if (!myFile.FileExists(e.AddedItems[0].ToString()))
+            {
+                MessageBoxResult result = MessageBox.Show("Save file not found.", "Error", MessageBoxButton.OK);
+                return;
+            }
 
-		}
-	}
+            var serializer = new SharpSerializer(true);
+
+            // deserialize (to check the serialization)
+            var res = serializer.Deserialize(stream);
+            rm.RouteCacheForSaving = (Dictionary<string, string>)res;
+            stream.Close();
+
+            NavigationService.Navigate(new Uri("/Pages/DirectionsPage.xaml?plan=saved", UriKind.Relative));
+
+        }
+    }
 }

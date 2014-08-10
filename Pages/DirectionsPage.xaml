@@ -277,11 +277,7 @@
 			<ec:ExtendedVisualStateManager/>
 		</VisualStateManager.CustomVisualStateManager>
 		<Rectangle Fill="#FF3232A2" Stroke="Black" Grid.Row="1" Visibility="Collapsed"/>
-		<maps:Map x:Name="MyMap" Margin="0" Grid.Row="1" ZoomLevel="5.684" Loaded="MyMap_Loaded" LandmarksEnabled="True" Tap="MyMap_Tap">
-			<maps:Map.Center>
-				<Location:GeoCoordinate Altitude="NaN" Course="NaN" HorizontalAccuracy="NaN" Longitude="-4.367" Latitude="55.551" Speed="NaN" VerticalAccuracy="NaN"/>
-			</maps:Map.Center>
-		</maps:Map>
+		<maps:Map x:Name="MyMap" Margin="0" Grid.Row="1" ZoomLevel="5.684" Loaded="MyMap_Loaded" LandmarksEnabled="True" Tap="MyMap_Tap"></maps:Map>
 		<Image x:Name="crosshair" HorizontalAlignment="Center" VerticalAlignment="Center" Source="/Cyclestreets;component/Assets/crosshair.png" Height="150" Width="150" Grid.Row="1"/>
 		<es:Arc x:Name="myLocationIndicator" ArcThickness="5" ArcThicknessUnit="Pixel" EndAngle="360" HorizontalAlignment="Left" Height="31.985" Margin="0" Grid.Row="1" Stretch="None" Stroke="Black" StartAngle="0" UseLayoutRounding="False" VerticalAlignment="Bottom" Width="31.985" Visibility="Collapsed" Fill="#FF000000"/>
 		<Grid x:Name="routeType" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Grid.Row="1">
