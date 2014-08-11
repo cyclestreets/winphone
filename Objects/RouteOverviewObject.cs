@@ -8,7 +8,7 @@ using Cyclestreets.Resources;
 
 namespace Cyclestreets.Objects
 {
-    public class RouteOverview : BindableBase
+    public class RouteOverviewObject : BindableBase
     {
         public int RouteNumber { get; set; }
         public int RouteLength { get; set; }
@@ -41,7 +41,7 @@ namespace Cyclestreets.Objects
         public int grammesCO2saved { get; set; }
         public int calories { get; set; }
 
-        public RouteOverview()
+        public RouteOverviewObject()
         {
             
         }

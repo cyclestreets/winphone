@@ -24,7 +24,7 @@ namespace Cyclestreets.Managers
         private dynamic _currentParsedRoute;
         private Dictionary<string, string> _journeyMap = new Dictionary<string, string>();
 
-        public RouteOverview Overview { get; set; }
+        public RouteOverviewObject Overview { get; set; }
 
         public Dictionary<string, string> RouteCacheForSaving
         {
@@ -266,7 +266,7 @@ namespace Cyclestreets.Managers
                     // sectionObj.Points.Add(new GeoCoordinate(latitude, longitude));
                     //sectionObj.Description = "Start " + section.start;
 
-                    Overview = new RouteOverview
+                    Overview = new RouteOverviewObject
                     {
                         Quietness = int.Parse(section.quietness.ToString()),
                         RouteNumber = int.Parse(section.itinerary.ToString()),

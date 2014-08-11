@@ -80,18 +80,30 @@
 				</Grid>
 				<Button Content="Save" Click="Button_Click"/>
 				<TextBlock TextWrapping="Wrap" Foreground="#FF919191" FontSize="16" Text="Route data: © OpenStreetMap contributors."/>
-				<RichTextBox TextWrapping="Wrap" Foreground="#FF919191" FontSize="16">
-					<Paragraph>
-						<Run Text="Read more about CycleStreets, or give feedback, at " />
-						<Hyperlink Click="Hyperlink_Click">http://www.cyclestreets.net/</Hyperlink>
-						<LineBreak/>
-						<Run Text="App developed by " />
-						<Hyperlink Click="Hyperlink_Click_1" >RW::Software</Hyperlink>
-						<Run Text=". Please post any issues on our " />
-						<Hyperlink Click="Hyperlink_Click_2" >forum</Hyperlink>
-					</Paragraph>
-				</RichTextBox>
-			</StackPanel>
+                <RichTextBox TextWrapping="Wrap" Foreground="#FF919191" FontSize="16">
+                    <Paragraph>
+                        <Run Text="Read more about CycleStreets, or give feedback, at "/>
+                        <Hyperlink>
+                            <Run Text="http://www.cyclestreets.net/"/>
+                        </Hyperlink>
+                        <LineBreak/>
+                        <Run Text="App developed by "/>
+                        <Hyperlink>
+                            <Run Text="RW::Software"/>
+                        </Hyperlink>
+                        <Run Text=". Please post any issues on our "/>
+                        <Hyperlink>
+                            <Run Text="forum"/>
+                        </Hyperlink>
+                        <LineBreak/>
+                        <Run Text="Ruler designed by Alexis Gaillard from the Noun Project"/>
+                        <LineBreak/>
+                        <Run Text="Justice designed by anna from the Noun Project"/>
+                        <LineBreak/>
+                        <Run Text="Stopwatch designed by Ilsur Aptukov from the Noun Project"/>
+                    </Paragraph>
+                </RichTextBox>
+            </StackPanel>
 
 		</Grid>
 	</Grid>

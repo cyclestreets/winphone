@@ -1,7 +1,6 @@
 ﻿/// Satnav mode
 /// Prompt feedback
 
-using System.Windows.Navigation;
 using Cyclestreets.Managers;
 using Cyclestreets.Resources;
 using Cyclestreets.Utils;
@@ -27,6 +26,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Windows.Devices.Geolocation;
 
@@ -1106,22 +1106,7 @@ namespace Cyclestreets.Pages
                 return AppResources.VeryBusy;
         }
 
-        private void DrawMapMarker(GeoCoordinate[] coordinate, Color color, bool dashed)
-        {
-            // Create a map marker
-            MapPolyline polygon = new MapPolyline();
-            polygon.StrokeColor = color;
-            polygon.StrokeThickness = 3;
-            polygon.StrokeDashed = dashed;
-            polygon.Path = new GeoCoordinateCollection();
-            for (int i = 0; i < coordinate.Length; i++)
-            {
-                //Point p = MyMap.ConvertGeoCoordinateToViewportPoint( coordinate[i] );
-                polygon.Path.Add(coordinate[i]);
-            }
 
-            MyMap.MapElements.Add(polygon);
-        }
 
         private Color ConvertHexStringToColour(string hexString)
         {
@@ -1163,7 +1148,7 @@ namespace Cyclestreets.Pages
             else
             {
                 MyMap.MapElements.Clear();
-                PlotCachedRoute();
+                MapUtils.PlotCachedRoute(MyMap, currentPlan);
             }
         }
 
@@ -1260,7 +1245,7 @@ namespace Cyclestreets.Pages
 
         private void privacy_Click(object sender, System.EventArgs e)
         {
-            WebBrowserTask url = new WebBrowserTask {Uri = new Uri("http://www.cyclestreets.net/privacy/")};
+            WebBrowserTask url = new WebBrowserTask { Uri = new Uri("http://www.cyclestreets.net/privacy/") };
             url.Show();
         }
 
@@ -1268,7 +1253,7 @@ namespace Cyclestreets.Pages
         {
             Microsoft.Phone.Maps.MapsSettings.ApplicationContext.ApplicationId = "823e41bf-889c-4102-863f-11cfee11f652";
             Microsoft.Phone.Maps.MapsSettings.ApplicationContext.AuthenticationToken = "xrQJghWalYn52fTfnUhWPQ";
- 
+
             RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
             if (PhoneApplicationService.Current.State.ContainsKey("loadedRoute") && PhoneApplicationService.Current.State["loadedRoute"] != null)
             {
@@ -1284,7 +1269,7 @@ namespace Cyclestreets.Pages
 
             SetMapStyle();
 
-           
+
             var newplan = rm.HasCachedRoute(currentPlan);
             if (newplan == null) return;
             currentPlan = newplan;
@@ -1298,7 +1283,7 @@ namespace Cyclestreets.Pages
             }
             else
             {
-                PlotCachedRoute();
+                MapUtils.PlotCachedRoute(MyMap, currentPlan);
 
                 rm.IsBusy = false;
                 pleaseWait.Width = this.Width;
@@ -1563,33 +1548,21 @@ namespace Cyclestreets.Pages
             }
             else
             {
-                PlotCachedRoute();
+                MapUtils.PlotCachedRoute(MyMap, currentPlan);
+
+                if (!SettingManager.instance.GetBoolValue("tutorialEnabled", true)) return;
+                bool shownTutorial = SettingManager.instance.GetBoolValue("shownTutorialRouteType", false);
+                if (!shownTutorial)
+                    routeTutorialRouteType.Visibility = Visibility.Visible;
+
+                rm.IsBusy = false;
+                pleaseWait.Width = this.Width;
+
+                NavigationService.Navigate(new Uri("/Pages/RouteOverview.xaml", UriKind.Relative));
             }
         }
 
-        private void PlotCachedRoute()
-        {
-            RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
-            _geometryCoords.Clear();
-            MyMap.MapElements.Clear();
-            _max = new GeoCoordinate(90, -180);
-            _min = new GeoCoordinate(-90, 180);
-            _currentStep = -1;
 
-            IEnumerable<RouteSection> sections = rm.GetRouteSections(currentPlan);
-            foreach (var routeSection in sections)
-            {
-                DrawMapMarker(routeSection.Points.ToArray(), routeSection.Walking ? Color.FromArgb(255, 0, 0, 0) : Color.FromArgb(255, 127, 0, 255), routeSection.Walking);
-            }
-            ExtendedVisualStateManager.GoToElementState(LayoutRoot, "RouteFoundState", true);
-
-            SmartDispatcher.BeginInvoke(() => MyMap.SetView(rm.GetRouteBounds()));
-
-            if (!SettingManager.instance.GetBoolValue("tutorialEnabled", true)) return;
-            bool shownTutorial = SettingManager.instance.GetBoolValue("shownTutorialRouteType", false);
-            if (!shownTutorial)
-                routeTutorialRouteType.Visibility = Visibility.Visible;
-        }
 
         private async void myLocationBorder_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
