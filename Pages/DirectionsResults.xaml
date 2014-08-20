@@ -117,7 +117,7 @@
                                 <ColumnDefinition Width="67*"/>
                             </Grid.ColumnDefinitions>
                             <Image Source="/Assets/world.png" Height="25"/>
-                            <TextBlock Grid.Column="1" Text="{Binding RouteManagerPtr.Overview.grammesCO2saved}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding RouteManagerPtr.Overview.GrammesCo2Saved}"/>
                         </Grid>
                         <Grid Height="40">
                             <Grid.ColumnDefinitions>

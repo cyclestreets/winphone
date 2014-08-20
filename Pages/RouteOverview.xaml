@@ -7,11 +7,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:maps="clr-namespace:Microsoft.Phone.Maps.Controls;assembly=Microsoft.Phone.Maps"
     xmlns:Primitives="clr-namespace:Microsoft.Phone.Controls.Primitives;assembly=Microsoft.Phone"
+    xmlns:Common="clr-namespace:ScoreAlerts.Common"
     x:Class="Cyclestreets.RouteOverview"
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d"
     shell:SystemTray.IsVisible="True">
 	<phone:PhoneApplicationPage.Resources>
+		<Common:BooleanInvertedToVisibilityConverter x:Key="BooleanInvertedToVisibilityConverter"/>
 		<Style x:Key="PivotStyle1" TargetType="phone:Pivot">
 			<Setter Property="Margin" Value="0"/>
 			<Setter Property="Padding" Value="0"/>
@@ -34,8 +36,8 @@
 								<RowDefinition Height="*"/>
 							</Grid.RowDefinitions>
 							<StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Horizontal">
-								<Image Height="50" Width="50" Source="{Binding DirectionsPage.RouteManagerPtr.CurrentRoute[0].TurnImage, Mode=OneWay}"/>
-								<ContentControl ContentTemplate="{TemplateBinding TitleTemplate}" Content="{Binding DirectionsPage.RouteManagerPtr.CurrentRoute[0].Turn}" HorizontalAlignment="Left" Style="{StaticResource PivotTitleStyle}" Height="31" VerticalAlignment="Center"/>
+								<Image Height="50" Width="50" Source="{Binding SelectedItem.TurnImage, RelativeSource={RelativeSource TemplatedParent}}"/>
+								<ContentControl ContentTemplate="{TemplateBinding TitleTemplate}" Content="{Binding SelectedItem.Turn, RelativeSource={RelativeSource TemplatedParent}}" HorizontalAlignment="Left" Style="{StaticResource PivotTitleStyle}" Height="31" VerticalAlignment="Center"/>
 							</StackPanel>
 							<Primitives:PivotHeadersControl x:Name="HeadersListElement" Grid.Row="1"/>
 							<ItemsPresenter x:Name="PivotItemPresenter" Margin="{TemplateBinding Padding}" Grid.Row="2"/>
@@ -46,14 +48,9 @@
 		</Style>
 		<DataTemplate x:Key="RouteSectionTemplate">
 			<StackPanel>
-				<TextBlock Text="{Binding Description}"/>
 				<TextBlock Text="{Binding DistanceString, Mode=OneWay}"/>
-				<TextBlock Text="{Binding Time}"/>
 				<TextBlock Text="{Binding TimeString, Mode=OneWay}"/>
-				<TextBlock Text="{Binding Turn}"/>
-				<Image Source="{Binding TurnImage, Mode=OneWay}" HorizontalAlignment="Left" Height="64" Width="64"/>
-				<TextBlock Text="{Binding VoiceDescription, Mode=OneWay}"/>
-				<CheckBox IsChecked="{Binding Walking, Mode=TwoWay}"/>
+				<TextBlock Text="{Binding VoiceDescription, Mode=OneWay}" TextWrapping="Wrap"/>
 			</StackPanel>
 		</DataTemplate>
 		<DataTemplate x:Key="DataTemplate1">
@@ -74,13 +71,13 @@
 		<StaticResource ResourceKey="PhoneForegroundBrush"/>
 	</phone:PhoneApplicationPage.Foreground>
 	<phone:PhoneApplicationPage.DataContext>
-		<Binding Source="{StaticResource Locator}"/>
+		<Binding Mode="OneWay" Path="DirectionsPage" Source="{StaticResource Locator}"/>
 	</phone:PhoneApplicationPage.DataContext>
 	<phone:PhoneApplicationPage.ApplicationBar>
 		<shell:ApplicationBar>
 			<shell:ApplicationBarIconButton IconUri="/Assets/icons/dark/appbar.location.circle.png" IsEnabled="True" Text="my location"/>
 			<shell:ApplicationBarIconButton IconUri="/Assets/AppBar/appbar.bike.png" IsEnabled="True" Text="live ride"/>
-			<shell:ApplicationBarIconButton IconUri="/Assets/icons/dark/appbar.information.circle.png" IsEnabled="True" Text="details"/>
+			<shell:ApplicationBarIconButton x:Name="details" IconUri="/Assets/icons/dark/appbar.information.circle.png" IsEnabled="True" Text="details" Click="details_Click"/>
 		</shell:ApplicationBar>
 	</phone:PhoneApplicationPage.ApplicationBar>
 
@@ -97,13 +94,22 @@
 			<RowDefinition Height="260*"/>
 		</Grid.RowDefinitions>
 
-		<maps:Map x:Name="MyMap" Margin="0" Grid.Row="1" Grid.ColumnSpan="2" ZoomLevel="5.684" Loaded="MyMap_Loaded" LandmarksEnabled="True" Tap="MyMap_Tap"/>
+		<StackPanel Grid.ColumnSpan="2" Grid.Row="1" VerticalAlignment="Center">
+			<ProgressBar VerticalAlignment="Center" IsIndeterminate="True">
+				<ProgressBar.Foreground>
+					<SolidColorBrush Color="{StaticResource PhoneForegroundColor}"/>
+				</ProgressBar.Foreground>
+			</ProgressBar>
+			<TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="Loading route information..." VerticalAlignment="Top"/>
+		</StackPanel>
+
+		<maps:Map x:Name="MyMap" Margin="0" Grid.Row="1" Grid.ColumnSpan="2" ZoomLevel="5.684" Loaded="MyMap_Loaded" LandmarksEnabled="True" Tap="MyMap_Tap" Visibility="{Binding RouteManagerPtr.IsBusy, Converter={StaticResource BooleanInvertedToVisibilityConverter}}"/>
 		<StackPanel Grid.Row="2" Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
-			<TextBlock TextWrapping="Wrap" Text="60" FontSize="60" FontFamily="Segoe WP Light" VerticalAlignment="Bottom"/>
+			<TextBlock TextWrapping="Wrap" Text="{Binding RouteManagerPtr.Overview.RouteDurationString, Mode=OneWay}" FontSize="60" FontFamily="Segoe WP Light" VerticalAlignment="Bottom"/>
 			<TextBlock TextWrapping="Wrap" Text="mins" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="Segoe WP Light" LineHeight="37"/>
 		</StackPanel>
 		<StackPanel Grid.Row="2" Orientation="Horizontal">
-			<TextBlock TextWrapping="Wrap" Text="1.2" FontSize="60" FontFamily="Segoe WP Light" VerticalAlignment="Bottom"/>
+			<TextBlock TextWrapping="Wrap" Text="{Binding RouteManagerPtr.Overview.RouteLengthStringMiles, Mode=OneWay}" FontSize="60" FontFamily="Segoe WP Light" VerticalAlignment="Bottom"/>
 			<TextBlock TextWrapping="Wrap" Text="miles" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="Segoe WP Light" LineHeight="37"/>
 		</StackPanel>
 		<Grid Grid.ColumnSpan="2">
@@ -133,8 +139,7 @@
 			</Rectangle>
 		</Grid>
 		<TextBlock Text="{Binding DirectionsPage.RouteManagerPtr.CurrentStepText, Mode=OneWay}" VerticalAlignment="Top" Grid.Row="3" Grid.ColumnSpan="2"/>
-		<phone:Pivot Grid.Row="3" Title="pivot" Grid.ColumnSpan="2" Style="{StaticResource PivotStyle1}" ItemTemplate="{StaticResource RouteSectionTemplate}" ItemsSource="{Binding DirectionsPage.RouteManagerPtr.CurrentRoute}" HeaderTemplate="{StaticResource DataTemplate1}">
-		</phone:Pivot>
+		<phone:Pivot Grid.Row="3" Title="{Binding SelectedItem, RelativeSource={RelativeSource Self}}" Grid.ColumnSpan="2" Style="{StaticResource PivotStyle1}" ItemTemplate="{StaticResource RouteSectionTemplate}" ItemsSource="{Binding RouteManagerPtr.CurrentRoute}" HeaderTemplate="{StaticResource DataTemplate1}"/>
 	</Grid>
 
 </phone:PhoneApplicationPage>

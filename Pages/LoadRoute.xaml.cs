@@ -49,7 +49,7 @@ namespace Cyclestreets.Pages
             rm.RouteCacheForSaving = (Dictionary<string, string>)res;
             stream.Close();
 
-            NavigationService.Navigate(new Uri("/Pages/DirectionsPage.xaml?plan=saved", UriKind.Relative));
+            NavigationService.Navigate(new Uri("/Pages/RouteOverview.xaml?plan=saved", UriKind.Relative));
 
         }
     }

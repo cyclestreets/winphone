@@ -59,5 +59,10 @@ namespace Cyclestreets
         {
             //throw new NotImplementedException();
         }
+
+        private void details_Click(object sender, System.EventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/Pages/DirectionsResults.xaml", UriKind.RelativeOrAbsolute));
+        }
     }
 }

@@ -1,23 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cyclestreets.Common;
+﻿using Cyclestreets.Common;
 using Cyclestreets.Resources;
+using System;
+using System.Globalization;
 
 namespace Cyclestreets.Objects
 {
     public class RouteOverviewObject : BindableBase
     {
+
         public int RouteNumber { get; set; }
         public int RouteLength { get; set; }
 
+        private int _routeDuration;
+        public int RouteDuration
+        {
+            private get { return _routeDuration; }
+            set
+            {
+                SetProperty(ref _routeDuration, value);
+                OnPropertyChanged("RouteDurationString");
+            }
+        }
+
+        public string RouteDurationString
+        {
+            get { return (RouteDuration / 60).ToString(CultureInfo.InvariantCulture); }
+        }
+
         public string RouteLengthString
         {
-            get 
+            get
             {
-                return RouteLength < 1000 ? String.Format(AppResources.MetresShort, RouteLength) : String.Format(AppResources.Miles, (int)(RouteLength*0.00062137));
+                return RouteLength < 1000 ? String.Format(AppResources.MetresShort, RouteLength) : String.Format(AppResources.Miles, (int)(RouteLength * 0.00062137));
+            }
+        }
+
+        public string RouteLengthStringMiles
+        {
+            get
+            {
+                return (RouteLength * 0.00062137).ToString("0.0");
             }
         }
 
@@ -36,14 +58,14 @@ namespace Cyclestreets.Objects
             }
         }
 
-        public int signalledJunctions { get; set; }
-        public int signalledCrossings { get; set; }
-        public int grammesCO2saved { get; set; }
+        public int SignalledJunctions { get; set; }
+        public int SignalledCrossings { get; set; }
+        public int GrammesCo2Saved { get; set; }
         public int calories { get; set; }
 
         public RouteOverviewObject()
         {
-            
+
         }
     }
 }

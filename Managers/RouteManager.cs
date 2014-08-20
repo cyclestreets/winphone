@@ -16,6 +16,7 @@ using System.Windows;
 
 namespace Cyclestreets.Managers
 {
+// ReSharper disable once ClassNeverInstantiated.Global
     public class RouteManager : BindableBase
     {
         private readonly Stackish<GeoCoordinate> _waypoints = new Stackish<GeoCoordinate>();
@@ -24,7 +25,11 @@ namespace Cyclestreets.Managers
         private dynamic _currentParsedRoute;
         private Dictionary<string, string> _journeyMap = new Dictionary<string, string>();
 
-        public RouteOverviewObject Overview { get; set; }
+        public RouteOverviewObject Overview
+        {
+            get { return _overview; }
+            private set { SetProperty(ref _overview, value); }
+        }
 
         public Dictionary<string, string> RouteCacheForSaving
         {
@@ -72,6 +77,8 @@ namespace Cyclestreets.Managers
         }
 
         private int _currentStep;
+        private RouteOverviewObject _overview;
+
         public int CurrentStep
         {
             get { return _currentStep; }
@@ -271,10 +278,11 @@ namespace Cyclestreets.Managers
                         Quietness = int.Parse(section.quietness.ToString()),
                         RouteNumber = int.Parse(section.itinerary.ToString()),
                         RouteLength = int.Parse(section.length.ToString()),
-                        signalledJunctions = int.Parse(section.signalledJunctions.ToString()),
-                        signalledCrossings = int.Parse(section.signalledCrossings.ToString()),
-                        grammesCO2saved = int.Parse(section.grammesCO2saved.ToString()),
-                        calories = int.Parse(section.calories.ToString())
+                        SignalledJunctions = int.Parse(section.signalledJunctions.ToString()),
+                        SignalledCrossings = int.Parse(section.signalledCrossings.ToString()),
+                        GrammesCo2Saved = int.Parse(section.grammesCO2saved.ToString()),
+                        calories = int.Parse(section.calories.ToString()),
+                        RouteDuration = int.Parse(section.time.ToString())
                     };
 
                     //result.Add(sectionObj);
@@ -327,6 +335,11 @@ namespace Cyclestreets.Managers
             if (_journeyMap.ContainsKey(defaultPlan))
                 return defaultPlan;
             return _journeyMap.Count > 0 ? _journeyMap.First().Key : null;
+        }
+
+        internal void GenerateDebugData()
+        {
+            
         }
     }
 }
