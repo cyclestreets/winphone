@@ -34,7 +34,7 @@ namespace Cyclestreets.Managers
         public Dictionary<string, string> RouteCacheForSaving
         {
             get { return _journeyMap; }
-            set { _journeyMap = value; }
+            set { _journeyMap = value; OnPropertyChanged("ReadyToDisplayRoute"); }
         }
 
         public bool IsBusy
@@ -223,7 +223,10 @@ namespace Cyclestreets.Managers
         public bool ParseRouteData(string currentRouteData, string routeType, bool newRoute)
         {
             if (newRoute)
+            {
                 _journeyMap.Clear();
+                OnPropertyChanged("ReadyToDisplayRoute");
+            }
 
             if (currentRouteData != null)
             {
@@ -231,7 +234,10 @@ namespace Cyclestreets.Managers
                 {
                     _currentParsedRoute = JObject.Parse(currentRouteData);
                     if (_currentParsedRoute != null && !_journeyMap.ContainsKey(routeType))
+                    {
                         _journeyMap.Add(routeType, currentRouteData);
+                        OnPropertyChanged("ReadyToDisplayRoute");
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -332,7 +338,7 @@ namespace Cyclestreets.Managers
 
         internal string HasCachedRoute(string defaultPlan)
         {
-            if (_journeyMap.ContainsKey(defaultPlan))
+            if (defaultPlan != null && _journeyMap.ContainsKey(defaultPlan))
                 return defaultPlan;
             return _journeyMap.Count > 0 ? _journeyMap.First().Key : null;
         }

@@ -13,17 +13,33 @@ namespace Cyclestreets.ViewModel
                 return SimpleIoc.Default.GetInstance<RouteManager>();
             }
         }
-		
+
+        private bool _displayMap = false;
+        public bool DisplayMap
+        {
+            get { return _displayMap; }
+            set { Set(ref _displayMap, value); }
+        }
+
+        private string _currentPlan;
+        public string CurrentPlan
+        {
+            get { return _currentPlan; }
+            set { Set(ref _currentPlan, value); }
+        }
+
 		public DirectionsPageViewModel()
 		{
 			if( IsInDesignMode )
 			{
 			    RouteManagerPtr.GenerateDebugData();
-
+                CurrentPlan = "balanced";
 			}
 			else
 			{
-			
+                // Setup route type dropdown
+                string plan = SettingManager.instance.GetStringValue("defaultRouteType", "balanced");
+                CurrentPlan = plan.Replace(" route", "");
 			}
 		}
 

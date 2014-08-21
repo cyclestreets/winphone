@@ -11,19 +11,31 @@ using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using GestureEventArgs = System.Windows.Input.GestureEventArgs;
+using Cyclestreets.ViewModel;
 
 namespace Cyclestreets
 {
     public partial class RouteOverview : PhoneApplicationPage
     {
-        private string currentPlan;
+        DirectionsPageViewModel viewModel;
+
         public RouteOverview()
         {
             InitializeComponent();
+        }
 
-            // Setup route type dropdown
-            string plan = SettingManager.instance.GetStringValue("defaultRouteType", "balanced");
-            currentPlan = plan.Replace(" route", "");
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+
+            viewModel = SimpleIoc.Default.GetInstance<DirectionsPageViewModel>();
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+
+            viewModel.DisplayMap = false;
         }
 
         private async void MyMap_Loaded(object sender, RoutedEventArgs e)
@@ -35,24 +47,13 @@ namespace Cyclestreets
             if (PhoneApplicationService.Current.State.ContainsKey("loadedRoute") && PhoneApplicationService.Current.State["loadedRoute"] != null)
             {
                 string routeData = (string)PhoneApplicationService.Current.State["loadedRoute"];
-                rm.ParseRouteData(routeData, currentPlan, false);
+                rm.ParseRouteData(routeData, viewModel.CurrentPlan, false);
             }
 
-            var newplan = rm.HasCachedRoute(currentPlan);
+            var newplan = rm.HasCachedRoute(viewModel.CurrentPlan);
             if (newplan == null) return;
-            currentPlan = newplan;
-            bool result = await rm.FindRoute(newplan, false);
-            if (!result)
-            {
-                MarkedUp.AnalyticClient.Error("Route Planning Error");
-
-                MessageBox.Show(
-                    "Could not parse route data information from server. Please let us know about this error with the route you were trying to plan");
-            }
-            else
-            {
-                MapUtils.PlotCachedRoute(MyMap,currentPlan);
-            }
+            viewModel.CurrentPlan = newplan;
+            StartRouting();
         }
 
         private void MyMap_Tap(object sender, GestureEventArgs e)
@@ -63,6 +64,48 @@ namespace Cyclestreets
         private void details_Click(object sender, System.EventArgs e)
         {
             NavigationService.Navigate(new Uri("/Pages/DirectionsResults.xaml", UriKind.RelativeOrAbsolute));
+        }
+
+        private void shortest1_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            if (viewModel.CurrentPlan == "shortest")
+                return;
+            viewModel.CurrentPlan = "shortest";
+            StartRouting();
+        }
+
+        private async void StartRouting()
+        {
+            RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
+            bool result = await rm.FindRoute(viewModel.CurrentPlan, false);
+            if (!result)
+            {
+                MarkedUp.AnalyticClient.Error("Route Planning Error");
+
+                MessageBox.Show(
+                    "Could not parse route data information from server. Please let us know about this error with the route you were trying to plan");
+            }
+            else
+            {
+                MapUtils.PlotCachedRoute(MyMap, viewModel.CurrentPlan);
+                viewModel.DisplayMap = true;
+            }
+        }
+
+        private void balanced1_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            if (viewModel.CurrentPlan == "balanced")
+                return;
+            viewModel.CurrentPlan = "balanced";
+            StartRouting();
+        }
+
+        private void fastest1_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            if (viewModel.CurrentPlan == "fastest")
+                return;
+            viewModel.CurrentPlan = "fastest";
+            StartRouting();
         }
     }
 }

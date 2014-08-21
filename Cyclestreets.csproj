@@ -181,6 +181,7 @@
     <Compile Include="Utils\GeoUtils.cs" />
     <Compile Include="Utils\MapUtils.cs" />
     <Compile Include="Utils\POIItem.cs" />
+    <Compile Include="Utils\RouteTypeVisibility.cs" />
     <Compile Include="Utils\Stackish.cs" />
     <Compile Include="Utils\Util.cs" />
     <Compile Include="Utils\UtilTime.cs" />
