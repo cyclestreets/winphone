@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Device.Location;
 using System.Linq;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 using Cyclestreets.Managers;
+using CycleStreets.Util;
 using Cyclestreets.Utils;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Phone.Controls;
+using Microsoft.Phone.Maps.Services;
 using Microsoft.Phone.Shell;
 using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 using Cyclestreets.ViewModel;
@@ -106,6 +109,21 @@ namespace Cyclestreets
                 return;
             viewModel.CurrentPlan = "fastest";
             StartRouting();
+        }
+
+        private async void mylocation_Click(object sender, EventArgs e)
+        {
+            if (LocationManager.instance.MyGeoPosition != null)
+            {
+                GeoCoordinate geo = CoordinateConverter.ConvertGeocoordinate(LocationManager.instance.MyGeoPosition.Coordinate);
+                MapLocation loc = await GeoUtils.StartReverseGeocode(geo);
+
+                SmartDispatcher.BeginInvoke(() => MyMap.SetView(loc.GeoCoordinate, 16));
+            }
+            else
+            {
+                Util.showLocationDialog();
+            }
         }
     }
 }
