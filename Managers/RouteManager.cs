@@ -187,10 +187,19 @@ namespace Cyclestreets.Managers
             var client = new RestClient("http://www.cyclestreets.net/api");
             var request = new RestRequest("journey.json", Method.GET);
             request.AddParameter("key", App.apiKey);
-            request.AddParameter("plan", routeType);
-            request.AddParameter("itinerarypoints", itinerarypoints);
-            request.AddParameter("speed", speed);
             request.AddParameter("useDom", useDom);
+            request.AddParameter("plan", routeType);
+            if (!newRoute)
+            {
+                //http://www.cyclestreets.net/api/journey.xml?key=registeredapikey&useDom=1&itinerary=345529&plan=fastest
+                request.AddParameter("itinerary", Overview.RouteNumber );
+            }
+            else
+            {
+                request.AddParameter("itinerarypoints", itinerarypoints);
+                request.AddParameter("speed", speed);
+            }
+            
 
             IsBusy = true;
 
