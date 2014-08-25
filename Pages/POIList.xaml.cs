@@ -26,7 +26,7 @@ namespace Cyclestreets
 			AsyncWebRequest _request = new AsyncWebRequest( "http://www.cyclestreets.net/api/poitypes.xml?key=" + App.apiKey + "&icons=32", POIFound );
 			_request.Start();
 
-			App.networkStatus.networkIsBusy = true;
+			App.networkStatus.NetworkIsBusy = true;
 		}
 
 		private void POIFound( byte[] data )
@@ -54,7 +54,7 @@ namespace Cyclestreets
 
 			poiList.ItemsSource = items;
 
-			App.networkStatus.networkIsBusy = false;
+			App.networkStatus.NetworkIsBusy = false;
 		}
 
 		protected override void OnNavigatedTo( System.Windows.Navigation.NavigationEventArgs e )

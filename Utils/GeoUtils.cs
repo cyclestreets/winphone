@@ -59,7 +59,7 @@ namespace Cyclestreets.Utils
             TaskCompletionSource<List<string>> tcs1 = new TaskCompletionSource<List<string>>();
             Task<List<string>> t1 = tcs1.Task;
 
-            App.networkStatus.networkIsBusy = true;
+            App.networkStatus.NetworkIsBusy = true;
             System.Diagnostics.Debug.WriteLine(@"Searching for " + searchTerm);
 
 

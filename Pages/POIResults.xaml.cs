@@ -79,7 +79,7 @@ namespace Cyclestreets
 			AsyncWebRequest _request = new AsyncWebRequest( "http://www.cyclestreets.net/api/pois.xml?key=" + App.apiKey + "&type=" + poiName + "&longitude=" + center.Longitude + "&latitude=" + center.Latitude + "&radius=25", POIResultsFound );
 			_request.Start();
 
-			App.networkStatus.networkIsBusy = true;
+			App.networkStatus.NetworkIsBusy = true;
 		}
 
 		private void POIResultsFound( byte[] data )
@@ -125,7 +125,7 @@ namespace Cyclestreets
 			}
 			poiList.ItemsSource = pois;
 
-			App.networkStatus.networkIsBusy = true;
+			App.networkStatus.NetworkIsBusy = true;
 		}
 
 		private void poiList_SelectionChanged( object sender, System.Windows.Controls.SelectionChangedEventArgs e )

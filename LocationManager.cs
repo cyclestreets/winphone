@@ -24,6 +24,11 @@ namespace Cyclestreets
 			MyMap = map;
 		}
 
+	    public void SetMap(Map myMap)
+	    {
+	        MyMap = myMap;
+	    }
+
 		public void LockToMyPos( bool doLock )
 		{
 			lockToMyPos = doLock;
@@ -59,13 +64,6 @@ namespace Cyclestreets
 		private void positionChangedHandler( Geolocator sender, PositionChangedEventArgs args )
 		{
 			MyGeoPosition = args.Position;
-			if( lockToMyPos )
-			{
-				SmartDispatcher.BeginInvoke( () =>
-				{
-					MyMap.SetView( CoordinateConverter.ConvertGeocoordinate( MyGeoPosition.Coordinate ), 14 );
-				} );
-			}
 		}
 
 

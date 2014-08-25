@@ -2,7 +2,7 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
   <file datatype="xml" source-language="en-US" target-language="fr" original="AppResources.resx" tool-id="MultilingualAppToolkit" product-name="Cyclestreets" product-version="1.4.0.2" build-num="0">
     <header>
-      <tool tool-id="MultilingualAppToolkit" tool-name="Multilingual App Toolkit" tool-version="3.0.1200.0" tool-company="Microsoft" />
+      <tool tool-id="MultilingualAppToolkit" tool-name="Multilingual App Toolkit" tool-version="3.1.1085.0" tool-company="Microsoft" />
     </header>
     <body>
       <group id="Resx">
@@ -130,6 +130,26 @@ Pourquoi ne pas nous donner une cote 5 étoiles pour montrer votre appréciation
         <trans-unit id="Resx/VoiceDescriptionStart" translate="yes" xml:space="preserve">
           <source>Start at {0}</source>
           <target state="new">Start at {0}</target>
+        </trans-unit>
+        <trans-unit id="Resx/RouteParseError" translate="yes" xml:space="preserve">
+          <source>Could not parse route data information from server. Please let us know about this error with the route you were trying to plan</source>
+          <target state="new">Could not parse route data information from server. Please let us know about this error with the route you were trying to plan</target>
+        </trans-unit>
+        <trans-unit id="Resx/Overwrite" translate="yes" xml:space="preserve">
+          <source>Overwrite?</source>
+          <target state="new">Overwrite?</target>
+        </trans-unit>
+        <trans-unit id="Resx/OverwriteMessage" translate="yes" xml:space="preserve">
+          <source>Do you want to overwrite this save file with the current route?</source>
+          <target state="new">Do you want to overwrite this save file with the current route?</target>
+        </trans-unit>
+        <trans-unit id="Resx/RouteSavedTitle" translate="yes" xml:space="preserve">
+          <source>Route Saved</source>
+          <target state="new">Route Saved</target>
+        </trans-unit>
+        <trans-unit id="Resx/RouteSaved" translate="yes" xml:space="preserve">
+          <source>This route has been saved and can be loaded even when a data connection is unavailable from the Load Route menu.</source>
+          <target state="new">This route has been saved and can be loaded even when a data connection is unavailable from the Load Route menu.</target>
         </trans-unit>
         <trans-unit translate="yes" id="Resx/directions" xml:space="preserve">
           <source>directions</source>

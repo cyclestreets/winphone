@@ -239,7 +239,7 @@ namespace Cyclestreets
 				{
 					poiLayer.Clear();
 				}
-				if( NavigationContext.QueryString.ContainsKey( "longitude" ) )
+				if( NavigationContext.QueryString.ContainsKey( @"longitude" ) )
 				{
 					GeoCoordinate center = new GeoCoordinate();
 					center.Longitude = float.Parse( NavigationContext.QueryString["longitude"] );
@@ -302,7 +302,7 @@ namespace Cyclestreets
 				}
 			}
 
-			if( PhoneApplicationService.Current.State.ContainsKey( "loadedRoute" ) && PhoneApplicationService.Current.State["loadedRoute"] != null )
+			if( PhoneApplicationService.Current.State.ContainsKey( @"loadedRoute" ) && PhoneApplicationService.Current.State["loadedRoute"] != null )
 			{
 				NavigationService.Navigate( new Uri( "/pages/DirectionsPage.xaml", UriKind.Relative ) );
 			}
@@ -473,11 +473,11 @@ namespace Cyclestreets
 
 		private void MyMap_Loaded( object sender, RoutedEventArgs e )
 		{
-			Microsoft.Phone.Maps.MapsSettings.ApplicationContext.ApplicationId = "823e41bf-889c-4102-863f-11cfee11f652";
-			Microsoft.Phone.Maps.MapsSettings.ApplicationContext.AuthenticationToken = "xrQJghWalYn52fTfnUhWPQ";
+			Microsoft.Phone.Maps.MapsSettings.ApplicationContext.ApplicationId = @"823e41bf-889c-4102-863f-11cfee11f652";
+			Microsoft.Phone.Maps.MapsSettings.ApplicationContext.AuthenticationToken = @"xrQJghWalYn52fTfnUhWPQ";
 
 			MyTileSource ts;
-			switch( SettingManager.instance.GetStringValue( "mapStyle", DirectionsPage.MapStyle[0] ) )
+            switch (SettingManager.instance.GetStringValue(@"mapStyle", MapUtils.MapStyle[0]))
 			{
 				case "OpenStreetMap":
 					ts = new OSMTileSource();
@@ -537,7 +537,7 @@ namespace Cyclestreets
 				return;
 			}
 
-			App.networkStatus.networkIsBusy = true;
+			App.networkStatus.NetworkIsBusy = true;
 			revGeoQ.GeoCoordinate = coord;
 			revGeoQ.QueryCompleted += tapMapReverseGeocode_QueryCompleted;
 			revGeoQ.QueryAsync();
@@ -549,7 +549,7 @@ namespace Cyclestreets
 
 			SmartDispatcher.BeginInvoke( () =>
 			{
-				App.networkStatus.networkIsBusy = false;
+				App.networkStatus.NetworkIsBusy = false;
 				if( poiLayer == null )
 				{
 					poiLayer = new MapLayer();

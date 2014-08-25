@@ -14,7 +14,7 @@ namespace Cyclestreets.ViewModel
             }
         }
 
-        private bool _displayMap = false;
+        private bool _displayMap;
         public bool DisplayMap
         {
             get { return _displayMap; }
@@ -33,13 +33,13 @@ namespace Cyclestreets.ViewModel
 			if( IsInDesignMode )
 			{
 			    RouteManagerPtr.GenerateDebugData();
-                CurrentPlan = "balanced";
+                CurrentPlan = @"balanced";
 			}
 			else
 			{
                 // Setup route type dropdown
-                string plan = SettingManager.instance.GetStringValue("defaultRouteType", "balanced");
-                CurrentPlan = plan.Replace(" route", "");
+                string plan = SettingManager.instance.GetStringValue(@"defaultRouteType", @"balanced");
+                CurrentPlan = plan.Replace(@" route", "");
 			}
 		}
 

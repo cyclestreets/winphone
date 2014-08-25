@@ -522,6 +522,24 @@ namespace Cyclestreets.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Overwrite?.
+        /// </summary>
+        public static string Overwrite {
+            get {
+                return ResourceManager.GetString("Overwrite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do you want to overwrite this save file with the current route?.
+        /// </summary>
+        public static string OverwriteMessage {
+            get {
+                return ResourceManager.GetString("OverwriteMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to please wait.
         /// </summary>
         public static string PleaseWait {
@@ -675,6 +693,33 @@ namespace Cyclestreets.Resources {
         public static string RouteNumber {
             get {
                 return ResourceManager.GetString("RouteNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not parse route data information from server. Please let us know about this error with the route you were trying to plan.
+        /// </summary>
+        public static string RouteParseError {
+            get {
+                return ResourceManager.GetString("RouteParseError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This route has been saved and can be loaded even when a data connection is unavailable from the Load Route menu..
+        /// </summary>
+        public static string RouteSaved {
+            get {
+                return ResourceManager.GetString("RouteSaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Route Saved.
+        /// </summary>
+        public static string RouteSavedTitle {
+            get {
+                return ResourceManager.GetString("RouteSavedTitle", resourceCulture);
             }
         }
         

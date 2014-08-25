@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using Cyclestreets.Objects;
 using Cyclestreets.Resources;
+using Cyclestreets.Utils;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using Microsoft.Phone.Tasks;
@@ -14,8 +16,8 @@ namespace Cyclestreets.Pages
 		{
 			InitializeComponent();
 
-			string defaultMapStyleSetting = SettingManager.instance.GetStringValue( "mapStyle", DirectionsPage.MapStyle[0] );
-			mapStyle.ItemsSource = DirectionsPage.MapStyle;
+			string defaultMapStyleSetting = SettingManager.instance.GetStringValue( "mapStyle", MapUtils.MapStyle[0] );
+            mapStyle.ItemsSource = MapUtils.MapStyle;
 			mapStyle.SelectedItem = defaultMapStyleSetting;
 
 			string defaultRouteTypeSetting = SettingManager.instance.GetStringValue( "defaultRouteType", DirectionsPage.RouteType[0].Value );

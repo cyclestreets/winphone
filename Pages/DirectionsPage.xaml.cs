@@ -1,7 +1,9 @@
 ﻿/// Satnav mode
 /// Prompt feedback
 
+using Cyclestreets.Annotations;
 using Cyclestreets.Managers;
+using Cyclestreets.Objects;
 using Cyclestreets.Resources;
 using Cyclestreets.Utils;
 using CycleStreets.Util;
@@ -17,7 +19,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Device.Location;
 using System.Net;
@@ -25,7 +26,6 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Windows.Devices.Geolocation;
@@ -33,11 +33,7 @@ using Windows.Devices.Geolocation;
 namespace Cyclestreets.Pages
 {
     #region CLASSES TO BE MOVED/REMOVED
-    public class ElevationPoint
-    {
-        public double Distance { get; set; }
-        public double Height { get; set; }
-    }
+
     public class CSResult
     {
         public string ResultName;
@@ -49,220 +45,31 @@ namespace Cyclestreets.Pages
         }
     }
 
-    public class RouteSegment
-    {
-        private int _time;
-        public string Time
-        {
-            get
-            {
-                TimeSpan t = TimeSpan.FromSeconds(_time);
-
-                string answer = string.Format("{0:D2}:{1:D2}",
-                                            t.Minutes + (t.Hours * 60),
-                                            t.Seconds);
-                return answer;
-            }
-            set
-            {
-                _time = int.Parse(value);
-            }
-        }
-
-        public string Distance
-        {
-            get
-            {
-                float f = (float)TotalDistance * 0.000621371192f;
-                return f.ToString("0.00") + AppResources.MetresShort;
-            }
-        }
-
-        private int _distanceShort;
-        public int DistanceMetres
-        {
-            set
-            {
-                _distanceShort = value;
-            }
-            get
-            {
-                return _distanceShort;
-            }
-        }
-        public string Turn
-        {
-            get;
-            set;
-        }
-        public bool Walk
-        {
-            get;
-            set;
-        }
-        public string ProvisionName
-        {
-            get;
-            set;
-        }
-        public string Name
-        {
-            get;
-            set;
-        }
-        public string BgColour
-        {
-            get;
-            set;
-        }
-
-        public GeoCoordinate Location
-        {
-            get;
-            set;
-        }
-        public double Bearing
-        {
-            get;
-            set;
-        }
-
-        public double TotalDistance { get; set; }
-    }
-    public class RouteSegmentCollection : List<RouteSegment> { }
-
-    public class RouteDetails
-    {
-        public int timeInSeconds
-        {
-            get;
-            set;
-        }
-
-        public float quietness
-        {
-            get;
-            set;
-        }
-
-        public int signalledJunctions
-        {
-            get;
-            set;
-        }
-
-        public int signalledCrossings
-        {
-            get;
-            set;
-        }
-
-        public int grammesCO2saved
-        {
-            get;
-            set;
-        }
-
-        public int calories
-        {
-            get;
-            set;
-        }
-
-        public int routeIndex
-        {
-            get;
-            set;
-        }
-
-        public List<RouteSegment> segments = new List<RouteSegment>();
-
-        ObservableCollection<ElevationPoint> _heightChart = new ObservableCollection<ElevationPoint>();
-        public ObservableCollection<ElevationPoint> HeightChart { get { return _heightChart; } set { _heightChart = value; } }
-
-        public int distance
-        {
-            get;
-            set;
-        }
-    }
-
-    public class JourneyFactItem
-    {
-        public JourneyFactItem(string image)
-        {
-            BitmapImage src = new BitmapImage { UriSource = new Uri(image, UriKind.Relative) };
-            ItemImage = src;
-        }
-
-        public BitmapImage ItemImage
-        {
-            get;
-            set;
-        }
-        public string Caption
-        {
-            get;
-            set;
-        }
-        public string Value
-        {
-            get;
-            set;
-        }
-    }
-
-    public class ListBoxPair
-    {
-        public string DisplayName { get; set; }
-        public string Value { get; set; }
-
-        public ListBoxPair(string displayName, string value)
-        {
-            DisplayName = displayName;
-            Value = value;
-        }
-    }
     #endregion
 
     public partial class DirectionsPage
     {
 
-        readonly GeocodeQuery _geoQ = null;
+        readonly GeocodeQuery _geoQ;
 
         Stackish<Pushpin> _waypoints = new Stackish<Pushpin>();
 
         readonly Dictionary<Pushpin, POI> _pinItems = new Dictionary<Pushpin, POI>();
-        private MapLayer _poiLayer;
 
-        readonly List<List<GeoCoordinate>> _geometryCoords = new List<List<GeoCoordinate>>();
-        readonly List<Color> _geometryColor = new List<Color>();
-        readonly List<bool> _geometryDashed = new List<bool>();
-
-        public static List<JourneyFactItem> Facts = new List<JourneyFactItem>();
-
-        private GeoCoordinate _max = new GeoCoordinate(90, -180);
-        private GeoCoordinate _min = new GeoCoordinate(-90, 180);
-
-        private bool _hideRouteOptions = false;
+        private bool _hideRouteOptions;
 
         GeoCoordinate _current = null;
 
-        private int _currentStep = -1;
 
-        public static String[] MapStyle = { "OpenStreetMap", "OpenCycleMap", "Nokia" };
         public static ListBoxPair[] RouteType = 
 		{ 
 			new ListBoxPair(AppResources.BalancedRoute, "balanced"),
 			new ListBoxPair(AppResources.FastestRoute, "fastest"), 
 			new ListBoxPair(AppResources.QuietestRoute, "quietest") 
 		};
-        public static String[] CycleSpeed = { "10mph", "12mph", "15mph" };
-        public static String[] EnabledDisabled = { AppResources.Enabled, AppResources.Disabled };
-        private string currentRouteData;
 
-        private static WebClient placeSearch;
-        private AsyncWebRequest _request;		// The request for directions
+        [NotNull] public static readonly String[] CycleSpeed = { @"10mph", @"12mph", @"15mph" };
+        public static readonly String[] EnabledDisabled = { AppResources.Enabled, AppResources.Disabled };
 
         public DirectionsPage()
         {
@@ -545,7 +352,7 @@ namespace Cyclestreets.Pages
                         this.Focus();
                         //MyMap.Center = CoordinateConverter.ConvertGeocoordinate(MyGeoPosition.Coordinate);
                     });
-                    App.networkStatus.networkIsBusy = false;
+                    App.networkStatus.NetworkIsBusy = false;
                 }
                 else
                 {
@@ -556,7 +363,7 @@ namespace Cyclestreets.Pages
                         _geoQ.SearchTerm = start;
                         _geoQ.GeoCoordinate = MyMap.Center;
                         _geoQ.QueryAsync();
-                        App.networkStatus.networkIsBusy = true;
+                        App.networkStatus.NetworkIsBusy = true;
 
                     }
                 }
@@ -569,7 +376,7 @@ namespace Cyclestreets.Pages
             {
                 GeoCoordinate g = e.Result[0].GeoCoordinate;
                 SetCurrentPosition(g);
-                App.networkStatus.networkIsBusy = false;
+                App.networkStatus.NetworkIsBusy = false;
                 this.Focus();
             }
             else
@@ -616,10 +423,10 @@ namespace Cyclestreets.Pages
                     GeoCoordinate g = new GeoCoordinate((double)pos[0], (double)pos[1]);
                     SetCurrentPosition(g);
 
-                    App.networkStatus.networkIsBusy = false;
+                    App.networkStatus.NetworkIsBusy = false;
                 }
             }
-            App.networkStatus.networkIsBusy = false;
+            App.networkStatus.NetworkIsBusy = false;
             this.Focus();
         }
 
@@ -635,9 +442,6 @@ namespace Cyclestreets.Pages
 
         private void confirmWaypoint_Click(object sender, EventArgs e)
         {
-            if (currentRouteData != null)
-                return;
-
             RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
             rm.AddWaypoint(_current);
 
@@ -1140,7 +944,7 @@ namespace Cyclestreets.Pages
             bool result = await rm.FindRoute(currentPlan, false);
             if (!result)
             {
-                MarkedUp.AnalyticClient.Error("Route Planning Error");
+                MarkedUp.AnalyticClient.Error(@"Route Planning Error");
 
                 MessageBox.Show(
                     "Could not parse route data information from server. Please let us know about this error with the route you were trying to plan");
@@ -1255,7 +1059,7 @@ namespace Cyclestreets.Pages
             Microsoft.Phone.Maps.MapsSettings.ApplicationContext.AuthenticationToken = "xrQJghWalYn52fTfnUhWPQ";
 
             RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
-            if (PhoneApplicationService.Current.State.ContainsKey("loadedRoute") && PhoneApplicationService.Current.State["loadedRoute"] != null)
+            if (PhoneApplicationService.Current.State.ContainsKey(@"loadedRoute") && PhoneApplicationService.Current.State["loadedRoute"] != null)
             {
                 string routeData = (string)PhoneApplicationService.Current.State["loadedRoute"];
                 _hideRouteOptions = true;
@@ -1276,7 +1080,7 @@ namespace Cyclestreets.Pages
             bool result = await rm.FindRoute(newplan, false);
             if (!result)
             {
-                MarkedUp.AnalyticClient.Error("Route Planning Error");
+                MarkedUp.AnalyticClient.Error(@"Route Planning Error");
 
                 MessageBox.Show(
                     "Could not parse route data information from server. Please let us know about this error with the route you were trying to plan");
@@ -1293,7 +1097,7 @@ namespace Cyclestreets.Pages
         private void SetMapStyle()
         {
             MyTileSource ts;
-            switch (SettingManager.instance.GetStringValue("mapStyle", MapStyle[0]))
+            switch (SettingManager.instance.GetStringValue(@"mapStyle", MapUtils.MapStyle[0]))
             {
                 case "OpenStreetMap":
                     ts = new OSMTileSource();
@@ -1338,7 +1142,7 @@ namespace Cyclestreets.Pages
                     _geoQ.SearchTerm = box.Text;
                     _geoQ.GeoCoordinate = MyMap.Center;
                     _geoQ.QueryAsync();
-                    App.networkStatus.networkIsBusy = true;
+                    App.networkStatus.NetworkIsBusy = true;
                 }
                 this.Focus();
             }
@@ -1451,11 +1255,7 @@ namespace Cyclestreets.Pages
         private void btn_cancel_Click(object sender, RoutedEventArgs e)
         {
             pleaseWait.IsOpen = false;
-            App.networkStatus.networkIsBusy = false;
-            if (_request != null)
-            {
-                _request.Stop();
-            }
+            App.networkStatus.NetworkIsBusy = false;
         }
 
         protected override void OnBackKeyPress(CancelEventArgs e)
@@ -1526,7 +1326,7 @@ namespace Cyclestreets.Pages
                 return;
             }
 
-            App.networkStatus.networkIsBusy = true;
+            App.networkStatus.NetworkIsBusy = true;
 
             MapLocation loc = await GeoUtils.StartReverseGeocode(coord);
 
@@ -1541,7 +1341,7 @@ namespace Cyclestreets.Pages
             bool result = await rm.FindRoute(currentPlan);
             if (!result)
             {
-                MarkedUp.AnalyticClient.Error("Route Planning Error");
+                MarkedUp.AnalyticClient.Error(@"Route Planning Error");
 
                 MessageBox.Show(
                     "Could not parse route data information from server. Please let us know about this error with the route you were trying to plan");

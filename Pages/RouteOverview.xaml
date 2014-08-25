@@ -9,7 +9,7 @@
     xmlns:Primitives="clr-namespace:Microsoft.Phone.Controls.Primitives;assembly=Microsoft.Phone"
     xmlns:Common="clr-namespace:ScoreAlerts.Common"
     xmlns:Utils="clr-namespace:Cyclestreets.Utils"
-    x:Class="Cyclestreets.RouteOverview"
+    x:Class="Cyclestreets.Pages.RouteOverview"
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d"
     shell:SystemTray.IsVisible="True">
@@ -79,7 +79,7 @@
 	<phone:PhoneApplicationPage.ApplicationBar>
 		<shell:ApplicationBar>
 			<shell:ApplicationBarIconButton x:Name="mylocation" IconUri="/Assets/icons/dark/appbar.location.circle.png" IsEnabled="True" Text="my location" Click="mylocation_Click"/>
-			<shell:ApplicationBarIconButton IconUri="/Assets/AppBar/appbar.bike.png" IsEnabled="True" Text="live ride"/>
+			<shell:ApplicationBarIconButton x:Name="liveride" IconUri="/Assets/AppBar/appbar.bike.png" IsEnabled="True" Text="live ride" Click="liveride_Click"/>
 			<shell:ApplicationBarIconButton x:Name="details" IconUri="/Assets/icons/dark/appbar.information.circle.png" IsEnabled="True" Text="details" Click="details_Click"/>
 		</shell:ApplicationBar>
 	</phone:PhoneApplicationPage.ApplicationBar>
