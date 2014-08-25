@@ -93,16 +93,25 @@ namespace Cyclestreets.Utils
                 }
 
                 if (o == null) return;
-                JObject results = (JObject)o["results"];
+                JObject results = (JObject)o[@"results"];
                 JToken resultArray;
-                if (results.TryGetValue("result", out resultArray))
+                if (results.TryGetValue(@"result", out resultArray))
                 {
                     JArray suggestions = resultArray as JArray;
                     List<string> names = new List<string>();
-                    if (suggestions == null) return;
-                    if (suggestions.Count <= 0) return;
+                    if (suggestions == null)
+                    {
+                        var suggestion = resultArray as JObject;
+                        if (suggestion == null) return;
+                        names.Add(suggestion[@"name"].ToString());
+                    }
+                    else
+                    {
+                        if (suggestions.Count <= 0) return;
+                        names.AddRange(suggestions.Select(x=>x[@"name"].ToString()).ToArray());
+                    }
 
-                    names.AddRange(suggestions.Cast<string>());
+                    
                     tcs1.SetResult(names);
                 }
                 else
