@@ -112,9 +112,9 @@ namespace Cyclestreets.Pages
 
         private async void mylocation_Click(object sender, EventArgs e)
         {
-            if (LocationManager.instance.MyGeoPosition != null)
+            if (LocationManager.Instance.MyGeoPosition != null)
             {
-                GeoCoordinate geo = CoordinateConverter.ConvertGeocoordinate(LocationManager.instance.MyGeoPosition.Coordinate);
+                GeoCoordinate geo = CoordinateConverter.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
                 MapLocation loc = await GeoUtils.StartReverseGeocode(geo);
 
                 SmartDispatcher.BeginInvoke(() => MyMap.SetView(loc.GeoCoordinate, 16));

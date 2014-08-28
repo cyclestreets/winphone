@@ -189,7 +189,7 @@ namespace CycleStreets.Util
 
 		internal static void showLocationDialog()
 		{
-			if( SettingManager.instance.GetBoolValue( "LocationConsent", true ) == false )
+			if( SettingManager.instance.GetBoolValue( @"LocationConsent", true ) == false )
 			{
 				MessageBoxResult result =
 								MessageBox.Show( "You have denied CycleStreets permission to access your location. Press OK to change this or Cancel to cancel.",

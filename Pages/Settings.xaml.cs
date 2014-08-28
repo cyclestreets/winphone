@@ -1,37 +1,37 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using Cyclestreets.Managers;
 using Cyclestreets.Objects;
 using Cyclestreets.Resources;
 using Cyclestreets.Utils;
-using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using Microsoft.Phone.Tasks;
 
 namespace Cyclestreets.Pages
 {
-	public partial class Settings : PhoneApplicationPage
+	public partial class Settings
 	{
 		public Settings()
 		{
 			InitializeComponent();
 
-			string defaultMapStyleSetting = SettingManager.instance.GetStringValue( "mapStyle", MapUtils.MapStyle[0] );
+			string defaultMapStyleSetting = SettingManager.instance.GetStringValue( @"mapStyle", MapUtils.MapStyle[0] );
             mapStyle.ItemsSource = MapUtils.MapStyle;
 			mapStyle.SelectedItem = defaultMapStyleSetting;
 
-			string defaultRouteTypeSetting = SettingManager.instance.GetStringValue( "defaultRouteType", DirectionsPage.RouteType[0].Value );
+			string defaultRouteTypeSetting = SettingManager.instance.GetStringValue( @"defaultRouteType", DirectionsPage.RouteType[0].Value );
 			defaultRouteType.ItemsSource = DirectionsPage.RouteType;
-            defaultRouteType.DisplayMemberPath = "DisplayName";
+            defaultRouteType.DisplayMemberPath = @"DisplayName";
             int idx = Array.FindIndex(DirectionsPage.RouteType, v => v.Value.Equals(defaultRouteTypeSetting));
             defaultRouteType.SelectedIndex = idx == -1 ? 0 : idx;
 
-			string cycleSpeedSetting = SettingManager.instance.GetStringValue( "cycleSpeed", DirectionsPage.CycleSpeed[0] );
+			string cycleSpeedSetting = SettingManager.instance.GetStringValue( @"cycleSpeed", DirectionsPage.CycleSpeed[0] );
 			cycleSpeed.ItemsSource = DirectionsPage.CycleSpeed;
 			cycleSpeed.SelectedItem = cycleSpeedSetting;
 
 			string locationEnabledSetting = DirectionsPage.EnabledDisabled[0];
-			if( !SettingManager.instance.GetBoolValue( "LocationConsent", true ) )
+			if( !SettingManager.instance.GetBoolValue( @"LocationConsent", true ) )
 				locationEnabledSetting = DirectionsPage.EnabledDisabled[1];
 
 			locationEnabled.ItemsSource = DirectionsPage.EnabledDisabled;
@@ -39,7 +39,7 @@ namespace Cyclestreets.Pages
 			locationEnabled.SelectionChanged += locationEnabled_SelectionChanged;
 
 			string tutorialEnabledSetting = DirectionsPage.EnabledDisabled[0];
-			if( SettingManager.instance.GetBoolValue( "tutorialEnabled", true ) == false )
+			if( SettingManager.instance.GetBoolValue( @"tutorialEnabled", true ) == false )
 				tutorialEnabledSetting = DirectionsPage.EnabledDisabled[1];
 
 			tutorialEnabled.ItemsSource = DirectionsPage.EnabledDisabled;
@@ -47,7 +47,7 @@ namespace Cyclestreets.Pages
 			tutorialEnabled.SelectionChanged += tutorialEnabled_SelectionChanged;
 
 			string preventSleepSetting = DirectionsPage.EnabledDisabled[0];
-			if( SettingManager.instance.GetBoolValue( "PreventSleep", true ) == false )
+			if( SettingManager.instance.GetBoolValue( @"PreventSleep", true ) == false )
 				preventSleepSetting = DirectionsPage.EnabledDisabled[1];
 
 			preventSleep.ItemsSource = DirectionsPage.EnabledDisabled;
@@ -60,7 +60,7 @@ namespace Cyclestreets.Pages
 			if( e.AddedItems.Count > 0 )
 			{
 				bool enabled = e.AddedItems[0].Equals( AppResources.Enabled );
-				SettingManager.instance.SetBoolValue( "PreventSleep", enabled );
+				SettingManager.instance.SetBoolValue( @"PreventSleep", enabled );
 				PhoneApplicationService.Current.UserIdleDetectionMode = enabled ? IdleDetectionMode.Disabled : IdleDetectionMode.Enabled;
 			}
 		}
@@ -69,21 +69,21 @@ namespace Cyclestreets.Pages
 		{
 			if( e.AddedItems.Count > 0 )
 			{
-				bool oldValue = SettingManager.instance.GetBoolValue( "tutorialEnabled", false );
+				bool oldValue = SettingManager.instance.GetBoolValue( @"tutorialEnabled", false );
 				bool enabled = e.AddedItems[0].Equals( AppResources.Enabled );
-				SettingManager.instance.SetBoolValue( "tutorialEnabled", enabled );
+				SettingManager.instance.SetBoolValue( @"tutorialEnabled", enabled );
 
 				if( enabled && !oldValue )
 				{
-					SettingManager.instance.SetBoolValue( "shownTutorial", false );
-					SettingManager.instance.SetBoolValue( "shownTutorialPin", false );
-					SettingManager.instance.SetBoolValue( "shownTutorialRouteType", false );
+					SettingManager.instance.SetBoolValue( @"shownTutorial", false );
+					SettingManager.instance.SetBoolValue( @"shownTutorialPin", false );
+					SettingManager.instance.SetBoolValue( @"shownTutorialRouteType", false );
 				}
 				else if( !enabled && oldValue )
 				{
-					SettingManager.instance.SetBoolValue( "shownTutorial", true );
-					SettingManager.instance.SetBoolValue( "shownTutorialPin", true );
-					SettingManager.instance.SetBoolValue( "shownTutorialRouteType", true );
+					SettingManager.instance.SetBoolValue( @"shownTutorial", true );
+					SettingManager.instance.SetBoolValue( @"shownTutorialPin", true );
+					SettingManager.instance.SetBoolValue( @"shownTutorialRouteType", true );
 				}
 			}
 		}
@@ -92,7 +92,7 @@ namespace Cyclestreets.Pages
 		{
 			if( e.AddedItems.Count > 0 )
 			{
-				SettingManager.instance.SetStringValue( "defaultRouteType", ((ListBoxPair)e.AddedItems[0]).Value );
+				SettingManager.instance.SetStringValue( @"defaultRouteType", ((ListBoxPair)e.AddedItems[0]).Value );
 			}
 		}
 
@@ -100,7 +100,7 @@ namespace Cyclestreets.Pages
 		{
 			if( e.AddedItems.Count > 0 )
 			{
-				SettingManager.instance.SetStringValue( "cycleSpeed", (string)e.AddedItems[0] );
+				SettingManager.instance.SetStringValue( @"cycleSpeed", (string)e.AddedItems[0] );
 			}
 		}
 
@@ -109,12 +109,12 @@ namespace Cyclestreets.Pages
 			if( e.AddedItems.Count > 0 )
 			{
 				bool enabled = e.AddedItems[0].Equals( AppResources.Enabled );
-				SettingManager.instance.SetBoolValue( "LocationConsent", enabled );
+				SettingManager.instance.SetBoolValue( @"LocationConsent", enabled );
 
 				if( enabled )
-					LocationManager.instance.StartTracking();
+					LocationManager.Instance.StartTracking();
 				else
-					LocationManager.instance.StopTracking();
+					LocationManager.Instance.StopTracking();
 			}
 		}
 
@@ -122,11 +122,11 @@ namespace Cyclestreets.Pages
 		{
 			string plan = ((ListBoxPair)defaultRouteType.SelectedItem).Value;
 
-			SettingManager.instance.SetStringValue( "defaultRouteType", plan );
+			SettingManager.instance.SetStringValue( @"defaultRouteType", plan );
 
 			plan = (string)cycleSpeed.SelectedItem;
 
-			SettingManager.instance.SetStringValue( "cycleSpeed", plan );
+			SettingManager.instance.SetStringValue( @"cycleSpeed", plan );
 
 			NavigationService.GoBack();
 		}
@@ -135,7 +135,7 @@ namespace Cyclestreets.Pages
 		{
 			WebBrowserTask url = new WebBrowserTask
 			{
-				Uri = new System.Uri( "http://www.cyclestreets.net/" )
+				Uri = new Uri( "http://www.cyclestreets.net/" )
 			};
 			url.Show();
 		}
@@ -144,25 +144,21 @@ namespace Cyclestreets.Pages
 		{
 			WebBrowserTask url = new WebBrowserTask
 			{
-				Uri = new System.Uri( "http://www.rwscripts.com/" )
+				Uri = new Uri( "http://www.rwscripts.com/" )
 			};
 			url.Show();
 		}
 
 		private void Hyperlink_Click_2( object sender, RoutedEventArgs e )
 		{
-			WebBrowserTask url = new WebBrowserTask
-			{
-				Uri = new System.Uri( "http://forum.rwscripts.com/" )
-			};
-			url.Show();
+		    NavigationService.Navigate(new Uri("/Pages/Feedback.xaml", UriKind.RelativeOrAbsolute));
 		}
 
 		private void mapStyle_SelectionChanged( object sender, SelectionChangedEventArgs e )
 		{
 			if( e.AddedItems.Count > 0 )
 			{
-				SettingManager.instance.SetStringValue( "mapStyle", (string)e.AddedItems[0] );
+				SettingManager.instance.SetStringValue( @"mapStyle", (string)e.AddedItems[0] );
 			}
 		}
 	}

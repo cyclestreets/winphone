@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 using System.Xml.Linq;
+using Cyclestreets.Managers;
 using Cyclestreets.Utils;
 using CycleStreets.Util;
 using Microsoft.Phone.Controls;
@@ -101,11 +102,11 @@ namespace Cyclestreets.Pages
 		{
 			this.Focus();
 
-			if( LocationManager.instance.MyGeoPosition != null )
+			if( LocationManager.Instance.MyGeoPosition != null )
 			{
 				App.networkStatus.NetworkIsBusy = true;
 
-				Geoposition coord = LocationManager.instance.MyGeoPosition;
+				Geoposition coord = LocationManager.Instance.MyGeoPosition;
 
 				string extra;
 				if( ( (ListBoxItem)routeType.SelectedItem ).Content.Equals( "Target Time" ) )

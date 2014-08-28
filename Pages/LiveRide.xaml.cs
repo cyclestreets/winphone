@@ -48,8 +48,6 @@ namespace Cyclestreets.Pages
             _viewModel.CurrentPlan = newplan;
             //StartRouting();
 
-            LocationManager.instance.LockToMyPos(true);
-            LocationManager.instance.SetMap(MyMap);
             MyMap.ZoomLevel = 18;
 
             PlotRoute();
@@ -82,12 +80,12 @@ namespace Cyclestreets.Pages
         {
             base.OnNavigatedTo(e);
 
-            LocationManager.instance.StopTracking();
-            LocationManager.instance.StartTracking(30,1000);
+            LocationManager.Instance.StopTracking();
+            LocationManager.Instance.StartTracking(30,1000);
 
             if (e.NavigationMode == NavigationMode.New)
             {
-                LocationManager.instance.trackingGeolocator.PositionChanged += positionChangedHandler;
+                LocationManager.Instance.TrackingGeolocator.PositionChanged += positionChangedHandler;
             }
         }
 
@@ -95,7 +93,7 @@ namespace Cyclestreets.Pages
         {
             base.OnNavigatedFrom(e);
 
-            LocationManager.instance.trackingGeolocator.PositionChanged -= positionChangedHandler;
+            LocationManager.Instance.TrackingGeolocator.PositionChanged -= positionChangedHandler;
         }
 
         private MapOverlay _myLocationOverlay;
@@ -107,13 +105,15 @@ namespace Cyclestreets.Pages
             if (args == null || args.Position == null)
                 return;
 
-            if ( args.Position.Coordinate != null && args.Position.Coordinate.Speed!=null)
-                _lrViewModel.MetresPerSecond = (double)args.Position.Coordinate.Speed;
-
+            
             
 
             SmartDispatcher.BeginInvoke(() =>
             {
+                if (args.Position.Coordinate != null && args.Position.Coordinate.Speed != null)
+                    _lrViewModel.MetresPerSecond = (double)args.Position.Coordinate.Speed;
+
+
                 if (args.Position.Coordinate.Accuracy > 50)
                 {
                     VisualStateManager.GoToState(this, @"OnScreen", true);
@@ -123,9 +123,9 @@ namespace Cyclestreets.Pages
                     VisualStateManager.GoToState(this, @"OffScreen", true);
                 }
 
-                if (LocationManager.instance.MyGeoPosition == null) return;
-                double myAccuracy = LocationManager.instance.MyGeoPosition.Coordinate.Accuracy;
-                GeoCoordinate myCoordinate = CoordinateConverter.ConvertGeocoordinate(LocationManager.instance.MyGeoPosition.Coordinate);
+                if (LocationManager.Instance.MyGeoPosition == null) return;
+                double myAccuracy = LocationManager.Instance.MyGeoPosition.Coordinate.Accuracy;
+                GeoCoordinate myCoordinate = CoordinateConverter.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
                 if (_myLocationOverlay == null)
                 {
                     Ellipse myCircle = new Ellipse
@@ -184,8 +184,8 @@ namespace Cyclestreets.Pages
 
         private void MyMap_ZoomLevelChanged(object sender, MapZoomLevelChangedEventArgs e)
         {
-            double myAccuracy = LocationManager.instance.MyGeoPosition.Coordinate.Accuracy;
-            GeoCoordinate myCoordinate = CoordinateConverter.ConvertGeocoordinate(LocationManager.instance.MyGeoPosition.Coordinate);
+            double myAccuracy = LocationManager.Instance.MyGeoPosition.Coordinate.Accuracy;
+            GeoCoordinate myCoordinate = CoordinateConverter.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
             double metersPerPixels = (Math.Cos(myCoordinate.Latitude * Math.PI / 180) * 2 * Math.PI * 6378137) / (256 * Math.Pow(2, MyMap.ZoomLevel));
             double radius = myAccuracy / metersPerPixels;
             _accuracyEllipse.Width = radius * 2;
@@ -210,9 +210,19 @@ namespace Cyclestreets.Pages
             }
         }
 
-        private void MyMap_CenterChanged(object sender, MapCenterChangedEventArgs e)
+        private void MyMap_Hold(object sender, System.Windows.Input.GestureEventArgs e)
         {
             _timeLastMoved = DateTime.Now;
+        }
+
+        private void MyMap_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            _timeLastMoved = DateTime.Now;
+        }
+
+        private void reroute_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+        	// TODO: Add event handler implementation here.
         }
     }
 }

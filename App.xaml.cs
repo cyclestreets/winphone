@@ -109,7 +109,7 @@ namespace Cyclestreets
             ReverseGeocodeQueryManager mgr = new ReverseGeocodeQueryManager();
             SettingManager smgr = new SettingManager();
 
-            if (smgr.GetBoolValue("PreventSleep", true))
+            if (smgr.GetBoolValue(@"PreventSleep", true))
                 PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;
         }
 

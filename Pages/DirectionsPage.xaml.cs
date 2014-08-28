@@ -132,7 +132,7 @@ namespace Cyclestreets.Pages
                 PhoneApplicationService.Current.State.Remove(@"loadedRoute");
             }
 
-            LocationManager.instance.trackingGeolocator.PositionChanged -= positionChangedHandler;
+            LocationManager.Instance.TrackingGeolocator.PositionChanged -= positionChangedHandler;
 
             //LocationManager.instance.StopTracking();
             //LocationManager.instance.StartTracking();
@@ -144,12 +144,12 @@ namespace Cyclestreets.Pages
 
             if (e.NavigationMode == NavigationMode.New)
             {
-                LocationManager.instance.trackingGeolocator.PositionChanged += positionChangedHandler;
+                LocationManager.Instance.TrackingGeolocator.PositionChanged += positionChangedHandler;
                 SetupTutorial();
 
-                if (LocationManager.instance.MyGeoPosition != null)
+                if (LocationManager.Instance.MyGeoPosition != null)
                 {
-                    MyMap.Center = CoordinateConverter.ConvertGeocoordinate(LocationManager.instance.MyGeoPosition.Coordinate);
+                    MyMap.Center = CoordinateConverter.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
                 }
             }
 
@@ -192,19 +192,19 @@ namespace Cyclestreets.Pages
                 if (result == MessageBoxResult.Cancel)
                 {
                     SettingManager.instance.SetBoolValue(@"shownTutorial", true);
-                    SettingManager.instance.SetBoolValue("tutorialEnabled", false);
+                    SettingManager.instance.SetBoolValue(@"tutorialEnabled", false);
                 }
                 else
                 {
                     routeTutorial1.Visibility = Visibility.Visible;
-                    SettingManager.instance.SetBoolValue("tutorialEnabled", true);
+                    SettingManager.instance.SetBoolValue(@"tutorialEnabled", true);
                 }
 
-                SettingManager.instance.SetBoolValue("shownTutorialQuestion", true);
+                SettingManager.instance.SetBoolValue(@"shownTutorialQuestion", true);
             }
             else
             {
-                if (SettingManager.instance.GetBoolValue("tutorialEnabled", true))
+                if (SettingManager.instance.GetBoolValue(@"tutorialEnabled", true))
                     routeTutorial1.Visibility = Visibility.Visible;
             }
         }
@@ -351,9 +351,9 @@ namespace Cyclestreets.Pages
 
             addWaypoint(pp);
 
-            if (SettingManager.instance.GetBoolValue("tutorialEnabled", true))
+            if (SettingManager.instance.GetBoolValue(@"tutorialEnabled", true))
             {
-                bool shownTutorial = SettingManager.instance.GetBoolValue("shownTutorialPin", false);
+                bool shownTutorial = SettingManager.instance.GetBoolValue(@"shownTutorialPin", false);
                 if (!shownTutorial)
                     routeTutorialPin.Visibility = Visibility.Visible;
             }
@@ -893,13 +893,13 @@ namespace Cyclestreets.Pages
         private void routeTutorial5_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             routeTutorial5.Visibility = Visibility.Collapsed;
-            SettingManager.instance.SetBoolValue("shownTutorial", true);
+            SettingManager.instance.SetBoolValue(@"shownTutorial", true);
         }
 
         private void routeTutorialPin_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             routeTutorialPin.Visibility = Visibility.Collapsed;
-            SettingManager.instance.SetBoolValue("shownTutorialPin", true);
+            SettingManager.instance.SetBoolValue(@"shownTutorialPin", true);
         }
 
         private void routeTutorialRouteType_Tap(object sender, System.Windows.Input.GestureEventArgs e)
@@ -911,7 +911,7 @@ namespace Cyclestreets.Pages
         private void routeTutorialRouteInfo_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             routeTutorialRouteInfo.Visibility = Visibility.Collapsed;
-            SettingManager.instance.SetBoolValue("shownTutorialRouteType", true);
+            SettingManager.instance.SetBoolValue(@"shownTutorialRouteType", true);
         }
 
         private void settings_Click(object sender, System.EventArgs e)
@@ -1045,17 +1045,16 @@ namespace Cyclestreets.Pages
         private MapOverlay myLocationOverlay = null;
         private MapOverlay myLocationOverlay2 = null;
         private Ellipse accuracyEllipse = null;
-        private bool planRouteAvailable;
         private MapLayer wayPointLayer;
         private string currentPlan;
         private void positionChangedHandler(Geolocator sender, PositionChangedEventArgs args)
         {
             SmartDispatcher.BeginInvoke(() =>
                 {
-                    if (LocationManager.instance.MyGeoPosition != null)
+                    if (LocationManager.Instance.MyGeoPosition != null)
                     {
-                        double myAccuracy = LocationManager.instance.MyGeoPosition.Coordinate.Accuracy;
-                        GeoCoordinate myCoordinate = CoordinateConverter.ConvertGeocoordinate(LocationManager.instance.MyGeoPosition.Coordinate);
+                        double myAccuracy = LocationManager.Instance.MyGeoPosition.Coordinate.Accuracy;
+                        GeoCoordinate myCoordinate = CoordinateConverter.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
                         if (myLocationOverlay == null)
                         {
                             Ellipse myCircle = new Ellipse();
@@ -1107,8 +1106,8 @@ namespace Cyclestreets.Pages
 
         private void MyMap_ZoomLevelChanged(object sender, MapZoomLevelChangedEventArgs e)
         {
-            double myAccuracy = LocationManager.instance.MyGeoPosition.Coordinate.Accuracy;
-            GeoCoordinate myCoordinate = CoordinateConverter.ConvertGeocoordinate(LocationManager.instance.MyGeoPosition.Coordinate);
+            double myAccuracy = LocationManager.Instance.MyGeoPosition.Coordinate.Accuracy;
+            GeoCoordinate myCoordinate = CoordinateConverter.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
             double metersPerPixels = (Math.Cos(myCoordinate.Latitude * Math.PI / 180) * 2 * Math.PI * 6378137) / (256 * Math.Pow(2, MyMap.ZoomLevel));
             double radius = myAccuracy / metersPerPixels;
             accuracyEllipse.Width = radius * 2;
@@ -1222,8 +1221,8 @@ namespace Cyclestreets.Pages
             {
                 MapUtils.PlotCachedRoute(MyMap, currentPlan);
 
-                if (!SettingManager.instance.GetBoolValue("tutorialEnabled", true)) return;
-                bool shownTutorial = SettingManager.instance.GetBoolValue("shownTutorialRouteType", false);
+                if (!SettingManager.instance.GetBoolValue(@"tutorialEnabled", true)) return;
+                bool shownTutorial = SettingManager.instance.GetBoolValue(@"shownTutorialRouteType", false);
                 if (!shownTutorial)
                     routeTutorialRouteType.Visibility = Visibility.Visible;
 
@@ -1238,9 +1237,9 @@ namespace Cyclestreets.Pages
 
         private async void myLocationBorder_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            if (LocationManager.instance.MyGeoPosition != null)
+            if (LocationManager.Instance.MyGeoPosition != null)
             {
-                GeoCoordinate geo = CoordinateConverter.ConvertGeocoordinate(LocationManager.instance.MyGeoPosition.Coordinate);
+                GeoCoordinate geo = CoordinateConverter.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
                 MapLocation loc = await GeoUtils.StartReverseGeocode(geo);
 
                 SetCurrentPosition(loc);

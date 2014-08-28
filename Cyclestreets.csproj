@@ -103,6 +103,7 @@
     <Compile Include="Common\BooleanToVisibilityConverter.cs" />
     <Compile Include="Helpers\FeedbackHelper.cs" />
     <Compile Include="Helpers\StorageHelper.cs" />
+    <Compile Include="Managers\LocationManager.cs" />
     <Compile Include="Managers\RouteManager.cs" />
     <Compile Include="MyPositionDataSource.cs" />
     <Compile Include="Objects\HeightData.cs" />
@@ -137,7 +138,6 @@
       <DependentUpon>FeedbackOverlay.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\CoordinateConverter.cs" />
-    <Compile Include="LocationManager.cs" />
     <Compile Include="Pages\LeisureRouting.xaml.cs">
       <DependentUpon>LeisureRouting.xaml</DependentUpon>
     </Compile>
@@ -371,6 +371,8 @@
     <Content Include="Assets\Tiles\IconicTileSmall.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Assets\quietest.png" />
+    <Resource Include="Assets\route.png" />
     <Resource Include="Assets\shortest.png" />
   </ItemGroup>
   <ItemGroup>

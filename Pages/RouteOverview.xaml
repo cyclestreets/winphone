@@ -121,7 +121,7 @@
 				<ColumnDefinition/>
 				<ColumnDefinition/>
 			</Grid.ColumnDefinitions>
-			<TextBlock x:Name="shortest" HorizontalAlignment="Center" TextWrapping="Wrap" Text="shortest" VerticalAlignment="Bottom" FontFamily="Segoe WP" FontSize="18" Foreground="{StaticResource PhoneForegroundBrush}"/>
+			<TextBlock x:Name="quietest" HorizontalAlignment="Center" TextWrapping="Wrap" Text="quietest" VerticalAlignment="Bottom" FontFamily="Segoe WP" FontSize="18" Foreground="{StaticResource PhoneForegroundBrush}"/>
 			<TextBlock x:Name="balanced" HorizontalAlignment="Center" TextWrapping="Wrap" Text="balanced" VerticalAlignment="Bottom" FontFamily="Segoe WP" FontSize="18" Grid.Column="1" Foreground="{StaticResource PhoneForegroundBrush}"/>
 			<TextBlock x:Name="fastest" HorizontalAlignment="Center" TextWrapping="Wrap" Text="fastest" VerticalAlignment="Bottom" FontFamily="Segoe WP" FontSize="18" Grid.Column="2" Foreground="{StaticResource PhoneForegroundBrush}"/>
 			<Rectangle x:Name="fastest1" Fill="{StaticResource PhoneForegroundBrush}" Stroke="Black" Grid.Column="2" Margin="0,0,0,15" Tap="fastest1_Tap">
@@ -134,13 +134,13 @@
 					<ImageBrush Stretch="Uniform" ImageSource="/Cyclestreets;component/Assets/balanced.png"/>
 				</Rectangle.OpacityMask>
 			</Rectangle>
-			<Rectangle x:Name="shortest1" Fill="{StaticResource PhoneForegroundBrush}" Stroke="Black" Margin="0,0,0,5" Tap="shortest1_Tap">
+			<Rectangle x:Name="quietest1" Fill="{StaticResource PhoneForegroundBrush}" Stroke="Black" Tap="shortest1_Tap" Height="53" VerticalAlignment="Top">
 				<Rectangle.OpacityMask>
-					<ImageBrush Stretch="Uniform" ImageSource="/Cyclestreets;component/Assets/shortest.png"/>
+					<ImageBrush Stretch="Uniform" ImageSource="/Cyclestreets;component/Assets/quietest.png"/>
 				</Rectangle.OpacityMask>
 			</Rectangle>
 			<Rectangle x:Name="balancedHighlight" Fill="{StaticResource PhoneAccentBrush}" Height="7" Stroke="Black" VerticalAlignment="Top" Grid.Column="1" Visibility="{Binding CurrentPlan, ConverterParameter=balanced, Converter={StaticResource RouteTypeVisibility}}"/>
-			<Rectangle x:Name="shortestHighlight" Fill="{StaticResource PhoneAccentBrush}" Height="7" Stroke="Black" VerticalAlignment="Top" Visibility="{Binding CurrentPlan, ConverterParameter=shortest, Converter={StaticResource RouteTypeVisibility}}"/>
+			<Rectangle x:Name="shortestHighlight" Fill="{StaticResource PhoneAccentBrush}" Height="7" Stroke="Black" VerticalAlignment="Top" Visibility="{Binding CurrentPlan, ConverterParameter=quietest, Converter={StaticResource RouteTypeVisibility}}"/>
 			<Rectangle x:Name="fastestHighlight" Fill="{StaticResource PhoneAccentBrush}" Height="7" Stroke="Black" VerticalAlignment="Top" Grid.Column="2" Visibility="{Binding CurrentPlan, ConverterParameter=fastest, Converter={StaticResource RouteTypeVisibility}}"/>
 		</Grid>
 		<TextBlock Text="{Binding DirectionsPage.RouteManagerPtr.CurrentStepText, Mode=OneWay}" VerticalAlignment="Top" Grid.Row="3" Grid.ColumnSpan="2"/>

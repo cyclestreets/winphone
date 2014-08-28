@@ -9,6 +9,7 @@ using System.Windows.Media;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml.Linq;
+using Cyclestreets.Managers;
 using Cyclestreets.Pages;
 using Cyclestreets.Resources;
 using Cyclestreets.Utils;
@@ -62,9 +63,9 @@ namespace Cyclestreets
 			directionsAppBar = ApplicationBar.Buttons[0] as Microsoft.Phone.Shell.ApplicationBarIconButton;
 			navigateToAppBar = ApplicationBar.Buttons[1] as Microsoft.Phone.Shell.ApplicationBarIconButton;
 
-			if( LocationManager.instance == null )
+			if( LocationManager.Instance == null )
 			{
-				LocationManager l = new LocationManager( MyMap );
+				LocationManager l = new LocationManager();
 			}
 
 			revGeoQ = new ReverseGeocodeQuery();
@@ -85,7 +86,7 @@ namespace Cyclestreets
 		{
 			base.OnNavigatingFrom( e );
 
-			LocationManager.instance.trackingGeolocator.PositionChanged -= trackingGeolocator_PositionChanged;
+			LocationManager.Instance.TrackingGeolocator.PositionChanged -= trackingGeolocator_PositionChanged;
 		}
 
 		protected override void OnNavigatedTo( System.Windows.Navigation.NavigationEventArgs e )
@@ -155,7 +156,7 @@ namespace Cyclestreets
 										ApplicationBarMenuItem m = new ApplicationBarMenuItem( "buy full version" );
 										m.Click += m_Click;
 										ApplicationBar.MenuItems.Add( m );
-										SettingManager.instance.SetBoolValue( "appIsTrial", true );
+										SettingManager.instance.SetBoolValue( @"appIsTrial", true );
 									}
 								}
 
@@ -171,7 +172,7 @@ namespace Cyclestreets
 			else
 			{
 				// Conversion tracking
-				if( SettingManager.instance.GetBoolValue( "appIsTrial", false ) )
+				if( SettingManager.instance.GetBoolValue( @"appIsTrial", false ) )
 				{
 					var tc = new TrialConversion()
 					{
@@ -183,7 +184,7 @@ namespace Cyclestreets
 						Price = 0.99
 					};
 					MarkedUp.AnalyticClient.TrialConversionComplete( tc );
-					SettingManager.instance.SetBoolValue( "appIsTrial", false );
+					SettingManager.instance.SetBoolValue( @"appIsTrial", false );
 				}
 
 				/*if( !SettingManager.instance.GetBoolValue( "RatedApp", false ) )
@@ -227,7 +228,7 @@ namespace Cyclestreets
 				}*/
 			}
 
-			if( SettingManager.instance.GetBoolValue( "LocationConsent", true ) )
+			if( SettingManager.instance.GetBoolValue( @"LocationConsent", true ) )
 			{
 				if( poiLayer == null )
 				{
@@ -246,19 +247,18 @@ namespace Cyclestreets
 					center.Latitude = float.Parse( NavigationContext.QueryString["latitude"] );
 					MyMap.Center = center;
 					MyMap.ZoomLevel = 16;
-					LocationManager.instance.LockToMyPos( false );
+
 
 					selected = center;
 				}
 				else
 				{
-					if( SettingManager.instance.GetBoolValue( "LocationConsent", true ) )
+					if( SettingManager.instance.GetBoolValue( @"LocationConsent", true ) )
 					{
-						LocationManager.instance.StartTracking();
+						LocationManager.Instance.StartTracking();
 
-						LocationManager.instance.LockToMyPos( true );
-						if( LocationManager.instance.MyGeoPosition != null )
-							MyMap.SetView( CoordinateConverter.ConvertGeocoordinate( LocationManager.instance.MyGeoPosition.Coordinate ), 14 );
+						if( LocationManager.Instance.MyGeoPosition != null )
+							MyMap.SetView( CoordinateConverter.ConvertGeocoordinate( LocationManager.Instance.MyGeoPosition.Coordinate ), 14 );
 					}
 				}
 
@@ -294,11 +294,11 @@ namespace Cyclestreets
 
 				if( result == MessageBoxResult.OK )
 				{
-					SettingManager.instance.SetBoolValue( "LocationConsent", true );
+					SettingManager.instance.SetBoolValue( @"LocationConsent", true );
 				}
 				else
 				{
-					SettingManager.instance.SetBoolValue( "LocationConsent", false );
+					SettingManager.instance.SetBoolValue( @"LocationConsent", false );
 				}
 			}
 
@@ -307,7 +307,7 @@ namespace Cyclestreets
 				NavigationService.Navigate( new Uri( "/pages/DirectionsPage.xaml", UriKind.Relative ) );
 			}
 
-			LocationManager.instance.trackingGeolocator.PositionChanged += trackingGeolocator_PositionChanged;
+			LocationManager.Instance.TrackingGeolocator.PositionChanged += trackingGeolocator_PositionChanged;
 		}
 
 		private MapOverlay myLocationOverlay = null;
@@ -317,10 +317,10 @@ namespace Cyclestreets
 		{
 			SmartDispatcher.BeginInvoke( () =>
 				{
-					if( LocationManager.instance.MyGeoPosition != null )
+					if( LocationManager.Instance.MyGeoPosition != null )
 					{
-						double myAccuracy = LocationManager.instance.MyGeoPosition.Coordinate.Accuracy;
-						GeoCoordinate myCoordinate = CoordinateConverter.ConvertGeocoordinate( LocationManager.instance.MyGeoPosition.Coordinate );
+						double myAccuracy = LocationManager.Instance.MyGeoPosition.Coordinate.Accuracy;
+						GeoCoordinate myCoordinate = CoordinateConverter.ConvertGeocoordinate( LocationManager.Instance.MyGeoPosition.Coordinate );
 
 						if( myLocationOverlay == null )
 						{
@@ -395,8 +395,8 @@ namespace Cyclestreets
 
 		void MyMap_ZoomLevelChanged( object sender, MapZoomLevelChangedEventArgs e )
 		{
-			double myAccuracy = LocationManager.instance.MyGeoPosition.Coordinate.Accuracy;
-			GeoCoordinate myCoordinate = CoordinateConverter.ConvertGeocoordinate( LocationManager.instance.MyGeoPosition.Coordinate );
+			double myAccuracy = LocationManager.Instance.MyGeoPosition.Coordinate.Accuracy;
+			GeoCoordinate myCoordinate = CoordinateConverter.ConvertGeocoordinate( LocationManager.Instance.MyGeoPosition.Coordinate );
 			double metersPerPixels = ( Math.Cos( myCoordinate.Latitude * Math.PI / 180 ) * 2 * Math.PI * 6378137 ) / ( 256 * Math.Pow( 2, MyMap.ZoomLevel ) );
 			double radius = myAccuracy / metersPerPixels;
 			accuracyEllipse.Width = radius * 2;
