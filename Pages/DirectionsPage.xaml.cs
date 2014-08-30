@@ -1,6 +1,7 @@
-﻿/// Satnav mode
-/// Prompt feedback
+﻿// Satnav mode
+// Prompt feedback
 
+using System.Diagnostics;
 using Cyclestreets.Annotations;
 using Cyclestreets.Managers;
 using Cyclestreets.Objects;
@@ -15,11 +16,9 @@ using Microsoft.Phone.Maps.Services;
 using Microsoft.Phone.Maps.Toolkit;
 using Microsoft.Phone.Shell;
 using Microsoft.Phone.Tasks;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Device.Location;
 using System.Net;
 using System.Windows;
@@ -54,18 +53,16 @@ namespace Cyclestreets.Pages
 
         Stackish<Pushpin> _waypoints = new Stackish<Pushpin>();
 
-        readonly Dictionary<Pushpin, POI> _pinItems = new Dictionary<Pushpin, POI>();
-
         private bool _hideRouteOptions;
 
-        GeoCoordinate _current = null;
+        GeoCoordinate _current;
 
 
         public static ListBoxPair[] RouteType = 
 		{ 
-			new ListBoxPair(AppResources.BalancedRoute, "balanced"),
-			new ListBoxPair(AppResources.FastestRoute, "fastest"), 
-			new ListBoxPair(AppResources.QuietestRoute, "quietest") 
+			new ListBoxPair(AppResources.BalancedRoute, @"balanced"),
+			new ListBoxPair(AppResources.FastestRoute, @"fastest"), 
+			new ListBoxPair(AppResources.QuietestRoute, @"quietest") 
 		};
 
         [NotNull] public static readonly String[] CycleSpeed = { @"10mph", @"12mph", @"15mph" };
@@ -79,31 +76,36 @@ namespace Cyclestreets.Pages
 
             // hack. See here http://stackoverflow.com/questions/5334574/applicationbariconbutton-is-null/5334703#5334703
             saveRoute = ApplicationBar.MenuItems[0] as ApplicationBarMenuItem;
+            Debug.Assert(saveRoute != null, @"saveRoute != null");
             saveRoute.Text = AppResources.SaveRoute;
             loadRoute = ApplicationBar.MenuItems[1] as ApplicationBarMenuItem;
+            Debug.Assert(loadRoute != null, @"loadRoute != null");
             loadRoute.Text = AppResources.LoadRoute;
             settings = ApplicationBar.MenuItems[2] as ApplicationBarMenuItem;
+            Debug.Assert(settings != null, @"settings != null");
             settings.Text = AppResources.Settings;
             privacy = ApplicationBar.MenuItems[3] as ApplicationBarMenuItem;
+            Debug.Assert(privacy != null, @"privacy != null");
             privacy.Text = AppResources.PrivacyPolicy;
             sendFeedback = ApplicationBar.MenuItems[4] as ApplicationBarMenuItem;
+            Debug.Assert(sendFeedback != null, @"sendFeedback != null");
             sendFeedback.Text = AppResources.FindRoute;
 
             saveRoute.IsEnabled = false;
 
             // Setup route type dropdown
-            string plan = SettingManager.instance.GetStringValue("defaultRouteType", "balanced");
+            string plan = SettingManager.instance.GetStringValue(@"defaultRouteType", @"balanced");
             routeTypePicker.ItemsSource = RouteType;
-            routeTypePicker.DisplayMemberPath = "DisplayName";
+            routeTypePicker.DisplayMemberPath = @"DisplayName";
             int idx = Array.FindIndex(RouteType, v => v.Value.Equals(plan));
             routeTypePicker.SelectedIndex = idx == -1 ? 0 : idx;
 
-            currentPlan = plan.Replace(" route", "");
+            _currentPlan = plan.Replace(@" route", "");
 
             _geoQ = new GeocodeQuery();
             _geoQ.QueryCompleted += geoQ_QueryCompleted;
 
-            clearCurrentPosition();
+            ClearCurrentPosition();
 
             pleaseWait.Width = Application.Current.Host.Content.ActualWidth;
 
@@ -123,7 +125,7 @@ namespace Cyclestreets.Pages
             acb.PopulateComplete();
         }
 
-        protected override void OnNavigatingFrom(System.Windows.Navigation.NavigatingCancelEventArgs e)
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             base.OnNavigatingFrom(e);
 
@@ -161,11 +163,11 @@ namespace Cyclestreets.Pages
             routeTypePicker.Visibility = _hideRouteOptions ? Visibility.Collapsed : Visibility.Visible;
 
             RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
-            var newplan = rm.HasCachedRoute(currentPlan);
+            var newplan = rm.HasCachedRoute(_currentPlan);
             if (newplan == null) return;
 
             rm.IsBusy = true;
-            pleaseWait.Width = this.Width;
+            pleaseWait.Width = Width;
         }
 
         private void SetupTutorial()
@@ -221,7 +223,7 @@ namespace Cyclestreets.Pages
                     SmartDispatcher.BeginInvoke(() =>
                     {
                         MyMap.SetView(res.Coord, 16);
-                        this.Focus();
+                        Focus();
                         //MyMap.Center = CoordinateConverter.ConvertGeocoordinate(MyGeoPosition.Coordinate);
                     });
                     App.networkStatus.NetworkIsBusy = false;
@@ -249,20 +251,20 @@ namespace Cyclestreets.Pages
                 GeoCoordinate g = e.Result[0].GeoCoordinate;
                 SetCurrentPosition(g);
                 App.networkStatus.NetworkIsBusy = false;
-                this.Focus();
+                Focus();
             }
             else
             {
                 GeocodeQuery geo = sender as GeocodeQuery;
+                if (geo == null) return;
                 string searchString = geo.SearchTerm;
 
                 WebClient wc = new WebClient();
-                string myLocation = "";
-                myLocation = geo.GeoCoordinate.Latitude + "," + geo.GeoCoordinate.Longitude;
-                myLocation = HttpUtility.UrlEncode(myLocation);
+                string location = String.Format(@"{0},{1}",geo.GeoCoordinate.Latitude, geo.GeoCoordinate.Longitude);
+                location = HttpUtility.UrlEncode(location);
 
 #if DEBUG
-                Uri service = new Uri("http://demo.places.nlp.nokia.com/places/v1/discover/search?at=" + myLocation + "&q=" + searchString + "&app_id=" + App.hereAppID + "&app_code=" + App.hereAppToken + "&accept=application%2Fjson");
+                Uri service = new Uri("http://demo.places.nlp.nokia.com/places/v1/discover/search?at=" + location + "&q=" + searchString + "&app_id=" + App.hereAppID + "&app_code=" + App.hereAppToken + "&accept=application%2Fjson");
 #else
 				Uri service = new Uri("http://places.nlp.nokia.com/places/v1/discover/search?at=" + myLocation + "&q=" + searchString + "&app_id=" + App.hereAppID + "&app_code=" + App.hereAppToken + "&accept=application%2Fjson");
 #endif
@@ -277,7 +279,7 @@ namespace Cyclestreets.Pages
         {
             if (e.Error == null && !e.Cancelled && !string.IsNullOrEmpty(e.Result))
             {
-                System.Diagnostics.Debug.WriteLine(e.Result);
+                Debug.WriteLine(e.Result);
                 JObject o = null;
                 try
                 {
@@ -285,13 +287,14 @@ namespace Cyclestreets.Pages
                 }
                 catch (Exception ex)
                 {
-                    MarkedUp.AnalyticClient.Error("Could not parse JSON " + e.Result + " " + ex.Message);
-                    MessageBox.Show("Could not parse route data information from server. Please let us know about this error with the route you were trying to plan");
+                    MarkedUp.AnalyticClient.Error(String.Format(AppResources.CouldNotParseJSON, e.Result, ex.Message));
+                    MessageBox.Show(AppResources.JSONParseError);
                 }
-                JArray suggestions = (JArray)o["results"]["items"];
+                Debug.Assert(o != null, @"o != null");
+                JArray suggestions = (JArray)o[@"results"][@"items"];
                 if (suggestions.Count > 0)
                 {
-                    JArray pos = (JArray)suggestions[0]["position"];
+                    JArray pos = (JArray)suggestions[0][@"position"];
                     GeoCoordinate g = new GeoCoordinate((double)pos[0], (double)pos[1]);
                     SetCurrentPosition(g);
 
@@ -299,7 +302,7 @@ namespace Cyclestreets.Pages
                 }
             }
             App.networkStatus.NetworkIsBusy = false;
-            this.Focus();
+            Focus();
         }
 
         private async void cursorPos_Click(object sender, EventArgs e)
@@ -309,47 +312,46 @@ namespace Cyclestreets.Pages
 
 
 
-            confirmWaypoint_Click(sender, e);
+            confirmWaypoint_Click();
         }
 
-        private void confirmWaypoint_Click(object sender, EventArgs e)
+        private void confirmWaypoint_Click()
         {
             RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
             rm.AddWaypoint(_current);
 
-            if (wayPointLayer == null)
+            if (_wayPointLayer == null)
             {
-                wayPointLayer = new MapLayer();
+                _wayPointLayer = new MapLayer();
 
-                MyMap.Layers.Add(wayPointLayer);
+                MyMap.Layers.Add(_wayPointLayer);
             }
 
             // Change last push pin from finish to intermediate
             if (_waypoints.Count > 1)
             {
                 Pushpin last = _waypoints.Peek();
-                last.Style = Resources["Intermediate"] as Style;
+                last.Style = Resources[@"Intermediate"] as Style;
                 last.Content = "" + (_waypoints.Count - 1);
             }
 
             Pushpin pp = new Pushpin();
             if (_waypoints.Count == 0)
-                pp.Style = Resources["Start"] as Style;
+                pp.Style = Resources[@"Start"] as Style;
             else
-                pp.Style = Resources["Finish"] as Style;
+                pp.Style = Resources[@"Finish"] as Style;
 
             pp.BorderBrush = new SolidColorBrush(Colors.Red);
             pp.BorderThickness = new Thickness(200);
-            pp.Tap += pinTapped;
+            pp.Tap += PinTapped;
 
-            MapOverlay overlay = new MapOverlay();
-            overlay.Content = pp;
+            MapOverlay overlay = new MapOverlay {Content = pp};
             pp.GeoCoordinate = _current;
             overlay.GeoCoordinate = _current;
             overlay.PositionOrigin = new Point(0.3, 1.0);
-            wayPointLayer.Add(overlay);
+            _wayPointLayer.Add(overlay);
 
-            addWaypoint(pp);
+            AddWaypoint(pp);
 
             if (SettingManager.instance.GetBoolValue(@"tutorialEnabled", true))
             {
@@ -360,18 +362,18 @@ namespace Cyclestreets.Pages
             // Clear box
             startPoint.Text = "";
 
-            clearCurrentPosition();
+            ClearCurrentPosition();
         }
 
-        private void pinTapped(object sender, System.Windows.Input.GestureEventArgs e)
+        private void PinTapped(object sender, System.Windows.Input.GestureEventArgs e)
         {
             Pushpin pp = sender as Pushpin;
             if (pp == null)
                 return;
 
-            removeWaypoint(pp);
+            RemoveWaypoint(pp);
 
-            wayPointLayer.Clear();
+            _wayPointLayer.Clear();
 
             RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
             rm.RemoveWaypoint(pp.GeoCoordinate);
@@ -384,33 +386,33 @@ namespace Cyclestreets.Pages
                     GeoCoordinate = _waypoints[i].GeoCoordinate,
                     PositionOrigin = new Point(0.3, 1.0)
                 };
-                wayPointLayer.Add(overlay);
+                _wayPointLayer.Add(overlay);
 
                 // Set pin styles
                 pp = _waypoints[i];
                 if (i == 0)
-                    pp.Style = Resources["Start"] as Style;
+                    pp.Style = Resources[@"Start"] as Style;
                 else if (i == _waypoints.Count - 1)
-                    pp.Style = Resources["Finish"] as Style;
+                    pp.Style = Resources[@"Finish"] as Style;
                 else
                 {
-                    pp.Style = Resources["Intermediate"] as Style;
+                    pp.Style = Resources[@"Intermediate"] as Style;
                     pp.Content = "" + i;
                 }
             }
         }
 
-        private void addWaypoint(Pushpin pp)
+        private void AddWaypoint(Pushpin pp)
         {
             _waypoints.Push(pp);
         }
 
-        private void removeWaypoint(Pushpin pp)
+        private void RemoveWaypoint(Pushpin pp)
         {
             _waypoints.Remove(pp);
         }
 
-        private void clearCurrentPosition()
+        private void ClearCurrentPosition()
         {
             _current = null;
             //confirmWaypoint.IsEnabled = false;
@@ -420,8 +422,8 @@ namespace Cyclestreets.Pages
         {
             if (loc == null)
             {
-                MessageBox.Show("Invalid Location",
-                    "Could not find location. Please try again", MessageBoxButton.OK);
+                MessageBox.Show( AppResources.NoLocationMsg, AppResources.InvalidLocation,
+                   MessageBoxButton.OK);
                 return;
             }
             SetCurrentPosition(loc.GeoCoordinate);
@@ -430,7 +432,7 @@ namespace Cyclestreets.Pages
             {
                 // Set the name in the box without looking it up
                 startPoint.Populating -= StartPointOnPopulating;
-                startPoint.Text = loc.Information.Name + " " + loc.Information.Address.Street + ", " + loc.Information.Address.City + ", " + loc.Information.Address.PostalCode;
+                startPoint.Text = String.Format(@"{0} {1}, {2}, {3}", loc.Information.Name, loc.Information.Address.Street, loc.Information.Address.City , loc.Information.Address.PostalCode);
                 startPoint.Populating += StartPointOnPopulating;
             });
         }
@@ -736,95 +738,28 @@ namespace Cyclestreets.Pages
             }
         }*/
 
-        private static T JsonGetPropertyHelper<T>(JObject p, string key)
-        {
-
-            if (p[key] == null)
-                throw new JsonException("Missing key " + key + " from result");
-
-            try
-            {
-                return p.Value<T>(key);
-            }
-            catch (Exception)
-            {
-                throw new JsonException(string.Format("Unexpected value for {0} {1}", key, p[key]));
-            }
-
-        }
-
-        private void poiTapped(object sender, System.Windows.Input.GestureEventArgs e)
-        {
-            Pushpin pp = sender as Pushpin;
-            POI p = _pinItems[pp];
-            foreach (KeyValuePair<Pushpin, POI> pair in _pinItems)
-            {
-                Pushpin ppItem = pair.Key;
-                POI pItem = pair.Value;
-                ppItem.Content = pItem.PinID;
-            }
-            pp.Content = p.Name;
-
-            //selected = p.GetGeoCoordinate();
-        }
-
-        private string getQuietnessString(float p)
-        {
-            if (p > 80)
-                return AppResources.Quiet;
-            else if (p > 60)
-                return AppResources.QuiteQuiet;
-            else if (p > 40)
-                return AppResources.QuiteBusy;
-            else if (p > 20)
-                return AppResources.Busy;
-            else
-                return AppResources.VeryBusy;
-        }
-
-
-
-        private Color ConvertHexStringToColour(string hexString)
-        {
-            //byte a = 0;
-            byte r = 0;
-            byte g = 0;
-            byte b = 0;
-            if (hexString.StartsWith("#"))
-            {
-                hexString = hexString.Substring(1, 6);
-            }
-            //a = Convert.ToByte(Int32.Parse(hexString.Substring(0, 2),
-            //	System.Globalization.NumberStyles.AllowHexSpecifier));
-            r = Convert.ToByte(Int32.Parse(hexString.Substring(0, 2),
-                System.Globalization.NumberStyles.AllowHexSpecifier));
-            g = Convert.ToByte(Int32.Parse(hexString.Substring(2, 2),
-                System.Globalization.NumberStyles.AllowHexSpecifier));
-            b = Convert.ToByte(Int32.Parse(hexString.Substring(4, 2), System.Globalization.NumberStyles.AllowHexSpecifier));
-            return Color.FromArgb(255, r, g, b);
-        }
 
         private async void routeTypePicker_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             ListPicker picker = sender as ListPicker;
             if (picker == null) return;
-            currentPlan = ((ListBoxPair)picker.SelectedItem).Value;
+            _currentPlan = ((ListBoxPair)picker.SelectedItem).Value;
 
             RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
             if (!rm.ReadyToPlanRoute) return;
 
-            bool result = await rm.FindRoute(currentPlan, false);
+            bool result = await rm.FindRoute(_currentPlan, false);
             if (!result)
             {
                 MarkedUp.AnalyticClient.Error(@"Route Planning Error");
 
                 MessageBox.Show(
-                    "Could not parse route data information from server. Please let us know about this error with the route you were trying to plan");
+                    AppResources.JSONParseError);
             }
             else
             {
                 MyMap.MapElements.Clear();
-                MapUtils.PlotCachedRoute(MyMap, currentPlan);
+                MapUtils.PlotCachedRoute(MyMap, _currentPlan);
             }
         }
 
@@ -914,12 +849,12 @@ namespace Cyclestreets.Pages
             SettingManager.instance.SetBoolValue(@"shownTutorialRouteType", true);
         }
 
-        private void settings_Click(object sender, System.EventArgs e)
+        private void settings_Click(object sender, EventArgs e)
         {
             NavigationService.Navigate(new Uri("/Pages/Settings.xaml", UriKind.Relative));
         }
 
-        private void privacy_Click(object sender, System.EventArgs e)
+        private void privacy_Click(object sender, EventArgs e)
         {
             WebBrowserTask url = new WebBrowserTask { Uri = new Uri("http://www.cyclestreets.net/privacy/") };
             url.Show();
@@ -927,16 +862,16 @@ namespace Cyclestreets.Pages
 
         private async void MyMap_Loaded(object sender, RoutedEventArgs e)
         {
-            Microsoft.Phone.Maps.MapsSettings.ApplicationContext.ApplicationId = "823e41bf-889c-4102-863f-11cfee11f652";
-            Microsoft.Phone.Maps.MapsSettings.ApplicationContext.AuthenticationToken = "xrQJghWalYn52fTfnUhWPQ";
+            Microsoft.Phone.Maps.MapsSettings.ApplicationContext.ApplicationId = @"823e41bf-889c-4102-863f-11cfee11f652";
+            Microsoft.Phone.Maps.MapsSettings.ApplicationContext.AuthenticationToken = @"xrQJghWalYn52fTfnUhWPQ";
 
             RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
-            if (PhoneApplicationService.Current.State.ContainsKey(@"loadedRoute") && PhoneApplicationService.Current.State["loadedRoute"] != null)
+            if (PhoneApplicationService.Current.State.ContainsKey(@"loadedRoute") && PhoneApplicationService.Current.State[@"loadedRoute"] != null)
             {
-                string routeData = (string)PhoneApplicationService.Current.State["loadedRoute"];
+                string routeData = (string)PhoneApplicationService.Current.State[@"loadedRoute"];
                 _hideRouteOptions = true;
-                rm.ParseRouteData(routeData, currentPlan, false);
-                PhoneApplicationService.Current.State["loadedRoute"] = null;
+                rm.ParseRouteData(routeData, _currentPlan, false);
+                PhoneApplicationService.Current.State[@"loadedRoute"] = null;
             }
 
             routeTypePicker.Visibility = _hideRouteOptions ? Visibility.Collapsed : Visibility.Visible;
@@ -946,23 +881,23 @@ namespace Cyclestreets.Pages
             SetMapStyle();
 
 
-            var newplan = rm.HasCachedRoute(currentPlan);
+            var newplan = rm.HasCachedRoute(_currentPlan);
             if (newplan == null) return;
-            currentPlan = newplan;
+            _currentPlan = newplan;
             bool result = await rm.FindRoute(newplan, false);
             if (!result)
             {
                 MarkedUp.AnalyticClient.Error(@"Route Planning Error");
 
                 MessageBox.Show(
-                    "Could not parse route data information from server. Please let us know about this error with the route you were trying to plan");
+                    AppResources.JSONParseError);
             }
             else
             {
-                MapUtils.PlotCachedRoute(MyMap, currentPlan);
+                MapUtils.PlotCachedRoute(MyMap, _currentPlan);
 
                 rm.IsBusy = false;
-                pleaseWait.Width = this.Width;
+                pleaseWait.Width = Width;
             }
         }
 
@@ -986,11 +921,12 @@ namespace Cyclestreets.Pages
                 MyMap.TileSources.Add(ts);
         }
 
-        private void startPoint_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        private void startPoint_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
                 AutoCompleteBox box = sender as AutoCompleteBox;
+                Debug.Assert(box != null, @"box != null");
                 string text = box.Text;
 
                 if (string.IsNullOrWhiteSpace(text))
@@ -1004,7 +940,7 @@ namespace Cyclestreets.Pages
                         // This is a postcode
                         string newPostcodeEnd = text.Substring(text.Length - 3, 3);
                         string newPostcodeStart = text.Substring(0, text.Length - 3);
-                        box.Text = newPostcodeStart + " " + newPostcodeEnd;
+                        box.Text = String.Format(@"{0} {1}",newPostcodeStart , newPostcodeEnd);
                     }
                 }
                 //StartPointOnPopulating(box.Text, box);
@@ -1016,7 +952,7 @@ namespace Cyclestreets.Pages
                     _geoQ.QueryAsync();
                     App.networkStatus.NetworkIsBusy = true;
                 }
-                this.Focus();
+                Focus();
             }
         }
 
@@ -1042,11 +978,11 @@ namespace Cyclestreets.Pages
 
         }
 
-        private MapOverlay myLocationOverlay = null;
-        private MapOverlay myLocationOverlay2 = null;
-        private Ellipse accuracyEllipse = null;
-        private MapLayer wayPointLayer;
-        private string currentPlan;
+        private MapOverlay _myLocationOverlay;
+        private MapOverlay _myLocationOverlay2;
+        private Ellipse _accuracyEllipse;
+        private MapLayer _wayPointLayer;
+        private string _currentPlan;
         private void positionChangedHandler(Geolocator sender, PositionChangedEventArgs args)
         {
             SmartDispatcher.BeginInvoke(() =>
@@ -1055,51 +991,54 @@ namespace Cyclestreets.Pages
                     {
                         double myAccuracy = LocationManager.Instance.MyGeoPosition.Coordinate.Accuracy;
                         GeoCoordinate myCoordinate = CoordinateConverter.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
-                        if (myLocationOverlay == null)
+                        if (_myLocationOverlay == null)
                         {
-                            Ellipse myCircle = new Ellipse();
-                            myCircle.Fill = new SolidColorBrush(Colors.Black);
-                            myCircle.Height = 20;
-                            myCircle.Width = 20;
-                            myCircle.Opacity = 30;
-                            Binding myBinding = new Binding("Visible");
-                            myBinding.Source = new MyPositionDataSource(MyMap);
+                            Ellipse myCircle = new Ellipse
+                            {
+                                Fill = new SolidColorBrush(Colors.Black),
+                                Height = 20,
+                                Width = 20,
+                                Opacity = 30
+                            };
+                            Binding myBinding = new Binding(@"Visible") {Source = new MyPositionDataSource(MyMap)};
                             myCircle.Visibility = Visibility.Visible;
-                            myCircle.SetBinding(Ellipse.VisibilityProperty, myBinding);
+                            myCircle.SetBinding(VisibilityProperty, myBinding);
 
                             MyMap.ZoomLevelChanged += MyMap_ZoomLevelChanged;
 
-                            accuracyEllipse = new Ellipse();
-                            accuracyEllipse.Fill = new SolidColorBrush(Color.FromArgb(75, 200, 0, 0));
-                            accuracyEllipse.Visibility = Visibility.Visible;
-                            accuracyEllipse.SetBinding(Ellipse.VisibilityProperty, myBinding);
+                            _accuracyEllipse = new Ellipse
+                            {
+                                Fill = new SolidColorBrush(Color.FromArgb(75, 200, 0, 0)),
+                                Visibility = Visibility.Visible
+                            };
+                            _accuracyEllipse.SetBinding(VisibilityProperty, myBinding);
 
                             // Create a MapOverlay to contain the circle.
-                            myLocationOverlay = new MapOverlay();
-                            myLocationOverlay.Content = myCircle;
-                            myLocationOverlay.PositionOrigin = new Point(0.5, 0.5);
-                            myLocationOverlay.GeoCoordinate = myCoordinate;
+                            _myLocationOverlay = new MapOverlay();
+                            _myLocationOverlay.Content = myCircle;
+                            _myLocationOverlay.PositionOrigin = new Point(0.5, 0.5);
+                            _myLocationOverlay.GeoCoordinate = myCoordinate;
 
-                            myLocationOverlay2 = new MapOverlay();
-                            myLocationOverlay2.Content = accuracyEllipse;
-                            myLocationOverlay2.PositionOrigin = new Point(0.5, 0.5);
-                            myLocationOverlay2.GeoCoordinate = myCoordinate;
+                            _myLocationOverlay2 = new MapOverlay();
+                            _myLocationOverlay2.Content = _accuracyEllipse;
+                            _myLocationOverlay2.PositionOrigin = new Point(0.5, 0.5);
+                            _myLocationOverlay2.GeoCoordinate = myCoordinate;
 
                             // Create a MapLayer to contain the MapOverlay.
                             MapLayer myLocationLayer = new MapLayer();
-                            myLocationLayer.Add(myLocationOverlay);
-                            myLocationLayer.Add(myLocationOverlay2);
+                            myLocationLayer.Add(_myLocationOverlay);
+                            myLocationLayer.Add(_myLocationOverlay2);
 
                             MyMap.Layers.Add(myLocationLayer);
                         }
 
-                        myLocationOverlay.GeoCoordinate = myCoordinate;
-                        myLocationOverlay2.GeoCoordinate = myCoordinate;
+                        _myLocationOverlay.GeoCoordinate = myCoordinate;
+                        _myLocationOverlay2.GeoCoordinate = myCoordinate;
 
                         double metersPerPixels = (Math.Cos(myCoordinate.Latitude * Math.PI / 180) * 2 * Math.PI * 6378137) / (256 * Math.Pow(2, MyMap.ZoomLevel));
                         double radius = myAccuracy / metersPerPixels;
-                        accuracyEllipse.Width = radius * 2;
-                        accuracyEllipse.Height = radius * 2;
+                        _accuracyEllipse.Width = radius * 2;
+                        _accuracyEllipse.Height = radius * 2;
                     }
                 });
         }
@@ -1110,8 +1049,8 @@ namespace Cyclestreets.Pages
             GeoCoordinate myCoordinate = CoordinateConverter.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
             double metersPerPixels = (Math.Cos(myCoordinate.Latitude * Math.PI / 180) * 2 * Math.PI * 6378137) / (256 * Math.Pow(2, MyMap.ZoomLevel));
             double radius = myAccuracy / metersPerPixels;
-            accuracyEllipse.Width = radius * 2;
-            accuracyEllipse.Height = radius * 2;
+            _accuracyEllipse.Width = radius * 2;
+            _accuracyEllipse.Height = radius * 2;
         }
 
         private void sendFeedback_Click(object sender, EventArgs e)
@@ -1129,67 +1068,11 @@ namespace Cyclestreets.Pages
             App.networkStatus.NetworkIsBusy = false;
         }
 
-        protected override void OnBackKeyPress(CancelEventArgs e)
-        {
-            base.OnBackKeyPress(e);
-
-            /*if (pleaseWait.IsOpen)
-            {
-                pleaseWait.IsOpen = false;
-                e.Cancel = true;
-            }
-            else if (currentStep >= 0)
-            {
-                currentStep = -1;
-
-                LocationRectangle rect = new LocationRectangle(min, max);
-                MyMap.SetView(rect);
-                MyMap.Pitch = 0;
-                MyMap.Heading = 0;
-
-                float f = (float)route.distance * 0.000621371192f;
-                findLabel1.Text = f.ToString("0.00") + AppResources.MetresShort + UtilTime.secsToLongDHMS(route.timeInSeconds);
-
-                SetMapStyle();
-                e.Cancel = true;
-            }
-            else if (currentRouteData != null)
-            {
-                currentRouteData = null;
-
-                geometryCoords.Clear();
-                facts.Clear();
-                route.segments.Clear();
-                MyMap.MapElements.Clear();
-                waypoints.Clear();
-
-                max = new GeoCoordinate(90, -180);
-                min = new GeoCoordinate(-90, 180);
-
-                currentStep = -1;
-
-                arrowLeft.Opacity = 50;
-                arrowRight.Opacity = 100;
-
-                route = null;
-
-                //cursorPos.IsEnabled = true;
-
-                ExtendedVisualStateManager.GoToElementState(LayoutRoot, "RoutePlanner", true);
-
-                MyMap.Layers.Clear();
-
-                wayPointLayer = null;
-
-
-                e.Cancel = true;
-            }*/
-        }
-
         private async void MyMap_Tap(object sender, System.Windows.Input.GestureEventArgs ev)
         {
             Map map = sender as Map;
             Point p = ev.GetPosition(map);
+            Debug.Assert(map != null, @"map != null");
             GeoCoordinate coord = map.ConvertViewportPointToGeoCoordinate(p);
 
             if (coord == null)
@@ -1203,23 +1086,23 @@ namespace Cyclestreets.Pages
 
             // Add a waypoint automatically
             _current = loc.GeoCoordinate;
-            confirmWaypoint_Click(null, null);
+            confirmWaypoint_Click();
         }
 
         private async void planRouteBorder_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
-            bool result = await rm.FindRoute(currentPlan);
+            bool result = await rm.FindRoute(_currentPlan);
             if (!result)
             {
                 MarkedUp.AnalyticClient.Error(@"Route Planning Error");
 
                 MessageBox.Show(
-                    "Could not parse route data information from server. Please let us know about this error with the route you were trying to plan");
+                    AppResources.JSONParseError);
             }
             else
             {
-                MapUtils.PlotCachedRoute(MyMap, currentPlan);
+                MapUtils.PlotCachedRoute(MyMap, _currentPlan);
 
                 if (!SettingManager.instance.GetBoolValue(@"tutorialEnabled", true)) return;
                 bool shownTutorial = SettingManager.instance.GetBoolValue(@"shownTutorialRouteType", false);
@@ -1227,7 +1110,7 @@ namespace Cyclestreets.Pages
                     routeTutorialRouteType.Visibility = Visibility.Visible;
 
                 rm.IsBusy = false;
-                pleaseWait.Width = this.Width;
+                pleaseWait.Width = Width;
 
                 NavigationService.Navigate(new Uri("/Pages/RouteOverview.xaml", UriKind.Relative));
             }
@@ -1243,8 +1126,13 @@ namespace Cyclestreets.Pages
                 MapLocation loc = await GeoUtils.StartReverseGeocode(geo);
 
                 SetCurrentPosition(loc);
-
-                confirmWaypoint_Click(sender, e);
+                if ( loc.GeoCoordinate.HorizontalAccuracy < 60 )
+                    confirmWaypoint_Click();
+                else
+                {
+                    MessageBox.Show(AppResources.PoorGPS,
+                        AppResources.PoorGPSTitle, MessageBoxButton.OK);
+                }
             }
             else
             {

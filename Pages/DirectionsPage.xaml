@@ -356,7 +356,7 @@
 			</Button>
 		</Grid>
 
-		<Popup x:Name="pleaseWait" IsOpen="{Binding RouteManagerPtr.IsBusy}" VerticalAlignment="Top" VerticalOffset="200">
+		<Popup x:Name="pleaseWait" IsOpen="{Binding RouteManagerPtr.IsBusy}" Width="{Binding RouteManagerPtr.BusyWidth}" VerticalAlignment="Top" VerticalOffset="200">
 			<StackPanel x:Name="popupPanel" Background="{StaticResource PhoneAccentBrush}">
 				<TextBlock Text="{Binding LocalizedResources.PleaseWait, Source={StaticResource LocalizedStrings}}" TextAlignment="Center" FontSize="40" Margin="10,0" Foreground="White" />
 				<TextBlock FontSize="21" Margin="10,0" TextWrapping="Wrap" TextAlignment="Center" Foreground="White" >

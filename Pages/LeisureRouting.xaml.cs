@@ -131,7 +131,7 @@ namespace Cyclestreets.Pages
 				}
 				poiNames = HttpUtility.UrlEncode( poiNames.TrimEnd( ',' ) );
 
-				string speedSetting = SettingManager.instance.GetStringValue( "cycleSpeed", "12mph" );
+				string speedSetting = SettingManager.instance.GetStringValue( @"cycleSpeed", @"12mph" );
 				int speed = Util.getSpeedFromString( speedSetting );
 
 				if( !string.IsNullOrWhiteSpace( poiNames ) )

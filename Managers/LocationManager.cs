@@ -17,14 +17,14 @@ namespace Cyclestreets.Managers
 			Instance = this;
 		}
 
-		public void StartTracking( uint accuracy = 30, double interval = 30000 )
+        public void StartTracking(PositionAccuracy accuracy = PositionAccuracy.High, double interval = 30000)
 		{
 			if( TrackingGeolocator != null )
 			{
 				return;
 			}
 
-            TrackingGeolocator = new Geolocator {ReportInterval = (uint) interval, DesiredAccuracyInMeters = accuracy, DesiredAccuracy = PositionAccuracy.High};
+            TrackingGeolocator = new Geolocator {ReportInterval = (uint) interval, DesiredAccuracy = accuracy};
 
 		    // this implicitly starts the tracking operation
 			TrackingGeolocator.PositionChanged += positionChangedHandler;

@@ -67,12 +67,20 @@
     				</VisualTransition>
     				<VisualTransition From="OffScreen" GeneratedDuration="0"/>
     			</VisualStateGroup.Transitions>
-    			<VisualState x:Name="OnScreen"/>
+    			<VisualState x:Name="OnScreen">
+    				<Storyboard>
+    					<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)" Storyboard.TargetName="grid" d:IsOptimized="True"/>
+    				</Storyboard>
+    			</VisualState>
     			<VisualState x:Name="OffScreen">
     				<Storyboard>
     					<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)" Storyboard.TargetName="grid">
-    						<EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+    						<EasingDoubleKeyFrame KeyTime="0" Value="800"/>
     						<EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="800"/>
+    					</DoubleAnimationUsingKeyFrames>
+    					<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationX)" Storyboard.TargetName="grid">
+    						<EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+    						<EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="0"/>
     					</DoubleAnimationUsingKeyFrames>
     				</Storyboard>
     			</VisualState>
@@ -100,6 +108,9 @@
             </StackPanel>
         </Grid>
         <Grid x:Name="grid" Height="80" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5">
+        	<Grid.Projection>
+        		<PlaneProjection/>
+        	</Grid.Projection>
         	<Grid.RenderTransform>
         		<CompositeTransform TranslateX="800"/>
         	</Grid.RenderTransform>

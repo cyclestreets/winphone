@@ -81,7 +81,7 @@ namespace Cyclestreets.Pages
             base.OnNavigatedTo(e);
 
             LocationManager.Instance.StopTracking();
-            LocationManager.Instance.StartTracking(30,1000);
+            LocationManager.Instance.StartTracking(PositionAccuracy.High, 1000);
 
             if (e.NavigationMode == NavigationMode.New)
             {
