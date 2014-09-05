@@ -101,6 +101,9 @@
     <Compile Include="Common\BindableBase.cs" />
     <Compile Include="Common\BooleanNegationConverter.cs" />
     <Compile Include="Common\BooleanToVisibilityConverter.cs" />
+    <Compile Include="CustomClasses\CycleStreetsMap.xaml.cs">
+      <DependentUpon>CycleStreetsMap.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Helpers\FeedbackHelper.cs" />
     <Compile Include="Helpers\StorageHelper.cs" />
     <Compile Include="Managers\LocationManager.cs" />
@@ -201,6 +204,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Page Include="CustomClasses\CycleStreetsMap.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\Feedback.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

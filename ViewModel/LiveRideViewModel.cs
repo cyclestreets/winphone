@@ -18,9 +18,9 @@ namespace Cyclestreets.ViewModel
             private get { return _metresPerSecond; }
             set
             {
-                if (  double.IsNaN(value) )
-                    Set(ref _metresPerSecond, 0);
-                else
+                //if (  double.IsNaN(value) )
+                  //  Set(ref _metresPerSecond, 0);
+                //else
                 Set(ref _metresPerSecond, value); 
                 RaisePropertyChanging(@"Speed");
             }
@@ -30,14 +30,15 @@ namespace Cyclestreets.ViewModel
         {
             get
             {
-                if (SettingManager.instance.GetStringValue(@"speed", @"mph") == @"mph")
+               /* if (SettingManager.instance.GetStringValue(@"speed", @"mph") == @"mph")
                 {
                     return (MetresPerSecond*2.23693629).ToString(@"0.00");
                 }
                 else
                 {
                     return (MetresPerSecond*3.6).ToString(@"0.00");
-                }
+                }*/
+                return MetresPerSecond.ToString();
             }
         }
         public LiveRideViewModel()
