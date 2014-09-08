@@ -26,27 +26,43 @@ namespace Cyclestreets.CustomClasses
     {
         // Use this from XAML to control whether animation is on or off
         #region DefaultPlan Dependency Property
-
         public static readonly DependencyProperty DefaultPlanProperty =
             DependencyProperty.Register("DefaultPlan", typeof(string), typeof(CycleStreetsMap), new PropertyMetadata(null, null));
 
-        public static void SetDefaultPlan(CycleStreetsMap element, string value)
+        public string DefaultPlan
         {
-            element.SetValue(DefaultPlanProperty, value);
+            get
+            {
+                return (string)GetValue(DefaultPlanProperty);
+            }
+            set
+            {
+                SetValue(DefaultPlanProperty, value);
+            }
         }
-
-        public static string GetDefaultPlan(CycleStreetsMap element)
-        {
-            return (string)element.GetValue(DefaultPlanProperty);
-        }
-
         #endregion
+
+        public GeoCoordinate Center
+        {
+            get
+            {
+                return MyMap.Center;
+            }
+        }
+
+        public Map Map
+        {
+            get
+            {
+                return MyMap;
+            }
+        }
 
         public CycleStreetsMap()
         {
             InitializeComponent();
 
-            LocationManager.Instance.TrackingGeolocator.PositionChanged += positionChangedHandler;
+            LocationManager.Instance.PositionChanged += positionChangedHandler;
         }
 
         private void Map_Loaded(object sender, RoutedEventArgs e)
@@ -58,16 +74,17 @@ namespace Cyclestreets.CustomClasses
             if (PhoneApplicationService.Current.State.ContainsKey(@"loadedRoute") && PhoneApplicationService.Current.State[@"loadedRoute"] != null)
             {
                 string routeData = (string)PhoneApplicationService.Current.State[@"loadedRoute"];
-                rm.ParseRouteData(routeData, GetDefaultPlan(this), false);
+                rm.ParseRouteData(routeData, DefaultPlan, false);
             }
 
-            var newplan = rm.HasCachedRoute(GetDefaultPlan(this));
+            var newplan = rm.HasCachedRoute(DefaultPlan);
             if (newplan == null) return;
-            SetDefaultPlan(this, newplan);
+            DefaultPlan = newplan;
 
             MyMap.ZoomLevel = 18;
 
             MyMap.ZoomLevelChanged += MyMap_ZoomLevelChanged;
+            MyMap.Tap += MyMap_Tap;
 
             PlotRoute();
 
@@ -187,18 +204,21 @@ namespace Cyclestreets.CustomClasses
 
         private void MyMap_ZoomLevelChanged(object sender, MapZoomLevelChangedEventArgs e)
         {
-            double myAccuracy = LocationManager.Instance.MyGeoPosition.Coordinate.Accuracy;
-            GeoCoordinate myCoordinate = CoordinateConverter.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
-            double metersPerPixels = (Math.Cos(myCoordinate.Latitude * Math.PI / 180) * 2 * Math.PI * 6378137) / (256 * Math.Pow(2, MyMap.ZoomLevel));
-            double radius = myAccuracy / metersPerPixels;
-            _accuracyEllipse.Width = radius * 2;
-            _accuracyEllipse.Height = radius * 2;
+            if (LocationManager.Instance.MyGeoPosition != null)
+            {
+                double myAccuracy = LocationManager.Instance.MyGeoPosition.Coordinate.Accuracy;
+                GeoCoordinate myCoordinate = CoordinateConverter.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
+                double metersPerPixels = (Math.Cos(myCoordinate.Latitude * Math.PI / 180) * 2 * Math.PI * 6378137) / (256 * Math.Pow(2, MyMap.ZoomLevel));
+                double radius = myAccuracy / metersPerPixels;
+                _accuracyEllipse.Width = radius * 2;
+                _accuracyEllipse.Height = radius * 2;
+            }
         }
 
         private async void PlotRoute()
         {
             var rm = SimpleIoc.Default.GetInstance<RouteManager>();
-            bool result = await rm.FindRoute(GetDefaultPlan(this), false);
+            bool result = await rm.FindRoute(DefaultPlan, false);
             if (!result)
             {
                 MarkedUp.AnalyticClient.Error(@"Route Planning Error");
@@ -208,7 +228,7 @@ namespace Cyclestreets.CustomClasses
             }
             else
             {
-                MapUtils.PlotCachedRoute(MyMap, GetDefaultPlan(this));
+                MapUtils.PlotCachedRoute(MyMap, DefaultPlan);
             }
         }
 
@@ -221,5 +241,34 @@ namespace Cyclestreets.CustomClasses
         {
             _timeLastMoved = DateTime.Now;
         }
+
+        private LocationRectangle GetMapBounds()
+        {
+            GeoCoordinate topLeft = MyMap.ConvertViewportPointToGeoCoordinate(new Point(0, 0));
+            GeoCoordinate bottomRight = MyMap.ConvertViewportPointToGeoCoordinate(new Point(MyMap.Width, MyMap.Height));
+
+            return LocationRectangle.CreateBoundingRectangle(new[] { topLeft, bottomRight });
+        }
+
+        private void ApplicationBarMenuItem_ToggleAerialView(object sender, EventArgs e)
+        {
+            ApplicationBarMenuItem item = sender as ApplicationBarMenuItem;
+            if (MyMap.CartographicMode == MapCartographicMode.Hybrid)
+            {
+                item.Text = AppResources.MainPage_ApplicationBarMenuItem_ToggleAerialView_Enable_aerial_view;
+                MyMap.CartographicMode = MapCartographicMode.Road;
+            }
+            else
+            {
+                item.Text = AppResources.MainPage_ApplicationBarMenuItem_ToggleAerialView_Disable_aerial_view;
+                MyMap.CartographicMode = MapCartographicMode.Hybrid;
+            }
+        }
+
+        public void AddLayer ( MapLayer l )
+        {
+            MyMap.Layers.Add(l);
+        }
     }
 }
+

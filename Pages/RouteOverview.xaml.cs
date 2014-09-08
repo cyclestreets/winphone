@@ -30,6 +30,20 @@ namespace Cyclestreets.Pages
             base.OnNavigatedTo(e);
 
             _viewModel = SimpleIoc.Default.GetInstance<DirectionsPageViewModel>();
+
+            if (NavigationContext.QueryString.ContainsKey(@"mode"))
+            {
+                switch(NavigationContext.QueryString[@"mode"])
+                {
+                    case "routeTo":
+                        {
+                            var rm = SimpleIoc.Default.GetInstance<RouteManager>();
+                            rm.RouteTo(double.Parse(NavigationContext.QueryString[@"longitude"]),
+                                        double.Parse(NavigationContext.QueryString[@"latitude"]));
+                            break;
+                        }
+                }
+            }
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)

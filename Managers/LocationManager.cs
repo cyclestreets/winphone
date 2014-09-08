@@ -1,10 +1,12 @@
-﻿using Windows.Devices.Geolocation;
+﻿using System.ComponentModel;
+using Windows.Devices.Geolocation;
+using Windows.Foundation;
 
 namespace Cyclestreets.Managers
 {
 	class LocationManager
 	{
-		public static LocationManager Instance;
+		public static LocationManager Instance = new LocationManager();
 
 		public Geoposition MyGeoPosition
 		{
@@ -12,7 +14,7 @@ namespace Cyclestreets.Managers
 		}
 		public Geolocator TrackingGeolocator;
 
-	    public LocationManager()
+	    private LocationManager()
 		{
 			Instance = this;
 		}
@@ -41,9 +43,13 @@ namespace Cyclestreets.Managers
 			MyGeoPosition = null;
 		}
 
+        public event TypedEventHandler<Geolocator, PositionChangedEventArgs> PositionChanged;
+
 		private void positionChangedHandler( Geolocator sender, PositionChangedEventArgs args )
 		{
 			MyGeoPosition = args.Position;
+            if (PositionChanged != null)
+                PositionChanged(sender, args);
 		}
 
 

@@ -361,5 +361,17 @@ namespace Cyclestreets.Managers
         {
 
         }
+
+        internal void RouteTo(double longitude, double latitude)
+        {
+            if ( LocationManager.Instance.MyGeoPosition == null )
+            {
+                Util.showLocationDialog();
+            }
+            else
+            {
+
+            }
+        }
     }
 }

@@ -24,6 +24,7 @@ using Microsoft.Phone.Maps.Toolkit;
 using Microsoft.Phone.Shell;
 using Microsoft.Phone.Tasks;
 using RestSharp;
+using Cyclestreets.CustomClasses;
 
 namespace Cyclestreets
 {
@@ -62,12 +63,7 @@ namespace Cyclestreets
 			/*findAppBar = ApplicationBar.Buttons[ 0 ] as Microsoft.Phone.Shell.ApplicationBarIconButton;*/
 			directionsAppBar = ApplicationBar.Buttons[0] as Microsoft.Phone.Shell.ApplicationBarIconButton;
 			navigateToAppBar = ApplicationBar.Buttons[1] as Microsoft.Phone.Shell.ApplicationBarIconButton;
-
-			if( LocationManager.Instance == null )
-			{
-				LocationManager l = new LocationManager();
-			}
-
+            
 			revGeoQ = new ReverseGeocodeQuery();
 			revGeoQ.QueryCompleted += geoQ_QueryCompleted;
 
@@ -85,8 +81,6 @@ namespace Cyclestreets
 		protected override void OnNavigatingFrom( NavigatingCancelEventArgs e )
 		{
 			base.OnNavigatingFrom( e );
-
-			LocationManager.Instance.TrackingGeolocator.PositionChanged -= trackingGeolocator_PositionChanged;
 		}
 
 		protected override void OnNavigatedTo( System.Windows.Navigation.NavigationEventArgs e )
@@ -234,7 +228,7 @@ namespace Cyclestreets
 				{
 					poiLayer = new MapLayer();
 
-					MyMap.Layers.Add( poiLayer );
+					MyMap.AddLayer( poiLayer );
 				}
 				else
 				{
@@ -245,9 +239,9 @@ namespace Cyclestreets
 					GeoCoordinate center = new GeoCoordinate();
 					center.Longitude = float.Parse( NavigationContext.QueryString["longitude"] );
 					center.Latitude = float.Parse( NavigationContext.QueryString["latitude"] );
-					MyMap.Center = center;
-					MyMap.ZoomLevel = 16;
-
+					//MyMap.Center = center;
+					//MyMap.ZoomLevel = 16;
+                    //FIXME
 
 					selected = center;
 				}
@@ -257,8 +251,9 @@ namespace Cyclestreets
 					{
 						LocationManager.Instance.StartTracking();
 
-						if( LocationManager.Instance.MyGeoPosition != null )
-							MyMap.SetView( CoordinateConverter.ConvertGeocoordinate( LocationManager.Instance.MyGeoPosition.Coordinate ), 14 );
+                        //FIXME
+						//if( LocationManager.Instance.MyGeoPosition != null )
+							//MyMap.SetView( CoordinateConverter.ConvertGeocoordinate( LocationManager.Instance.MyGeoPosition.Coordinate ), 14 );
 					}
 				}
 
@@ -306,101 +301,6 @@ namespace Cyclestreets
 			{
 				NavigationService.Navigate( new Uri( "/pages/DirectionsPage.xaml", UriKind.Relative ) );
 			}
-
-			LocationManager.Instance.TrackingGeolocator.PositionChanged += trackingGeolocator_PositionChanged;
-		}
-
-		private MapOverlay myLocationOverlay = null;
-		private MapOverlay myLocationOverlay2 = null;
-		private Ellipse accuracyEllipse = null;
-		void trackingGeolocator_PositionChanged( Windows.Devices.Geolocation.Geolocator sender, Windows.Devices.Geolocation.PositionChangedEventArgs args )
-		{
-			SmartDispatcher.BeginInvoke( () =>
-				{
-					if( LocationManager.Instance.MyGeoPosition != null )
-					{
-						double myAccuracy = LocationManager.Instance.MyGeoPosition.Coordinate.Accuracy;
-						GeoCoordinate myCoordinate = CoordinateConverter.ConvertGeocoordinate( LocationManager.Instance.MyGeoPosition.Coordinate );
-
-						if( myLocationOverlay == null )
-						{
-
-							// 				Arc myArc = new Arc();
-							// 				myArc.ArcThickness = 5;
-							// 				myArc.ArcThicknessUnit = Microsoft.Expression.Media.UnitType.Pixel;
-							// 				myArc.EndAngle = 360;
-							// 				myArc.StartAngle = 0;
-							// 				myArc.Height = 30;
-							// Create a small circle to mark the current location.
-							Ellipse myCircle = new Ellipse();
-							myCircle.Fill = new SolidColorBrush( Colors.Black );
-							myCircle.Height = 20;
-							myCircle.Width = 20;
-							myCircle.Opacity = 30;
-							Binding myBinding = new Binding( "Visible" );
-							myBinding.Source = new MyPositionDataSource( MyMap );
-							myCircle.Visibility = Visibility.Visible;
-							myCircle.SetBinding( Ellipse.VisibilityProperty, myBinding );
-
-							MyMap.ZoomLevelChanged += MyMap_ZoomLevelChanged;
-
-							accuracyEllipse = new Ellipse();
-							accuracyEllipse.Fill = new SolidColorBrush( Color.FromArgb( 75, 200, 0, 0 ) );
-							accuracyEllipse.Visibility = Visibility.Visible;
-							accuracyEllipse.SetBinding( Ellipse.VisibilityProperty, myBinding );
-
-							// 							Ellipse myCircle = new MapPo();
-							// 							myCircle.Fill = new SolidColorBrush( Color.FromArgb(128, 0, 255, 0) );
-							// 							MyMap.ConvertGeoCoordinateToViewportPoint()
-							// 							myCircle.Height = LocationManager.instance.MyGeoPosition.Coordinate.Accuracy;
-							// 							myCircle.Width = 20;
-							// 							myCircle.Opacity = 30;
-							// 							Binding myBinding = new Binding( "Visible" );
-							// 							myBinding.Source = new MyPositionDataSource( MyMap );
-							// 							myCircle.Visibility = Visibility.Visible;
-							// 							myCircle.SetBinding( Ellipse.VisibilityProperty, myBinding );
-
-
-
-
-							// Create a MapOverlay to contain the circle.
-							myLocationOverlay = new MapOverlay();
-							myLocationOverlay.Content = myCircle;
-							myLocationOverlay.PositionOrigin = new Point( 0.5, 0.5 );
-							myLocationOverlay.GeoCoordinate = myCoordinate;
-
-							myLocationOverlay2 = new MapOverlay();
-							myLocationOverlay2.Content = accuracyEllipse;
-							myLocationOverlay2.PositionOrigin = new Point( 0.5, 0.5 );
-							myLocationOverlay2.GeoCoordinate = myCoordinate;
-
-							// Create a MapLayer to contain the MapOverlay.
-							MapLayer myLocationLayer = new MapLayer();
-							myLocationLayer.Add( myLocationOverlay );
-							myLocationLayer.Add( myLocationOverlay2 );
-
-							MyMap.Layers.Add( myLocationLayer );
-						}
-
-						myLocationOverlay.GeoCoordinate = myCoordinate;
-						myLocationOverlay2.GeoCoordinate = myCoordinate;
-
-						double metersPerPixels = ( Math.Cos( myCoordinate.Latitude * Math.PI / 180 ) * 2 * Math.PI * 6378137 ) / ( 256 * Math.Pow( 2, MyMap.ZoomLevel ) );
-						double radius = myAccuracy / metersPerPixels;
-						accuracyEllipse.Width = radius * 2;
-						accuracyEllipse.Height = radius * 2;
-					}
-				} );
-		}
-
-		void MyMap_ZoomLevelChanged( object sender, MapZoomLevelChangedEventArgs e )
-		{
-			double myAccuracy = LocationManager.Instance.MyGeoPosition.Coordinate.Accuracy;
-			GeoCoordinate myCoordinate = CoordinateConverter.ConvertGeocoordinate( LocationManager.Instance.MyGeoPosition.Coordinate );
-			double metersPerPixels = ( Math.Cos( myCoordinate.Latitude * Math.PI / 180 ) * 2 * Math.PI * 6378137 ) / ( 256 * Math.Pow( 2, MyMap.ZoomLevel ) );
-			double radius = myAccuracy / metersPerPixels;
-			accuracyEllipse.Width = radius * 2;
-			accuracyEllipse.Height = radius * 2;
 		}
 
 		private void poiTapped( object sender, System.Windows.Input.GestureEventArgs e )
@@ -425,30 +325,6 @@ namespace Cyclestreets
 
 		}
 
-
-		private LocationRectangle GetMapBounds()
-		{
-			GeoCoordinate topLeft = MyMap.ConvertViewportPointToGeoCoordinate( new Point( 0, 0 ) );
-			GeoCoordinate bottomRight = MyMap.ConvertViewportPointToGeoCoordinate( new Point( MyMap.Width, MyMap.Height ) );
-
-			return LocationRectangle.CreateBoundingRectangle( new[] { topLeft, bottomRight } );
-		}
-
-		private void ApplicationBarMenuItem_ToggleAerialView( object sender, EventArgs e )
-		{
-			ApplicationBarMenuItem item = sender as ApplicationBarMenuItem;
-			if( MyMap.CartographicMode == MapCartographicMode.Hybrid )
-			{
-				item.Text = AppResources.MainPage_ApplicationBarMenuItem_ToggleAerialView_Enable_aerial_view;
-				MyMap.CartographicMode = MapCartographicMode.Road;
-			}
-			else
-			{
-				item.Text = AppResources.MainPage_ApplicationBarMenuItem_ToggleAerialView_Disable_aerial_view;
-				MyMap.CartographicMode = MapCartographicMode.Hybrid;
-			}
-		}
-
 		private void ApplicationBarIconButton_Directions( object sender, EventArgs e )
 		{
 			NavigationService.Navigate( new Uri( "/Pages/DirectionsPage.xaml", UriKind.Relative ) );
@@ -458,7 +334,7 @@ namespace Cyclestreets
 		private void ApplicationBarIconButton_NavigateTo( object sender, EventArgs e )
 		{
 			if( selected != null )
-				NavigationService.Navigate( new Uri( "/Pages/DirectionsPage.xaml?longitude=" + selected.Longitude + "&latitude=" + selected.Latitude, UriKind.Relative ) );
+				NavigationService.Navigate( new Uri( "/Pages/RouteOverview.xaml?mode=routeTo&longitude=" + selected.Longitude + "&latitude=" + selected.Latitude, UriKind.Relative ) );
 		}
 
 		private void poiList_Click( object sender, System.EventArgs e )
@@ -469,35 +345,6 @@ namespace Cyclestreets
 		private void settings_Click( object sender, System.EventArgs e )
 		{
 			NavigationService.Navigate( new Uri( "/Pages/Settings.xaml", UriKind.Relative ) );
-		}
-
-		private void MyMap_Loaded( object sender, RoutedEventArgs e )
-		{
-			Microsoft.Phone.Maps.MapsSettings.ApplicationContext.ApplicationId = @"823e41bf-889c-4102-863f-11cfee11f652";
-			Microsoft.Phone.Maps.MapsSettings.ApplicationContext.AuthenticationToken = @"xrQJghWalYn52fTfnUhWPQ";
-
-			MyTileSource ts;
-            switch (SettingManager.instance.GetStringValue(@"mapStyle", MapUtils.MapStyle[0]))
-			{
-				case "OpenStreetMap":
-					ts = new OSMTileSource();
-					break;
-				case "OpenCycleMap":
-					ts = new OCMTileSource();
-					break;
-				default:
-					ts = null;
-					break;
-			}
-			MyMap.TileSources.Clear();
-			if( ts != null )
-				MyMap.TileSources.Add( ts );
-
-			App app = App.Current as App;
-			
-			//FeedbackHelper.Default.AppName = "CycleStreets";
-			//FeedbackHelper.Default.IsTrial = app.IsTrial;
-			//FeedbackHelper.Default.Initialise( "info@cyclestreets.net" );
 		}
 
 		private void privacy_Click( object sender, System.EventArgs e )
@@ -528,7 +375,7 @@ namespace Cyclestreets
 
 		private void MyMap_Tap( object sender, System.Windows.Input.GestureEventArgs e )
 		{
-			Map map = sender as Map;
+			Map map = ((CycleStreetsMap)sender).Map;
 			Point p = e.GetPosition( map );
 			GeoCoordinate coord = map.ConvertViewportPointToGeoCoordinate( p );
 
@@ -554,7 +401,7 @@ namespace Cyclestreets
 				{
 					poiLayer = new MapLayer();
 
-					MyMap.Layers.Add( poiLayer );
+					MyMap.AddLayer( poiLayer );
 				}
 				else
 				{
