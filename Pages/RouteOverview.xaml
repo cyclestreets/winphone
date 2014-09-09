@@ -16,6 +16,7 @@
 	<phone:PhoneApplicationPage.Resources>
 		<Utils:RouteTypeVisibility x:Key="RouteTypeVisibility"/>
 		<Common:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <Common:BooleanToOpacityConverter x:Key="BooleanToOpacityConverter"/>
 		<Common:BooleanInvertedToVisibilityConverter x:Key="BooleanInvertedToVisibilityConverter"/>
 		<Style x:Key="PivotStyle1" TargetType="phone:Pivot">
 			<Setter Property="Margin" Value="0"/>
@@ -106,7 +107,7 @@
 			<TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="Loading route information..." VerticalAlignment="Top"/>
 		</StackPanel>
 
-		<maps:Map x:Name="MyMap" Margin="0" Grid.Row="1" Grid.ColumnSpan="2" ZoomLevel="5.684" Loaded="MyMap_Loaded" LandmarksEnabled="True" Tap="MyMap_Tap" Visibility="{Binding DisplayMap, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        <maps:Map x:Name="MyMap" Margin="0" Grid.Row="1" Grid.ColumnSpan="2" ZoomLevel="5.684" Loaded="MyMap_Loaded" LandmarksEnabled="True" Tap="MyMap_Tap" Opacity="{Binding DisplayMap, Converter={StaticResource BooleanToOpacityConverter}}" />
 		<StackPanel Grid.Row="2" Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
 			<TextBlock TextWrapping="Wrap" Text="{Binding RouteManagerPtr.Overview.RouteDurationString, Mode=OneWay}" FontSize="60" FontFamily="Segoe WP Light" VerticalAlignment="Bottom"/>
 			<TextBlock TextWrapping="Wrap" Text="mins" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="Segoe WP Light" LineHeight="37" Visibility="{Binding DisplayMap, Converter={StaticResource BooleanToVisibilityConverter}}"/>

@@ -19,13 +19,14 @@ namespace Cyclestreets.Pages
     public partial class RouteOverview
     {
         DirectionsPageViewModel _viewModel;
+        private bool _mapReady = false;
 
         public RouteOverview()
         {
             InitializeComponent();
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
@@ -38,8 +39,20 @@ namespace Cyclestreets.Pages
                     case "routeTo":
                         {
                             var rm = SimpleIoc.Default.GetInstance<RouteManager>();
-                            rm.RouteTo(double.Parse(NavigationContext.QueryString[@"longitude"]),
-                                        double.Parse(NavigationContext.QueryString[@"latitude"]));
+                            bool result = await rm.RouteTo(double.Parse(NavigationContext.QueryString[@"longitude"]),
+                                        double.Parse(NavigationContext.QueryString[@"latitude"]),
+                                        _viewModel.CurrentPlan);
+                            if (!result)
+                            {
+                                MarkedUp.AnalyticClient.Error(@"Route Planning Error");
+
+                                MessageBox.Show(AppResources.RouteParseError);
+                            }
+                            else
+                            {
+                                if (_mapReady)
+                                    StartRouting();
+                            }
                             break;
                         }
                 }
@@ -65,8 +78,11 @@ namespace Cyclestreets.Pages
                 rm.ParseRouteData(routeData, _viewModel.CurrentPlan, false);
             }
 
+            _mapReady = true;
+
             var newplan = rm.HasCachedRoute(_viewModel.CurrentPlan);
-            if (newplan == null) return;
+            if (newplan == null) 
+                return;
             _viewModel.CurrentPlan = newplan;
             StartRouting();
         }
@@ -104,6 +120,11 @@ namespace Cyclestreets.Pages
             {
                 MapUtils.PlotCachedRoute(MyMap, _viewModel.CurrentPlan);
                 _viewModel.DisplayMap = true;
+                if (LocationManager.Instance.MyGeoPosition != null)
+                {
+                    MyMap.Center = CoordinateConverter.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
+                    MyMap.ZoomLevel = 10;
+                }
                 SmartDispatcher.BeginInvoke(() => MyMap.SetView(rm.GetRouteBounds()));
             }
         }

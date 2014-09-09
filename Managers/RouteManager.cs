@@ -362,15 +362,20 @@ namespace Cyclestreets.Managers
 
         }
 
-        internal void RouteTo(double longitude, double latitude)
+        internal Task<bool> RouteTo(double longitude, double latitude, string routeType)
         {
             if ( LocationManager.Instance.MyGeoPosition == null )
             {
                 Util.showLocationDialog();
+                return null;
             }
             else
             {
-
+                GeoCoordinate target = new GeoCoordinate(latitude, longitude);
+                _waypoints.Clear();
+                AddWaypoint(CoordinateConverter.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate));
+                AddWaypoint(target);
+                return FindRoute(routeType, true);
             }
         }
     }
