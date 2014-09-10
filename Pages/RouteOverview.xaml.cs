@@ -122,7 +122,7 @@ namespace Cyclestreets.Pages
                 _viewModel.DisplayMap = true;
                 if (LocationManager.Instance.MyGeoPosition != null)
                 {
-                    MyMap.Center = CoordinateConverter.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
+                    MyMap.Center = GeoUtils.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
                     MyMap.ZoomLevel = 10;
                 }
                 SmartDispatcher.BeginInvoke(() => MyMap.SetView(rm.GetRouteBounds()));
@@ -149,7 +149,7 @@ namespace Cyclestreets.Pages
         {
             if (LocationManager.Instance.MyGeoPosition != null)
             {
-                GeoCoordinate geo = CoordinateConverter.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
+                GeoCoordinate geo = GeoUtils.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
                 MapLocation loc = await GeoUtils.StartReverseGeocode(geo);
 
                 SmartDispatcher.BeginInvoke(() => MyMap.SetView(loc.GeoCoordinate, 16));

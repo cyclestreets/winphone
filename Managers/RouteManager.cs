@@ -373,7 +373,7 @@ namespace Cyclestreets.Managers
             {
                 GeoCoordinate target = new GeoCoordinate(latitude, longitude);
                 _waypoints.Clear();
-                AddWaypoint(CoordinateConverter.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate));
+                AddWaypoint(GeoUtils.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate));
                 AddWaypoint(target);
                 return FindRoute(routeType, true);
             }

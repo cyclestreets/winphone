@@ -87,6 +87,8 @@ namespace Cyclestreets
 		{
 			base.OnNavigatedTo( e );
 
+		    MyMap.Center = GeoUtils.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
+
 			var app = Application.Current as App;
 			if( app != null && app.IsTrial )
 			{

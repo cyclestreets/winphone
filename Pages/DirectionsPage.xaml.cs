@@ -151,7 +151,7 @@ namespace Cyclestreets.Pages
 
                 if (LocationManager.Instance.MyGeoPosition != null)
                 {
-                    MyMap.Center = CoordinateConverter.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
+                    MyMap.Center = GeoUtils.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
                 }
             }
 
@@ -990,7 +990,7 @@ namespace Cyclestreets.Pages
                     if (LocationManager.Instance.MyGeoPosition != null)
                     {
                         double myAccuracy = LocationManager.Instance.MyGeoPosition.Coordinate.Accuracy;
-                        GeoCoordinate myCoordinate = CoordinateConverter.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
+                        GeoCoordinate myCoordinate = GeoUtils.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
                         if (_myLocationOverlay == null)
                         {
                             Ellipse myCircle = new Ellipse
@@ -1046,7 +1046,7 @@ namespace Cyclestreets.Pages
         private void MyMap_ZoomLevelChanged(object sender, MapZoomLevelChangedEventArgs e)
         {
             double myAccuracy = LocationManager.Instance.MyGeoPosition.Coordinate.Accuracy;
-            GeoCoordinate myCoordinate = CoordinateConverter.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
+            GeoCoordinate myCoordinate = GeoUtils.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
             double metersPerPixels = (Math.Cos(myCoordinate.Latitude * Math.PI / 180) * 2 * Math.PI * 6378137) / (256 * Math.Pow(2, MyMap.ZoomLevel));
             double radius = myAccuracy / metersPerPixels;
             _accuracyEllipse.Width = radius * 2;
@@ -1122,7 +1122,7 @@ namespace Cyclestreets.Pages
         {
             if (LocationManager.Instance.MyGeoPosition != null)
             {
-                GeoCoordinate geo = CoordinateConverter.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
+                GeoCoordinate geo = GeoUtils.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
                 MapLocation loc = await GeoUtils.StartReverseGeocode(geo);
 
                 SetCurrentPosition(loc);

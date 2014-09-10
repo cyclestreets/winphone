@@ -1,4 +1,7 @@
-﻿using Microsoft.Phone.Maps.Services;
+﻿using System.Diagnostics;
+using Windows.Devices.Geolocation;
+using MarkedUp;
+using Microsoft.Phone.Maps.Services;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using System;
@@ -60,7 +63,7 @@ namespace Cyclestreets.Utils
             Task<List<string>> t1 = tcs1.Task;
 
             App.networkStatus.NetworkIsBusy = true;
-            System.Diagnostics.Debug.WriteLine(@"Searching for " + searchTerm);
+            Debug.WriteLine(@"Searching for " + searchTerm);
 
 
             string searchTermSafe = HttpUtility.UrlEncode(searchTerm);
@@ -80,7 +83,7 @@ namespace Cyclestreets.Utils
             client.ExecuteAsync(request, delegate(IRestResponse response)
             {
                 string result = response.Content;
-                System.Diagnostics.Debug.WriteLine(result);
+                Debug.WriteLine(result);
                 JObject o = null;
                 try
                 {
@@ -88,7 +91,7 @@ namespace Cyclestreets.Utils
                 }
                 catch (Exception ex)
                 {
-                    MarkedUp.AnalyticClient.Error("Could not parse JSON " + result + " " + ex.Message);
+                    AnalyticClient.Error("Could not parse JSON " + result + " " + ex.Message);
                     MessageBox.Show("Could not parse location data information from server. Please let us know about this error with what you were typing in the search box to cause this problem.");
                 }
 
@@ -136,5 +139,19 @@ namespace Cyclestreets.Utils
         }
 
 
+        public static GeoCoordinate ConvertGeocoordinate(Geocoordinate geocoordinate)
+        {
+            return new GeoCoordinate
+                (
+                geocoordinate.Latitude,
+                geocoordinate.Longitude,
+                geocoordinate.Altitude ?? Double.NaN,
+                geocoordinate.Accuracy,
+                geocoordinate.Accuracy,
+                /*geocoordinate.AltitudeAccuracy ?? Double.NaN,*/
+                geocoordinate.Speed ?? Double.NaN,
+                geocoordinate.Heading ?? Double.NaN
+                );
+        }
     }
 }

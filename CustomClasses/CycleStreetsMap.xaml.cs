@@ -1,24 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using Cyclestreets.Managers;
+using Cyclestreets.Pages;
+using Cyclestreets.Resources;
+using Cyclestreets.Utils;
+using GalaSoft.MvvmLight.Ioc;
+using Microsoft.Phone.Maps.Controls;
+using Microsoft.Phone.Shell;
+using System;
+using System.Device.Location;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Navigation;
-using Microsoft.Phone.Controls;
-using Microsoft.Phone.Shell;
-using Cyclestreets.Managers;
-using GalaSoft.MvvmLight.Ioc;
-using Cyclestreets.ViewModel;
-using Cyclestreets.Pages;
-using Cyclestreets.Utils;
-using Microsoft.Phone.Maps.Controls;
+using System.Windows.Data;
+using System.Windows.Media;
 using System.Windows.Shapes;
 using Windows.Devices.Geolocation;
-using System.Device.Location;
-using System.Windows.Media;
-using System.Windows.Data;
-using Cyclestreets.Resources;
 
 namespace Cyclestreets.CustomClasses
 {
@@ -48,6 +42,7 @@ namespace Cyclestreets.CustomClasses
             {
                 return MyMap.Center;
             }
+            set { MyMap.Center = value; }
         }
 
         public Map Map
@@ -124,7 +119,7 @@ namespace Cyclestreets.CustomClasses
             SmartDispatcher.BeginInvoke(() =>
             {
                 PositionChanged(args.Position);
-                
+
             });
         }
 
@@ -141,7 +136,7 @@ namespace Cyclestreets.CustomClasses
 
             if (LocationManager.Instance.MyGeoPosition == null) return;
             double myAccuracy = LocationManager.Instance.MyGeoPosition.Coordinate.Accuracy;
-            GeoCoordinate myCoordinate = CoordinateConverter.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
+            GeoCoordinate myCoordinate = GeoUtils.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
             if (_myLocationOverlay == null)
             {
                 Ellipse myCircle = new Ellipse
@@ -207,7 +202,7 @@ namespace Cyclestreets.CustomClasses
             if (LocationManager.Instance.MyGeoPosition != null)
             {
                 double myAccuracy = LocationManager.Instance.MyGeoPosition.Coordinate.Accuracy;
-                GeoCoordinate myCoordinate = CoordinateConverter.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
+                GeoCoordinate myCoordinate = GeoUtils.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
                 double metersPerPixels = (Math.Cos(myCoordinate.Latitude * Math.PI / 180) * 2 * Math.PI * 6378137) / (256 * Math.Pow(2, MyMap.ZoomLevel));
                 double radius = myAccuracy / metersPerPixels;
                 _accuracyEllipse.Width = radius * 2;
@@ -265,7 +260,7 @@ namespace Cyclestreets.CustomClasses
             }
         }
 
-        public void AddLayer ( MapLayer l )
+        public void AddLayer(MapLayer l)
         {
             MyMap.Layers.Add(l);
         }

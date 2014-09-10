@@ -143,7 +143,6 @@
     <Compile Include="UserControls\FeedbackOverlay.xaml.cs">
       <DependentUpon>FeedbackOverlay.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Utils\CoordinateConverter.cs" />
     <Compile Include="Pages\LeisureRouting.xaml.cs">
       <DependentUpon>LeisureRouting.xaml</DependentUpon>
     </Compile>

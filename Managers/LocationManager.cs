@@ -6,7 +6,7 @@ namespace Cyclestreets.Managers
 {
 	class LocationManager
 	{
-		public static LocationManager Instance = new LocationManager();
+		public static readonly LocationManager Instance = new LocationManager();
 
 		public Geoposition MyGeoPosition
 		{
@@ -16,7 +16,7 @@ namespace Cyclestreets.Managers
 
 	    private LocationManager()
 		{
-			Instance = this;
+			//Instance = this;
 		}
 
         public void StartTracking(PositionAccuracy accuracy = PositionAccuracy.High, double interval = 30000)
