@@ -15,6 +15,11 @@ namespace Cyclestreets
         public ExtendedSplash()
         {
             InitializeComponent();
+
+            if (LocationManager.Instance == null)
+            {
+                LocationManager l = new LocationManager(null);
+            }
         }
     }
 }

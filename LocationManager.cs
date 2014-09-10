@@ -6,64 +6,61 @@ namespace Cyclestreets
 {
 	class LocationManager
 	{
-		public static LocationManager instance;
+		public static LocationManager Instance;
 
 		public Geoposition MyGeoPosition
 		{
-			get;
-			set;
+			get; private set;
 		}
-		public Geolocator trackingGeolocator;
+		public Geolocator TrackingGeolocator;
 
-		private Map MyMap;
-		private bool lockToMyPos;
+		private readonly Map _myMap;
+		private bool _lockToMyPos;
 
 		public LocationManager( Map map )
 		{
-			instance = this;
-			MyMap = map;
+			Instance = this;
+			_myMap = map;
 		}
 
 		public void LockToMyPos( bool doLock )
 		{
-			lockToMyPos = doLock;
+			_lockToMyPos = doLock;
 		}
 
-		public void StartTracking( uint accuracy = 30, double interval = 30000 )
+		public void StartTracking(double interval = 30000 )
 		{
-			if( this.trackingGeolocator != null )
+			if( this.TrackingGeolocator != null )
 			{
 				return;
 			}
 
-			this.trackingGeolocator = new Geolocator();
-			this.trackingGeolocator.ReportInterval = (uint)interval;
-			//this.trackingGeolocator.DesiredAccuracy = PositionAccuracy.High;
-			this.trackingGeolocator.DesiredAccuracyInMeters = accuracy;
+			this.TrackingGeolocator = new Geolocator {ReportInterval = (uint) interval, DesiredAccuracy = PositionAccuracy.High};
+		    //this.TrackingGeolocator.DesiredAccuracyInMeters = (uint)accuracy;
 
 			// this implicitly starts the tracking operation
-			this.trackingGeolocator.PositionChanged += positionChangedHandler;
+			this.TrackingGeolocator.PositionChanged += positionChangedHandler;
 		}
 
 		public void StopTracking()
 		{
-			if( this.trackingGeolocator == null )
+			if( this.TrackingGeolocator == null )
 			{
 				return;
 			}
 
-			this.trackingGeolocator = null;
+			this.TrackingGeolocator = null;
 			MyGeoPosition = null;
 		}
 
 		private void positionChangedHandler( Geolocator sender, PositionChangedEventArgs args )
 		{
 			MyGeoPosition = args.Position;
-			if( lockToMyPos )
+			if( _lockToMyPos )
 			{
 				SmartDispatcher.BeginInvoke( () =>
 				{
-					MyMap.SetView( CoordinateConverter.ConvertGeocoordinate( MyGeoPosition.Coordinate ), 14 );
+					_myMap.SetView( CoordinateConverter.ConvertGeocoordinate( MyGeoPosition.Coordinate ), 14 );
 				} );
 			}
 		}

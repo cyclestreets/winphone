@@ -110,9 +110,9 @@ namespace Cyclestreets.Pages
 				SettingManager.instance.SetBoolValue( "LocationConsent", enabled );
 
 				if( enabled )
-					LocationManager.instance.StartTracking();
+					LocationManager.Instance.StartTracking();
 				else
-					LocationManager.instance.StopTracking();
+					LocationManager.Instance.StopTracking();
 			}
 		}
 

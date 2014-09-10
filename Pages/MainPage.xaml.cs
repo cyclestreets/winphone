@@ -62,7 +62,7 @@ namespace Cyclestreets
 			directionsAppBar = ApplicationBar.Buttons[0] as Microsoft.Phone.Shell.ApplicationBarIconButton;
 			navigateToAppBar = ApplicationBar.Buttons[1] as Microsoft.Phone.Shell.ApplicationBarIconButton;
 
-			if( LocationManager.instance == null )
+			if( LocationManager.Instance == null )
 			{
 				LocationManager l = new LocationManager( MyMap );
 			}
@@ -85,7 +85,7 @@ namespace Cyclestreets
 		{
 			base.OnNavigatingFrom( e );
 
-			LocationManager.instance.trackingGeolocator.PositionChanged -= trackingGeolocator_PositionChanged;
+			LocationManager.Instance.TrackingGeolocator.PositionChanged -= trackingGeolocator_PositionChanged;
 		}
 
 		protected override void OnNavigatedTo( System.Windows.Navigation.NavigationEventArgs e )
@@ -246,7 +246,7 @@ namespace Cyclestreets
 					center.Latitude = float.Parse( NavigationContext.QueryString["latitude"] );
 					MyMap.Center = center;
 					MyMap.ZoomLevel = 16;
-					LocationManager.instance.LockToMyPos( false );
+					LocationManager.Instance.LockToMyPos( false );
 
 					selected = center;
 				}
@@ -254,11 +254,11 @@ namespace Cyclestreets
 				{
 					if( SettingManager.instance.GetBoolValue( "LocationConsent", true ) )
 					{
-						LocationManager.instance.StartTracking();
+						LocationManager.Instance.StartTracking();
 
-						LocationManager.instance.LockToMyPos( true );
-						if( LocationManager.instance.MyGeoPosition != null )
-							MyMap.SetView( CoordinateConverter.ConvertGeocoordinate( LocationManager.instance.MyGeoPosition.Coordinate ), 14 );
+						LocationManager.Instance.LockToMyPos( true );
+						if( LocationManager.Instance.MyGeoPosition != null )
+							MyMap.SetView( CoordinateConverter.ConvertGeocoordinate( LocationManager.Instance.MyGeoPosition.Coordinate ), 14 );
 					}
 				}
 
@@ -307,7 +307,7 @@ namespace Cyclestreets
 				NavigationService.Navigate( new Uri( "/pages/DirectionsPage.xaml", UriKind.Relative ) );
 			}
 
-			LocationManager.instance.trackingGeolocator.PositionChanged += trackingGeolocator_PositionChanged;
+			LocationManager.Instance.TrackingGeolocator.PositionChanged += trackingGeolocator_PositionChanged;
 		}
 
 		private MapOverlay myLocationOverlay = null;
@@ -317,10 +317,10 @@ namespace Cyclestreets
 		{
 			SmartDispatcher.BeginInvoke( () =>
 				{
-					if( LocationManager.instance.MyGeoPosition != null )
+					if( LocationManager.Instance.MyGeoPosition != null )
 					{
-						double myAccuracy = LocationManager.instance.MyGeoPosition.Coordinate.Accuracy;
-						GeoCoordinate myCoordinate = CoordinateConverter.ConvertGeocoordinate( LocationManager.instance.MyGeoPosition.Coordinate );
+						double myAccuracy = LocationManager.Instance.MyGeoPosition.Coordinate.Accuracy;
+						GeoCoordinate myCoordinate = CoordinateConverter.ConvertGeocoordinate( LocationManager.Instance.MyGeoPosition.Coordinate );
 
 						if( myLocationOverlay == null )
 						{
@@ -395,8 +395,8 @@ namespace Cyclestreets
 
 		void MyMap_ZoomLevelChanged( object sender, MapZoomLevelChangedEventArgs e )
 		{
-			double myAccuracy = LocationManager.instance.MyGeoPosition.Coordinate.Accuracy;
-			GeoCoordinate myCoordinate = CoordinateConverter.ConvertGeocoordinate( LocationManager.instance.MyGeoPosition.Coordinate );
+			double myAccuracy = LocationManager.Instance.MyGeoPosition.Coordinate.Accuracy;
+			GeoCoordinate myCoordinate = CoordinateConverter.ConvertGeocoordinate( LocationManager.Instance.MyGeoPosition.Coordinate );
 			double metersPerPixels = ( Math.Cos( myCoordinate.Latitude * Math.PI / 180 ) * 2 * Math.PI * 6378137 ) / ( 256 * Math.Pow( 2, MyMap.ZoomLevel ) );
 			double radius = myAccuracy / metersPerPixels;
 			accuracyEllipse.Width = radius * 2;
