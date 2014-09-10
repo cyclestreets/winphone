@@ -44,6 +44,7 @@ namespace Cyclestreets.ViewModel
 
             SimpleIoc.Default.Register<MainViewModel>();
 			SimpleIoc.Default.Register<DirectionsPageViewModel>();
+            SimpleIoc.Default.Register<LiveRideViewModel>();
         }
 
         public MainViewModel Main
@@ -60,6 +61,14 @@ namespace Cyclestreets.ViewModel
 				return ServiceLocator.Current.GetInstance<DirectionsPageViewModel>();
 			}
 		}
+
+        public LiveRideViewModel LiveRide
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<LiveRideViewModel>();
+            }
+        }
         
         public static void Cleanup()
         {

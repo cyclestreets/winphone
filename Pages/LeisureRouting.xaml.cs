@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 using System.Xml.Linq;
+using Cyclestreets.Managers;
 using Cyclestreets.Utils;
 using CycleStreets.Util;
 using Microsoft.Phone.Controls;
@@ -30,7 +31,7 @@ namespace Cyclestreets.Pages
 			AsyncWebRequest _request = new AsyncWebRequest( "http://www.cyclestreets.net/api/poitypes.xml?key=" + App.apiKey + "&icons=32", POIFound );
 			_request.Start();
 
-			App.networkStatus.networkIsBusy = true;
+			App.networkStatus.NetworkIsBusy = true;
 		}
 
 		private void POIFound( byte[] data )
@@ -58,7 +59,7 @@ namespace Cyclestreets.Pages
 
 			poiList.ItemsSource = items;
 
-			App.networkStatus.networkIsBusy = false;
+			App.networkStatus.NetworkIsBusy = false;
 		}
 
 		private void RouteFound( byte[] data )
@@ -71,13 +72,13 @@ namespace Cyclestreets.Pages
 			PhoneApplicationService.Current.State[ "loadedRoute" ] = enc.GetString( data, 0, data.Length );
 			NavigationService.Navigate( new Uri( "/Pages/DirectionsPage.xaml?plan=leisure", UriKind.Relative ) );
 
-			App.networkStatus.networkIsBusy = false;
+			App.networkStatus.NetworkIsBusy = false;
 		}
 
 		private void btn_cancel_Click( object sender, RoutedEventArgs e )
 		{
 			pleaseWait.IsOpen = false;
-			App.networkStatus.networkIsBusy = false;
+			App.networkStatus.NetworkIsBusy = false;
 			if( _request != null )
 			{
 				_request.Stop();
@@ -103,7 +104,7 @@ namespace Cyclestreets.Pages
 
 			if( LocationManager.Instance.MyGeoPosition != null )
 			{
-				App.networkStatus.networkIsBusy = true;
+				App.networkStatus.NetworkIsBusy = true;
 
 				Geoposition coord = LocationManager.Instance.MyGeoPosition;
 
@@ -130,7 +131,7 @@ namespace Cyclestreets.Pages
 				}
 				poiNames = HttpUtility.UrlEncode( poiNames.TrimEnd( ',' ) );
 
-				string speedSetting = SettingManager.instance.GetStringValue( "cycleSpeed", "12mph" );
+				string speedSetting = SettingManager.instance.GetStringValue( @"cycleSpeed", @"12mph" );
 				int speed = Util.getSpeedFromString( speedSetting );
 
 				if( !string.IsNullOrWhiteSpace( poiNames ) )

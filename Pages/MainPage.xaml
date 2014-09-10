@@ -1,4 +1,4 @@
-﻿<phone:PhoneApplicationPage
+﻿<phone:PhoneApplicationPage xmlns:CustomClasses="clr-namespace:Cyclestreets.CustomClasses" 
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
@@ -128,11 +128,12 @@
 			<ec:ExtendedVisualStateManager/>
 		</VisualStateManager.CustomVisualStateManager>
 		<!--Panorama control-->
-		<maps:Map x:Name="MyMap" PedestrianFeaturesEnabled="True" Margin="0" ZoomLevel="5.684" Loaded="MyMap_Loaded" Tap="MyMap_Tap">
+		<!--<maps:Map x:Name="MyMap" PedestrianFeaturesEnabled="True" Margin="0" ZoomLevel="5.684" Loaded="MyMap_Loaded" Tap="MyMap_Tap">
 			<maps:Map.Center>
 				<Location:GeoCoordinate Altitude="NaN" Course="NaN" HorizontalAccuracy="NaN" Longitude="-4.367" Latitude="55.551" Speed="NaN" VerticalAccuracy="NaN"/>
 			</maps:Map.Center>
-		</maps:Map>
+		</maps:Map>-->
+        <CustomClasses:CycleStreetsMap x:Name="MyMap" Tap="MyMap_Tap" />
 		<UserControls:FeedbackOverlay/>
 	</Grid>
 

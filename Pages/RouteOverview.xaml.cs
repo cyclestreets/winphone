@@ -1,61 +1,89 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Device.Location;
-using System.Linq;
-using System.Net;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Navigation;
+using Cyclestreets.Annotations;
 using Cyclestreets.Managers;
+using Cyclestreets.Resources;
 using CycleStreets.Util;
 using Cyclestreets.Utils;
+using Cyclestreets.ViewModel;
 using GalaSoft.MvvmLight.Ioc;
-using Microsoft.Phone.Controls;
 using Microsoft.Phone.Maps.Services;
 using Microsoft.Phone.Shell;
 using GestureEventArgs = System.Windows.Input.GestureEventArgs;
-using Cyclestreets.ViewModel;
 
-namespace Cyclestreets
+namespace Cyclestreets.Pages
 {
-    public partial class RouteOverview : PhoneApplicationPage
+    [UsedImplicitly]
+    public partial class RouteOverview
     {
-        DirectionsPageViewModel viewModel;
+        DirectionsPageViewModel _viewModel;
+        private bool _mapReady = false;
 
         public RouteOverview()
         {
             InitializeComponent();
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
-            viewModel = SimpleIoc.Default.GetInstance<DirectionsPageViewModel>();
+            _viewModel = SimpleIoc.Default.GetInstance<DirectionsPageViewModel>();
+
+            if (NavigationContext.QueryString.ContainsKey(@"mode"))
+            {
+                switch(NavigationContext.QueryString[@"mode"])
+                {
+                    case "routeTo":
+                        {
+                            var rm = SimpleIoc.Default.GetInstance<RouteManager>();
+                            bool result = await rm.RouteTo(double.Parse(NavigationContext.QueryString[@"longitude"]),
+                                        double.Parse(NavigationContext.QueryString[@"latitude"]),
+                                        _viewModel.CurrentPlan);
+                            if (!result)
+                            {
+                                MarkedUp.AnalyticClient.Error(@"Route Planning Error");
+
+                                MessageBox.Show(AppResources.RouteParseError);
+                            }
+                            else
+                            {
+                                if (_mapReady)
+                                    StartRouting();
+                            }
+                            break;
+                        }
+                }
+            }
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
 
-            viewModel.DisplayMap = false;
+            _viewModel.DisplayMap = false;
         }
 
-        private async void MyMap_Loaded(object sender, RoutedEventArgs e)
+        private void MyMap_Loaded(object sender, RoutedEventArgs e)
         {
-            Microsoft.Phone.Maps.MapsSettings.ApplicationContext.ApplicationId = "823e41bf-889c-4102-863f-11cfee11f652";
-            Microsoft.Phone.Maps.MapsSettings.ApplicationContext.AuthenticationToken = "xrQJghWalYn52fTfnUhWPQ";
+            Microsoft.Phone.Maps.MapsSettings.ApplicationContext.ApplicationId = @"823e41bf-889c-4102-863f-11cfee11f652";
+            Microsoft.Phone.Maps.MapsSettings.ApplicationContext.AuthenticationToken = @"xrQJghWalYn52fTfnUhWPQ";
 
-            RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
-            if (PhoneApplicationService.Current.State.ContainsKey("loadedRoute") && PhoneApplicationService.Current.State["loadedRoute"] != null)
+            var rm = SimpleIoc.Default.GetInstance<RouteManager>();
+            if (PhoneApplicationService.Current.State.ContainsKey(@"loadedRoute") && PhoneApplicationService.Current.State[@"loadedRoute"] != null)
             {
-                string routeData = (string)PhoneApplicationService.Current.State["loadedRoute"];
-                rm.ParseRouteData(routeData, viewModel.CurrentPlan, false);
+                var routeData = (string)PhoneApplicationService.Current.State[@"loadedRoute"];
+                rm.ParseRouteData(routeData, _viewModel.CurrentPlan, false);
             }
 
-            var newplan = rm.HasCachedRoute(viewModel.CurrentPlan);
-            if (newplan == null) return;
-            viewModel.CurrentPlan = newplan;
+            _mapReady = true;
+
+            var newplan = rm.HasCachedRoute(_viewModel.CurrentPlan);
+            if (newplan == null) 
+                return;
+            _viewModel.CurrentPlan = newplan;
             StartRouting();
         }
 
@@ -64,50 +92,56 @@ namespace Cyclestreets
             //throw new NotImplementedException();
         }
 
-        private void details_Click(object sender, System.EventArgs e)
+        private void details_Click(object sender, EventArgs e)
         {
             NavigationService.Navigate(new Uri("/Pages/DirectionsResults.xaml", UriKind.RelativeOrAbsolute));
         }
 
-        private void shortest1_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        private void shortest1_Tap(object sender, GestureEventArgs e)
         {
-            if (viewModel.CurrentPlan == "shortest")
+            if (_viewModel.CurrentPlan == @"quietest")
                 return;
-            viewModel.CurrentPlan = "shortest";
+            _viewModel.CurrentPlan = @"quietest";
             StartRouting();
         }
 
         private async void StartRouting()
         {
-            RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
-            bool result = await rm.FindRoute(viewModel.CurrentPlan, false);
+            var rm = SimpleIoc.Default.GetInstance<RouteManager>();
+            bool result = await rm.FindRoute(_viewModel.CurrentPlan, false);
             if (!result)
             {
-                MarkedUp.AnalyticClient.Error("Route Planning Error");
+                MarkedUp.AnalyticClient.Error(@"Route Planning Error");
 
                 MessageBox.Show(
-                    "Could not parse route data information from server. Please let us know about this error with the route you were trying to plan");
+                    AppResources.RouteParseError);
             }
             else
             {
-                MapUtils.PlotCachedRoute(MyMap, viewModel.CurrentPlan);
-                viewModel.DisplayMap = true;
+                MapUtils.PlotCachedRoute(MyMap, _viewModel.CurrentPlan);
+                _viewModel.DisplayMap = true;
+                if (LocationManager.Instance.MyGeoPosition != null)
+                {
+                    MyMap.Center = CoordinateConverter.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
+                    MyMap.ZoomLevel = 10;
+                }
+                SmartDispatcher.BeginInvoke(() => MyMap.SetView(rm.GetRouteBounds()));
             }
         }
 
-        private void balanced1_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        private void balanced1_Tap(object sender, GestureEventArgs e)
         {
-            if (viewModel.CurrentPlan == "balanced")
+            if (_viewModel.CurrentPlan == @"balanced")
                 return;
-            viewModel.CurrentPlan = "balanced";
+            _viewModel.CurrentPlan = @"balanced";
             StartRouting();
         }
 
-        private void fastest1_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        private void fastest1_Tap(object sender, GestureEventArgs e)
         {
-            if (viewModel.CurrentPlan == "fastest")
+            if (_viewModel.CurrentPlan == @"fastest")
                 return;
-            viewModel.CurrentPlan = "fastest";
+            _viewModel.CurrentPlan = @"fastest";
             StartRouting();
         }
 
@@ -124,6 +158,11 @@ namespace Cyclestreets
             {
                 Util.showLocationDialog();
             }
+        }
+
+        private void liveride_Click(object sender, EventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/Pages/LiveRide.xaml", UriKind.RelativeOrAbsolute));
         }
     }
 }

@@ -414,4 +414,37 @@ Why not give us a 5 star rating to show your appreciation?</value>
   <data name="VoiceDescriptionStart" xml:space="preserve">
     <value>Start at {0}</value>
   </data>
+  <data name="RouteParseError" xml:space="preserve">
+    <value>Could not parse route data information from server. Please let us know about this error with the route you were trying to plan</value>
+  </data>
+  <data name="RouteSaved" xml:space="preserve">
+    <value>This route has been saved and can be loaded even when a data connection is unavailable from the Load Route menu.</value>
+  </data>
+  <data name="RouteSavedTitle" xml:space="preserve">
+    <value>Route Saved</value>
+  </data>
+  <data name="OverwriteMessage" xml:space="preserve">
+    <value>Do you want to overwrite this save file with the current route?</value>
+  </data>
+  <data name="Overwrite" xml:space="preserve">
+    <value>Overwrite?</value>
+  </data>
+    <data name="PoorGPS" xml:space="preserve">
+    <value>Your GPS accuracy is low. Your current position may not be accurate.</value>
+  </data>
+    <data name="PoorGPSTitle" xml:space="preserve">
+    <value>Poor GPS Signal</value>
+  </data>
+    <data name="CouldNotParseJSON" xml:space="preserve">
+    <value>Could not parse JSON {0} {1}</value>
+  </data>
+    <data name="JSONParseError" xml:space="preserve">
+    <value>Could not parse route data information from server. Please let us know about this error with the route you were trying to plan</value>
+  </data>
+    <data name="InvalidLocation" xml:space="preserve">
+    <value>Invalid Location</value>
+  </data>
+    <data name="NoLocationMsg" xml:space="preserve">
+    <value>Could not find location. Please try again</value>
+  </data>
 </root>

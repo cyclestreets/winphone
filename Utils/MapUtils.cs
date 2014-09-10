@@ -10,6 +10,8 @@ namespace Cyclestreets.Utils
 {
     static class MapUtils
     {
+        public static string[] MapStyle = { @"OpenStreetMap", @"OpenCycleMap", @"Nokia" };
+
         public static void PlotCachedRoute(Map myMap, string currentPlan)
         {
             RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
@@ -21,7 +23,7 @@ namespace Cyclestreets.Utils
                 DrawMapMarker(myMap, routeSection.Points.ToArray(), routeSection.Walking ? Color.FromArgb(255, 0, 0, 0) : Color.FromArgb(255, 127, 0, 255), routeSection.Walking);
             }
             
-            SmartDispatcher.BeginInvoke(() => myMap.SetView(rm.GetRouteBounds()));
+            //SmartDispatcher.BeginInvoke(() => myMap.SetView(rm.GetRouteBounds()));
         }
 
         private static void DrawMapMarker(Map myMap, IEnumerable<GeoCoordinate> coordinate, Color color, bool dashed)

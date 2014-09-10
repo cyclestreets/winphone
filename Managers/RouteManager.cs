@@ -16,7 +16,7 @@ using System.Windows;
 
 namespace Cyclestreets.Managers
 {
-// ReSharper disable once ClassNeverInstantiated.Global
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class RouteManager : BindableBase
     {
         private readonly Stackish<GeoCoordinate> _waypoints = new Stackish<GeoCoordinate>();
@@ -35,6 +35,11 @@ namespace Cyclestreets.Managers
         {
             get { return _journeyMap; }
             set { _journeyMap = value; OnPropertyChanged("ReadyToDisplayRoute"); }
+        }
+
+        public double BusyWidth
+        {
+            get { return App.RootFrame.ActualWidth; }
         }
 
         public bool IsBusy
@@ -176,7 +181,7 @@ namespace Cyclestreets.Managers
                 return t1;
             }
 
-            string speedSetting = SettingManager.instance.GetStringValue("cycleSpeed", "12mph");
+            string speedSetting = SettingManager.instance.GetStringValue(@"cycleSpeed", @"12mph");
 
             int speed = Util.getSpeedFromString(speedSetting);
             const int useDom = 0; // 0=xml 1=gml
@@ -192,14 +197,14 @@ namespace Cyclestreets.Managers
             if (!newRoute)
             {
                 //http://www.cyclestreets.net/api/journey.xml?key=registeredapikey&useDom=1&itinerary=345529&plan=fastest
-                request.AddParameter("itinerary", Overview.RouteNumber );
+                request.AddParameter("itinerary", Overview.RouteNumber);
             }
             else
             {
                 request.AddParameter("itinerarypoints", itinerarypoints);
                 request.AddParameter("speed", speed);
             }
-            
+
 
             IsBusy = true;
 
@@ -354,7 +359,24 @@ namespace Cyclestreets.Managers
 
         internal void GenerateDebugData()
         {
-            
+
+        }
+
+        internal Task<bool> RouteTo(double longitude, double latitude, string routeType)
+        {
+            if ( LocationManager.Instance.MyGeoPosition == null )
+            {
+                Util.showLocationDialog();
+                return null;
+            }
+            else
+            {
+                GeoCoordinate target = new GeoCoordinate(latitude, longitude);
+                _waypoints.Clear();
+                AddWaypoint(CoordinateConverter.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate));
+                AddWaypoint(target);
+                return FindRoute(routeType, true);
+            }
         }
     }
 }

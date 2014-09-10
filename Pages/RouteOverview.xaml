@@ -9,13 +9,14 @@
     xmlns:Primitives="clr-namespace:Microsoft.Phone.Controls.Primitives;assembly=Microsoft.Phone"
     xmlns:Common="clr-namespace:ScoreAlerts.Common"
     xmlns:Utils="clr-namespace:Cyclestreets.Utils"
-    x:Class="Cyclestreets.RouteOverview"
+    x:Class="Cyclestreets.Pages.RouteOverview"
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d"
     shell:SystemTray.IsVisible="True">
 	<phone:PhoneApplicationPage.Resources>
 		<Utils:RouteTypeVisibility x:Key="RouteTypeVisibility"/>
 		<Common:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <Common:BooleanToOpacityConverter x:Key="BooleanToOpacityConverter"/>
 		<Common:BooleanInvertedToVisibilityConverter x:Key="BooleanInvertedToVisibilityConverter"/>
 		<Style x:Key="PivotStyle1" TargetType="phone:Pivot">
 			<Setter Property="Margin" Value="0"/>
@@ -79,7 +80,7 @@
 	<phone:PhoneApplicationPage.ApplicationBar>
 		<shell:ApplicationBar>
 			<shell:ApplicationBarIconButton x:Name="mylocation" IconUri="/Assets/icons/dark/appbar.location.circle.png" IsEnabled="True" Text="my location" Click="mylocation_Click"/>
-			<shell:ApplicationBarIconButton IconUri="/Assets/AppBar/appbar.bike.png" IsEnabled="True" Text="live ride"/>
+			<shell:ApplicationBarIconButton x:Name="liveride" IconUri="/Assets/AppBar/appbar.bike.png" IsEnabled="True" Text="live ride" Click="liveride_Click"/>
 			<shell:ApplicationBarIconButton x:Name="details" IconUri="/Assets/icons/dark/appbar.information.circle.png" IsEnabled="True" Text="details" Click="details_Click"/>
 		</shell:ApplicationBar>
 	</phone:PhoneApplicationPage.ApplicationBar>
@@ -106,7 +107,7 @@
 			<TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="Loading route information..." VerticalAlignment="Top"/>
 		</StackPanel>
 
-		<maps:Map x:Name="MyMap" Margin="0" Grid.Row="1" Grid.ColumnSpan="2" ZoomLevel="5.684" Loaded="MyMap_Loaded" LandmarksEnabled="True" Tap="MyMap_Tap" Visibility="{Binding DisplayMap, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        <maps:Map x:Name="MyMap" Margin="0" Grid.Row="1" Grid.ColumnSpan="2" ZoomLevel="5.684" Loaded="MyMap_Loaded" LandmarksEnabled="True" Tap="MyMap_Tap" Opacity="{Binding DisplayMap, Converter={StaticResource BooleanToOpacityConverter}}" />
 		<StackPanel Grid.Row="2" Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
 			<TextBlock TextWrapping="Wrap" Text="{Binding RouteManagerPtr.Overview.RouteDurationString, Mode=OneWay}" FontSize="60" FontFamily="Segoe WP Light" VerticalAlignment="Bottom"/>
 			<TextBlock TextWrapping="Wrap" Text="mins" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="Segoe WP Light" LineHeight="37" Visibility="{Binding DisplayMap, Converter={StaticResource BooleanToVisibilityConverter}}"/>
@@ -121,7 +122,7 @@
 				<ColumnDefinition/>
 				<ColumnDefinition/>
 			</Grid.ColumnDefinitions>
-			<TextBlock x:Name="shortest" HorizontalAlignment="Center" TextWrapping="Wrap" Text="shortest" VerticalAlignment="Bottom" FontFamily="Segoe WP" FontSize="18" Foreground="{StaticResource PhoneForegroundBrush}"/>
+			<TextBlock x:Name="quietest" HorizontalAlignment="Center" TextWrapping="Wrap" Text="quietest" VerticalAlignment="Bottom" FontFamily="Segoe WP" FontSize="18" Foreground="{StaticResource PhoneForegroundBrush}"/>
 			<TextBlock x:Name="balanced" HorizontalAlignment="Center" TextWrapping="Wrap" Text="balanced" VerticalAlignment="Bottom" FontFamily="Segoe WP" FontSize="18" Grid.Column="1" Foreground="{StaticResource PhoneForegroundBrush}"/>
 			<TextBlock x:Name="fastest" HorizontalAlignment="Center" TextWrapping="Wrap" Text="fastest" VerticalAlignment="Bottom" FontFamily="Segoe WP" FontSize="18" Grid.Column="2" Foreground="{StaticResource PhoneForegroundBrush}"/>
 			<Rectangle x:Name="fastest1" Fill="{StaticResource PhoneForegroundBrush}" Stroke="Black" Grid.Column="2" Margin="0,0,0,15" Tap="fastest1_Tap">
@@ -134,13 +135,13 @@
 					<ImageBrush Stretch="Uniform" ImageSource="/Cyclestreets;component/Assets/balanced.png"/>
 				</Rectangle.OpacityMask>
 			</Rectangle>
-			<Rectangle x:Name="shortest1" Fill="{StaticResource PhoneForegroundBrush}" Stroke="Black" Margin="0,0,0,5" Tap="shortest1_Tap">
+			<Rectangle x:Name="quietest1" Fill="{StaticResource PhoneForegroundBrush}" Stroke="Black" Tap="shortest1_Tap" Height="53" VerticalAlignment="Top">
 				<Rectangle.OpacityMask>
-					<ImageBrush Stretch="Uniform" ImageSource="/Cyclestreets;component/Assets/shortest.png"/>
+					<ImageBrush Stretch="Uniform" ImageSource="/Cyclestreets;component/Assets/quietest.png"/>
 				</Rectangle.OpacityMask>
 			</Rectangle>
 			<Rectangle x:Name="balancedHighlight" Fill="{StaticResource PhoneAccentBrush}" Height="7" Stroke="Black" VerticalAlignment="Top" Grid.Column="1" Visibility="{Binding CurrentPlan, ConverterParameter=balanced, Converter={StaticResource RouteTypeVisibility}}"/>
-			<Rectangle x:Name="shortestHighlight" Fill="{StaticResource PhoneAccentBrush}" Height="7" Stroke="Black" VerticalAlignment="Top" Visibility="{Binding CurrentPlan, ConverterParameter=shortest, Converter={StaticResource RouteTypeVisibility}}"/>
+			<Rectangle x:Name="shortestHighlight" Fill="{StaticResource PhoneAccentBrush}" Height="7" Stroke="Black" VerticalAlignment="Top" Visibility="{Binding CurrentPlan, ConverterParameter=quietest, Converter={StaticResource RouteTypeVisibility}}"/>
 			<Rectangle x:Name="fastestHighlight" Fill="{StaticResource PhoneAccentBrush}" Height="7" Stroke="Black" VerticalAlignment="Top" Grid.Column="2" Visibility="{Binding CurrentPlan, ConverterParameter=fastest, Converter={StaticResource RouteTypeVisibility}}"/>
 		</Grid>
 		<TextBlock Text="{Binding DirectionsPage.RouteManagerPtr.CurrentStepText, Mode=OneWay}" VerticalAlignment="Top" Grid.Row="3" Grid.ColumnSpan="2"/>

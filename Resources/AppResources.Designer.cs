@@ -115,6 +115,15 @@ namespace Cyclestreets.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not parse JSON {0} {1}.
+        /// </summary>
+        public static string CouldNotParseJSON {
+            get {
+                return ResourceManager.GetString("CouldNotParseJSON", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cursor.
         /// </summary>
         public static string Cursor {
@@ -360,6 +369,15 @@ namespace Cyclestreets.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid Location.
+        /// </summary>
+        public static string InvalidLocation {
+            get {
+                return ResourceManager.GetString("InvalidLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to journey facts.
         /// </summary>
         public static string JourneyFacts {
@@ -374,6 +392,15 @@ namespace Cyclestreets.Resources {
         public static string JourneyTime {
             get {
                 return ResourceManager.GetString("JourneyTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not parse route data information from server. Please let us know about this error with the route you were trying to plan.
+        /// </summary>
+        public static string JSONParseError {
+            get {
+                return ResourceManager.GetString("JSONParseError", resourceCulture);
             }
         }
         
@@ -495,6 +522,15 @@ namespace Cyclestreets.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not find location. Please try again.
+        /// </summary>
+        public static string NoLocationMsg {
+            get {
+                return ResourceManager.GetString("NoLocationMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No Route.
         /// </summary>
         public static string NoRoute {
@@ -522,6 +558,24 @@ namespace Cyclestreets.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Overwrite?.
+        /// </summary>
+        public static string Overwrite {
+            get {
+                return ResourceManager.GetString("Overwrite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do you want to overwrite this save file with the current route?.
+        /// </summary>
+        public static string OverwriteMessage {
+            get {
+                return ResourceManager.GetString("OverwriteMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to please wait.
         /// </summary>
         public static string PleaseWait {
@@ -536,6 +590,24 @@ namespace Cyclestreets.Resources {
         public static string PleaseWaitMsg {
             get {
                 return ResourceManager.GetString("PleaseWaitMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your GPS accuracy is low. Your current position may not be accurate..
+        /// </summary>
+        public static string PoorGPS {
+            get {
+                return ResourceManager.GetString("PoorGPS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Poor GPS Signal.
+        /// </summary>
+        public static string PoorGPSTitle {
+            get {
+                return ResourceManager.GetString("PoorGPSTitle", resourceCulture);
             }
         }
         
@@ -675,6 +747,33 @@ namespace Cyclestreets.Resources {
         public static string RouteNumber {
             get {
                 return ResourceManager.GetString("RouteNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not parse route data information from server. Please let us know about this error with the route you were trying to plan.
+        /// </summary>
+        public static string RouteParseError {
+            get {
+                return ResourceManager.GetString("RouteParseError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This route has been saved and can be loaded even when a data connection is unavailable from the Load Route menu..
+        /// </summary>
+        public static string RouteSaved {
+            get {
+                return ResourceManager.GetString("RouteSaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Route Saved.
+        /// </summary>
+        public static string RouteSavedTitle {
+            get {
+                return ResourceManager.GetString("RouteSavedTitle", resourceCulture);
             }
         }
         
