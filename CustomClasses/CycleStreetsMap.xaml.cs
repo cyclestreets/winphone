@@ -8,7 +8,6 @@ using Microsoft.Phone.Shell;
 using System;
 using System.Device.Location;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -16,7 +15,7 @@ using Windows.Devices.Geolocation;
 
 namespace Cyclestreets.CustomClasses
 {
-    public partial class CycleStreetsMap : UserControl, IDisposable
+    public partial class CycleStreetsMap : IDisposable
     {
         // Use this from XAML to control whether animation is on or off
         #region DefaultPlan Dependency Property
@@ -114,7 +113,7 @@ namespace Cyclestreets.CustomClasses
         private MapOverlay _myLocationOverlay2;
         private Ellipse _accuracyEllipse;
         private DateTime _timeLastMoved;
-        private MapOverlay _myLocationOverlay3;
+
         private void positionChangedHandler(Geolocator sender, PositionChangedEventArgs args)
         {
             if (args == null || args.Position == null)
@@ -249,17 +248,19 @@ namespace Cyclestreets.CustomClasses
             return LocationRectangle.CreateBoundingRectangle(new[] { topLeft, bottomRight });
         }
 
-        private void ApplicationBarMenuItem_ToggleAerialView(object sender, EventArgs e)
+        private void ApplicationBarMenuItem_ToggleAerialView(object sender)
         {
             ApplicationBarMenuItem item = sender as ApplicationBarMenuItem;
             if (MyMap.CartographicMode == MapCartographicMode.Hybrid)
             {
-                item.Text = AppResources.MainPage_ApplicationBarMenuItem_ToggleAerialView_Enable_aerial_view;
+                if (item != null)
+                    item.Text = AppResources.MainPage_ApplicationBarMenuItem_ToggleAerialView_Enable_aerial_view;
                 MyMap.CartographicMode = MapCartographicMode.Road;
             }
             else
             {
-                item.Text = AppResources.MainPage_ApplicationBarMenuItem_ToggleAerialView_Disable_aerial_view;
+                if (item != null)
+                    item.Text = AppResources.MainPage_ApplicationBarMenuItem_ToggleAerialView_Disable_aerial_view;
                 MyMap.CartographicMode = MapCartographicMode.Hybrid;
             }
         }

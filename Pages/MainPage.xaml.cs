@@ -4,38 +4,33 @@ using System.Device.Location;
 using System.Globalization;
 using System.Net;
 using System.Windows;
-using System.Windows.Data;
-using System.Windows.Media;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Xml.Linq;
+using Cyclestreets.Annotations;
+using Cyclestreets.CustomClasses;
 using Cyclestreets.Managers;
-using Cyclestreets.Pages;
 using Cyclestreets.Resources;
-using Cyclestreets.Utils;
-using CycleStreets.Helpers;
 using CycleStreets.Util;
+using Cyclestreets.Utils;
 using MarkedUp;
 using Microsoft.Expression.Interactivity.Core;
-using Microsoft.Phone.Controls;
 using Microsoft.Phone.Maps.Controls;
 using Microsoft.Phone.Maps.Services;
 using Microsoft.Phone.Maps.Toolkit;
 using Microsoft.Phone.Shell;
 using Microsoft.Phone.Tasks;
 using RestSharp;
-using Cyclestreets.CustomClasses;
 
-namespace Cyclestreets
+namespace Cyclestreets.Pages
 {
-	public partial class MainPage : PhoneApplicationPage
+    [UsedImplicitly]
+    public partial class MainPage
 	{
-		readonly Dictionary<Pushpin, POI> pinItems = new Dictionary<Pushpin, POI>();
+		readonly Dictionary<Pushpin, POI> _pinItems = new Dictionary<Pushpin, POI>();
 
-		ReverseGeocodeQuery revGeoQ = null;
+        readonly ReverseGeocodeQuery _revGeoQ;
 		private GeoCoordinate _selected;
 
-		private GeoCoordinate selected
+		private GeoCoordinate Selected
 		{
 			get
 			{
@@ -48,7 +43,7 @@ namespace Cyclestreets
 			}
 		}
 
-		private MapLayer poiLayer;
+		private MapLayer _poiLayer;
 
 		// Declare the MarketplaceDetailTask object with page scope
 		// so we can access it from event handlers.
@@ -61,15 +56,15 @@ namespace Cyclestreets
 
 			// hack. See here http://stackoverflow.com/questions/5334574/applicationbariconbutton-is-null/5334703#5334703
 			/*findAppBar = ApplicationBar.Buttons[ 0 ] as Microsoft.Phone.Shell.ApplicationBarIconButton;*/
-			directionsAppBar = ApplicationBar.Buttons[0] as Microsoft.Phone.Shell.ApplicationBarIconButton;
-			navigateToAppBar = ApplicationBar.Buttons[1] as Microsoft.Phone.Shell.ApplicationBarIconButton;
+			directionsAppBar = ApplicationBar.Buttons[0] as ApplicationBarIconButton;
+			navigateToAppBar = ApplicationBar.Buttons[1] as ApplicationBarIconButton;
             
-			revGeoQ = new ReverseGeocodeQuery();
-			revGeoQ.QueryCompleted += geoQ_QueryCompleted;
+			_revGeoQ = new ReverseGeocodeQuery();
+			_revGeoQ.QueryCompleted += geoQ_QueryCompleted;
 
 			var sgs = VisualStateManager.GetVisualStateGroups( LayoutRoot );
 			var sg = sgs[0] as VisualStateGroup;
-			ExtendedVisualStateManager.GoToElementState( LayoutRoot, ( (VisualState)sg.States[0] ).Name, true );
+		    if (sg != null) ExtendedVisualStateManager.GoToElementState( LayoutRoot, ( (VisualState)sg.States[0] ).Name, true );
 		}
 
 		void m_Click( object sender, EventArgs e )
@@ -78,12 +73,7 @@ namespace Cyclestreets
 
 		}
 
-		protected override void OnNavigatingFrom( NavigatingCancelEventArgs e )
-		{
-			base.OnNavigatingFrom( e );
-		}
-
-		protected override void OnNavigatedTo( System.Windows.Navigation.NavigationEventArgs e )
+	    protected override void OnNavigatedTo( System.Windows.Navigation.NavigationEventArgs e )
 		{
 			base.OnNavigatedTo( e );
 
@@ -98,7 +88,7 @@ namespace Cyclestreets
 
 				String udid = Util.GetHardwareId();
 
-				String serverUrl = "http://www.rwscripts.com/cyclestreets/trial.php";
+				const string serverUrl = "http://www.rwscripts.com/cyclestreets/trial.php";
 
 				var client = new RestClient( serverUrl );
 
@@ -133,29 +123,31 @@ namespace Cyclestreets
 							{
 								if( s.Element( "trialID" ) != null )
 								{
-									( (App)App.Current ).trialID = int.Parse( s.Element( "trialID" ).Value );
+								    var xElement = s.Element( "trialID" );
+								    if (xElement != null)
+								        ( (App)Application.Current ).trialID = int.Parse( xElement.Value );
 								}
-								if( s.Element( "result" ) != null )
-								{
-									if( int.Parse( s.Element( "result" ).Value ) == 0 )
+							    if( s.Element( "result" ) != null )
+							    {
+							        var xElement = s.Element( "result" );
+							        if( xElement != null && int.Parse( xElement.Value ) == 0 )
 									{
 										NavigationService.Navigate( new Uri( "/Pages/TrialExpired.xaml", UriKind.Relative ) );
 
-										( (App)App.Current ).trialExpired = true;
+										( (App)Application.Current ).trialExpired = true;
 										//( (App)App.Current ).showTrialExpiredMessage();
 										//if( NavigationService.CanGoBack )
 										//	NavigationService.GoBack();
 									}
 									else
 									{
-										MessageBoxResult result = MessageBox.Show( AppResources.TrialWelcome, AppResources.MainPage_OnNavigatedTo_Hello, MessageBoxButton.OK );
+										MessageBox.Show( AppResources.TrialWelcome, AppResources.MainPage_OnNavigatedTo_Hello, MessageBoxButton.OK );
 										ApplicationBarMenuItem m = new ApplicationBarMenuItem( "buy full version" );
 										m.Click += m_Click;
 										ApplicationBar.MenuItems.Add( m );
 										SettingManager.instance.SetBoolValue( @"appIsTrial", true );
 									}
-								}
-
+							    }
 							}
 						}
 						catch( Exception ex )
@@ -170,7 +162,7 @@ namespace Cyclestreets
 				// Conversion tracking
 				if( SettingManager.instance.GetBoolValue( @"appIsTrial", false ) )
 				{
-					var tc = new TrialConversion()
+					var tc = new TrialConversion
 					{
 						ProductId = "FreeToPaid",
 						ProductName = "Free Trial to Full version",
@@ -179,7 +171,7 @@ namespace Cyclestreets
 						Currency = RegionInfo.CurrentRegion.ISOCurrencySymbol,
 						Price = 0.99
 					};
-					MarkedUp.AnalyticClient.TrialConversionComplete( tc );
+					AnalyticClient.TrialConversionComplete( tc );
 					SettingManager.instance.SetBoolValue( @"appIsTrial", false );
 				}
 
@@ -226,26 +218,28 @@ namespace Cyclestreets
 
 			if( SettingManager.instance.GetBoolValue( @"LocationConsent", true ) )
 			{
-				if( poiLayer == null )
+				if( _poiLayer == null )
 				{
-					poiLayer = new MapLayer();
+					_poiLayer = new MapLayer();
 
-					MyMap.AddLayer( poiLayer );
+					MyMap.AddLayer( _poiLayer );
 				}
 				else
 				{
-					poiLayer.Clear();
+					_poiLayer.Clear();
 				}
 				if( NavigationContext.QueryString.ContainsKey( @"longitude" ) )
 				{
-					GeoCoordinate center = new GeoCoordinate();
-					center.Longitude = float.Parse( NavigationContext.QueryString["longitude"] );
-					center.Latitude = float.Parse( NavigationContext.QueryString["latitude"] );
-					//MyMap.Center = center;
+					GeoCoordinate center = new GeoCoordinate
+					{
+					    Longitude = float.Parse(NavigationContext.QueryString["longitude"]),
+					    Latitude = float.Parse(NavigationContext.QueryString["latitude"])
+					};
+				    //MyMap.Center = center;
 					//MyMap.ZoomLevel = 16;
                     //FIXME
 
-					selected = center;
+					Selected = center;
 				}
 				else
 				{
@@ -261,23 +255,20 @@ namespace Cyclestreets
 
 				if( POIResults.pois != null && POIResults.pois.Count > 0 )
 				{
-					pinItems.Clear();
+					_pinItems.Clear();
 					foreach( POI p in POIResults.pois )
 					{
 						Pushpin pp = new Pushpin();
-						pinItems.Add( pp, p );
+						_pinItems.Add( pp, p );
 						pp.Content = p.PinID;
-						pp.Tap += poiTapped;
-
-						ContextMenu ctxt = new ContextMenu();
-
+						pp.Tap += PoiTapped;
 
 						MapOverlay overlay = new MapOverlay();
 						overlay.Content = pp;
 						pp.GeoCoordinate = p.GetGeoCoordinate();
 						overlay.GeoCoordinate = p.GetGeoCoordinate();
 						overlay.PositionOrigin = new Point( 0, 1.0 );
-						poiLayer.Add( overlay );
+						_poiLayer.Add( overlay );
 					}
 
 				}
@@ -305,19 +296,22 @@ namespace Cyclestreets
 			}
 		}
 
-		private void poiTapped( object sender, System.Windows.Input.GestureEventArgs e )
+		private void PoiTapped( object sender, System.Windows.Input.GestureEventArgs e )
 		{
 			Pushpin pp = sender as Pushpin;
-			POI p = pinItems[pp];
-			foreach( KeyValuePair<Pushpin, POI> pair in pinItems )
-			{
-				Pushpin ppItem = pair.Key;
-				POI pItem = pair.Value;
-				ppItem.Content = pItem.PinID;
-			}
-			pp.Content = p.Name;
+		    if (pp != null)
+		    {
+		        POI p = _pinItems[pp];
+		        foreach( KeyValuePair<Pushpin, POI> pair in _pinItems )
+		        {
+		            Pushpin ppItem = pair.Key;
+		            POI pItem = pair.Value;
+		            ppItem.Content = pItem.PinID;
+		        }
+		        pp.Content = p.Name;
 
-			selected = p.GetGeoCoordinate();
+		        Selected = p.GetGeoCoordinate();
+		    }
 		}
 
 
@@ -335,24 +329,24 @@ namespace Cyclestreets
 
 		private void ApplicationBarIconButton_NavigateTo( object sender, EventArgs e )
 		{
-			if( selected != null )
-				NavigationService.Navigate( new Uri( "/Pages/RouteOverview.xaml?mode=routeTo&longitude=" + selected.Longitude + "&latitude=" + selected.Latitude, UriKind.Relative ) );
+			if( Selected != null )
+				NavigationService.Navigate( new Uri( "/Pages/RouteOverview.xaml?mode=routeTo&longitude=" + Selected.Longitude + "&latitude=" + Selected.Latitude, UriKind.Relative ) );
 		}
 
-		private void poiList_Click( object sender, System.EventArgs e )
+		private void poiList_Click( object sender, EventArgs e )
 		{
 			NavigationService.Navigate( new Uri( "/Pages/POIList.xaml?longitude=" + MyMap.Center.Longitude + "&latitude=" + MyMap.Center.Latitude, UriKind.Relative ) );
 		}
 
-		private void settings_Click( object sender, System.EventArgs e )
+		private void settings_Click( object sender, EventArgs e )
 		{
 			NavigationService.Navigate( new Uri( "/Pages/Settings.xaml", UriKind.Relative ) );
 		}
 
-		private void privacy_Click( object sender, System.EventArgs e )
+		private void privacy_Click( object sender, EventArgs e )
 		{
 			WebBrowserTask url = new WebBrowserTask();
-			url.Uri = new System.Uri( "http://www.cyclestreets.net/privacy/" );
+			url.Uri = new Uri( "http://www.cyclestreets.net/privacy/" );
 			url.Show();
 		}
 
@@ -381,33 +375,46 @@ namespace Cyclestreets
 			Point p = e.GetPosition( map );
 			GeoCoordinate coord = map.ConvertViewportPointToGeoCoordinate( p );
 
-			if( revGeoQ.IsBusy )
-			{
-				return;
-			}
+            if (_poiLayer == null)
+            {
+                _poiLayer = new MapLayer();
 
-			App.networkStatus.NetworkIsBusy = true;
-			revGeoQ.GeoCoordinate = coord;
-			revGeoQ.QueryCompleted += tapMapReverseGeocode_QueryCompleted;
-			revGeoQ.QueryAsync();
+                MyMap.AddLayer(_poiLayer);
+            }
+            else
+            {
+                _poiLayer.Clear();
+            }
+
+            GeoLocationPin pp = new GeoLocationPin(coord);
+            Selected = coord;
+
+            MapOverlay overlay = new MapOverlay
+            {
+                Content = pp,
+                GeoCoordinate = coord,
+                PositionOrigin = new Point(0, 1.0)
+            };
+
+		    _poiLayer.Add(overlay);
 		}
 
 		private void tapMapReverseGeocode_QueryCompleted( object sender, QueryCompletedEventArgs<IList<MapLocation>> e )
 		{
-			revGeoQ.QueryCompleted -= tapMapReverseGeocode_QueryCompleted;
+			_revGeoQ.QueryCompleted -= tapMapReverseGeocode_QueryCompleted;
 
 			SmartDispatcher.BeginInvoke( () =>
 			{
 				App.networkStatus.NetworkIsBusy = false;
-				if( poiLayer == null )
+				if( _poiLayer == null )
 				{
-					poiLayer = new MapLayer();
+					_poiLayer = new MapLayer();
 
-					MyMap.AddLayer( poiLayer );
+					MyMap.AddLayer( _poiLayer );
 				}
 				else
 				{
-					poiLayer.Clear();
+					_poiLayer.Clear();
 				}
 
 				if( e.Result != null && e.Result.Count > 0 )
@@ -422,14 +429,14 @@ namespace Cyclestreets
 						pp.Content = loc.Information.Address.Street;
 					//pp.Tap += poiTapped;
 
-					selected = loc.GeoCoordinate;
+					Selected = loc.GeoCoordinate;
 
 					MapOverlay overlay = new MapOverlay();
 					overlay.Content = pp;
 					pp.GeoCoordinate = loc.GeoCoordinate;
 					overlay.GeoCoordinate = loc.GeoCoordinate;
 					overlay.PositionOrigin = new Point( 0, 1.0 );
-					poiLayer.Add( overlay );
+					_poiLayer.Add( overlay );
 				}
 			} );
 		}

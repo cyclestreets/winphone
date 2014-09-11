@@ -1,0 +1,32 @@
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Maps="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps" xmlns:Common="clr-namespace:ScoreAlerts.Common" x:Name="userControl" x:Class="Cyclestreets.CustomClasses.GeoLocationPin"
+    mc:Ignorable="d"
+    d:DesignHeight="480" d:DesignWidth="480">
+
+    <UserControl.Resources>
+        <Common:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <Common:BooleanInvertedToVisibilityConverter x:Key="BooleanInvertedToVisibilityConverter"/>
+    </UserControl.Resources>
+    <UserControl.FontFamily>
+        <StaticResource ResourceKey="PhoneFontFamilyNormal"/>
+    </UserControl.FontFamily>
+    <UserControl.FontSize>
+        <StaticResource ResourceKey="PhoneFontSizeNormal"/>
+    </UserControl.FontSize>
+    <UserControl.Foreground>
+        <StaticResource ResourceKey="PhoneForegroundBrush"/>
+    </UserControl.Foreground>
+
+    <Grid HorizontalAlignment="Left" VerticalAlignment="Top">
+        <Maps:Pushpin x:Name="pushpin">
+            <Grid MinWidth="100">
+                <TextBlock x:Name="pinText" Text="Location" HorizontalAlignment="Center" Visibility="Collapsed"/>
+                <ProgressBar x:Name="progress" IsIndeterminate="True" Foreground="White" Visibility="Visible"/>
+            </Grid>
+        </Maps:Pushpin>
+    </Grid>
+</UserControl>

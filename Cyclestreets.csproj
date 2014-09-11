@@ -104,6 +104,9 @@
     <Compile Include="CustomClasses\CycleStreetsMap.xaml.cs">
       <DependentUpon>CycleStreetsMap.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CustomClasses\GeoLocationPin.xaml.cs">
+      <DependentUpon>GeoLocationPin.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Helpers\FeedbackHelper.cs" />
     <Compile Include="Helpers\StorageHelper.cs" />
     <Compile Include="Managers\LocationManager.cs" />
@@ -206,6 +209,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Page Include="CustomClasses\GeoLocationPin.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Pages\ExtendedSplash.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
@@ -435,6 +442,7 @@
     <Reference Include="Microsoft.Expression.Drawing" />
     <Reference Include="Microsoft.Expression.Interactions" />
     <Reference Include="Microsoft.Phone.Controls, Version=8.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Phone.Controls.Maps, Version=8.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Phone.Controls.Toolkit, Version=8.0.1.0, Culture=neutral, PublicKeyToken=b772ad94eb9ca604, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>packages\WPtoolkit.4.2013.08.16\lib\wp8\Microsoft.Phone.Controls.Toolkit.dll</HintPath>

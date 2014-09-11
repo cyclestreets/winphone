@@ -10,7 +10,7 @@
 	xmlns:ec="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
 	xmlns:Location="clr-namespace:System.Device.Location;assembly=System.Device"
 	xmlns:UserControls="clr-namespace:CycleStreets.UserControls"
-	x:Class="Cyclestreets.MainPage"
+	x:Class="Cyclestreets.Pages.MainPage"
 	mc:Ignorable="d"
 	FontFamily="{StaticResource PhoneFontFamilyNormal}"
 	FontSize="{StaticResource PhoneFontSizeNormal}"
