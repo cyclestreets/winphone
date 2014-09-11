@@ -1,16 +1,16 @@
-﻿using System.Diagnostics;
-using Windows.Devices.Geolocation;
-using MarkedUp;
+﻿using MarkedUp;
 using Microsoft.Phone.Maps.Services;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Device.Location;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows;
+using Windows.Devices.Geolocation;
 
 namespace Cyclestreets.Utils
 {
@@ -111,10 +111,10 @@ namespace Cyclestreets.Utils
                     else
                     {
                         if (suggestions.Count <= 0) return;
-                        names.AddRange(suggestions.Select(x=>x[@"name"].ToString()).ToArray());
+                        names.AddRange(suggestions.Select(x => x[@"name"].ToString()).ToArray());
                     }
 
-                    
+
                     tcs1.SetResult(names);
                 }
                 else
@@ -129,13 +129,17 @@ namespace Cyclestreets.Utils
 
         public async static Task<MapLocation> StartReverseGeocode(GeoCoordinate center)
         {
-            if (!_revGeoQ.IsBusy)
+            if (_revGeoQ.IsBusy) return null;
+            try
             {
                 _revGeoQ.GeoCoordinate = center;
                 IList<MapLocation> results = await _revGeoQ.QueryTaskAsync();
                 return results.FirstOrDefault();
             }
-            return null;
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
 

@@ -4,63 +4,17 @@ using System.Device.Location;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
-using Cyclestreets.Common;
-using Microsoft.Phone.Controls;
-using Microsoft.Phone.Maps.Services;
+using Cyclestreets.Objects;
+using Cyclestreets.Resources;
 
-namespace Cyclestreets
+namespace Cyclestreets.Pages
 {
-	public class POI : BindableBase, ReverseGeocodeHandler
+    public partial class PoiResults
 	{
-		public string Name { get; set; }
+		GeoCoordinate _center;
+		public static ObservableCollection<POI> Pois;
 
-		GeoCoordinate _position;
-		public GeoCoordinate Position
-		{
-			get { return _position; }
-			set
-			{
-				_position = value;
-
-				ReverseGeocodeQueryManager.Instance.Add( this );
-			}
-		}
-
-		public GeoCoordinate GetGeoCoordinate()
-		{
-			return _position;
-		}
-
-		public void geoQ_QueryCompleted( object sender, QueryCompletedEventArgs<System.Collections.Generic.IList<MapLocation>> e )
-		{
-			MapLocation loc = e.Result[ 0 ];
-			Location = loc.Information.Address.Street + ", " + loc.Information.Address.PostalCode;
-		}
-
-		public string Distance { get; set; }
-		private string _location = "...";
-		public string Location
-		{
-			get
-			{ return _location; }
-
-			set
-			{
-				this.SetProperty( ref this._location, value.TrimStart( new char[] { ',', ' ' } ) );
-			}
-		}
-
-		public string PinID { get; set; }
-
-		public string BGColour { get; set; }
-	}
-
-	public partial class POIResults : PhoneApplicationPage
-	{
-		GeoCoordinate center;
-		public static ObservableCollection<POI> pois = null;
-
-		public POIResults()
+		public PoiResults()
 		{
 			InitializeComponent();
 
@@ -70,19 +24,19 @@ namespace Cyclestreets
 		protected override void OnNavigatedTo( System.Windows.Navigation.NavigationEventArgs e )
 		{
 			base.OnNavigatedTo( e );
-			center = new GeoCoordinate();
-			center.Longitude = float.Parse( NavigationContext.QueryString[ "longitude" ] );
-			center.Latitude = float.Parse( NavigationContext.QueryString[ "latitude" ] );
+			_center = new GeoCoordinate();
+			_center.Longitude = float.Parse( NavigationContext.QueryString[ @"longitude" ] );
+			_center.Latitude = float.Parse( NavigationContext.QueryString[ @"latitude" ] );
 
-			string poiName = NavigationContext.QueryString[ "POIName" ];
+			string poiName = NavigationContext.QueryString[ @"POIName" ];
 
-			AsyncWebRequest _request = new AsyncWebRequest( "http://www.cyclestreets.net/api/pois.xml?key=" + App.apiKey + "&type=" + poiName + "&longitude=" + center.Longitude + "&latitude=" + center.Latitude + "&radius=25", POIResultsFound );
-			_request.Start();
+			AsyncWebRequest request = new AsyncWebRequest( string.Format(@"http://www.cyclestreets.net/api/pois.xml?key={0}&type={1}&longitude={2}&latitude={3}&radius=25", App.apiKey, poiName, _center.Longitude, _center.Latitude), PoiResultsFound );
+			request.Start();
 
 			App.networkStatus.NetworkIsBusy = true;
 		}
 
-		private void POIResultsFound( byte[] data )
+		private void PoiResultsFound( byte[] data )
 		{
 			if( data == null )
 				return;
@@ -92,38 +46,33 @@ namespace Cyclestreets
 
 			XDocument xml = XDocument.Parse( str.Trim() );
 
-			var poi = xml.Descendants( "poi" )
-									.Where( e => (string)e.Parent.Name.LocalName == "pois" );
-			pois = new ObservableCollection<POI>();
+			var poi = xml.Descendants( @"poi" )
+									.Where( e => e.Parent != null && e.Parent.Name.LocalName == "pois" );
+			Pois = new ObservableCollection<POI>();
 			int id = 1;
-			string col1 = "#7F000000";
-			string col2 = "#3F000000";
+			const string col1 = "#7F000000";
+			const string col2 = "#3F000000";
 			bool swap = true;
 			foreach( XElement p in poi )
 			{
 				POI item = new POI();
-				item.Name = p.Element( "name" ).Value;
-				GeoCoordinate g = new GeoCoordinate();
-				g.Longitude = float.Parse( p.Element( "longitude" ).Value );
-				g.Latitude = float.Parse( p.Element( "latitude" ).Value );
-				item.Position = g;
-				double dist = center.GetDistanceTo( item.Position ) * 0.000621371192;
-				item.Distance = dist.ToString( "0.00" ) + "m";
+			    var xElement = p.Element( @"name" );
+			    if (xElement != null) item.Name = xElement.Value;
+			    GeoCoordinate g = new GeoCoordinate();
+			    var element = p.Element( @"longitude" );
+			    if (element != null) g.Longitude = float.Parse( element.Value );
+			    var xElement1 = p.Element( @"latitude" );
+			    if (xElement1 != null) g.Latitude = float.Parse( xElement1.Value );
+			    item.Position = g;
+				double dist = _center.GetDistanceTo( item.Position ) * 0.000621371192;
+				item.Distance = dist.ToString( @"0.00" ) + AppResources.MetresShort;
 				item.PinID = "" + ( id++ );
-				if( swap )
-					item.BGColour = col1;
-				else
-					item.BGColour = col2;
+				item.BgColour = swap ? col1 : col2;
 				swap = !swap;
-				pois.Add( item );
+				Pois.Add( item );
 			}
 
-			if( pois.Count == 0 )
-			{
-				POI item = new POI();
-				item.Name = "No results in nearby area";
-			}
-			poiList.ItemsSource = pois;
+			poiList.ItemsSource = Pois;
 
 			App.networkStatus.NetworkIsBusy = true;
 		}

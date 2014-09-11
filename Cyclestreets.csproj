@@ -110,10 +110,13 @@
     <Compile Include="Helpers\FeedbackHelper.cs" />
     <Compile Include="Helpers\StorageHelper.cs" />
     <Compile Include="Managers\LocationManager.cs" />
+    <Compile Include="Managers\ReverseGeocodeQueryManager.cs" />
     <Compile Include="Managers\RouteManager.cs" />
     <Compile Include="MyPositionDataSource.cs" />
     <Compile Include="Objects\HeightData.cs" />
     <Compile Include="Objects\ListBoxPair.cs" />
+    <Compile Include="Objects\POI.cs" />
+    <Compile Include="Objects\ReverseGeocodeObject.cs" />
     <Compile Include="Objects\RouteOverviewObject.cs" />
     <Compile Include="Objects\RouteSection.cs" />
     <Compile Include="Pages\LiveRide.xaml.cs">
@@ -181,7 +184,6 @@
       <DependentUpon>AppResources.resx</DependentUpon>
     </Compile>
     <Compile Include="ReverseGeocodeHandler.cs" />
-    <Compile Include="ReverseGeocodeQueryManager.cs" />
     <Compile Include="SettingManager.cs" />
     <Compile Include="Pages\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>

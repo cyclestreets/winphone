@@ -522,6 +522,15 @@ namespace Cyclestreets.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No results in nearby area.
+        /// </summary>
+        public static string NoLocalResults {
+            get {
+                return ResourceManager.GetString("NoLocalResults", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not find location. Please try again.
         /// </summary>
         public static string NoLocationMsg {

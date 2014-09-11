@@ -447,4 +447,7 @@ Why not give us a 5 star rating to show your appreciation?</value>
     <data name="NoLocationMsg" xml:space="preserve">
     <value>Could not find location. Please try again</value>
   </data>
+  <data name="NoLocalResults" xml:space="preserve">
+    <value>No results in nearby area</value>
+  </data>
 </root>

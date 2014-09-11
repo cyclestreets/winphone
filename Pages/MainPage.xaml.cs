@@ -8,6 +8,7 @@ using System.Xml.Linq;
 using Cyclestreets.Annotations;
 using Cyclestreets.CustomClasses;
 using Cyclestreets.Managers;
+using Cyclestreets.Objects;
 using Cyclestreets.Resources;
 using CycleStreets.Util;
 using Cyclestreets.Utils;
@@ -253,10 +254,10 @@ namespace Cyclestreets.Pages
 					}
 				}
 
-				if( POIResults.pois != null && POIResults.pois.Count > 0 )
+				if( PoiResults.Pois != null && PoiResults.Pois.Count > 0 )
 				{
 					_pinItems.Clear();
-					foreach( POI p in POIResults.pois )
+					foreach( POI p in PoiResults.Pois )
 					{
 						Pushpin pp = new Pushpin();
 						_pinItems.Add( pp, p );
@@ -299,19 +300,17 @@ namespace Cyclestreets.Pages
 		private void PoiTapped( object sender, System.Windows.Input.GestureEventArgs e )
 		{
 			Pushpin pp = sender as Pushpin;
-		    if (pp != null)
+		    if (pp == null) return;
+		    POI p = _pinItems[pp];
+		    foreach( KeyValuePair<Pushpin, POI> pair in _pinItems )
 		    {
-		        POI p = _pinItems[pp];
-		        foreach( KeyValuePair<Pushpin, POI> pair in _pinItems )
-		        {
-		            Pushpin ppItem = pair.Key;
-		            POI pItem = pair.Value;
-		            ppItem.Content = pItem.PinID;
-		        }
-		        pp.Content = p.Name;
-
-		        Selected = p.GetGeoCoordinate();
+		        Pushpin ppItem = pair.Key;
+		        POI pItem = pair.Value;
+		        ppItem.Content = pItem.PinID;
 		    }
+		    pp.Content = p.Name;
+
+		    Selected = p.GetGeoCoordinate();
 		}
 
 
@@ -345,9 +344,8 @@ namespace Cyclestreets.Pages
 
 		private void privacy_Click( object sender, EventArgs e )
 		{
-			WebBrowserTask url = new WebBrowserTask();
-			url.Uri = new Uri( "http://www.cyclestreets.net/privacy/" );
-			url.Show();
+			WebBrowserTask url = new WebBrowserTask {Uri = new Uri("http://www.cyclestreets.net/privacy/")};
+		    url.Show();
 		}
 
 		private void leisureRouting_Click( object sender, EventArgs e )
@@ -397,48 +395,6 @@ namespace Cyclestreets.Pages
             };
 
 		    _poiLayer.Add(overlay);
-		}
-
-		private void tapMapReverseGeocode_QueryCompleted( object sender, QueryCompletedEventArgs<IList<MapLocation>> e )
-		{
-			_revGeoQ.QueryCompleted -= tapMapReverseGeocode_QueryCompleted;
-
-			SmartDispatcher.BeginInvoke( () =>
-			{
-				App.networkStatus.NetworkIsBusy = false;
-				if( _poiLayer == null )
-				{
-					_poiLayer = new MapLayer();
-
-					MyMap.AddLayer( _poiLayer );
-				}
-				else
-				{
-					_poiLayer.Clear();
-				}
-
-				if( e.Result != null && e.Result.Count > 0 )
-				{
-					MapLocation loc = e.Result[0];
-
-					Pushpin pp = new Pushpin();
-					//pinItems.Add( pp, p );
-					if( string.IsNullOrWhiteSpace( loc.Information.Address.Street ) )
-						pp.Content = loc.Information.Address.City + ", " + loc.Information.Address.PostalCode;
-					else
-						pp.Content = loc.Information.Address.Street;
-					//pp.Tap += poiTapped;
-
-					Selected = loc.GeoCoordinate;
-
-					MapOverlay overlay = new MapOverlay();
-					overlay.Content = pp;
-					pp.GeoCoordinate = loc.GeoCoordinate;
-					overlay.GeoCoordinate = loc.GeoCoordinate;
-					overlay.PositionOrigin = new Point( 0, 1.0 );
-					_poiLayer.Add( overlay );
-				}
-			} );
 		}
 	}
 }

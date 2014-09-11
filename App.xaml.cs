@@ -56,8 +56,8 @@ namespace Cyclestreets
         // Use "" to let user Phone Language selection determine locale.
         public static String appForceCulture = ""; //"qps-PLOC";
 
-        public static string hereAppID = "zgcciiZ696xHUiuoyJZi";
-        public static string hereAppToken = "tH8mLbASkG9oz6j8DuXn7A";
+        public static string hereAppID = @"zgcciiZ696xHUiuoyJZi";
+        public static string hereAppToken = @"tH8mLbASkG9oz6j8DuXn7A";
 
         public static string apiKey = "d2ff10bbbded8e86";
 
@@ -106,7 +106,6 @@ namespace Cyclestreets
 				PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;
 			}*/
 
-            ReverseGeocodeQueryManager mgr = new ReverseGeocodeQueryManager();
             SettingManager smgr = new SettingManager();
 
             if (smgr.GetBoolValue(@"PreventSleep", true))
