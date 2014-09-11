@@ -16,7 +16,7 @@ using Windows.Devices.Geolocation;
 
 namespace Cyclestreets.CustomClasses
 {
-    public partial class CycleStreetsMap : UserControl
+    public partial class CycleStreetsMap : UserControl, IDisposable
     {
         // Use this from XAML to control whether animation is on or off
         #region DefaultPlan Dependency Property
@@ -58,6 +58,10 @@ namespace Cyclestreets.CustomClasses
             InitializeComponent();
 
             LocationManager.Instance.PositionChanged += positionChangedHandler;
+        }
+                public void Dispose()
+        {
+            LocationManager.Instance.PositionChanged -= positionChangedHandler;
         }
 
         private void Map_Loaded(object sender, RoutedEventArgs e)

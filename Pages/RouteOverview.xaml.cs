@@ -55,6 +55,34 @@ namespace Cyclestreets.Pages
                             }
                             break;
                         }
+                    case "leisure":
+                        {
+                            int duration = -1;
+                            int distance = -1;
+                            string poiTypes = null;
+
+                            var rm = SimpleIoc.Default.GetInstance<RouteManager>();
+                            if (NavigationContext.QueryString.ContainsKey(@"duration"))
+                                duration = int.Parse(NavigationContext.QueryString[@"duration"]);
+                            if (NavigationContext.QueryString.ContainsKey(@"distance"))
+                                distance = int.Parse(NavigationContext.QueryString[@"distance"]);
+                            if (NavigationContext.QueryString.ContainsKey(@"poitypes"))
+                                poiTypes = NavigationContext.QueryString[@"poitypes"];
+
+                            bool result = await rm.FindLeisureRoute(duration,distance,poiTypes);
+                            if (!result)
+                            {
+                                MarkedUp.AnalyticClient.Error(@"Route Planning Error");
+
+                                MessageBox.Show(AppResources.RouteParseError);
+                            }
+                            else
+                            {
+                                if (_mapReady)
+                                    StartRouting();
+                            }
+                            break;
+                        }
                 }
             }
         }

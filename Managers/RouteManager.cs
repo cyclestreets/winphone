@@ -167,6 +167,56 @@ namespace Cyclestreets.Managers
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="targetTimeSeconds"></param>
+        /// <param name="targetMiles"></param>
+        /// <param name="poiNames">Comma seperated list of points of interest to try and apss through</param>
+        /// <returns></returns>
+        public Task<bool> FindLeisureRoute(int targetTimeSeconds = -1, int targetMiles = -1, string poiNames = null)
+        {
+            TaskCompletionSource<bool> tcs1 = new TaskCompletionSource<bool>();
+            Task<bool> t1 = tcs1.Task;
+
+            // Clear the cache
+            _cachedRouteData = null;
+
+            string speedSetting = SettingManager.instance.GetStringValue(@"cycleSpeed", @"12mph");
+
+            int speed = Util.getSpeedFromString(speedSetting);
+            const int useDom = 0; // 0=xml 1=gml
+
+            var client = new RestClient("http://www.cyclestreets.net/api");
+            var request = new RestRequest("journey.json", Method.GET);
+            request.AddParameter("key", App.apiKey);
+            request.AddParameter("useDom", useDom);
+            request.AddParameter("plan", "leisure");
+            request.AddParameter("itinerarypoints", String.Format(@"{0},{1}",LocationManager.Instance.MyGeoPosition.Coordinate.Longitude, LocationManager.Instance.MyGeoPosition.Coordinate.Latitude));
+            request.AddParameter("speed", speed.ToString());
+            if (targetTimeSeconds != -1)
+                request.AddParameter("duration", (targetTimeSeconds * 60).ToString());
+            else
+                request.AddParameter("distance", ((int)((double)targetMiles * 1609.344)).ToString());
+            if ( !string.IsNullOrWhiteSpace(poiNames))
+                request.AddParameter("poitypes", poiNames);
+
+            IsBusy = true;
+
+            // execute the request
+            client.ExecuteAsync(request, r =>
+            {
+                string result = r.Content;
+
+                bool res = ParseRouteData(result, "balanced", true);
+
+                IsBusy = false;
+                tcs1.SetResult(res);
+            });
+
+            return t1;
+        }
+
         public Task<bool> FindRoute(string routeType, bool newRoute = true)
         {
             TaskCompletionSource<bool> tcs1 = new TaskCompletionSource<bool>();

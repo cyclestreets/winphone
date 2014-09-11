@@ -104,24 +104,21 @@ namespace Cyclestreets.Pages
 
 			if( LocationManager.Instance.MyGeoPosition != null )
 			{
-				App.networkStatus.NetworkIsBusy = true;
-
-				Geoposition coord = LocationManager.Instance.MyGeoPosition;
-
-				string extra;
+                
+                string extra;
 				if( ( (ListBoxItem)routeType.SelectedItem ).Content.Equals( "Target Time" ) )
 				{
 					int val = 0;
 					int.TryParse( valueEntry.Text, out val );
 
-					extra = "&duration=" + ( val * 60 );
+					extra = "&duration=" + val;
 				}
 				else
 				{
 					int val = 0;
 					int.TryParse( valueEntry.Text, out val );
 
-					extra = "&distance=" + (int)( val * 1609.344 );
+					extra = "&distance=" + val;
 				}
 				string poiNames = "";
 				foreach( POIItem item in items )
@@ -131,17 +128,10 @@ namespace Cyclestreets.Pages
 				}
 				poiNames = HttpUtility.UrlEncode( poiNames.TrimEnd( ',' ) );
 
-				string speedSetting = SettingManager.instance.GetStringValue( @"cycleSpeed", @"12mph" );
-				int speed = Util.getSpeedFromString( speedSetting );
-
 				if( !string.IsNullOrWhiteSpace( poiNames ) )
 					extra += "&poitypes=" + poiNames;
 
-				_request = new AsyncWebRequest( "http://www.cyclestreets.net/api/journey.json?key=" + App.apiKey + "&plan=leisure&itinerarypoints=" + coord.Coordinate.Longitude + "," + coord.Coordinate.Latitude + "&speed=" + speed + extra, RouteFound );
-				_request.Start();
-
-				pleaseWait.IsOpen = true;
-				popupPanel.Width = Application.Current.Host.Content.ActualWidth;
+                NavigationService.Navigate(new Uri("/Pages/RouteOverview.xaml?mode=leisure" + extra, UriKind.Relative));
 			}
 			else
 			{
