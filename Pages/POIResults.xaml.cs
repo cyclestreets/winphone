@@ -6,6 +6,9 @@ using System.Text;
 using System.Xml.Linq;
 using Cyclestreets.Objects;
 using Cyclestreets.Resources;
+using Newtonsoft.Json.Linq;
+using MarkedUp;
+using System.Windows;
 
 namespace Cyclestreets.Pages
 {
@@ -30,7 +33,7 @@ namespace Cyclestreets.Pages
 
 			string poiName = NavigationContext.QueryString[ @"POIName" ];
 
-			AsyncWebRequest request = new AsyncWebRequest( string.Format(@"http://www.cyclestreets.net/api/pois.xml?key={0}&type={1}&longitude={2}&latitude={3}&radius=25", App.apiKey, poiName, _center.Longitude, _center.Latitude), PoiResultsFound );
+			AsyncWebRequest request = new AsyncWebRequest( string.Format(@"http://www.cyclestreets.net/api/pois.json?key={0}&type={1}&longitude={2}&latitude={3}&radius=25", App.apiKey, poiName, _center.Longitude, _center.Latitude), PoiResultsFound );
 			request.Start();
 
 			App.networkStatus.NetworkIsBusy = true;
@@ -41,31 +44,38 @@ namespace Cyclestreets.Pages
 			if( data == null )
 				return;
 
+
 			UTF8Encoding enc = new UTF8Encoding();
 			string str = enc.GetString( data, 0, data.Length );
 
-			XDocument xml = XDocument.Parse( str.Trim() );
+            JObject o = null;
+            try
+            {
+                o = JObject.Parse(str);
+            }
+            catch (Exception ex)
+            {
+                AnalyticClient.Error("Could not parse JSON " + str + " " + ex.Message);
+                MessageBox.Show("Could not parse location data information from server. Please let us know about this error with what you were typing in the search box to cause this problem.");
+            }
 
-			var poi = xml.Descendants( @"poi" )
-									.Where( e => e.Parent != null && e.Parent.Name.LocalName == "pois" );
-			Pois = new ObservableCollection<POI>();
-			int id = 1;
-			const string col1 = "#7F000000";
-			const string col2 = "#3F000000";
-			bool swap = true;
-			foreach( XElement p in poi )
-			{
+            if (o == null) return;
+            JArray results = (JArray)o[@"pois"]["poi"];
+            Pois = new ObservableCollection<POI>();
+            int id = 1;
+            const string col1 = "#7F000000";
+            const string col2 = "#3F000000";
+            bool swap = true;
+            foreach( var poi in results )
+            {
 				POI item = new POI();
-			    var xElement = p.Element( @"name" );
-			    if (xElement != null) item.Name = xElement.Value;
+                item.Name = poi[@"name"].ToString();
 			    GeoCoordinate g = new GeoCoordinate();
-			    var element = p.Element( @"longitude" );
-			    if (element != null) g.Longitude = float.Parse( element.Value );
-			    var xElement1 = p.Element( @"latitude" );
-			    if (xElement1 != null) g.Latitude = float.Parse( xElement1.Value );
+                g.Longitude = float.Parse(poi[@"longitude"].ToString());
+                g.Latitude = float.Parse(poi[@"latitude"].ToString());
 			    item.Position = g;
 				double dist = _center.GetDistanceTo( item.Position ) * 0.000621371192;
-				item.Distance = dist.ToString( @"0.00" ) + AppResources.MetresShort;
+				item.Distance = String.Format(AppResources.MetresShort,dist.ToString( @"0.00" ));
 				item.PinID = "" + ( id++ );
 				item.BgColour = swap ? col1 : col2;
 				swap = !swap;
@@ -73,8 +83,7 @@ namespace Cyclestreets.Pages
 			}
 
 			poiList.ItemsSource = Pois;
-
-			App.networkStatus.NetworkIsBusy = true;
+            App.networkStatus.NetworkIsBusy = false;
 		}
 
 		private void poiList_SelectionChanged( object sender, System.Windows.Controls.SelectionChangedEventArgs e )

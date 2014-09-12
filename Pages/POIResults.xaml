@@ -34,18 +34,16 @@
 							<DataTemplate>
 								<Grid Margin="0" Background="{Binding BGColour}">
 									<Grid.ColumnDefinitions>
-										<ColumnDefinition Width="30"/>
+										<ColumnDefinition Width="40"/>
 										<ColumnDefinition/>
 									</Grid.ColumnDefinitions>
 									<Grid.RowDefinitions>
 										<RowDefinition/>
 										<RowDefinition/>
-										<RowDefinition/>
 									</Grid.RowDefinitions>
-									<TextBlock x:Name="title" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Name}" VerticalAlignment="Top" Margin="5" FontSize="28" Grid.Column="1" />
-									<TextBlock x:Name="location" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Location}" VerticalAlignment="Top" Margin="5" Grid.Row="1" Grid.Column="1" />
-									<TextBlock x:Name="distance" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Distance}" VerticalAlignment="Top" Margin="5" Grid.Row="2" Grid.Column="1"/>
-									<Toolkit:Pushpin Content="{Binding PinID}" HorizontalAlignment="Center" Margin="0,16" VerticalAlignment="Center" Grid.RowSpan="3" Height="60" Width="29"/>
+									<TextBlock x:Name="title" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Name}" VerticalAlignment="Top" Margin="5" FontSize="28" Grid.Column="1" Foreground="White" />
+									<TextBlock x:Name="distance" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Distance}" VerticalAlignment="Top" Margin="5" Grid.Row="2" Grid.Column="1" FontSize="12" Foreground="#FF787878"/>
+									<Toolkit:Pushpin Content="{Binding PinID}" HorizontalAlignment="Center" Margin="0,16" VerticalAlignment="Center" Grid.RowSpan="3" Height="60" Width="29" Background="White" Foreground="Black"/>
 									<!-- Main List Item Template Here -->
 								</Grid>
 							</DataTemplate>

@@ -6,7 +6,7 @@ using Microsoft.Phone.Maps.Services;
 
 namespace Cyclestreets.Objects
 {
-    public class POI : BindableBase, ReverseGeocodeHandler
+    public class POI : BindableBase
     {
         public string Name { get; set; }
 
@@ -17,20 +17,12 @@ namespace Cyclestreets.Objects
             set
             {
                 _position = value;
-
-                ReverseGeocodeQueryManager.Instance.Add( this );
             }
         }
 
         public GeoCoordinate GetGeoCoordinate()
         {
             return _position;
-        }
-
-        public void geoQ_QueryCompleted( object sender, QueryCompletedEventArgs<IList<MapLocation>> e )
-        {
-            MapLocation loc = e.Result[ 0 ];
-            Location = loc.Information.Address.Street + ", " + loc.Information.Address.PostalCode;
         }
 
         public string Distance { get; set; }

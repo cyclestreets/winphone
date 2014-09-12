@@ -269,6 +269,8 @@ namespace Cyclestreets.CustomClasses
         {
             MyMap.Layers.Add(l);
         }
+
+        public double ZoomLevel { get { return MyMap.ZoomLevel; } set { MyMap.ZoomLevel = value; } }
     }
 }
 
