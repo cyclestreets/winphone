@@ -236,9 +236,8 @@ namespace Cyclestreets.Pages
 					    Longitude = float.Parse(NavigationContext.QueryString["longitude"]),
 					    Latitude = float.Parse(NavigationContext.QueryString["latitude"])
 					};
-				    //MyMap.Center = center;
-					//MyMap.ZoomLevel = 16;
-                    //FIXME
+				    MyMap.Center = center;
+					MyMap.ZoomLevel = 16;
 
 					Selected = center;
 				}
@@ -311,6 +310,8 @@ namespace Cyclestreets.Pages
 		    pp.Content = p.Name;
 
 		    Selected = p.GetGeoCoordinate();
+
+            e.Handled = true;
 		}
 
 
