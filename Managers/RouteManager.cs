@@ -62,11 +62,14 @@ namespace Cyclestreets.Managers
         public void AddWaypoint(GeoCoordinate c)
         {
             _waypoints.Push(c);
+            OnPropertyChanged("ReadyToPlanRoute");
+
         }
 
         public void RemoveWaypoint(GeoCoordinate geoCoordinate)
         {
             _waypoints.Remove(geoCoordinate);
+            OnPropertyChanged("ReadyToPlanRoute");
         }
 
         public List<RouteSection> CurrentRoute
@@ -192,13 +195,13 @@ namespace Cyclestreets.Managers
             request.AddParameter("key", App.apiKey);
             request.AddParameter("useDom", useDom);
             request.AddParameter("plan", "leisure");
-            request.AddParameter("itinerarypoints", String.Format(@"{0},{1}",LocationManager.Instance.MyGeoPosition.Coordinate.Longitude, LocationManager.Instance.MyGeoPosition.Coordinate.Latitude));
+            request.AddParameter("itinerarypoints", String.Format(@"{0},{1}", LocationManager.Instance.MyGeoPosition.Coordinate.Longitude, LocationManager.Instance.MyGeoPosition.Coordinate.Latitude));
             request.AddParameter("speed", speed.ToString());
             if (targetTimeSeconds != -1)
                 request.AddParameter("duration", (targetTimeSeconds * 60).ToString());
             else
                 request.AddParameter("distance", ((int)((double)targetMiles * 1609.344)).ToString());
-            if ( !string.IsNullOrWhiteSpace(poiNames))
+            if (!string.IsNullOrWhiteSpace(poiNames))
                 request.AddParameter("poitypes", poiNames);
 
             IsBusy = true;
@@ -414,7 +417,7 @@ namespace Cyclestreets.Managers
 
         internal Task<bool> RouteTo(double longitude, double latitude, string routeType)
         {
-            if ( LocationManager.Instance.MyGeoPosition == null )
+            if (LocationManager.Instance.MyGeoPosition == null)
             {
                 Util.showLocationDialog();
                 return null;

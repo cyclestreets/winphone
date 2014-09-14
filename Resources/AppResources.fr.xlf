@@ -151,6 +151,10 @@ Pourquoi ne pas nous donner une cote 5 étoiles pour montrer votre appréciation
           <source>No results in nearby area</source>
           <target state="new">No results in nearby area</target>
         </trans-unit>
+        <trans-unit id="Resx/GPS_Error" translate="yes" xml:space="preserve">
+          <source>GPS Error</source>
+          <target state="new">GPS Error</target>
+        </trans-unit>
         <trans-unit id="Resx/InvalidLocation" translate="yes" xml:space="preserve">
           <source>Invalid Location</source>
           <target state="new">Invalid Location</target>

@@ -1,7 +1,6 @@
 ﻿// Satnav mode
 // Prompt feedback
 
-using System.Diagnostics;
 using Cyclestreets.Annotations;
 using Cyclestreets.Managers;
 using Cyclestreets.Objects;
@@ -20,6 +19,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Device.Location;
+using System.Diagnostics;
 using System.Net;
 using System.Windows;
 using System.Windows.Data;
@@ -65,7 +65,8 @@ namespace Cyclestreets.Pages
 			new ListBoxPair(AppResources.QuietestRoute, @"quietest") 
 		};
 
-        [NotNull] public static readonly String[] CycleSpeed = { @"10mph", @"12mph", @"15mph" };
+        [NotNull]
+        public static readonly String[] CycleSpeed = { @"10mph", @"12mph", @"15mph" };
         public static readonly String[] EnabledDisabled = { AppResources.Enabled, AppResources.Disabled };
 
         public DirectionsPage()
@@ -74,40 +75,15 @@ namespace Cyclestreets.Pages
 
             //progress.DataContext = App.networkStatus;
 
-            // hack. See here http://stackoverflow.com/questions/5334574/applicationbariconbutton-is-null/5334703#5334703
-            saveRoute = ApplicationBar.MenuItems[0] as ApplicationBarMenuItem;
-            Debug.Assert(saveRoute != null, @"saveRoute != null");
-            saveRoute.Text = AppResources.SaveRoute;
-            loadRoute = ApplicationBar.MenuItems[1] as ApplicationBarMenuItem;
-            Debug.Assert(loadRoute != null, @"loadRoute != null");
-            loadRoute.Text = AppResources.LoadRoute;
-            settings = ApplicationBar.MenuItems[2] as ApplicationBarMenuItem;
-            Debug.Assert(settings != null, @"settings != null");
-            settings.Text = AppResources.Settings;
-            privacy = ApplicationBar.MenuItems[3] as ApplicationBarMenuItem;
-            Debug.Assert(privacy != null, @"privacy != null");
-            privacy.Text = AppResources.PrivacyPolicy;
-            sendFeedback = ApplicationBar.MenuItems[4] as ApplicationBarMenuItem;
-            Debug.Assert(sendFeedback != null, @"sendFeedback != null");
-            sendFeedback.Text = AppResources.FindRoute;
 
-            saveRoute.IsEnabled = false;
 
             // Setup route type dropdown
-            string plan = SettingManager.instance.GetStringValue(@"defaultRouteType", @"balanced");
-            routeTypePicker.ItemsSource = RouteType;
-            routeTypePicker.DisplayMemberPath = @"DisplayName";
-            int idx = Array.FindIndex(RouteType, v => v.Value.Equals(plan));
-            routeTypePicker.SelectedIndex = idx == -1 ? 0 : idx;
 
-            _currentPlan = plan.Replace(@" route", "");
 
             _geoQ = new GeocodeQuery();
             _geoQ.QueryCompleted += geoQ_QueryCompleted;
 
             ClearCurrentPosition();
-
-            pleaseWait.Width = Application.Current.Host.Content.ActualWidth;
 
             startPoint.Populating += StartPointOnPopulating;
 
@@ -160,14 +136,12 @@ namespace Cyclestreets.Pages
                 _hideRouteOptions = (NavigationContext.QueryString[@"plan"].Equals(@"leisure"));
             }
 
-            routeTypePicker.Visibility = _hideRouteOptions ? Visibility.Collapsed : Visibility.Visible;
 
             RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
             var newplan = rm.HasCachedRoute(_currentPlan);
             if (newplan == null) return;
 
             rm.IsBusy = true;
-            pleaseWait.Width = Width;
         }
 
         private void SetupTutorial()
@@ -260,7 +234,7 @@ namespace Cyclestreets.Pages
                 string searchString = geo.SearchTerm;
 
                 WebClient wc = new WebClient();
-                string location = String.Format(@"{0},{1}",geo.GeoCoordinate.Latitude, geo.GeoCoordinate.Longitude);
+                string location = String.Format(@"{0},{1}", geo.GeoCoordinate.Latitude, geo.GeoCoordinate.Longitude);
                 location = HttpUtility.UrlEncode(location);
 
 #if DEBUG
@@ -307,10 +281,8 @@ namespace Cyclestreets.Pages
 
         private async void cursorPos_Click(object sender, EventArgs e)
         {
-            MapLocation loc = await GeoUtils.StartReverseGeocode(MyMap.Center);
-            SetCurrentPosition(loc);
-
-
+            //MapLocation loc = await GeoUtils.StartReverseGeocode(MyMap.Center);
+            SetCurrentPosition(MyMap.Center);
 
             confirmWaypoint_Click();
         }
@@ -345,7 +317,7 @@ namespace Cyclestreets.Pages
             pp.BorderThickness = new Thickness(200);
             pp.Tap += PinTapped;
 
-            MapOverlay overlay = new MapOverlay {Content = pp};
+            MapOverlay overlay = new MapOverlay { Content = pp };
             pp.GeoCoordinate = _current;
             overlay.GeoCoordinate = _current;
             overlay.PositionOrigin = new Point(0.3, 1.0);
@@ -422,7 +394,7 @@ namespace Cyclestreets.Pages
         {
             if (loc == null)
             {
-                MessageBox.Show( AppResources.NoLocationMsg, AppResources.InvalidLocation,
+                MessageBox.Show(AppResources.NoLocationMsg, AppResources.InvalidLocation,
                    MessageBoxButton.OK);
                 return;
             }
@@ -432,7 +404,7 @@ namespace Cyclestreets.Pages
             {
                 // Set the name in the box without looking it up
                 startPoint.Populating -= StartPointOnPopulating;
-                startPoint.Text = String.Format(@"{0} {1}, {2}, {3}", loc.Information.Name, loc.Information.Address.Street, loc.Information.Address.City , loc.Information.Address.PostalCode);
+                startPoint.Text = String.Format(@"{0} {1}, {2}, {3}", loc.Information.Name, loc.Information.Address.Street, loc.Information.Address.City, loc.Information.Address.PostalCode);
                 startPoint.Populating += StartPointOnPopulating;
             });
         }
@@ -874,8 +846,6 @@ namespace Cyclestreets.Pages
                 PhoneApplicationService.Current.State[@"loadedRoute"] = null;
             }
 
-            routeTypePicker.Visibility = _hideRouteOptions ? Visibility.Collapsed : Visibility.Visible;
-
             positionChangedHandler(null, null);
 
             SetMapStyle();
@@ -897,7 +867,6 @@ namespace Cyclestreets.Pages
                 MapUtils.PlotCachedRoute(MyMap, _currentPlan);
 
                 rm.IsBusy = false;
-                pleaseWait.Width = Width;
             }
         }
 
@@ -940,7 +909,7 @@ namespace Cyclestreets.Pages
                         // This is a postcode
                         string newPostcodeEnd = text.Substring(text.Length - 3, 3);
                         string newPostcodeStart = text.Substring(0, text.Length - 3);
-                        box.Text = String.Format(@"{0} {1}",newPostcodeStart , newPostcodeEnd);
+                        box.Text = String.Format(@"{0} {1}", newPostcodeStart, newPostcodeEnd);
                     }
                 }
                 //StartPointOnPopulating(box.Text, box);
@@ -1000,7 +969,7 @@ namespace Cyclestreets.Pages
                                 Width = 20,
                                 Opacity = 30
                             };
-                            Binding myBinding = new Binding(@"Visible") {Source = new MyPositionDataSource(MyMap)};
+                            Binding myBinding = new Binding(@"Visible") { Source = new MyPositionDataSource(MyMap) };
                             myCircle.Visibility = Visibility.Visible;
                             myCircle.SetBinding(VisibilityProperty, myBinding);
 
@@ -1064,7 +1033,6 @@ namespace Cyclestreets.Pages
 
         private void btn_cancel_Click(object sender, RoutedEventArgs e)
         {
-            pleaseWait.IsOpen = false;
             App.networkStatus.NetworkIsBusy = false;
         }
 
@@ -1080,12 +1048,8 @@ namespace Cyclestreets.Pages
                 return;
             }
 
-            App.networkStatus.NetworkIsBusy = true;
+            SetCurrentPosition(coord);
 
-            MapLocation loc = await GeoUtils.StartReverseGeocode(coord);
-
-            // Add a waypoint automatically
-            _current = loc.GeoCoordinate;
             confirmWaypoint_Click();
         }
 
@@ -1110,7 +1074,6 @@ namespace Cyclestreets.Pages
                     routeTutorialRouteType.Visibility = Visibility.Visible;
 
                 rm.IsBusy = false;
-                pleaseWait.Width = Width;
 
                 NavigationService.Navigate(new Uri("/Pages/RouteOverview.xaml", UriKind.Relative));
             }
@@ -1118,15 +1081,13 @@ namespace Cyclestreets.Pages
 
 
 
-        private async void myLocationBorder_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        private void myLocationBorder_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             if (LocationManager.Instance.MyGeoPosition != null)
             {
                 GeoCoordinate geo = GeoUtils.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
-                MapLocation loc = await GeoUtils.StartReverseGeocode(geo);
-
-                SetCurrentPosition(loc);
-                if ( loc.GeoCoordinate.HorizontalAccuracy < 60 )
+                SetCurrentPosition(geo);
+                if (geo.HorizontalAccuracy < 60)
                     confirmWaypoint_Click();
                 else
                 {

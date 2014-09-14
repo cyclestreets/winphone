@@ -450,4 +450,7 @@ Why not give us a 5 star rating to show your appreciation?</value>
   <data name="NoLocalResults" xml:space="preserve">
     <value>No results in nearby area</value>
   </data>
+  <data name="GPS_Error" xml:space="preserve">
+    <value>GPS Error</value>
+  </data>
 </root>

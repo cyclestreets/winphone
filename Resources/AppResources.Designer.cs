@@ -369,6 +369,15 @@ namespace Cyclestreets.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to GPS Error.
+        /// </summary>
+        public static string GPS_Error {
+            get {
+                return ResourceManager.GetString("GPS_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid Location.
         /// </summary>
         public static string InvalidLocation {
