@@ -192,5 +192,36 @@ namespace Cyclestreets.Pages
         {
             NavigationService.Navigate(new Uri("/Pages/LiveRide.xaml", UriKind.RelativeOrAbsolute));
         }
+
+        /*private void arrowLeft_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
+            rm.CurrentStep--;
+            if (rm.CurrentStep <= 0)
+            {
+                MyMap.SetView(rm.GetRouteBounds());
+                MyMap.Pitch = 0;
+                MyMap.Heading = 0;
+
+                SetMapStyle();
+            }
+            else
+            {
+                MyMap.SetView(rm.CurrentGeoCoordinate, 20, rm.CurrentBearing, 75);
+
+                MyMap.TileSources.Clear();
+            }
+
+        }
+
+        private void arrowRight_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
+            rm.CurrentStep++;
+
+            MyMap.SetView(rm.CurrentGeoCoordinate, 20, rm.CurrentBearing, 75);
+
+            MyMap.TileSources.Clear();
+        }*/
     }
 }

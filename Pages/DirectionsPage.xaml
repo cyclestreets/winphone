@@ -1,4 +1,4 @@
-﻿<phone:PhoneApplicationPage
+﻿<phone:PhoneApplicationPage xmlns:CustomClasses="clr-namespace:Cyclestreets.CustomClasses" 
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
@@ -100,8 +100,9 @@
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="65"/>
             <RowDefinition/>
+            <RowDefinition Height="65"/>
         </Grid.RowDefinitions>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="VisualStateGroup">
@@ -193,11 +194,7 @@
         <VisualStateManager.CustomVisualStateManager>
             <ec:ExtendedVisualStateManager/>
         </VisualStateManager.CustomVisualStateManager>
-        <Rectangle Fill="#FF3232A2" Stroke="Black" Grid.Row="1" Visibility="Collapsed"/>
-        <maps:Map x:Name="MyMap" Margin="0" Grid.Row="1" ZoomLevel="5.684" Loaded="MyMap_Loaded" LandmarksEnabled="True" Tap="MyMap_Tap"></maps:Map>
-        <Image x:Name="crosshair" HorizontalAlignment="Center" VerticalAlignment="Center" Source="/Cyclestreets;component/Assets/crosshair.png" Height="150" Width="150" Grid.Row="1" IsHitTestVisible="False"/>
-        <es:Arc x:Name="myLocationIndicator" ArcThickness="5" ArcThicknessUnit="Pixel" EndAngle="360" HorizontalAlignment="Left" Height="31.985" Margin="0" Grid.Row="1" Stretch="None" Stroke="Black" StartAngle="0" UseLayoutRounding="False" VerticalAlignment="Bottom" Width="31.985" Visibility="Collapsed" Fill="#FF000000"/>
-        <Grid x:Name="locationEntry" VerticalAlignment="Top" Margin="0" RenderTransformOrigin="0.5,0.5" Grid.Row="1">
+        <Grid x:Name="locationEntry" VerticalAlignment="Top" Margin="0" RenderTransformOrigin="0.5,0.5" Height="65">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="59*"/>
                 <ColumnDefinition Width="21*"/>
@@ -226,7 +223,7 @@
                 <Image Source="/Cyclestreets;component/Assets/crosshair_button.png" Width="30"/>
             </Button>
         </Grid>
-        <Grid x:Name="fakeAppBar" VerticalAlignment="Bottom" Margin="0" RenderTransformOrigin="0.5,0.5" Grid.Row="1" Height="60" Background="{StaticResource PhoneChromeBrush}">
+        <Grid x:Name="fakeAppBar" Margin="0" RenderTransformOrigin="0.5,0.5" Grid.Row="2" Background="{StaticResource PhoneChromeBrush}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
@@ -249,42 +246,36 @@
                 </Grid>
             </Border>
         </Grid>
-        <edc:Callout x:Name="routeTutorial1" AnchorPoint="0.021,-0.246" CalloutStyle="Rectangle" Content="Tutorial: Tap these boxes to close and continue&#xA;You can add route markers in four ways.&#xA;You can type in this box..." FontSize="14.666999816894531" Height="174" Grid.Row="1" Width="248" Cursor="Arrow" Padding="10,0" Tap="routeTutorial1_Tap" Margin="67,76,165,499" Visibility="Collapsed">
+        <Rectangle Fill="#FF3232A2" Stroke="Black" Grid.Row="1"/>
+        <CustomClasses:CycleStreetsMap x:Name="MyMap" Margin="0" Grid.Row="1" ZoomLevel="5.684" Tap="MyMap_Tap"/>
+        <Image x:Name="crosshair" HorizontalAlignment="Center" VerticalAlignment="Center" Source="/Cyclestreets;component/Assets/crosshair.png" Height="150" Width="150" IsHitTestVisible="False" Grid.Row="1"/>
+        <es:Arc x:Name="myLocationIndicator" ArcThickness="5" ArcThicknessUnit="Pixel" EndAngle="360" HorizontalAlignment="Left" Height="31.985" Margin="0" Grid.Row="1" Stretch="None" Stroke="Black" StartAngle="0" UseLayoutRounding="False" VerticalAlignment="Bottom" Width="31.985" Visibility="Collapsed" Fill="#FF000000"/>
+        <edc:Callout x:Name="routeTutorial1" AnchorPoint="0.075,-0.375" CalloutStyle="Rectangle" Content="Tutorial: Tap these boxes to close and continue&#xA;You can add route markers in four ways.&#xA;You can type in this box..." FontSize="14.666999816894531" Grid.Row="1" Cursor="Arrow" Padding="10,0" Tap="routeTutorial1_Tap" Margin="67,22,165,470" Visibility="Collapsed">
             <edc:Callout.Fill>
                 <SolidColorBrush Color="{StaticResource PhoneBackgroundColor}"/>
             </edc:Callout.Fill>
         </edc:Callout>
-        <edc:Callout x:Name="routeTutorial2" AnchorPoint="0.07,1.341" CalloutStyle="Rectangle" Content="{Binding LocalizedResources.Tutorial2, Source={StaticResource LocalizedStrings}}" FontSize="14.666999816894531" HorizontalAlignment="Left" Height="100" Margin="67,0,0,81" Grid.Row="1" VerticalAlignment="Bottom" Width="248" Cursor="Arrow" Padding="10,0" Tap="routeTutorial2_Tap" Visibility="Collapsed">
+        <edc:Callout x:Name="routeTutorial2" AnchorPoint="0.07,1.341" CalloutStyle="Rectangle" Content="{Binding LocalizedResources.Tutorial2, Source={StaticResource LocalizedStrings}}" FontSize="14.666999816894531" HorizontalAlignment="Left" Height="100" Margin="67,0,0,21" Grid.Row="1" VerticalAlignment="Bottom" Width="248" Cursor="Arrow" Padding="10,0" Tap="routeTutorial2_Tap" Visibility="Collapsed">
             <edc:Callout.Fill>
                 <SolidColorBrush Color="{StaticResource PhoneBackgroundColor}"/>
             </edc:Callout.Fill>
         </edc:Callout>
-        <edc:Callout x:Name="routeTutorial3" AnchorPoint="0.955,-0.329" CalloutStyle="Rectangle" Content="{Binding LocalizedResources.Tutorial3, Source={StaticResource LocalizedStrings}}" FontSize="14.666999816894531" HorizontalAlignment="Left" Height="128" Margin="202,0,0,545" Grid.Row="1" VerticalAlignment="Bottom" Width="248" Cursor="Arrow" Padding="10" Tap="routeTutorial3_Tap" Visibility="Collapsed">
+        <edc:Callout x:Name="routeTutorial3" AnchorPoint="0.955,-0.329" CalloutStyle="Rectangle" Content="{Binding LocalizedResources.Tutorial3, Source={StaticResource LocalizedStrings}}" FontSize="14.666999816894531" HorizontalAlignment="Left" Height="128" Margin="187,0,0,505" VerticalAlignment="Bottom" Width="248" Cursor="Arrow" Padding="10" Tap="routeTutorial3_Tap" Grid.Row="1" Visibility="Collapsed">
             <edc:Callout.Fill>
                 <SolidColorBrush Color="{StaticResource PhoneBackgroundColor}"/>
             </edc:Callout.Fill>
         </edc:Callout>
-        <edc:Callout x:Name="routeTutorial4" AnchorPoint="0.149,1.21" CalloutStyle="Rectangle" Content="{Binding LocalizedResources.Tutorial4, Source={StaticResource LocalizedStrings}}" FontSize="14.666999816894531" HorizontalAlignment="Left" Height="60" Margin="105,0,0,455" Grid.Row="1" VerticalAlignment="Bottom" Width="280" Cursor="Arrow" Padding="10" Tap="routeTutorial4_Tap" Visibility="Collapsed">
+        <edc:Callout x:Name="routeTutorial4" AnchorPoint="-0.031,1.541" CalloutStyle="Rectangle" Content="{Binding LocalizedResources.Tutorial4, Source={StaticResource LocalizedStrings}}" FontSize="14.666999816894531" HorizontalAlignment="Left" Height="60" Margin="73,0,0,425" VerticalAlignment="Bottom" Width="280" Cursor="Arrow" Padding="10" Tap="routeTutorial4_Tap" Grid.Row="1" Visibility="Collapsed">
             <edc:Callout.Fill>
                 <SolidColorBrush Color="{StaticResource PhoneBackgroundColor}"/>
             </edc:Callout.Fill>
         </edc:Callout>
-        <edc:Callout x:Name="routeTutorial5" AnchorPoint="0.597,1.231" CalloutStyle="Rectangle" Content="{Binding LocalizedResources.Tutorial5, Source={StaticResource LocalizedStrings}}" FontSize="14.666999816894531" HorizontalAlignment="Left" Height="108" Margin="244,0,0,104" Grid.Row="1" VerticalAlignment="Bottom" Width="226" Cursor="Arrow" Padding="10" Tap="routeTutorial5_Tap" Visibility="Collapsed">
+        <edc:Callout x:Name="routeTutorial5" AnchorPoint="0.59,1.514" CalloutStyle="Rectangle" Content="{Binding LocalizedResources.Tutorial5, Source={StaticResource LocalizedStrings}}" FontSize="14.666999816894531" HorizontalAlignment="Left" Height="108" Margin="244,0,0,44" Grid.Row="1" VerticalAlignment="Bottom" Width="226" Cursor="Arrow" Padding="10" Tap="routeTutorial5_Tap" Visibility="Collapsed">
             <edc:Callout.Fill>
                 <SolidColorBrush Color="{StaticResource PhoneBackgroundColor}"/>
             </edc:Callout.Fill>
         </edc:Callout>
-        <edc:Callout x:Name="routeTutorialPin" AnchorPoint="0.597,1.231" CalloutStyle="Rectangle" Content="{Binding LocalizedResources.Tutorial6, Source={StaticResource LocalizedStrings}}" FontSize="14.666999816894531" HorizontalAlignment="Center" Height="63" Margin="127,237,127,392" Grid.Row="1" VerticalAlignment="Center" Width="226" Cursor="Arrow" Padding="10" Tap="routeTutorialPin_Tap" Visibility="Collapsed">
-            <edc:Callout.Fill>
-                <SolidColorBrush Color="{StaticResource PhoneBackgroundColor}"/>
-            </edc:Callout.Fill>
-        </edc:Callout>
-        <edc:Callout x:Name="routeTutorialRouteType" AnchorPoint="0.111,-0.444" CalloutStyle="Rectangle" Content="{Binding LocalizedResources.Tutorial7, Source={StaticResource LocalizedStrings}}" FontSize="14.666999816894531" HorizontalAlignment="Left" Height="104" Margin="108,87,146,0" Grid.Row="1" VerticalAlignment="Top" Width="226" Cursor="Arrow" Padding="10" Tap="routeTutorialRouteType_Tap" Visibility="Collapsed">
-            <edc:Callout.Fill>
-                <SolidColorBrush Color="{StaticResource PhoneBackgroundColor}"/>
-            </edc:Callout.Fill>
-        </edc:Callout>
-        <edc:Callout x:Name="routeTutorialRouteInfo" AnchorPoint="0.885,-0.433" CalloutStyle="Rectangle" Content="{Binding LocalizedResources.Tutorial8, Source={StaticResource LocalizedStrings}}" FontSize="14.666999816894531" HorizontalAlignment="Left" Height="104" Margin="224,87,0,0" Grid.Row="1" VerticalAlignment="Top" Width="226" Cursor="Arrow" Padding="10" Tap="routeTutorialRouteInfo_Tap" Visibility="Collapsed">
+        <edc:Callout x:Name="routeTutorialPin" AnchorPoint="0.509,2.149" CalloutStyle="Rectangle" Content="{Binding LocalizedResources.Tutorial6, Source={StaticResource LocalizedStrings}}" FontSize="14.666999816894531" HorizontalAlignment="Center" Height="63" Margin="127,181,127,394" Grid.Row="1" VerticalAlignment="Center" Width="226" Cursor="Arrow" Padding="10" Tap="routeTutorialPin_Tap" Visibility="Collapsed">
             <edc:Callout.Fill>
                 <SolidColorBrush Color="{StaticResource PhoneBackgroundColor}"/>
             </edc:Callout.Fill>
