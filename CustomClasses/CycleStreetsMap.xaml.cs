@@ -58,9 +58,25 @@ namespace Cyclestreets.CustomClasses
 
             LocationManager.Instance.PositionChanged += positionChangedHandler;
         }
-                public void Dispose()
+
+        ~CycleStreetsMap()
         {
             LocationManager.Instance.PositionChanged -= positionChangedHandler;
+            if (MyMap != null)
+            {
+                MyMap.ZoomLevelChanged -= MyMap_ZoomLevelChanged;
+                MyMap.Tap -= MyMap_Tap;
+            }
+        }
+
+        public void Dispose()
+        {
+            LocationManager.Instance.PositionChanged -= positionChangedHandler;
+            if (MyMap != null)
+            {
+                MyMap.ZoomLevelChanged -= MyMap_ZoomLevelChanged;
+                MyMap.Tap -= MyMap_Tap;
+            }
         }
 
         private void Map_Loaded(object sender, RoutedEventArgs e)
@@ -208,8 +224,11 @@ namespace Cyclestreets.CustomClasses
                 GeoCoordinate myCoordinate = GeoUtils.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
                 double metersPerPixels = (Math.Cos(myCoordinate.Latitude * Math.PI / 180) * 2 * Math.PI * 6378137) / (256 * Math.Pow(2, MyMap.ZoomLevel));
                 double radius = myAccuracy / metersPerPixels;
-                _accuracyEllipse.Width = radius * 2;
-                _accuracyEllipse.Height = radius * 2;
+                if (_accuracyEllipse != null)
+                {
+                    _accuracyEllipse.Width = radius * 2;
+                    _accuracyEllipse.Height = radius * 2;
+                }
             }
         }
 
