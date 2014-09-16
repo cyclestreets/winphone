@@ -32,13 +32,30 @@ namespace Cyclestreets.Pages
 
             _viewModel = SimpleIoc.Default.GetInstance<DirectionsPageViewModel>();
 
+            var rm = SimpleIoc.Default.GetInstance<RouteManager>();
             if (NavigationContext.QueryString.ContainsKey(@"mode"))
             {
                 switch(NavigationContext.QueryString[@"mode"])
                 {
+                    case "planroute":
+                        {
+                            bool result = await rm.FindRoute(_viewModel.CurrentPlan, true);
+                            if (!result)
+                            {
+                                MarkedUp.AnalyticClient.Error(@"Route Planning Error");
+
+                                MessageBox.Show(AppResources.RouteParseError);
+                            }
+                            else
+                            {
+                                if (_mapReady)
+                                    StartRouting();
+                            }
+                            break;
+                        }
                     case "routeTo":
                         {
-                            var rm = SimpleIoc.Default.GetInstance<RouteManager>();
+                            
                             bool result = await rm.RouteTo(double.Parse(NavigationContext.QueryString[@"longitude"]),
                                         double.Parse(NavigationContext.QueryString[@"latitude"]),
                                         _viewModel.CurrentPlan);
@@ -61,7 +78,6 @@ namespace Cyclestreets.Pages
                             int distance = -1;
                             string poiTypes = null;
 
-                            var rm = SimpleIoc.Default.GetInstance<RouteManager>();
                             if (NavigationContext.QueryString.ContainsKey(@"duration"))
                                 duration = int.Parse(NavigationContext.QueryString[@"duration"]);
                             if (NavigationContext.QueryString.ContainsKey(@"distance"))
@@ -150,6 +166,8 @@ namespace Cyclestreets.Pages
                 _viewModel.DisplayMap = true;
                 if (LocationManager.Instance.MyGeoPosition != null)
                 {
+                    MyMap.Pitch = 0;
+                    MyMap.Heading = 0;
                     MyMap.Center = GeoUtils.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
                     MyMap.ZoomLevel = 10;
                 }
@@ -169,6 +187,7 @@ namespace Cyclestreets.Pages
         {
             if (_viewModel.CurrentPlan == @"fastest")
                 return;
+
             _viewModel.CurrentPlan = @"fastest";
             StartRouting();
         }
@@ -180,7 +199,11 @@ namespace Cyclestreets.Pages
                 GeoCoordinate geo = GeoUtils.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
                 MapLocation loc = await GeoUtils.StartReverseGeocode(geo);
 
-                SmartDispatcher.BeginInvoke(() => MyMap.SetView(loc.GeoCoordinate, 16));
+                SmartDispatcher.BeginInvoke(() => {
+                       MyMap.Pitch = 0;
+                       MyMap.Heading = 0;
+                       MyMap.SetView(loc.GeoCoordinate, 16);
+                });
             }
             else
             {
@@ -193,35 +216,28 @@ namespace Cyclestreets.Pages
             NavigationService.Navigate(new Uri("/Pages/LiveRide.xaml", UriKind.RelativeOrAbsolute));
         }
 
-        /*private void arrowLeft_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        private void routeList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
-            rm.CurrentStep--;
-            if (rm.CurrentStep <= 0)
+            if (e.AddedItems.Count > 0)
             {
-                MyMap.SetView(rm.GetRouteBounds());
-                MyMap.Pitch = 0;
-                MyMap.Heading = 0;
+                RouteSection rs = e.AddedItems[0] as RouteSection;
+                if (rs != null)
+                {
+                    if ( rs is StartPoint )
+                    {
+                        var rm = SimpleIoc.Default.GetInstance<RouteManager>();
+                        MyMap.SetView(rm.GetRouteBounds());
+                        MyMap.Pitch = 0;
+                        MyMap.Heading = 0;
+                    }
+                    else if (rs.Points.Count > 0)
+                    {
+                        MyMap.SetView(rs.Points[0], 20, (rs.Bearing==null)?0:rs.Bearing, 75);
 
-                SetMapStyle();
+                        MyMap.TileSources.Clear();
+                    }
+                }
             }
-            else
-            {
-                MyMap.SetView(rm.CurrentGeoCoordinate, 20, rm.CurrentBearing, 75);
-
-                MyMap.TileSources.Clear();
-            }
-
         }
-
-        private void arrowRight_Tap(object sender, System.Windows.Input.GestureEventArgs e)
-        {
-            RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
-            rm.CurrentStep++;
-
-            MyMap.SetView(rm.CurrentGeoCoordinate, 20, rm.CurrentBearing, 75);
-
-            MyMap.TileSources.Clear();
-        }*/
     }
 }

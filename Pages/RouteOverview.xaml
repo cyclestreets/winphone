@@ -145,7 +145,7 @@
 			<Rectangle x:Name="fastestHighlight" Fill="{StaticResource PhoneAccentBrush}" Height="7" Stroke="Black" VerticalAlignment="Top" Grid.Column="2" Visibility="{Binding CurrentPlan, ConverterParameter=fastest, Converter={StaticResource RouteTypeVisibility}}"/>
 		</Grid>
 		<TextBlock Text="{Binding DirectionsPage.RouteManagerPtr.CurrentStepText, Mode=OneWay}" VerticalAlignment="Top" Grid.Row="3" Grid.ColumnSpan="2"/>
-		<phone:Pivot Grid.Row="3" Title="{Binding SelectedItem, RelativeSource={RelativeSource Self}}" Grid.ColumnSpan="2" Style="{StaticResource PivotStyle1}" ItemTemplate="{StaticResource RouteSectionTemplate}" ItemsSource="{Binding RouteManagerPtr.CurrentRoute}" HeaderTemplate="{StaticResource DataTemplate1}"/>
+		<phone:Pivot x:Name="routeList" Grid.Row="3" Title="{Binding SelectedItem, RelativeSource={RelativeSource Self}}" Grid.ColumnSpan="2" Style="{StaticResource PivotStyle1}" ItemTemplate="{StaticResource RouteSectionTemplate}" ItemsSource="{Binding RouteManagerPtr.CurrentRoute}" HeaderTemplate="{StaticResource DataTemplate1}" SelectionChanged="routeList_SelectionChanged"/>
 	</Grid>
 
 </phone:PhoneApplicationPage>

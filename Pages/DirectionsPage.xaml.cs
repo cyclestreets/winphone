@@ -827,10 +827,10 @@ namespace Cyclestreets.Pages
             confirmWaypoint_Click();
         }
 
-        private async void planRouteBorder_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        private void planRouteBorder_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
-            string defaultRouteTypeSetting = SettingManager.instance.GetStringValue(@"defaultRouteType", "Balanced");
+            /*string defaultRouteTypeSetting = SettingManager.instance.GetStringValue(@"defaultRouteType", "Balanced");
             bool result = await rm.FindRoute(defaultRouteTypeSetting);
             if (!result)
             {
@@ -849,7 +849,8 @@ namespace Cyclestreets.Pages
                 rm.IsBusy = false;
 
                 NavigationService.Navigate(new Uri("/Pages/RouteOverview.xaml", UriKind.Relative));
-            }
+            }*/
+            NavigationService.Navigate(new Uri("/Pages/RouteOverview.xaml?mode=planroute", UriKind.Relative));
         }
 
 
