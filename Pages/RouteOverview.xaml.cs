@@ -39,6 +39,7 @@ namespace Cyclestreets.Pages
                 {
                     case "planroute":
                         {
+                            _viewModel.CanChangeRouteType = true;
                             bool result = await rm.FindRoute(_viewModel.CurrentPlan, true);
                             if (!result)
                             {
@@ -55,7 +56,7 @@ namespace Cyclestreets.Pages
                         }
                     case "routeTo":
                         {
-                            
+                            _viewModel.CanChangeRouteType = true;
                             bool result = await rm.RouteTo(double.Parse(NavigationContext.QueryString[@"longitude"]),
                                         double.Parse(NavigationContext.QueryString[@"latitude"]),
                                         _viewModel.CurrentPlan);
@@ -78,6 +79,8 @@ namespace Cyclestreets.Pages
                             int distance = -1;
                             string poiTypes = null;
 
+                            _viewModel.CanChangeRouteType = false;
+
                             if (NavigationContext.QueryString.ContainsKey(@"duration"))
                                 duration = int.Parse(NavigationContext.QueryString[@"duration"]);
                             if (NavigationContext.QueryString.ContainsKey(@"distance"))
@@ -99,8 +102,13 @@ namespace Cyclestreets.Pages
                             }
                             break;
                         }
+                    default:
+                        _viewModel.CanChangeRouteType = true;
+                        break;
                 }
             }
+            else
+                _viewModel.CanChangeRouteType = true;
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)

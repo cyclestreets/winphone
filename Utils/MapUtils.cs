@@ -5,6 +5,7 @@ using Cyclestreets.Managers;
 using Cyclestreets.Pages;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Phone.Maps.Controls;
+using System.Diagnostics;
 
 namespace Cyclestreets.Utils
 {
@@ -14,12 +15,16 @@ namespace Cyclestreets.Utils
 
         public static void PlotCachedRoute(Map myMap, string currentPlan)
         {
+            Debug.Assert(myMap != null);
+
             RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
             myMap.MapElements.Clear();
 
             IEnumerable<RouteSection> sections = rm.GetRouteSections(currentPlan);
             foreach (var routeSection in sections)
             {
+                if (routeSection.Points == null)
+                    continue;
                 DrawMapMarker(myMap, routeSection.Points.ToArray(), routeSection.Walking ? Color.FromArgb(255, 0, 0, 0) : Color.FromArgb(255, 127, 0, 255), routeSection.Walking);
             }
             

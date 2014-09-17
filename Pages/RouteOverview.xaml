@@ -13,139 +13,140 @@
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d"
     shell:SystemTray.IsVisible="True">
-	<phone:PhoneApplicationPage.Resources>
-		<Utils:RouteTypeVisibility x:Key="RouteTypeVisibility"/>
-		<Common:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    <phone:PhoneApplicationPage.Resources>
+        <Utils:RouteTypeVisibility x:Key="RouteTypeVisibility"/>
+        <Common:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <Common:BooleanToOpacityConverter x:Key="BooleanToOpacityConverter"/>
-		<Common:BooleanInvertedToVisibilityConverter x:Key="BooleanInvertedToVisibilityConverter"/>
-		<Style x:Key="PivotStyle1" TargetType="phone:Pivot">
-			<Setter Property="Margin" Value="0"/>
-			<Setter Property="Padding" Value="0"/>
-			<Setter Property="Foreground" Value="{StaticResource PhoneForegroundBrush}"/>
-			<Setter Property="Background" Value="Transparent"/>
-			<Setter Property="ItemsPanel">
-				<Setter.Value>
-					<ItemsPanelTemplate>
-						<Grid/>
-					</ItemsPanelTemplate>
-				</Setter.Value>
-			</Setter>
-			<Setter Property="Template">
-				<Setter.Value>
-					<ControlTemplate TargetType="phone:Pivot">
-						<Grid HorizontalAlignment="{TemplateBinding HorizontalAlignment}" VerticalAlignment="{TemplateBinding VerticalAlignment}">
-							<Grid.RowDefinitions>
-								<RowDefinition Height="50"/>
-								<RowDefinition Height="Auto"/>
-								<RowDefinition Height="*"/>
-							</Grid.RowDefinitions>
-							<StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Horizontal">
-								<Image Height="50" Width="50" Source="{Binding SelectedItem.TurnImage, RelativeSource={RelativeSource TemplatedParent}}"/>
-								<ContentControl ContentTemplate="{TemplateBinding TitleTemplate}" Content="{Binding SelectedItem.Turn, RelativeSource={RelativeSource TemplatedParent}}" HorizontalAlignment="Left" Style="{StaticResource PivotTitleStyle}" Height="31" VerticalAlignment="Center"/>
-							</StackPanel>
-							<Primitives:PivotHeadersControl x:Name="HeadersListElement" Grid.Row="1"/>
-							<ItemsPresenter x:Name="PivotItemPresenter" Margin="{TemplateBinding Padding}" Grid.Row="2"/>
-						</Grid>
-					</ControlTemplate>
-				</Setter.Value>
-			</Setter>
-		</Style>
-		<DataTemplate x:Key="RouteSectionTemplate">
-			<StackPanel>
-				<TextBlock Text="{Binding DistanceString, Mode=OneWay}"/>
-				<TextBlock Text="{Binding TimeString, Mode=OneWay}"/>
-				<TextBlock Text="{Binding VoiceDescription, Mode=OneWay}" TextWrapping="Wrap"/>
-			</StackPanel>
-		</DataTemplate>
-		<DataTemplate x:Key="DataTemplate1">
-			<TextBlock Text="{Binding Description}" FontSize="30">
-				<TextBlock.Foreground>
-					<SolidColorBrush Color="{StaticResource PhoneForegroundColor}"/>
-				</TextBlock.Foreground>
-			</TextBlock>
-		</DataTemplate>
-	</phone:PhoneApplicationPage.Resources>
-	<phone:PhoneApplicationPage.FontFamily>
-		<StaticResource ResourceKey="PhoneFontFamilyNormal"/>
-	</phone:PhoneApplicationPage.FontFamily>
-	<phone:PhoneApplicationPage.FontSize>
-		<StaticResource ResourceKey="PhoneFontSizeNormal"/>
-	</phone:PhoneApplicationPage.FontSize>
-	<phone:PhoneApplicationPage.Foreground>
-		<StaticResource ResourceKey="PhoneForegroundBrush"/>
-	</phone:PhoneApplicationPage.Foreground>
-	<phone:PhoneApplicationPage.DataContext>
-		<Binding Mode="OneWay" Path="DirectionsPage" Source="{StaticResource Locator}"/>
-	</phone:PhoneApplicationPage.DataContext>
-	<phone:PhoneApplicationPage.ApplicationBar>
-		<shell:ApplicationBar>
-			<shell:ApplicationBarIconButton x:Name="mylocation" IconUri="/Assets/icons/dark/appbar.location.circle.png" IsEnabled="True" Text="my location" Click="mylocation_Click"/>
-			<shell:ApplicationBarIconButton x:Name="liveride" IconUri="/Assets/AppBar/appbar.bike.png" IsEnabled="True" Text="live ride" Click="liveride_Click"/>
-			<shell:ApplicationBarIconButton x:Name="details" IconUri="/Assets/icons/dark/appbar.information.circle.png" IsEnabled="True" Text="details" Click="details_Click"/>
-		</shell:ApplicationBar>
-	</phone:PhoneApplicationPage.ApplicationBar>
+        <Common:BooleanInvertedToVisibilityConverter x:Key="BooleanInvertedToVisibilityConverter"/>
+        <Style x:Key="PivotStyle1" TargetType="phone:Pivot">
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Foreground" Value="{StaticResource PhoneForegroundBrush}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <Grid/>
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="phone:Pivot">
+                        <Grid HorizontalAlignment="{TemplateBinding HorizontalAlignment}" VerticalAlignment="{TemplateBinding VerticalAlignment}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Horizontal">
+                                <Image Height="50" Width="50" Source="{Binding SelectedItem.TurnImage, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                <ContentControl ContentTemplate="{TemplateBinding TitleTemplate}" Content="{Binding SelectedItem.Turn, RelativeSource={RelativeSource TemplatedParent}}" HorizontalAlignment="Left" Style="{StaticResource PivotTitleStyle}" Height="31" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <Primitives:PivotHeadersControl x:Name="HeadersListElement" Grid.Row="1"/>
+                            <ItemsPresenter x:Name="PivotItemPresenter" Margin="{TemplateBinding Padding}" Grid.Row="2"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <DataTemplate x:Key="RouteSectionTemplate">
+            <StackPanel>
+                <TextBlock Text="{Binding DistanceString, Mode=OneWay}"/>
+                <TextBlock Text="{Binding TimeString, Mode=OneWay}"/>
+                <TextBlock Text="{Binding VoiceDescription, Mode=OneWay}" TextWrapping="Wrap"/>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="DataTemplate1">
+            <TextBlock Text="{Binding Description}" FontSize="30">
+                <TextBlock.Foreground>
+                    <SolidColorBrush Color="{StaticResource PhoneForegroundColor}"/>
+                </TextBlock.Foreground>
+            </TextBlock>
+        </DataTemplate>
+    </phone:PhoneApplicationPage.Resources>
+    <phone:PhoneApplicationPage.FontFamily>
+        <StaticResource ResourceKey="PhoneFontFamilyNormal"/>
+    </phone:PhoneApplicationPage.FontFamily>
+    <phone:PhoneApplicationPage.FontSize>
+        <StaticResource ResourceKey="PhoneFontSizeNormal"/>
+    </phone:PhoneApplicationPage.FontSize>
+    <phone:PhoneApplicationPage.Foreground>
+        <StaticResource ResourceKey="PhoneForegroundBrush"/>
+    </phone:PhoneApplicationPage.Foreground>
+    <phone:PhoneApplicationPage.DataContext>
+        <Binding Mode="OneWay" Path="DirectionsPage" Source="{StaticResource Locator}"/>
+    </phone:PhoneApplicationPage.DataContext>
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar>
+            <shell:ApplicationBarIconButton x:Name="mylocation" IconUri="/Assets/icons/dark/appbar.location.circle.png" IsEnabled="True" Text="my location" Click="mylocation_Click"/>
+            <shell:ApplicationBarIconButton x:Name="liveride" IconUri="/Assets/AppBar/appbar.bike.png" IsEnabled="True" Text="live ride" Click="liveride_Click"/>
+            <shell:ApplicationBarIconButton x:Name="details" IconUri="/Assets/icons/dark/appbar.information.circle.png" IsEnabled="True" Text="details" Click="details_Click"/>
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
 
     <!--LayoutRoot is the root grid where all page content is placed-->
-	<Grid x:Name="LayoutRoot" Background="Transparent" Margin="20,0">
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition/>
-			<ColumnDefinition/>
-		</Grid.ColumnDefinitions>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="75*"/>
-			<RowDefinition Height="345*"/>
-			<RowDefinition Height="88*"/>
-			<RowDefinition Height="260*"/>
-		</Grid.RowDefinitions>
+    <Grid x:Name="LayoutRoot" Background="Transparent" Margin="20,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="75*"/>
+            <RowDefinition Height="345*"/>
+            <RowDefinition Height="88*"/>
+            <RowDefinition Height="260*"/>
+        </Grid.RowDefinitions>
 
-		<StackPanel Grid.ColumnSpan="2" Grid.Row="1" VerticalAlignment="Center">
-			<ProgressBar VerticalAlignment="Center" IsIndeterminate="True">
-				<ProgressBar.Foreground>
-					<SolidColorBrush Color="{StaticResource PhoneForegroundColor}"/>
-				</ProgressBar.Foreground>
-			</ProgressBar>
-			<TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="Loading route information..." VerticalAlignment="Top"/>
-		</StackPanel>
+        <StackPanel Grid.ColumnSpan="2" Grid.Row="1" VerticalAlignment="Center">
+            <ProgressBar VerticalAlignment="Center" IsIndeterminate="True">
+                <ProgressBar.Foreground>
+                    <SolidColorBrush Color="{StaticResource PhoneForegroundColor}"/>
+                </ProgressBar.Foreground>
+            </ProgressBar>
+            <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="Loading route information..." VerticalAlignment="Top"/>
+        </StackPanel>
 
         <maps:Map x:Name="MyMap" Margin="0" Grid.Row="1" Grid.ColumnSpan="2" ZoomLevel="5.684" Loaded="MyMap_Loaded" LandmarksEnabled="True" Tap="MyMap_Tap" Opacity="{Binding DisplayMap, Converter={StaticResource BooleanToOpacityConverter}}" />
-		<StackPanel Grid.Row="2" Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
-			<TextBlock TextWrapping="Wrap" Text="{Binding RouteManagerPtr.Overview.RouteDurationString, Mode=OneWay}" FontSize="60" FontFamily="Segoe WP Light" VerticalAlignment="Bottom"/>
-			<TextBlock TextWrapping="Wrap" Text="mins" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="Segoe WP Light" LineHeight="37" Visibility="{Binding DisplayMap, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-		</StackPanel>
-		<StackPanel Grid.Row="2" Orientation="Horizontal">
-			<TextBlock TextWrapping="Wrap" Text="{Binding RouteManagerPtr.Overview.RouteLengthStringMiles, Mode=OneWay}" FontSize="60" FontFamily="Segoe WP Light" VerticalAlignment="Bottom"/>
-			<TextBlock TextWrapping="Wrap" Text="miles" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="Segoe WP Light" LineHeight="37" Visibility="{Binding DisplayMap, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-		</StackPanel>
-		<Grid Grid.ColumnSpan="2">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition/>
-				<ColumnDefinition/>
-				<ColumnDefinition/>
-			</Grid.ColumnDefinitions>
-			<TextBlock x:Name="quietest" HorizontalAlignment="Center" TextWrapping="Wrap" Text="quietest" VerticalAlignment="Bottom" FontFamily="Segoe WP" FontSize="18" Foreground="{StaticResource PhoneForegroundBrush}"/>
-			<TextBlock x:Name="balanced" HorizontalAlignment="Center" TextWrapping="Wrap" Text="balanced" VerticalAlignment="Bottom" FontFamily="Segoe WP" FontSize="18" Grid.Column="1" Foreground="{StaticResource PhoneForegroundBrush}"/>
-			<TextBlock x:Name="fastest" HorizontalAlignment="Center" TextWrapping="Wrap" Text="fastest" VerticalAlignment="Bottom" FontFamily="Segoe WP" FontSize="18" Grid.Column="2" Foreground="{StaticResource PhoneForegroundBrush}"/>
-			<Rectangle x:Name="fastest1" Fill="{StaticResource PhoneForegroundBrush}" Stroke="Black" Grid.Column="2" Margin="0,0,0,15" Tap="fastest1_Tap">
-				<Rectangle.OpacityMask>
-					<ImageBrush Stretch="Uniform" ImageSource="/Cyclestreets;component/Assets/fastest.png"/>
-				</Rectangle.OpacityMask>
-			</Rectangle>
-			<Rectangle x:Name="balanced1" Fill="{StaticResource PhoneForegroundBrush}" Stroke="Black" Grid.Column="1" Margin="0,0,0,15" Tap="balanced1_Tap">
-				<Rectangle.OpacityMask>
-					<ImageBrush Stretch="Uniform" ImageSource="/Cyclestreets;component/Assets/balanced.png"/>
-				</Rectangle.OpacityMask>
-			</Rectangle>
-			<Rectangle x:Name="quietest1" Fill="{StaticResource PhoneForegroundBrush}" Stroke="Black" Tap="shortest1_Tap" Height="53" VerticalAlignment="Top">
-				<Rectangle.OpacityMask>
-					<ImageBrush Stretch="Uniform" ImageSource="/Cyclestreets;component/Assets/quietest.png"/>
-				</Rectangle.OpacityMask>
-			</Rectangle>
-			<Rectangle x:Name="balancedHighlight" Fill="{StaticResource PhoneAccentBrush}" Height="7" Stroke="Black" VerticalAlignment="Top" Grid.Column="1" Visibility="{Binding CurrentPlan, ConverterParameter=balanced, Converter={StaticResource RouteTypeVisibility}}"/>
-			<Rectangle x:Name="shortestHighlight" Fill="{StaticResource PhoneAccentBrush}" Height="7" Stroke="Black" VerticalAlignment="Top" Visibility="{Binding CurrentPlan, ConverterParameter=quietest, Converter={StaticResource RouteTypeVisibility}}"/>
-			<Rectangle x:Name="fastestHighlight" Fill="{StaticResource PhoneAccentBrush}" Height="7" Stroke="Black" VerticalAlignment="Top" Grid.Column="2" Visibility="{Binding CurrentPlan, ConverterParameter=fastest, Converter={StaticResource RouteTypeVisibility}}"/>
-		</Grid>
-		<TextBlock Text="{Binding DirectionsPage.RouteManagerPtr.CurrentStepText, Mode=OneWay}" VerticalAlignment="Top" Grid.Row="3" Grid.ColumnSpan="2"/>
-		<phone:Pivot x:Name="routeList" Grid.Row="3" Title="{Binding SelectedItem, RelativeSource={RelativeSource Self}}" Grid.ColumnSpan="2" Style="{StaticResource PivotStyle1}" ItemTemplate="{StaticResource RouteSectionTemplate}" ItemsSource="{Binding RouteManagerPtr.CurrentRoute}" HeaderTemplate="{StaticResource DataTemplate1}" SelectionChanged="routeList_SelectionChanged"/>
-	</Grid>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
+            <TextBlock TextWrapping="Wrap" Text="{Binding RouteManagerPtr.Overview.RouteDurationString, Mode=OneWay}" FontSize="60" FontFamily="Segoe WP Light" VerticalAlignment="Bottom"/>
+            <TextBlock TextWrapping="Wrap" Text="mins" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="Segoe WP Light" LineHeight="37" Visibility="{Binding DisplayMap, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        </StackPanel>
+        <StackPanel Grid.Row="2" Orientation="Horizontal">
+            <TextBlock TextWrapping="Wrap" Text="{Binding RouteManagerPtr.Overview.RouteLengthStringMiles, Mode=OneWay}" FontSize="60" FontFamily="Segoe WP Light" VerticalAlignment="Bottom"/>
+            <TextBlock TextWrapping="Wrap" Text="miles" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="Segoe WP Light" LineHeight="37" Visibility="{Binding DisplayMap, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        </StackPanel>
+        <Grid Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <TextBlock x:Name="quietest" HorizontalAlignment="Center" TextWrapping="Wrap" Text="quietest" VerticalAlignment="Bottom" FontFamily="Segoe WP" FontSize="18" Foreground="{StaticResource PhoneForegroundBrush}"/>
+            <TextBlock x:Name="balanced" HorizontalAlignment="Center" TextWrapping="Wrap" Text="balanced" VerticalAlignment="Bottom" FontFamily="Segoe WP" FontSize="18" Grid.Column="1" Foreground="{StaticResource PhoneForegroundBrush}"/>
+            <TextBlock x:Name="fastest" HorizontalAlignment="Center" TextWrapping="Wrap" Text="fastest" VerticalAlignment="Bottom" FontFamily="Segoe WP" FontSize="18" Grid.Column="2" Foreground="{StaticResource PhoneForegroundBrush}"/>
+            <Rectangle x:Name="fastest1" Fill="{StaticResource PhoneForegroundBrush}" Stroke="Black" Grid.Column="2" Margin="0,0,0,15" Tap="fastest1_Tap">
+                <Rectangle.OpacityMask>
+                    <ImageBrush Stretch="Uniform" ImageSource="/Cyclestreets;component/Assets/fastest.png"/>
+                </Rectangle.OpacityMask>
+            </Rectangle>
+            <Rectangle x:Name="balanced1" Fill="{StaticResource PhoneForegroundBrush}" Stroke="Black" Grid.Column="1" Margin="0,0,0,15" Tap="balanced1_Tap">
+                <Rectangle.OpacityMask>
+                    <ImageBrush Stretch="Uniform" ImageSource="/Cyclestreets;component/Assets/balanced.png"/>
+                </Rectangle.OpacityMask>
+            </Rectangle>
+            <Rectangle x:Name="quietest1" Fill="{StaticResource PhoneForegroundBrush}" Stroke="Black" Tap="shortest1_Tap" Height="53" VerticalAlignment="Top">
+                <Rectangle.OpacityMask>
+                    <ImageBrush Stretch="Uniform" ImageSource="/Cyclestreets;component/Assets/quietest.png"/>
+                </Rectangle.OpacityMask>
+            </Rectangle>
+            <Rectangle x:Name="routeTypeDisabledMask" Fill="#BF000000" Stroke="Black" Grid.ColumnSpan="3" Grid.RowSpan="2" Visibility="{Binding CanChangeRouteType, Converter={StaticResource BooleanInvertedToVisibilityConverter}}"/>
+            <Rectangle x:Name="balancedHighlight" Fill="{StaticResource PhoneAccentBrush}" Height="7" Stroke="Black" VerticalAlignment="Top" Grid.Column="1" Visibility="{Binding CurrentPlan, ConverterParameter=balanced, Converter={StaticResource RouteTypeVisibility}}"/>
+            <Rectangle x:Name="shortestHighlight" Fill="{StaticResource PhoneAccentBrush}" Height="7" Stroke="Black" VerticalAlignment="Top" Visibility="{Binding CurrentPlan, ConverterParameter=quietest, Converter={StaticResource RouteTypeVisibility}}"/>
+            <Rectangle x:Name="fastestHighlight" Fill="{StaticResource PhoneAccentBrush}" Height="7" Stroke="Black" VerticalAlignment="Top" Grid.Column="2" Visibility="{Binding CurrentPlan, ConverterParameter=fastest, Converter={StaticResource RouteTypeVisibility}}"/>
+        </Grid>
+        <TextBlock Text="{Binding DirectionsPage.RouteManagerPtr.CurrentStepText, Mode=OneWay}" VerticalAlignment="Top" Grid.Row="3" Grid.ColumnSpan="2"/>
+        <phone:Pivot x:Name="routeList" Grid.Row="3" Title="{Binding SelectedItem, RelativeSource={RelativeSource Self}}" Grid.ColumnSpan="2" Style="{StaticResource PivotStyle1}" ItemTemplate="{StaticResource RouteSectionTemplate}" ItemsSource="{Binding RouteManagerPtr.CurrentRoute}" HeaderTemplate="{StaticResource DataTemplate1}" SelectionChanged="routeList_SelectionChanged"/>
+    </Grid>
 
 </phone:PhoneApplicationPage>

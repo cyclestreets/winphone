@@ -21,6 +21,13 @@ namespace Cyclestreets.ViewModel
             set { Set(ref _displayMap, value); }
         }
 
+        private bool _canChangeType = true;
+        public bool CanChangeRouteType
+        {
+            get { return _canChangeType; }
+            set { Set(ref _canChangeType, value); }
+        }
+
         private string _currentPlan;
         public string CurrentPlan
         {
