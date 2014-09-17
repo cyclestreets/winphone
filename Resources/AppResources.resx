@@ -453,4 +453,7 @@ Why not give us a 5 star rating to show your appreciation?</value>
   <data name="GPS_Error" xml:space="preserve">
     <value>GPS Error</value>
   </data>
+  <data name="FindingRoute" xml:space="preserve">
+    <value>Finding new route...</value>
+  </data>
 </root>

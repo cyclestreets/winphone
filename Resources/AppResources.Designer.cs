@@ -351,6 +351,15 @@ namespace Cyclestreets.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Finding new route....
+        /// </summary>
+        public static string FindingRoute {
+            get {
+                return ResourceManager.GetString("FindingRoute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Find Route.
         /// </summary>
         public static string FindRoute {
