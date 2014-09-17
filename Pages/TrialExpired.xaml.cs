@@ -29,7 +29,7 @@ namespace Cyclestreets
 
 			EmailComposeTask task = new EmailComposeTask();
 			task.To = "info@cyclestreets.net";
-			task.Subject = "Windows Phone Trial Feedback. Trial ID:" + ( (App)App.Current ).trialID;
+			task.Subject = "Windows Phone Trial Feedback. Trial ID:" + ( (App)App.Current ).TrialID;
 			task.Show();
 
 
