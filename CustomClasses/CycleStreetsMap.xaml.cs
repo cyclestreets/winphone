@@ -57,6 +57,13 @@ namespace Cyclestreets.CustomClasses
             InitializeComponent();
 
             LocationManager.Instance.PositionChanged += positionChangedHandler;
+
+            MyMap.ZoomLevel = 10;
+
+            MyMap.ZoomLevelChanged += MyMap_ZoomLevelChanged;
+
+            if (LocationManager.Instance.MyGeoPosition != null)
+                PositionChanged(LocationManager.Instance.MyGeoPosition);
         }
 
         ~CycleStreetsMap()
@@ -93,9 +100,7 @@ namespace Cyclestreets.CustomClasses
             if (newplan == null) return;
             DefaultPlan = newplan;
 
-            MyMap.ZoomLevel = 10;
 
-            MyMap.ZoomLevelChanged += MyMap_ZoomLevelChanged;
 
             PlotRoute();
 
@@ -154,13 +159,6 @@ namespace Cyclestreets.CustomClasses
                 Binding myBinding = new Binding(@"Visible") { Source = new MyPositionDataSource(MyMap) };
                 myCircle.Visibility = Visibility.Visible;
                 myCircle.SetBinding(VisibilityProperty, myBinding);
-
-                _accuracyEllipse = new Ellipse
-                {
-                    Fill = new SolidColorBrush(Color.FromArgb(75, 200, 0, 0)),
-                    Visibility = Visibility.Visible
-                };
-                _accuracyEllipse.SetBinding(VisibilityProperty, myBinding);
 
                 _accuracyEllipse = new Ellipse
                 {
