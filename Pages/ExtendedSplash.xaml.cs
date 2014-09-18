@@ -1,7 +1,7 @@
-﻿using System;
-using System.Windows.Navigation;
-using Cyclestreets.Managers;
+﻿using Cyclestreets.Managers;
 using Microsoft.Phone.Shell;
+using System;
+using System.Windows.Navigation;
 
 namespace Cyclestreets.Pages
 {
@@ -14,7 +14,7 @@ namespace Cyclestreets.Pages
             SystemTray.SetIsVisible(this, true);
             SystemTray.SetOpacity(this, 0);
 
-            var prog = new ProgressIndicator {IsVisible = true, IsIndeterminate = true, Text = "Getting location..."};
+            var prog = new ProgressIndicator { IsVisible = true, IsIndeterminate = true, Text = "Getting location..." };
 
             SystemTray.SetProgressIndicator(this, prog);
         }
@@ -36,7 +36,13 @@ namespace Cyclestreets.Pages
 
         void Instance_PositionChanged(Windows.Devices.Geolocation.Geolocator sender, Windows.Devices.Geolocation.PositionChangedEventArgs args)
         {
-            SmartDispatcher.BeginInvoke(() => NavigationService.Navigate(new Uri(@"/Pages/MainPage.xaml", UriKind.RelativeOrAbsolute)));
+            SmartDispatcher.BeginInvoke(() =>
+            {
+                NavigationService.RemoveBackEntry();
+                SmartDispatcher.BeginInvoke(
+                    () => NavigationService.Navigate(new Uri(@"/Pages/MainPage.xaml", UriKind.RelativeOrAbsolute)));
+                LocationManager.Instance.PositionChanged -= Instance_PositionChanged;
+            });
         }
     }
 }
