@@ -82,6 +82,7 @@
             <shell:ApplicationBarIconButton x:Name="mylocation" IconUri="/Assets/icons/dark/appbar.location.circle.png" IsEnabled="True" Text="my location" Click="mylocation_Click"/>
             <shell:ApplicationBarIconButton x:Name="liveride" IconUri="/Assets/AppBar/appbar.bike.png" IsEnabled="True" Text="live ride" Click="liveride_Click"/>
             <shell:ApplicationBarIconButton x:Name="details" IconUri="/Assets/icons/dark/appbar.information.circle.png" IsEnabled="True" Text="details" Click="details_Click"/>
+            <shell:ApplicationBarIconButton x:Name="save" IconUri="/Assets/AppBar/save.png" Text="save" Click="save_Click"/>
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>
 

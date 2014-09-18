@@ -65,7 +65,6 @@ namespace Cyclestreets.CustomClasses
             if (MyMap != null)
             {
                 MyMap.ZoomLevelChanged -= MyMap_ZoomLevelChanged;
-                MyMap.Tap -= MyMap_Tap;
             }
         }
 
@@ -75,7 +74,6 @@ namespace Cyclestreets.CustomClasses
             if (MyMap != null)
             {
                 MyMap.ZoomLevelChanged -= MyMap_ZoomLevelChanged;
-                MyMap.Tap -= MyMap_Tap;
             }
         }
 
@@ -98,7 +96,6 @@ namespace Cyclestreets.CustomClasses
             MyMap.ZoomLevel = 10;
 
             MyMap.ZoomLevelChanged += MyMap_ZoomLevelChanged;
-            MyMap.Tap += MyMap_Tap;
 
             PlotRoute();
 
@@ -238,16 +235,6 @@ namespace Cyclestreets.CustomClasses
             }
         }
 
-        private void MyMap_Hold(object sender, System.Windows.Input.GestureEventArgs e)
-        {
-            _timeLastMoved = DateTime.Now;
-        }
-
-        private void MyMap_Tap(object sender, System.Windows.Input.GestureEventArgs e)
-        {
-            _timeLastMoved = DateTime.Now;
-        }
-
         private LocationRectangle GetMapBounds()
         {
             GeoCoordinate topLeft = MyMap.ConvertViewportPointToGeoCoordinate(new Point(0, 0));
@@ -279,6 +266,18 @@ namespace Cyclestreets.CustomClasses
         }
 
         public double ZoomLevel { get { return MyMap.ZoomLevel; } set { MyMap.ZoomLevel = value; } }
+
+        private bool _touchDown = false;
+        private void MyMap_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            _touchDown = true;
+            _timeLastMoved = DateTime.Now;
+        }
+
+        private void MyMap_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            _touchDown = false;
+        }
     }
 }
 

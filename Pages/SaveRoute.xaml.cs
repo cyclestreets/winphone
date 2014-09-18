@@ -2,10 +2,12 @@
 using Cyclestreets.Resources;
 using GalaSoft.MvvmLight.Ioc;
 using Polenter.Serialization;
+using System.Linq;
 using System.IO;
 using System.IO.IsolatedStorage;
 using System.Windows;
 using System.Windows.Controls;
+using System.Text.RegularExpressions;
 
 namespace Cyclestreets.Pages
 {
@@ -20,13 +22,15 @@ namespace Cyclestreets.Pages
         {
             base.OnNavigatedTo(e);
 
-            string[] names = IsolatedStorageFile.GetUserStoreForApplication().GetFileNames("*.route");
-            existingSaves.ItemsSource = names;
+            string[] names = IsolatedStorageFile.GetUserStoreForApplication().GetFileNames(@"*.route");
+            existingSaves.ItemsSource = names.Select(n => n.Remove(n.Length - 6)).ToList();
         }
 
         private void saveButton_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            string fileName = saveFileName.Text;
+            Regex rgx = new Regex(@"[^a-zA-Z0-9 -]");
+            string fileName = rgx.Replace(saveFileName.Text, @"");
+            fileName += @".route";
             if (!string.IsNullOrWhiteSpace(fileName))
             {
                 saveRoute(fileName);

@@ -20,10 +20,14 @@ namespace Cyclestreets.Pages
     {
         DirectionsPageViewModel _viewModel;
         private bool _mapReady = false;
+        private ApplicationBarIconButton saveButton = null;
 
         public RouteOverview()
         {
             InitializeComponent();
+
+            saveButton = ApplicationBar.Buttons[3] as ApplicationBarIconButton;
+            saveButton.IsEnabled = false;
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -161,6 +165,8 @@ namespace Cyclestreets.Pages
         {
             var prog = new ProgressIndicator { IsVisible = true, IsIndeterminate = true, Text = AppResources.FindingRoute };
 
+            saveButton.IsEnabled = false;
+
             SystemTray.SetProgressIndicator(this, prog);
 
             var rm = SimpleIoc.Default.GetInstance<RouteManager>();
@@ -188,6 +194,8 @@ namespace Cyclestreets.Pages
                 }
                 SmartDispatcher.BeginInvoke(() => MyMap.SetView(rm.GetRouteBounds()));
             }
+
+            saveButton.IsEnabled = true;
         }
 
         private void balanced1_Tap(object sender, GestureEventArgs e)
@@ -255,6 +263,11 @@ namespace Cyclestreets.Pages
                     }
                 }
             }
+        }
+
+        private void save_Click(object sender, System.EventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/Pages/SaveRoute.xaml", UriKind.RelativeOrAbsolute));
         }
     }
 }

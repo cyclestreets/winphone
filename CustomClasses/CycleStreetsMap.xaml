@@ -80,7 +80,7 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        <maps:Map x:Name="MyMap" Loaded="Map_Loaded" ZoomLevel="10" Hold="MyMap_Hold" Tap="MyMap_Tap"/>
+        <maps:Map x:Name="MyMap" Loaded="Map_Loaded" ZoomLevel="10" MouseLeftButtonDown="MyMap_MouseLeftButtonDown" MouseLeftButtonUp="MyMap_MouseLeftButtonUp"/>
         <Grid x:Name="grid" Height="80" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5">
             <Grid.Projection>
                 <PlaneProjection/>

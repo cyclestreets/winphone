@@ -3,6 +3,7 @@ using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Phone.Controls;
 using Polenter.Serialization;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.IsolatedStorage;
@@ -24,9 +25,7 @@ namespace Cyclestreets.Pages
             base.OnNavigatedTo(e);
 
             string[] names = IsolatedStorageFile.GetUserStoreForApplication().GetFileNames("*.route");
-            saveFiles.ItemsSource = names;
-
-            NavigationService.RemoveBackEntry();
+            saveFiles.ItemsSource = names.Select(n=>n.Remove(n.Length - 6)).ToList();
         }
 
         private void saveFiles_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -34,22 +33,34 @@ namespace Cyclestreets.Pages
             RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
 
             IsolatedStorageFile myFile = IsolatedStorageFile.GetUserStoreForApplication();
-            var stream = new IsolatedStorageFileStream(e.AddedItems[0].ToString(), FileMode.Open, myFile);
+            try
+            {
 
-            if (!myFile.FileExists(e.AddedItems[0].ToString()))
+                var stream = new IsolatedStorageFileStream(e.AddedItems[0].ToString() + ".route", FileMode.Open, myFile);
+
+                if (!myFile.FileExists(e.AddedItems[0].ToString()))
+                {
+                    MessageBoxResult result = MessageBox.Show("Save file not found.", "Error", MessageBoxButton.OK);
+                    return;
+                }
+
+                var serializer = new SharpSerializer(true);
+
+                // deserialize (to check the serialization)
+                var res = serializer.Deserialize(stream);
+                rm.RouteCacheForSaving = (Dictionary<string, string>)res;
+                stream.Close();
+
+                NavigationService.Navigate(new Uri("/Pages/RouteOverview.xaml?plan=saved", UriKind.Relative));
+                NavigationService.RemoveBackEntry();
+            }
+            catch
             {
                 MessageBoxResult result = MessageBox.Show("Save file not found.", "Error", MessageBoxButton.OK);
                 return;
             }
 
-            var serializer = new SharpSerializer(true);
-
-            // deserialize (to check the serialization)
-            var res = serializer.Deserialize(stream);
-            rm.RouteCacheForSaving = (Dictionary<string, string>)res;
-            stream.Close();
-
-            NavigationService.Navigate(new Uri("/Pages/RouteOverview.xaml?plan=saved", UriKind.Relative));
+            
 
         }
     }
