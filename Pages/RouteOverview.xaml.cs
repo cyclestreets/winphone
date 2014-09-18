@@ -1,16 +1,16 @@
-﻿using System;
-using System.Device.Location;
-using System.Windows;
-using System.Windows.Navigation;
-using Cyclestreets.Annotations;
+﻿using Cyclestreets.Annotations;
 using Cyclestreets.Managers;
 using Cyclestreets.Resources;
-using CycleStreets.Util;
 using Cyclestreets.Utils;
 using Cyclestreets.ViewModel;
+using CycleStreets.Util;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Phone.Maps.Services;
 using Microsoft.Phone.Shell;
+using System;
+using System.Device.Location;
+using System.Windows;
+using System.Windows.Navigation;
 using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 
 namespace Cyclestreets.Pages
@@ -35,7 +35,7 @@ namespace Cyclestreets.Pages
             var rm = SimpleIoc.Default.GetInstance<RouteManager>();
             if (NavigationContext.QueryString.ContainsKey(@"mode"))
             {
-                switch(NavigationContext.QueryString[@"mode"])
+                switch (NavigationContext.QueryString[@"mode"])
                 {
                     case "planroute":
                         {
@@ -88,7 +88,7 @@ namespace Cyclestreets.Pages
                             if (NavigationContext.QueryString.ContainsKey(@"poitypes"))
                                 poiTypes = NavigationContext.QueryString[@"poitypes"];
 
-                            bool result = await rm.FindLeisureRoute(duration,distance,poiTypes);
+                            bool result = await rm.FindLeisureRoute(duration, distance, poiTypes);
                             if (!result)
                             {
                                 MarkedUp.AnalyticClient.Error(@"Route Planning Error");
@@ -133,7 +133,7 @@ namespace Cyclestreets.Pages
             _mapReady = true;
 
             var newplan = rm.HasCachedRoute(_viewModel.CurrentPlan);
-            if (newplan == null) 
+            if (newplan == null)
                 return;
             _viewModel.CurrentPlan = newplan;
             StartRouting();
@@ -159,8 +159,15 @@ namespace Cyclestreets.Pages
 
         private async void StartRouting()
         {
+            var prog = new ProgressIndicator { IsVisible = true, IsIndeterminate = true, Text = AppResources.FindingRoute };
+
+            SystemTray.SetProgressIndicator(this, prog);
+
             var rm = SimpleIoc.Default.GetInstance<RouteManager>();
             bool result = await rm.FindRoute(_viewModel.CurrentPlan, false);
+
+            prog.IsVisible = false;
+
             if (!result)
             {
                 MarkedUp.AnalyticClient.Error(@"Route Planning Error");
@@ -197,6 +204,7 @@ namespace Cyclestreets.Pages
                 return;
 
             _viewModel.CurrentPlan = @"fastest";
+
             StartRouting();
         }
 
@@ -207,10 +215,11 @@ namespace Cyclestreets.Pages
                 GeoCoordinate geo = GeoUtils.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
                 MapLocation loc = await GeoUtils.StartReverseGeocode(geo);
 
-                SmartDispatcher.BeginInvoke(() => {
-                       MyMap.Pitch = 0;
-                       MyMap.Heading = 0;
-                       MyMap.SetView(loc.GeoCoordinate, 16);
+                SmartDispatcher.BeginInvoke(() =>
+                {
+                    MyMap.Pitch = 0;
+                    MyMap.Heading = 0;
+                    MyMap.SetView(loc.GeoCoordinate, 16);
                 });
             }
             else
@@ -231,7 +240,7 @@ namespace Cyclestreets.Pages
                 RouteSection rs = e.AddedItems[0] as RouteSection;
                 if (rs != null)
                 {
-                    if ( rs is StartPoint )
+                    if (rs is StartPoint)
                     {
                         var rm = SimpleIoc.Default.GetInstance<RouteManager>();
                         MyMap.SetView(rm.GetRouteBounds());
@@ -240,7 +249,7 @@ namespace Cyclestreets.Pages
                     }
                     else if (rs.Points.Count > 0)
                     {
-                        MyMap.SetView(rs.Points[0], 20, (rs.Bearing==null)?0:rs.Bearing, 75);
+                        MyMap.SetView(rs.Points[0], 20, (rs.Bearing == null) ? 0 : rs.Bearing, 75);
 
                         MyMap.TileSources.Clear();
                     }

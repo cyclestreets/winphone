@@ -7,6 +7,8 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Markup;
 using System.Windows.Navigation;
+using BugSense;
+using BugSense.Core.Model;
 using CrittercismSDK;
 using Cyclestreets.Common;
 using CycleStreets.Helpers;
@@ -60,13 +62,12 @@ namespace Cyclestreets
         public static string hereAppID = @"zgcciiZ696xHUiuoyJZi";
         public static string hereAppToken = @"tH8mLbASkG9oz6j8DuXn7A";
 
-        public static string apiKey = "d2ff10bbbded8e86";
+        public static string apiKey = @"d2ff10bbbded8e86";
 
         public static NetworkBusy networkStatus = new NetworkBusy();
 
         private static LicenseInformation _licenseInfo = new LicenseInformation();
         private static bool _isTrial;
-        public bool trialExpired;
 
         enum SessionType
         {
@@ -156,32 +157,21 @@ namespace Cyclestreets
 #endif
         }
 
-        public MessageBoxResult showTrialExpiredMessage()
-        {
-            MessageBoxResult result = MessageBox.Show(AppResources.TrialExpiredMsg, AppResources.TrialExpiredTitle,
-                MessageBoxButton.OK);
-            if (result == MessageBoxResult.OK)
-            {
-                MarketplaceDetailTask _marketPlaceDetailTask = new MarketplaceDetailTask();
-                _marketPlaceDetailTask.Show();
-            }
-            return result;
-        }
-
         // Code to execute when the application is launching (eg, from Start)
         // This code will not execute when the application is reactivated
         private void Application_Launching(object sender, LaunchingEventArgs e)
         {
-            Crittercism.Init("52b1be13d0d8f72067000007");
-            Api.StartSession("JZSMBMX659NW78S35ZPR");
-            AnalyticClient.Initialize("87c139ca-14a7-41ff-8b3b-095894a52bdf");
+            Crittercism.Init(@"52b1be13d0d8f72067000007");
+            BugSenseHandler.Instance.InitAndStartSession(new ExceptionManager(Current), RootFrame, @"2d8ae0f1" );
+            Api.StartSession(@"JZSMBMX659NW78S35ZPR");
+            AnalyticClient.Initialize(@"87c139ca-14a7-41ff-8b3b-095894a52bdf");
             AnalyticClient.RegisterRootNavigationFrame(RootFrame);
             CheckLicense();
 
             // Call this on launch to initialise the feedback helper
             FeedbackHelper.Default.Launching();
 
-            SettingManager.instance.SetIntValue("LaunchCount", SettingManager.instance.GetIntValue("LaunchCount", 0) + 1);
+            SettingManager.instance.SetIntValue(@"LaunchCount", SettingManager.instance.GetIntValue(@"LaunchCount", 0) + 1);
 
             // When a new instance of the app is launched, clear all deactivation settings 
             RemoveCurrentDeactivationSettings(); 
@@ -191,8 +181,8 @@ namespace Cyclestreets
         // This code will not execute when the application is first launched
         private void Application_Activated(object sender, ActivatedEventArgs e)
         {
-            Api.StartSession("JZSMBMX659NW78S35ZPR");
-            AnalyticClient.Initialize("87c139ca-14a7-41ff-8b3b-095894a52bdf");
+            Api.StartSession(@"JZSMBMX659NW78S35ZPR");
+            AnalyticClient.Initialize(@"87c139ca-14a7-41ff-8b3b-095894a52bdf");
             //MarkedUp.AnalyticClient.RegisterRootNavigationFrame( RootFrame );
 
             CheckLicense();
@@ -208,7 +198,7 @@ namespace Cyclestreets
             if (!e.IsApplicationInstancePreserved)
             {
                 RestoreSessionType();
-            } 
+        }
         }
 
         // Code to execute when the application is deactivated (sent to background)
@@ -315,7 +305,7 @@ namespace Cyclestreets
             }
             else
             {
-                Api.LogError("Unhandled Exception", e.ExceptionObject);
+                Api.LogError(@"Unhandled Exception", e.ExceptionObject);
                 AnalyticClient.LogLastChanceException(e);
             }
         }
@@ -392,13 +382,13 @@ namespace Cyclestreets
         #region Phone application initialization
 
         // Avoid double-initialization
-        private bool phoneApplicationInitialized;
-        public int trialID;
+        private bool _phoneApplicationInitialized;
+        public int TrialID;
 
         // Do not add any additional code to this method
         private void InitializePhoneApplication()
         {
-            if (phoneApplicationInitialized)
+            if (_phoneApplicationInitialized)
                 return;
 
             // Create the frame but don't set it as RootVisual yet; this allows the splash
@@ -416,7 +406,7 @@ namespace Cyclestreets
             RootFrame.Navigating += RootFrame_Navigating; 
 
             // Ensure we don't initialize again
-            phoneApplicationInitialized = true;
+            _phoneApplicationInitialized = true;
         }
 
         // Do not add any additional code to this method
@@ -450,7 +440,6 @@ namespace Cyclestreets
             // For UI consistency, clear the entire page stack
             while (RootFrame.RemoveBackEntry() != null)
             {
-                ; // do nothing
             }
         }
 

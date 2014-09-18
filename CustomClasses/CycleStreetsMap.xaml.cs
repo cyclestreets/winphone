@@ -95,7 +95,7 @@ namespace Cyclestreets.CustomClasses
             if (newplan == null) return;
             DefaultPlan = newplan;
 
-            MyMap.ZoomLevel = 18;
+            MyMap.ZoomLevel = 10;
 
             MyMap.ZoomLevelChanged += MyMap_ZoomLevelChanged;
             MyMap.Tap += MyMap_Tap;
@@ -135,23 +135,12 @@ namespace Cyclestreets.CustomClasses
             if (args == null || args.Position == null)
                 return;
 
-            SmartDispatcher.BeginInvoke(() =>
-            {
-                PositionChanged(args.Position);
-
-            });
+            SmartDispatcher.BeginInvoke(() => PositionChanged(args.Position));
         }
 
         private void PositionChanged(Geoposition geoposition)
         {
-            if (geoposition.Coordinate.Accuracy > 50)
-            {
-                VisualStateManager.GoToState(this, @"OnScreen", true);
-            }
-            else
-            {
-                VisualStateManager.GoToState(this, @"OffScreen", true);
-            }
+            VisualStateManager.GoToState(this, geoposition.Coordinate.Accuracy > 50 ? @"OnScreen" : @"OffScreen", true);
 
             if (LocationManager.Instance.MyGeoPosition == null) return;
             double myAccuracy = LocationManager.Instance.MyGeoPosition.Coordinate.Accuracy;

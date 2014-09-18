@@ -28,8 +28,7 @@ namespace Cyclestreets.Pages
 	{
 		readonly Dictionary<Pushpin, POI> _pinItems = new Dictionary<Pushpin, POI>();
 
-        readonly ReverseGeocodeQuery _revGeoQ;
-		private GeoCoordinate _selected;
+        private GeoCoordinate _selected;
 
 		private GeoCoordinate Selected
 		{
@@ -53,15 +52,12 @@ namespace Cyclestreets.Pages
 		// Constructor
 		public MainPage()
 		{
-			InitializeComponent();
+		    InitializeComponent();
 
 			// hack. See here http://stackoverflow.com/questions/5334574/applicationbariconbutton-is-null/5334703#5334703
 			/*findAppBar = ApplicationBar.Buttons[ 0 ] as Microsoft.Phone.Shell.ApplicationBarIconButton;*/
 			directionsAppBar = ApplicationBar.Buttons[0] as ApplicationBarIconButton;
 			navigateToAppBar = ApplicationBar.Buttons[1] as ApplicationBarIconButton;
-            
-			_revGeoQ = new ReverseGeocodeQuery();
-			_revGeoQ.QueryCompleted += geoQ_QueryCompleted;
 
 			var sgs = VisualStateManager.GetVisualStateGroups( LayoutRoot );
 			var sg = sgs[0] as VisualStateGroup;
@@ -126,7 +122,7 @@ namespace Cyclestreets.Pages
 								{
 								    var xElement = s.Element( "trialID" );
 								    if (xElement != null)
-								        ( (App)Application.Current ).trialID = int.Parse( xElement.Value );
+								        ( (App)Application.Current ).TrialID = int.Parse( xElement.Value );
 								}
 							    if( s.Element( "result" ) != null )
 							    {
@@ -135,8 +131,7 @@ namespace Cyclestreets.Pages
 									{
 										NavigationService.Navigate( new Uri( "/Pages/TrialExpired.xaml", UriKind.Relative ) );
 
-										( (App)Application.Current ).trialExpired = true;
-										//( (App)App.Current ).showTrialExpiredMessage();
+									    //( (App)App.Current ).showTrialExpiredMessage();
 										//if( NavigationService.CanGoBack )
 										//	NavigationService.GoBack();
 									}
