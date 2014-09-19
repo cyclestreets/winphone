@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Device.Location;
+using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
@@ -8,12 +10,10 @@ using System.Windows.Shapes;
 using Windows.Devices.Geolocation;
 using Cyclestreets.Annotations;
 using Cyclestreets.Managers;
-using Cyclestreets.Resources;
 using Cyclestreets.Utils;
 using Cyclestreets.ViewModel;
-using Microsoft.Phone.Maps.Controls;
-using Microsoft.Phone.Shell;
 using GalaSoft.MvvmLight.Ioc;
+using Microsoft.Phone.Maps.Controls;
 
 namespace Cyclestreets.Pages
 {
@@ -23,17 +23,28 @@ namespace Cyclestreets.Pages
         private readonly DirectionsPageViewModel _viewModel;
         private readonly LiveRideViewModel _lrViewModel;
 
+        private readonly List<Point> _routeSegments = new List<Point>();
+
+        private int _currentTargetPoint = -1;
+        private object _myPositionOverlay;
+        private MapOverlay _myLocationOverlay;
+        private MapLayer _myLocationLayer;
+
         public LiveRide()
         {
             InitializeComponent();
 
             _viewModel = SimpleIoc.Default.GetInstance<DirectionsPageViewModel>();
             _lrViewModel = SimpleIoc.Default.GetInstance<LiveRideViewModel>();
+
+            LocationManager.Instance.PositionChanged += positionChangedHandler;
         }
 
-        
-
-       
+        private void positionChangedHandler(Geolocator sender, PositionChangedEventArgs args)
+        {
+           GenerateLineSegments();
+            
+        }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -42,22 +53,133 @@ namespace Cyclestreets.Pages
             LocationManager.Instance.StopTracking();
             LocationManager.Instance.StartTracking(PositionAccuracy.High, 1000);
 
-            LocationManager.Instance.PositionChanged += Instance_PositionChanged;
+            GenerateLineSegments();
         }
 
-        void Instance_PositionChanged(Geolocator sender, PositionChangedEventArgs args)
+        private void GenerateLineSegments()
         {
-            if ( args.Position != null && args.Position.Coordinate != null )
+            SmartDispatcher.BeginInvoke(() =>
             {
-                args.Position.Coordinate.Speed
-            }
+                var rm = SimpleIoc.Default.GetInstance<RouteManager>();
+                IEnumerable<RouteSection> sections = rm.GetRouteSections(_viewModel.CurrentPlan);
+                foreach (var routeSection in sections.Where(routeSection => routeSection.Points != null))
+                {
+                    _routeSegments.AddRange(
+                        routeSection.Points.Select(p => MyMap.Map.ConvertGeoCoordinateToViewportPoint(p)).ToList());
+                }
+                FindClosestPointOnLine();
+            });
         }
 
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        private void FindClosestPointOnLine()
         {
-            base.OnNavigatedFrom(e);
+            int startPointIdx = 0;
+            int endPointIdx = _routeSegments.Count - 1;
+            if (_currentTargetPoint != -1)
+            {
+                endPointIdx = Math.Min(_routeSegments.Count - 2, _currentTargetPoint + 5);
+                startPointIdx = Math.Min(0, _currentTargetPoint - 2);
+            }
 
-            LocationManager.Instance.PositionChanged -= Instance_PositionChanged;
+            SmartDispatcher.BeginInvoke(() =>
+            {
+                if (LocationManager.Instance.MyGeoPosition == null)
+                    return;
+
+                Point myPoint =
+                    MyMap.Map.ConvertGeoCoordinateToViewportPoint(
+                        GeoUtils.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate));
+
+                Point? closest = null;
+                double closestDist = double.MaxValue;
+                for (int i = startPointIdx; i < endPointIdx; i++)
+                {
+                    Point closestTemp;
+                    var d = FindDistanceToSegment(myPoint, _routeSegments[i], _routeSegments[i + 1], out closestTemp);
+                    if (d < closestDist)
+                    {
+                        closestDist = d;
+                        closest = closestTemp;
+                    }
+                }
+
+                DrawMyLocationOnMap(closest);
+            });
+        }
+
+        private void DrawMyLocationOnMap(Point? closest)
+        {
+            if (closest == null) return;
+            GeoCoordinate myCoordinate = MyMap.Map.ConvertViewportPointToGeoCoordinate(closest.GetValueOrDefault());
+            if (_myPositionOverlay == null)
+            {
+                Ellipse myCircle = new Ellipse
+                {
+                    Fill = new SolidColorBrush(Colors.Blue),
+                    Height = 20,
+                    Width = 20,
+                    Opacity = 30
+                };
+
+                // Create a MapOverlay to contain the circle.
+                _myLocationOverlay = new MapOverlay
+                {
+                    Content = myCircle,
+                    PositionOrigin = new Point(0.5, 0.5),
+                    GeoCoordinate = myCoordinate
+                };
+
+                // Create a MapLayer to contain the MapOverlay.
+                if (_myLocationLayer != null)
+                    MyMap.Map.Layers.Remove(_myLocationLayer);
+
+                _myLocationLayer = new MapLayer { _myLocationOverlay };
+
+                MyMap.Map.Layers.Add(_myLocationLayer);
+            }
+
+            _myLocationOverlay.GeoCoordinate = myCoordinate;
+        }
+
+        private double FindDistanceToSegment(Point pt, Point p1, Point p2, out Point closest)
+        {
+            double dx = p2.X - p1.X;
+            double dy = p2.Y - p1.Y;
+            if ((dx == 0) && (dy == 0))
+            {
+                // It's a point not a line segment.
+                closest = p1;
+                dx = pt.X - p1.X;
+                dy = pt.Y - p1.Y;
+                return Math.Sqrt(dx * dx + dy * dy);
+            }
+
+            // Calculate the t that minimizes the distance.
+            double t = ((pt.X - p1.X) * dx + (pt.Y - p1.Y) * dy) /
+                (dx * dx + dy * dy);
+
+            // See if this represents one of the segment's
+            // end points or a point in the middle.
+            if (t < 0)
+            {
+                closest = new Point(p1.X, p1.Y);
+                dx = pt.X - p1.X;
+                dy = pt.Y - p1.Y;
+            }
+            else if (t > 1)
+            {
+                closest = new Point(p2.X, p2.Y);
+                dx = pt.X - p2.X;
+                dy = pt.Y - p2.Y;
+            }
+            else
+            {
+                closest = new Point(p1.X + t * dx, p1.Y + t * dy);
+                dx = pt.X - closest.X;
+                dy = pt.Y - closest.Y;
+            }
+
+            return Math.Sqrt(dx * dx + dy * dy);
         }
 
         private void reroute_Tap(object sender, System.Windows.Input.GestureEventArgs e)

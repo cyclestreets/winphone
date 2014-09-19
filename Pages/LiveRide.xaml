@@ -22,7 +22,7 @@
             <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
 
-        <CustomClasses:CycleStreetsMap  />
+        <CustomClasses:CycleStreetsMap x:Name="MyMap" DefaultPlan="{Binding DirectionsPage.CurrentPlan}"  />
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="33*"/>
