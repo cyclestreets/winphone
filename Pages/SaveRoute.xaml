@@ -29,7 +29,7 @@
 					<ColumnDefinition Width="107*"/>
 					<ColumnDefinition Width="45*"/>
 				</Grid.ColumnDefinitions>
-				<TextBox x:Name="saveFileName" TextWrapping="Wrap" Text="Route name" Margin="0" Tap="saveFileName_Tap" Foreground="#DEFFFFFF" BorderBrush="#26FFFFFF" Background="#26FFFFFF"/>
+				<TextBox x:Name="saveFileName" TextWrapping="Wrap" Text="Route name" Margin="0" Tap="saveFileName_Tap"/>
 				<Button x:Name="saveButton" Content="Save" Grid.Column="1" Margin="0" VerticalAlignment="Top" Tap="saveButton_Tap" BorderBrush="#DEFFFFFF" Foreground="#DEFFFFFF"/>
 			</Grid>
 			<TextBlock TextWrapping="Wrap" Text="Replace Existing Saved Route:" FontSize="{StaticResource PhoneFontSizeSmall}" Foreground="White"/>

@@ -41,11 +41,23 @@ namespace Cyclestreets.Pages
 
             LocationManager.Instance.StopTracking();
             LocationManager.Instance.StartTracking(PositionAccuracy.High, 1000);
+
+            LocationManager.Instance.PositionChanged += Instance_PositionChanged;
+        }
+
+        void Instance_PositionChanged(Geolocator sender, PositionChangedEventArgs args)
+        {
+            if ( args.Position != null && args.Position.Coordinate != null )
+            {
+                args.Position.Coordinate.Speed
+            }
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
+
+            LocationManager.Instance.PositionChanged -= Instance_PositionChanged;
         }
 
         private void reroute_Tap(object sender, System.Windows.Input.GestureEventArgs e)
