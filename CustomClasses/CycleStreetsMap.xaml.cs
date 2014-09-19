@@ -35,6 +35,40 @@ namespace Cyclestreets.CustomClasses
         }
         #endregion
 
+        #region Lock To My Location Dependency Property
+        public static readonly DependencyProperty LockToMyLocationProperty =
+            DependencyProperty.Register("LockToMyLocation", typeof(bool), typeof(CycleStreetsMap), new PropertyMetadata(true, null));
+
+        public bool LockToMyLocation
+        {
+            get
+            {
+                return (bool)GetValue(LockToMyLocationProperty);
+            }
+            set
+            {
+                SetValue(LockToMyLocationProperty, value);
+            }
+        }
+        #endregion
+
+        #region Show Accuracy banner Dependency Property
+        public static readonly DependencyProperty ShowAccuracyBannerProperty =
+            DependencyProperty.Register("ShowAccuracyBanner", typeof(bool), typeof(CycleStreetsMap), new PropertyMetadata(true, null));
+
+        public bool ShowAccuracyBanner
+        {
+            get
+            {
+                return (bool)GetValue(ShowAccuracyBannerProperty);
+            }
+            set
+            {
+                SetValue(ShowAccuracyBannerProperty, value);
+            }
+        }
+        #endregion
+
         public GeoCoordinate Center
         {
             get
@@ -196,7 +230,7 @@ namespace Cyclestreets.CustomClasses
             _accuracyEllipse.Width = radius * 2;
             _accuracyEllipse.Height = radius * 2;
 
-            if (DateTime.Now - _timeLastMoved > new TimeSpan(0, 0, 20))
+            if (LockToMyLocation && DateTime.Now - _timeLastMoved > new TimeSpan(0, 0, 20))
                 MyMap.Center = myCoordinate;
         }
 

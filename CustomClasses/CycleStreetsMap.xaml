@@ -3,12 +3,22 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:maps="clr-namespace:Microsoft.Phone.Maps.Controls;assembly=Microsoft.Phone.Maps" x:Class="Cyclestreets.CustomClasses.CycleStreetsMap"
+    xmlns:maps="clr-namespace:Microsoft.Phone.Maps.Controls;assembly=Microsoft.Phone.Maps" xmlns:Common="clr-namespace:ScoreAlerts.Common" x:Name="userControl" x:Class="Cyclestreets.CustomClasses.CycleStreetsMap"
     mc:Ignorable="d"
-    FontFamily="{StaticResource PhoneFontFamilyNormal}"
-    FontSize="{StaticResource PhoneFontSizeNormal}"
-    Foreground="{StaticResource PhoneForegroundBrush}"
     d:DesignHeight="480" d:DesignWidth="480">
+
+    <UserControl.Resources>
+        <Common:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </UserControl.Resources>
+    <UserControl.FontFamily>
+        <StaticResource ResourceKey="PhoneFontFamilyNormal"/>
+    </UserControl.FontFamily>
+    <UserControl.FontSize>
+        <StaticResource ResourceKey="PhoneFontSizeNormal"/>
+    </UserControl.FontSize>
+    <UserControl.Foreground>
+        <StaticResource ResourceKey="PhoneForegroundBrush"/>
+    </UserControl.Foreground>
 
     <Grid x:Name="LayoutRoot" Background="{StaticResource PhoneChromeBrush}" DataContext="{Binding Source={StaticResource Locator}}">
         <VisualStateManager.VisualStateGroups>
@@ -81,7 +91,7 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
         <maps:Map x:Name="MyMap" Loaded="Map_Loaded" ZoomLevel="10" MouseLeftButtonDown="MyMap_MouseLeftButtonDown" MouseLeftButtonUp="MyMap_MouseLeftButtonUp"/>
-        <Grid x:Name="grid" Height="80" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5">
+        <Grid x:Name="grid" Height="80" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Visibility="{Binding ShowAccuracyBanner, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=userControl}">
             <Grid.Projection>
                 <PlaneProjection/>
             </Grid.Projection>

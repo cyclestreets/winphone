@@ -26,7 +26,6 @@ namespace Cyclestreets.Pages
         private readonly List<Point> _routeSegments = new List<Point>();
 
         private int _currentTargetPoint = -1;
-        private object _myPositionOverlay;
         private MapOverlay _myLocationOverlay;
         private MapLayer _myLocationLayer;
 
@@ -37,13 +36,14 @@ namespace Cyclestreets.Pages
             _viewModel = SimpleIoc.Default.GetInstance<DirectionsPageViewModel>();
             _lrViewModel = SimpleIoc.Default.GetInstance<LiveRideViewModel>();
 
-            LocationManager.Instance.PositionChanged += positionChangedHandler;
+            
         }
 
         private void positionChangedHandler(Geolocator sender, PositionChangedEventArgs args)
         {
-           GenerateLineSegments();
-            
+            GenerateLineSegments();
+            if (args.Position != null && args.Position.Coordinate != null && args.Position.Coordinate.Speed != null)
+                _lrViewModel.MetresPerSecond = args.Position.Coordinate.Speed.GetValueOrDefault();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -54,6 +54,15 @@ namespace Cyclestreets.Pages
             LocationManager.Instance.StartTracking(PositionAccuracy.High, 1000);
 
             GenerateLineSegments();
+
+            LocationManager.Instance.PositionChanged += positionChangedHandler;
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+
+            LocationManager.Instance.PositionChanged -= positionChangedHandler;
         }
 
         private void GenerateLineSegments()
@@ -111,7 +120,7 @@ namespace Cyclestreets.Pages
         {
             if (closest == null) return;
             GeoCoordinate myCoordinate = MyMap.Map.ConvertViewportPointToGeoCoordinate(closest.GetValueOrDefault());
-            if (_myPositionOverlay == null)
+            if (_myLocationOverlay == null)
             {
                 Ellipse myCircle = new Ellipse
                 {
