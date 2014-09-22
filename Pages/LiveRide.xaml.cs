@@ -69,6 +69,8 @@ namespace Cyclestreets.Pages
         {
             SmartDispatcher.BeginInvoke(() =>
             {
+                _routeSegments.Clear();
+
                 var rm = SimpleIoc.Default.GetInstance<RouteManager>();
                 IEnumerable<RouteSection> sections = rm.GetRouteSections(_viewModel.CurrentPlan);
                 foreach (var routeSection in sections.Where(routeSection => routeSection.Points != null))

@@ -365,7 +365,10 @@ namespace Cyclestreets.Pages
 
 		private void MyMap_Tap( object sender, System.Windows.Input.GestureEventArgs e )
 		{
+            CycleStreetsMap csmap = ((CycleStreetsMap)sender);
 			Map map = ((CycleStreetsMap)sender).Map;
+            csmap.LockToMyLocation = false;
+
 			Point p = e.GetPosition( map );
 			GeoCoordinate coord = map.ConvertViewportPointToGeoCoordinate( p );
 
