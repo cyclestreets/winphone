@@ -48,6 +48,7 @@ namespace Cyclestreets.Pages
 		// Declare the MarketplaceDetailTask object with page scope
 		// so we can access it from event handlers.
 		readonly MarketplaceDetailTask _marketPlaceDetailTask = new MarketplaceDetailTask();
+        private bool viewingPOI;
 
 		// Constructor
 		public MainPage()
@@ -58,6 +59,9 @@ namespace Cyclestreets.Pages
 			/*findAppBar = ApplicationBar.Buttons[ 0 ] as Microsoft.Phone.Shell.ApplicationBarIconButton;*/
 			directionsAppBar = ApplicationBar.Buttons[0] as ApplicationBarIconButton;
 			navigateToAppBar = ApplicationBar.Buttons[1] as ApplicationBarIconButton;
+            pointOfInterest = ApplicationBar.Buttons[3] as ApplicationBarIconButton;
+
+            pointOfInterest.IconUri = new Uri("/Assets/icons/dark/appbar.location.round.png", UriKind.RelativeOrAbsolute);
 
 			var sgs = VisualStateManager.GetVisualStateGroups( LayoutRoot );
 			var sg = sgs[0] as VisualStateGroup;
@@ -250,6 +254,9 @@ namespace Cyclestreets.Pages
 
 				if( PoiResults.Pois != null && PoiResults.Pois.Count > 0 )
 				{
+				    viewingPOI = true;
+                    pointOfInterest.IconUri = new Uri("/Assets/icons/dark/appbar.location.round.clear.png", UriKind.RelativeOrAbsolute);
+
 					_pinItems.Clear();
 					foreach( POI p in PoiResults.Pois )
 					{
@@ -330,7 +337,17 @@ namespace Cyclestreets.Pages
 
 		private void poiList_Click( object sender, EventArgs e )
 		{
-			NavigationService.Navigate( new Uri( "/Pages/POIList.xaml?longitude=" + MyMap.Center.Longitude + "&latitude=" + MyMap.Center.Latitude, UriKind.Relative ) );
+		    if (viewingPOI)
+		    {
+		        viewingPOI = false;
+                _poiLayer.Clear();
+		        pointOfInterest.IconUri = new Uri("/Assets/icons/dark/appbar.location.round.png", UriKind.RelativeOrAbsolute);
+		    }
+		    else
+		    {
+                NavigationService.Navigate(new Uri("/Pages/POIList.xaml?longitude=" + MyMap.Center.Longitude + "&latitude=" + MyMap.Center.Latitude, UriKind.Relative));    
+		    }
+			
 		}
 
 		private void settings_Click( object sender, EventArgs e )
@@ -365,6 +382,9 @@ namespace Cyclestreets.Pages
 
 		private void MyMap_Tap( object sender, System.Windows.Input.GestureEventArgs e )
 		{
+		    if (viewingPOI)
+		        return;
+
             CycleStreetsMap csmap = ((CycleStreetsMap)sender);
 			Map map = ((CycleStreetsMap)sender).Map;
             csmap.LockToMyLocation = false;

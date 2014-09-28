@@ -621,6 +621,15 @@ namespace Cyclestreets.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not parse point of interest data information from server. Please let us know about this error with what you were looking for to cause this problem..
+        /// </summary>
+        public static string poiParseError {
+            get {
+                return ResourceManager.GetString("poiParseError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Your GPS accuracy is low. Your current position may not be accurate..
         /// </summary>
         public static string PoorGPS {

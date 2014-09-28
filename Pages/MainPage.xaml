@@ -60,8 +60,7 @@
 		<shell:ApplicationBar x:Name="appBar">
 			<shell:ApplicationBar.MenuItems>
 				<shell:ApplicationBarMenuItem x:Name="loadRoute" IsEnabled="True" Text="load route" Click="loadRoute_Click"/>
-				<shell:ApplicationBarMenuItem x:Name="poiList" IsEnabled="True" Text="Points of interest" Click="poiList_Click"/>
-				<shell:ApplicationBarMenuItem x:Name="settings" IsEnabled="True" Text="Settings" Click="settings_Click"/>
+                <shell:ApplicationBarMenuItem x:Name="settings" IsEnabled="True" Text="Settings" Click="settings_Click"/>
 				<shell:ApplicationBarMenuItem x:Name="privacy" IsEnabled="True" Text="Privacy Policy" Click="privacy_Click"/>
 				<shell:ApplicationBarMenuItem x:Name="sendFeedback" IsEnabled="True" Text="send feedback" Click="sendFeedback_Click"/>
 			</shell:ApplicationBar.MenuItems>
@@ -69,7 +68,8 @@
 			<shell:ApplicationBarIconButton x:Name="directionsAppBar" IconUri="/Assets/icons/dark/appbar.directions.png" IsEnabled="True" Text="Directions" Click="ApplicationBarIconButton_Directions"/>
 			<shell:ApplicationBarIconButton x:Name="navigateToAppBar" IconUri="/Assets/icons/dark/appbar.location.png" IsEnabled="False" Text="Navigate To" Click="ApplicationBarIconButton_NavigateTo"/>
 			<shell:ApplicationBarIconButton x:Name="leisureRouting" IconUri="/Assets/icons/dark/appbar.map.aerial.png" IsEnabled="True" Text="leisure" Click="leisureRouting_Click"/>
-		</shell:ApplicationBar>
+            <shell:ApplicationBarIconButton x:Name="pointOfInterest" IconUri="/Assets/AppBar/cancel.png" IsEnabled="True" Text="p.o.i." Click="poiList_Click"/>
+        </shell:ApplicationBar>
 	</phone:PhoneApplicationPage.ApplicationBar>
 
 	<!--LayoutRoot is the root grid where all page content is placed-->

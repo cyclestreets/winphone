@@ -302,6 +302,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\AppBar\appbar.directions.png" />
+    <Content Include="Assets\AppBar\cancel.png" />
     <Content Include="Assets\AppBar\feature.email.png" />
     <Content Include="Assets\AppBar\save.png" />
     <Content Include="Assets\AppBar\share.png" />
@@ -321,11 +322,13 @@
     <Content Include="Assets\icons\dark\appbar.directions.png" />
     <Content Include="Assets\icons\dark\appbar.information.circle.png" />
     <Content Include="Assets\icons\dark\appbar.location.add.png" />
+    <Content Include="Assets\icons\dark\appbar.location.checkin.png" />
     <Content Include="Assets\icons\dark\appbar.location.circle.png" />
     <Content Include="Assets\icons\dark\appbar.location.delete.png" />
     <Content Include="Assets\icons\dark\appbar.location.foursquare.png" />
     <Content Include="Assets\icons\dark\appbar.location.minus.png" />
     <Content Include="Assets\icons\dark\appbar.location.png" />
+    <Content Include="Assets\icons\dark\appbar.location.round.clear.png" />
     <Content Include="Assets\icons\dark\appbar.location.round.png" />
     <Content Include="Assets\icons\dark\appbar.magnify.png" />
     <Content Include="Assets\icons\dark\appbar.map.aerial.highway.png" />

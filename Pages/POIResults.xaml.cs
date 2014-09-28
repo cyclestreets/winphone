@@ -55,22 +55,36 @@ namespace Cyclestreets.Pages
             }
             catch (Exception ex)
             {
-                AnalyticClient.Error("Could not parse JSON " + str + " " + ex.Message);
-                MessageBox.Show("Could not parse location data information from server. Please let us know about this error with what you were typing in the search box to cause this problem.");
+                AnalyticClient.Error(@"Could not parse JSON " + str + @" " + ex.Message);
+                MessageBox.Show(AppResources.poiParseError);
             }
 
             if (o == null) return;
-            JArray results = (JArray)o[@"pois"]["poi"];
-            Pois = new ObservableCollection<POI>();
+		    JArray results = null;
+		    if (o[@"pois"][@"poi"] is JArray)
+		        results = o[@"pois"][@"poi"] as JArray;
+		    else
+		    {
+		        if (o[@"pois"][@"poi"] is JObject)
+		        {
+		            results = new JArray {o[@"pois"][@"poi"] as JObject};
+		        }
+		    }
+		    Pois = new ObservableCollection<POI>();
             int id = 1;
-            const string col1 = "#7F000000";
-            const string col2 = "#3F000000";
+            const string col1 = @"#7F000000";
+            const string col2 = @"#3F000000";
             bool swap = true;
+		    if (results == null )
+		    {
+		        no_poi.Visibility = Visibility.Visible;
+                App.networkStatus.NetworkIsBusy = false;
+		        return;
+		    }
             foreach( var poi in results )
             {
-				POI item = new POI();
-                item.Name = poi[@"name"].ToString();
-			    GeoCoordinate g = new GeoCoordinate();
+				POI item = new POI {Name = poi[@"name"].ToString()};
+                GeoCoordinate g = new GeoCoordinate();
                 g.Longitude = float.Parse(poi[@"longitude"].ToString());
                 g.Latitude = float.Parse(poi[@"latitude"].ToString());
 			    item.Position = g;

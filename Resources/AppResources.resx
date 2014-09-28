@@ -456,4 +456,7 @@ Why not give us a 5 star rating to show your appreciation?</value>
   <data name="FindingRoute" xml:space="preserve">
     <value>Finding new route...</value>
   </data>
+  <data name="poiParseError" xml:space="preserve">
+    <value>Could not parse point of interest data information from server. Please let us know about this error with what you were looking for to cause this problem.</value>
+  </data>
 </root>
