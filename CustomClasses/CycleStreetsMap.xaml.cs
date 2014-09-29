@@ -35,15 +35,21 @@ namespace Cyclestreets.CustomClasses
         }
         #endregion
 
+        public enum LocationLock
+        {
+            NoLock,
+            LocationLock,
+            LocationAndZoomLock,
+        };
         #region Lock To My Location Dependency Property
         public static readonly DependencyProperty LockToMyLocationProperty =
-            DependencyProperty.Register("LockToMyLocation", typeof(bool), typeof(CycleStreetsMap), new PropertyMetadata(true, null));
+            DependencyProperty.Register("LockToMyLocation", typeof(LocationLock), typeof(CycleStreetsMap), new PropertyMetadata(LocationLock.LocationLock, null));
 
-        public bool LockToMyLocation
+        public LocationLock LockToMyLocation
         {
             get
             {
-                return (bool)GetValue(LockToMyLocationProperty);
+                return (LocationLock)GetValue(LockToMyLocationProperty);
             }
             set
             {
@@ -230,8 +236,18 @@ namespace Cyclestreets.CustomClasses
             _accuracyEllipse.Width = radius * 2;
             _accuracyEllipse.Height = radius * 2;
 
-            if (LockToMyLocation && DateTime.Now - _timeLastMoved > new TimeSpan(0, 0, 20))
-                MyMap.Center = myCoordinate;
+            float targetZoom;
+            if (myAccuracy < 50)
+                targetZoom = 18f;
+            else if (myAccuracy < 200)
+                targetZoom = 14f;
+            else if (myAccuracy < 500)
+                targetZoom = 12f;
+            else
+                targetZoom = 10f;
+
+            if (LockToMyLocation != LocationLock.NoLock && DateTime.Now - _timeLastMoved > new TimeSpan(0, 0, 20))
+                MyMap.SetView(myCoordinate, targetZoom, MapAnimationKind.Linear);
         }
 
         private void MyMap_ZoomLevelChanged(object sender, MapZoomLevelChangedEventArgs e)

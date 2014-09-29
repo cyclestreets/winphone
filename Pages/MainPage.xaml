@@ -133,7 +133,7 @@
 				<Location:GeoCoordinate Altitude="NaN" Course="NaN" HorizontalAccuracy="NaN" Longitude="-4.367" Latitude="55.551" Speed="NaN" VerticalAccuracy="NaN"/>
 			</maps:Map.Center>
 		</maps:Map>-->
-        <CustomClasses:CycleStreetsMap x:Name="MyMap" Tap="MyMap_Tap" LockToMyLocation="False" ShowAccuracyBanner="False" />
+        <CustomClasses:CycleStreetsMap x:Name="MyMap" Tap="MyMap_Tap" LockToMyLocation="LocationAndZoomLock" ShowAccuracyBanner="False" />
 		<UserControls:FeedbackOverlay/>
 	</Grid>
 

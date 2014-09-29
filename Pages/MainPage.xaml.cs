@@ -4,6 +4,7 @@ using System.Device.Location;
 using System.Globalization;
 using System.Net;
 using System.Windows;
+using System.Windows.Input;
 using System.Xml.Linq;
 using Cyclestreets.Annotations;
 using Cyclestreets.CustomClasses;
@@ -387,7 +388,7 @@ namespace Cyclestreets.Pages
 
             CycleStreetsMap csmap = ((CycleStreetsMap)sender);
 			Map map = ((CycleStreetsMap)sender).Map;
-            csmap.LockToMyLocation = false;
+            csmap.LockToMyLocation = CycleStreetsMap.LocationLock.NoLock;
 
 			Point p = e.GetPosition( map );
 			GeoCoordinate coord = map.ConvertViewportPointToGeoCoordinate( p );
@@ -415,5 +416,6 @@ namespace Cyclestreets.Pages
 
 		    _poiLayer.Add(overlay);
 		}
+
 	}
 }

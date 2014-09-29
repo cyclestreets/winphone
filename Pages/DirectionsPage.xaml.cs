@@ -15,7 +15,6 @@ using Microsoft.Phone.Maps.Controls;
 using Microsoft.Phone.Maps.Services;
 using Microsoft.Phone.Maps.Toolkit;
 using Microsoft.Phone.Shell;
-using Microsoft.Phone.Tasks;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -23,12 +22,9 @@ using System.Device.Location;
 using System.Diagnostics;
 using System.Net;
 using System.Windows;
-using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Windows.Devices.Geolocation;
 
 namespace Cyclestreets.Pages
 {
@@ -52,12 +48,9 @@ namespace Cyclestreets.Pages
 
         readonly GeocodeQuery _geoQ;
 
-        Stackish<Pushpin> _waypoints = new Stackish<Pushpin>();
-
-        private bool _hideRouteOptions;
+        readonly Stackish<Pushpin> _waypoints = new Stackish<Pushpin>();
 
         GeoCoordinate _current;
-
 
         public static ListBoxPair[] RouteType = 
 		{ 
@@ -266,7 +259,7 @@ namespace Cyclestreets.Pages
             Focus();
         }
 
-        private async void cursorPos_Click(object sender, EventArgs e)
+        private void cursorPos_Click(object sender, EventArgs e)
         {
             //MapLocation loc = await GeoUtils.StartReverseGeocode(MyMap.Center);
             SetCurrentPosition(MyMap.Center);
@@ -375,25 +368,6 @@ namespace Cyclestreets.Pages
         {
             _current = null;
             //confirmWaypoint.IsEnabled = false;
-        }
-
-        private void SetCurrentPosition(MapLocation loc)
-        {
-            if (loc == null)
-            {
-                MessageBox.Show(AppResources.NoLocationMsg, AppResources.InvalidLocation,
-                   MessageBoxButton.OK);
-                return;
-            }
-            SetCurrentPosition(loc.GeoCoordinate);
-
-            SmartDispatcher.BeginInvoke(() =>
-            {
-                // Set the name in the box without looking it up
-                startPoint.Populating -= StartPointOnPopulating;
-                startPoint.Text = String.Format(@"{0} {1}, {2}, {3}", loc.Information.Name, loc.Information.Address.Street, loc.Information.Address.City, loc.Information.Address.PostalCode);
-                startPoint.Populating += StartPointOnPopulating;
-            });
         }
 
         private void SetCurrentPosition(GeoCoordinate c)
@@ -697,13 +671,6 @@ namespace Cyclestreets.Pages
             }
         }*/
 
-        private void routeInfo_Tap(object sender, System.Windows.Input.GestureEventArgs e)
-        {
-            //PhoneApplicationService.Current.State["route"] = currentRouteData;
-            //PhoneApplicationService.Current.State["routeIndex"] = route.routeIndex;
-            NavigationService.Navigate(new Uri("/Pages/DirectionsResults.xaml", UriKind.Relative));
-        }
-
         private void routeTutorial1_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             routeTutorial2.Visibility = Visibility.Visible;
@@ -787,16 +754,6 @@ namespace Cyclestreets.Pages
             }
         }
 
-        private void saveRoute_Click(object sender, EventArgs e)
-        {
-            NavigationService.Navigate(new Uri("/Pages/SaveRoute.xaml", UriKind.Relative));
-        }
-
-        private void loadRoute_Click(object sender, EventArgs e)
-        {
-            NavigationService.Navigate(new Uri("/Pages/LoadRoute.xaml", UriKind.Relative));
-        }
-
         private void startPoint_Populated(object sender, PopulatedEventArgs e)
         {
             /*foreach (object o in e.Data)
@@ -828,31 +785,9 @@ namespace Cyclestreets.Pages
         }
 
         private void planRouteBorder_Tap(object sender, System.Windows.Input.GestureEventArgs e)
-        {
-            RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
-            /*string defaultRouteTypeSetting = SettingManager.instance.GetStringValue(@"defaultRouteType", "Balanced");
-            bool result = await rm.FindRoute(defaultRouteTypeSetting);
-            if (!result)
-            {
-                MarkedUp.AnalyticClient.Error(@"Route Planning Error");
-
-                MessageBox.Show(
-                    AppResources.JSONParseError);
-            }
-            else
-            {
-                //if (!SettingManager.instance.GetBoolValue(@"tutorialEnabled", true)) return;
-               // bool shownTutorial = SettingManager.instance.GetBoolValue(@"shownTutorialRouteType", false);
-                //if (!shownTutorial)
-               //     routeTutorialRouteType.Visibility = Visibility.Visible;
-
-                rm.IsBusy = false;
-
-                NavigationService.Navigate(new Uri("/Pages/RouteOverview.xaml", UriKind.Relative));
-            }*/
+        {   
             NavigationService.Navigate(new Uri("/Pages/RouteOverview.xaml?mode=planroute", UriKind.Relative));
         }
-
 
 
         private void myLocationBorder_Tap(object sender, System.Windows.Input.GestureEventArgs e)
