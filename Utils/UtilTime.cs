@@ -1,4 +1,6 @@
 ﻿using System;
+using Cyclestreets.Resources;
+
 namespace Cyclestreets.Utils
 {
 	public class UtilTime
@@ -32,7 +34,7 @@ namespace Cyclestreets.Utils
 
 			int firstId = -1;
 
-			int temp = 0;
+			int temp;
 			int duration = (int)inDuration;
 			if( duration >= ONE_SECOND )
 			{
@@ -40,7 +42,7 @@ namespace Cyclestreets.Utils
 				if( temp > 0 )
 				{
 					duration -= temp * ONE_DAY;
-					timesOut[ 0 ] = (int)temp;
+					timesOut[ 0 ] = temp;
 					firstId = 0;
 				}
 
@@ -48,7 +50,7 @@ namespace Cyclestreets.Utils
 				if( temp > 0 )
 				{
 					duration -= temp * ONE_HOUR;
-					timesOut[ 1 ] = (int)temp;
+					timesOut[ 1 ] = temp;
 					if( firstId == -1 )
 						firstId = 1;
 				}
@@ -57,7 +59,7 @@ namespace Cyclestreets.Utils
 				if( temp > 0 )
 				{
 					duration -= temp * ONE_MINUTE;
-					timesOut[ 2 ] = (int)temp;
+					timesOut[ 2 ] = temp;
 					if( firstId == -1 )
 						firstId = 2;
 				}
@@ -65,7 +67,7 @@ namespace Cyclestreets.Utils
 				temp = duration / ONE_SECOND;
 				if( temp > 0 )
 				{
-					timesOut[ 3 ] = (int)temp;
+					timesOut[ 3 ] = temp;
 					if( firstId == -1 )
 						firstId = 3;
 				}
@@ -103,21 +105,21 @@ namespace Cyclestreets.Utils
 					if( times[ i ] > 0 ) // If this time has a value
 					{
 						if( count > 0 )
-							output += " "; // add a separator
+							output += @" "; // add a separator
 						output += times[ i ];
 						switch( i )
 						{
 							case 0:
-								output += "Day";
+								output += AppResources.Day;
 								break;
 							case 1:
-								output += "Hour";
+								output += AppResources.Hour;
 								break;
 							case 2:
-								output += "Minute";
+								output += AppResources.Minute;
 								break;
 							case 3:
-								output += "Second";
+								output += AppResources.Second;
 								break;
 						}
 						count++;
@@ -127,10 +129,9 @@ namespace Cyclestreets.Utils
 			}
 			else
 			{
-				output += "0"; // for values less than 1 second
+				output += @"0"; // for values less than 1 second
 			}
-			times = null;
-			return output;
+		    return output;
 
 		}
 
@@ -152,7 +153,7 @@ namespace Cyclestreets.Utils
 
 			int count = 0;
 
-			int temp = 0;
+			int temp;
 			if( duration >= ONE_SECOND )
 			{
 				temp = (int)Math.Floor( duration / ONE_DAY );
@@ -160,8 +161,8 @@ namespace Cyclestreets.Utils
 				{
 					duration -= temp * ONE_DAY;
 					timesOut[ 0 ] = "" + temp;
-					timesOut[ 0 ] += " " + "Day";
-					timesOut[ 0 ] += ( ( temp > 1 ) ? "s" : "" );
+					timesOut[ 0 ] += @" " + AppResources.Day;
+					timesOut[ 0 ] += ( ( temp > 1 ) ? @"s" : "" );
 					count++;
 					// times[0] += ( ( duration >= ONE_MINUTE ) ? ", " : "" );
 				}
@@ -171,8 +172,8 @@ namespace Cyclestreets.Utils
 				{
 					duration -= temp * ONE_HOUR;
 					timesOut[ 1 ] = "" + temp;
-					timesOut[ 1 ] += " " + "Hour";
-					timesOut[ 1 ] += ( ( temp > 1 ) ? "s" : "" );
+					timesOut[ 1 ] += @" " + AppResources.Hour;
+					timesOut[ 1 ] += ( ( temp > 1 ) ? @"s" : "" );
 					count++;
 					// res = res + ( ( duration >= ONE_MINUTE ) ? ", " : "" );
 				}
@@ -182,8 +183,8 @@ namespace Cyclestreets.Utils
 				{
 					duration -= temp * ONE_MINUTE;
 					timesOut[ 2 ] = "" + temp;
-					timesOut[ 2 ] += " " + "Minute";
-					timesOut[ 2 ] += ( ( temp > 1 ) ? "s" : "" );
+					timesOut[ 2 ] += @" " + AppResources.Minute;
+					timesOut[ 2 ] += ( ( temp > 1 ) ? @"s" : "" );
 					count++;
 				}
 
@@ -191,8 +192,8 @@ namespace Cyclestreets.Utils
 				if( temp > 0 )
 				{
 					timesOut[ 3 ] = "" + temp;
-					timesOut[ 3 ] += " " + "Second";
-					timesOut[ 3 ] += ( ( temp > 1 ) ? "s" : "" );
+					timesOut[ 3 ] += @" " + AppResources.Second;
+					timesOut[ 3 ] += ( ( temp > 1 ) ? @"s" : "" );
 					count++;
 				}
 			}
@@ -201,7 +202,7 @@ namespace Cyclestreets.Utils
 				timesOut[ 0 ] = null;
 				timesOut[ 1 ] = null;
 				timesOut[ 2 ] = null;
-				timesOut[ 3 ] = "0 " + "Second";
+				timesOut[ 3 ] = @"0 " + AppResources.Second;
 				count = 1;
 			}
 			return count;
@@ -239,7 +240,7 @@ namespace Cyclestreets.Utils
 
 					if( found < total && found < maxValuesToDisplay )
 					{
-						res += ", ";
+						res += @", ";
 					}
 					else
 					{

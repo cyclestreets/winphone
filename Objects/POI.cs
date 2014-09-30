@@ -26,7 +26,7 @@ namespace Cyclestreets.Objects
         }
 
         public string Distance { get; set; }
-        private string _location = "...";
+        private string _location = @"...";
 
         private string Location
         {

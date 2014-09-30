@@ -3,16 +3,16 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Windows.Controls;
-using System.Windows.Navigation;
 using System.Xml.Linq;
+using Cyclestreets.Annotations;
 using Cyclestreets.Utils;
-using Microsoft.Phone.Controls;
 
-namespace Cyclestreets
+namespace Cyclestreets.Pages
 {
-	public partial class POIList : PhoneApplicationPage
+    [UsedImplicitly]
+    public partial class POIList
 	{
-		private ObservableCollection<POIItem> items = new ObservableCollection<POIItem>();
+		private readonly ObservableCollection<POIItem> items = new ObservableCollection<POIItem>();
 
 		float longitude;
 		float latitude;
@@ -23,7 +23,7 @@ namespace Cyclestreets
 
 			progress.DataContext = App.networkStatus;
 
-			AsyncWebRequest _request = new AsyncWebRequest( "http://www.cyclestreets.net/api/poitypes.xml?key=" + App.apiKey + "&icons=32", POIFound );
+			AsyncWebRequest _request = new AsyncWebRequest( string.Format(@"http://www.cyclestreets.net/api/poitypes.xml?key={0}&icons=32", App.apiKey), POIFound );
 			_request.Start();
 
 			App.networkStatus.NetworkIsBusy = true;
@@ -39,17 +39,19 @@ namespace Cyclestreets
 
 			XDocument xml = XDocument.Parse( str.Trim() );
 
-			var poi = xml.Descendants( "poitype" )
-									.Where( e => (string)e.Parent.Name.LocalName == "poitypes" );
+			var poi = xml.Descendants( @"poitype" )
+									.Where( e => e.Parent != null && e.Parent.Name.LocalName == @"poitypes" );
 
 			foreach( XElement p in poi )
 			{
 				POIItem item = new POIItem();
-				item.POILabel = p.Element( "name" ).Value;
-				item.POIEnabled = false;
-				item.POIName = p.Element( "key" ).Value;
+			    var xElement = p.Element( @"name" );
+			    if (xElement != null) item.POILabel = xElement.Value;
+			    item.POIEnabled = false;
+			    var element = p.Element( @"key" );
+			    if (element != null) item.POIName = element.Value;
 
-				items.Add( item );
+			    items.Add( item );
 			}
 
 			poiList.ItemsSource = items;
@@ -60,15 +62,16 @@ namespace Cyclestreets
 		protected override void OnNavigatedTo( System.Windows.Navigation.NavigationEventArgs e )
 		{
 			base.OnNavigatedTo( e );
-			longitude = float.Parse( NavigationContext.QueryString[ "longitude" ] );
-			latitude = float.Parse( NavigationContext.QueryString[ "latitude" ] );
+			longitude = float.Parse( NavigationContext.QueryString[ @"longitude" ] );
+			latitude = float.Parse( NavigationContext.QueryString[ @"latitude" ] );
 		}
 
 		private void CheckBox_Tap_1( object sender, System.Windows.Input.GestureEventArgs e )
 		{
-			POIItem item = ( (CheckBox)sender ).DataContext as POIItem;
+		    POIItem item = ( (CheckBox)sender ).DataContext as POIItem;
 
-			NavigationService.Navigate( new Uri( "/Pages/POIResults.xaml?longitude=" + longitude + "&latitude=" + latitude + "&POIName=" + item.POIName, UriKind.Relative ) );
+		    if (item != null)
+		        NavigationService.Navigate( new Uri( "/Pages/POIResults.xaml?longitude=" + longitude + "&latitude=" + latitude + "&POIName=" + item.POIName, UriKind.Relative ) );
 		}
 	}
 }

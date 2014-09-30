@@ -2,16 +2,13 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Navigation;
 using System.Xml.Linq;
-using Cyclestreets;
+using Cyclestreets.Resources;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Info;
-using Microsoft.Phone.Maps.Services;
 
-namespace CycleStreets.Util
+namespace Cyclestreets.Utils
 {
 	public static class EnumerableExtensions
 	{
@@ -65,14 +62,14 @@ namespace CycleStreets.Util
 
 		public static string GetHardwareId()
 		{
-			byte[] uniqueId = (byte[])DeviceExtendedProperties.GetValue( "DeviceUniqueId" );
+			byte[] uniqueId = (byte[])DeviceExtendedProperties.GetValue( @"DeviceUniqueId" );
 			return BitConverter.ToString( uniqueId );
 		}
 
 		public static DateTime UnixTimeStampToDateTime( double unixTimeStamp )
 		{
 			// Unix timestamp is seconds past epoch
-			System.DateTime dtDateTime = new DateTime( 1970, 1, 1, 0, 0, 0, 0 );
+			DateTime dtDateTime = new DateTime( 1970, 1, 1, 0, 0, 0, 0 );
 			dtDateTime = dtDateTime.AddSeconds( unixTimeStamp ).ToLocalTime();
 			return dtDateTime;
 		}
@@ -85,10 +82,7 @@ namespace CycleStreets.Util
 			{
 				return EConnectionType.ENoConnection;
 			}
-			else
-			{
-				return EConnectionType.EConnected;
-			}
+		    return EConnectionType.EConnected;
 		}
 
 		public static bool ResultContainsErrors( string webResponse, string actionPerformed )
@@ -98,22 +92,26 @@ namespace CycleStreets.Util
 			try
 			{
 				XDocument xml = XDocument.Parse( webResponse.Trim() );
-				var error = xml.Descendants( "root" );
+				var error = xml.Descendants( @"root" );
 				foreach( XElement e in error )
 				{
-					if( e.Element( "error" ) != null )
+					if( e.Element( @"error" ) != null )
 					{
-						int errorCode = Int32.Parse( e.Element( "error_code" ).Value );
+					    var xElement = e.Element( @"error_code" );
+					    if (xElement != null)
+					    {
+					        int errorCode = Int32.Parse( xElement.Value );
 
-						//MarkedUp.AnalyticClient.Error( e.Element( "error" ).Value );
+					        //MarkedUp.AnalyticClient.Error( e.Element( "error" ).Value );
 
-						SmartDispatcher.BeginInvoke( () =>
-						{
-							MessageBoxResult result = MessageBox.Show( "Server reported an error.\nAction: " + actionPerformed + "\nCode " + errorCode + "\nMessage: " + e.Element( "error" ).Value + ".\nPlease try again later or report to dave@rwscripts.com if it continues. Thanks.\n", "Error", MessageBoxButton.OK );
+					        SmartDispatcher.BeginInvoke( () =>
+					        {
+					            MessageBox.Show( string.Format(AppResources.Util_ResultContainsErrors_, actionPerformed, errorCode, e.Element( @"error" ).Value), AppResources.Error, MessageBoxButton.OK );
 
-						} );
+					        } );
+					    }
 
-						return true;
+					    return true;
 					}
 				}
 
@@ -121,7 +119,7 @@ namespace CycleStreets.Util
 			}
 			catch( System.Xml.XmlException ex )
 			{
-				FlurryWP8SDK.Api.LogError( "Invalid XML: \"" + webResponse + "\"", ex );
+				FlurryWP8SDK.Api.LogError( string.Format(@"Invalid XML: '{0}'", webResponse), ex );
 				return true;
 			}
 
@@ -131,7 +129,7 @@ namespace CycleStreets.Util
 		{
 			SmartDispatcher.BeginInvoke( () =>
 			{
-				MessageBoxResult result = MessageBox.Show( "There was an error while downloading the available store items. Please try again. If this problem persists, please contact dave@rwscripts.com", "Error", MessageBoxButton.OK );
+				MessageBoxResult result = MessageBox.Show( AppResources.StoreErrorMsg, AppResources.Error, MessageBoxButton.OK );
 				if( result == MessageBoxResult.OK )
 				{
 					// 					Uri nUri = null;
@@ -148,7 +146,7 @@ namespace CycleStreets.Util
 		{
 			SmartDispatcher.BeginInvoke( () =>
 			{
-				MessageBoxResult result = MessageBox.Show( "There was an error while downloading data from the server. Please try again.", "Error", MessageBoxButton.OK );
+				MessageBoxResult result = MessageBox.Show( AppResources.DataDownloadError, AppResources.Error, MessageBoxButton.OK );
 				if( result == MessageBoxResult.OK )
 				{
 
@@ -160,8 +158,8 @@ namespace CycleStreets.Util
 		{
 			SmartDispatcher.BeginInvoke( () =>
 			{
-				MessageBoxResult result = MessageBox.Show( "No Internet connection available. A connection to the Internet is required to use this app. Check flight mode is not enabled and try again.", "No Internet", MessageBoxButton.OK );
-				//if( result == MessageBoxResult.OK )
+			    MessageBox.Show( AppResources.NoNetConnection, AppResources.NoInternetTitle, MessageBoxButton.OK );
+			    //if( result == MessageBoxResult.OK )
 				{
 					// 					Uri nUri = null;
 					// 					if( App.UserSession != null )
@@ -170,7 +168,7 @@ namespace CycleStreets.Util
 					// 						nUri = new Uri( string.Format( "/SplashPage.xaml?Refresh=true&random={0}", Guid.NewGuid() ), UriKind.Relative );
 					// 					App.RootFrame.Navigate( nUri );
 				}
-			} );
+			});
 		}
 
 		public static int getSpeedFromString( string speedVal )
@@ -192,8 +190,8 @@ namespace CycleStreets.Util
 			if( SettingManager.instance.GetBoolValue( @"LocationConsent", true ) == false )
 			{
 				MessageBoxResult result =
-								MessageBox.Show( "You have denied CycleStreets permission to access your location. Press OK to change this or Cancel to cancel.",
-								"Location",
+								MessageBox.Show( AppResources.LocationPermsBody,
+								AppResources.Location,
 								MessageBoxButton.OKCancel );
 				if( result == MessageBoxResult.OK )
 				{
@@ -202,10 +200,9 @@ namespace CycleStreets.Util
 			}
 			else
 			{
-				MessageBoxResult result =
-									MessageBox.Show( "Unable to retrieve your location. Please check location services are enabled on this device.",
-									"Location",
-									MessageBoxButton.OK );
+				MessageBox.Show( AppResources.CantFindYou,
+				    AppResources.Location,
+				    MessageBoxButton.OK );
 			}
 		}
 

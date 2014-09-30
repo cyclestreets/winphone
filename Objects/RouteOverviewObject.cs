@@ -18,7 +18,7 @@ namespace Cyclestreets.Objects
             set
             {
                 SetProperty(ref _routeDuration, value);
-                OnPropertyChanged("RouteDurationString");
+                OnPropertyChanged(@"RouteDurationString");
             }
         }
 
@@ -39,7 +39,7 @@ namespace Cyclestreets.Objects
         {
             get
             {
-                return (RouteLength * 0.00062137).ToString("0.0");
+                return (RouteLength * 0.00062137).ToString(@"0.0");
             }
         }
 

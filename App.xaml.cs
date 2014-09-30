@@ -18,9 +18,7 @@ using FlurryWP8SDK;
 using GalaSoft.MvvmLight.Ioc;
 using MarkedUp;
 using Microsoft.Phone.Controls;
-using Microsoft.Phone.Marketplace;
 using Microsoft.Phone.Shell;
-using Microsoft.Phone.Tasks;
 using System.IO.IsolatedStorage;
 
 #endregion
@@ -66,7 +64,6 @@ namespace Cyclestreets
 
         public static NetworkBusy networkStatus = new NetworkBusy();
 
-        private static LicenseInformation _licenseInfo = new LicenseInformation();
         private static bool _isTrial;
 
         enum SessionType
@@ -80,10 +77,10 @@ namespace Cyclestreets
         private SessionType sessionType = SessionType.None; 
  
         // Set to true when the page navigation is being reset  
-        bool wasRelaunched = false; 
+        bool wasRelaunched; 
  
         // set to true when 5 min passed since the app was relaunched 
-        bool mustClearPagestack = false; 
+        bool mustClearPagestack; 
  
         IsolatedStorageSettings settings = IsolatedStorageSettings.ApplicationSettings; 
 
@@ -240,11 +237,11 @@ namespace Cyclestreets
 
 
                 // Keep track of Session Type  
-                if (e.Uri.ToString().Contains("DeepLink=true"))
+                if (e.Uri.ToString().Contains(@"DeepLink=true"))
                 {
                     sessionType = SessionType.DeepLink;
                 }
-                else if (e.Uri.ToString().Contains("/MainPage.xaml"))
+                else if (e.Uri.ToString().Contains(@"/MainPage.xaml"))
                 {
                     sessionType = SessionType.Home;
                 }
@@ -263,7 +260,7 @@ namespace Cyclestreets
                 // This block will run if the previous navigation was a relaunch 
                 wasRelaunched = false;
 
-                if (e.Uri.ToString().Contains("DeepLink=true"))
+                if (e.Uri.ToString().Contains(@"DeepLink=true"))
                 {
                     // This block will run if the launch Uri contains "DeepLink=true" which 
                     // was specified when the secondary tile was created in MainPage.xaml.cs 
@@ -272,7 +269,7 @@ namespace Cyclestreets
                     // The app was relaunched via a Deep Link. 
                     // The page stack will be cleared. 
                 }
-                else if (e.Uri.ToString().Contains("/MainPage.xaml"))
+                else if (e.Uri.ToString().Contains(@"/MainPage.xaml"))
                 {
                     // This block will run if the navigation Uri is the main page 
                     if (sessionType == SessionType.DeepLink)
@@ -484,12 +481,12 @@ namespace Cyclestreets
         // session type of the app instance to isolated storage. 
         public void SaveCurrentDeactivationSettings()
         {
-            if (AddOrUpdateValue("DeactivateTime", DateTimeOffset.Now))
+            if (AddOrUpdateValue(@"DeactivateTime", DateTimeOffset.Now))
             {
                 settings.Save();
             }
 
-            if (AddOrUpdateValue("SessionType", sessionType))
+            if (AddOrUpdateValue(@"SessionType", sessionType))
             {
                 settings.Save();
             }
@@ -500,8 +497,8 @@ namespace Cyclestreets
         // isolated storage 
         public void RemoveCurrentDeactivationSettings()
         {
-            RemoveValue("DeactivateTime");
-            RemoveValue("SessionType");
+            RemoveValue(@"DeactivateTime");
+            RemoveValue(@"SessionType");
             settings.Save();
         }
 
@@ -511,9 +508,9 @@ namespace Cyclestreets
         {
             DateTimeOffset lastDeactivated;
 
-            if (settings.Contains("DeactivateTime"))
+            if (settings.Contains(@"DeactivateTime"))
             {
-                lastDeactivated = (DateTimeOffset)settings["DeactivateTime"];
+                lastDeactivated = (DateTimeOffset)settings[@"DeactivateTime"];
             }
 
             var currentDuration = DateTimeOffset.Now.Subtract(lastDeactivated);
@@ -524,9 +521,9 @@ namespace Cyclestreets
         // Helper method to restore the session type from isolated storage. 
         void RestoreSessionType()
         {
-            if (settings.Contains("SessionType"))
+            if (settings.Contains(@"SessionType"))
             {
-                sessionType = (SessionType)settings["SessionType"];
+                sessionType = (SessionType)settings[@"SessionType"];
             }
         } 
     }

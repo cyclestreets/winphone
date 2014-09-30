@@ -16,7 +16,6 @@ using Cyclestreets.Utils;
 using MarkedUp;
 using Microsoft.Expression.Interactivity.Core;
 using Microsoft.Phone.Maps.Controls;
-using Microsoft.Phone.Maps.Services;
 using Microsoft.Phone.Maps.Toolkit;
 using Microsoft.Phone.Shell;
 using Microsoft.Phone.Tasks;
@@ -62,9 +61,10 @@ namespace Cyclestreets.Pages
 			navigateToAppBar = ApplicationBar.Buttons[1] as ApplicationBarIconButton;
             pointOfInterest = ApplicationBar.Buttons[3] as ApplicationBarIconButton;
 
-            pointOfInterest.IconUri = new Uri("/Assets/icons/dark/appbar.location.round.png", UriKind.RelativeOrAbsolute);
+		    if (pointOfInterest != null)
+		        pointOfInterest.IconUri = new Uri("/Assets/icons/dark/appbar.location.round.png", UriKind.RelativeOrAbsolute);
 
-			var sgs = VisualStateManager.GetVisualStateGroups( LayoutRoot );
+		    var sgs = VisualStateManager.GetVisualStateGroups( LayoutRoot );
 			var sg = sgs[0] as VisualStateGroup;
 		    if (sg != null) ExtendedVisualStateManager.GoToElementState( LayoutRoot, ( (VisualState)sg.States[0] ).Name, true );
 		}
@@ -95,10 +95,10 @@ namespace Cyclestreets.Pages
 				var client = new RestClient( serverUrl );
 
 				var request = new RestRequest( "", Method.POST );
-				request.AddParameter( "Hardware", udid ); // adds to POST or URL querystring based on Method
+				request.AddParameter( @"Hardware", udid ); // adds to POST or URL querystring based on Method
 
 				// easily add HTTP Headers
-				request.AddHeader( "header", "value" );
+				request.AddHeader( @"header", @"value" );
 
 				// execute the request
 				//RestResponse response = client.ExecuteAsync(request, sendPushURLCallback);
@@ -107,7 +107,7 @@ namespace Cyclestreets.Pages
 				// easy async support
 				client.ExecuteAsync( request, response =>
 				{
-					if( Util.ResultContainsErrors( response.Content, "sendPushToken" ) )
+					if( Util.ResultContainsErrors( response.Content, @"sendPushToken" ) )
 					{
 						Util.dataFailure();
 					}
@@ -120,18 +120,18 @@ namespace Cyclestreets.Pages
 						try
 						{
 							XDocument xml = XDocument.Parse( response.Content.Trim() );
-							var session = xml.Descendants( "root" );
+							var session = xml.Descendants( @"root" );
 							foreach( XElement s in session )
 							{
-								if( s.Element( "trialID" ) != null )
+								if( s.Element( @"trialID" ) != null )
 								{
-								    var xElement = s.Element( "trialID" );
+								    var xElement = s.Element( @"trialID" );
 								    if (xElement != null)
 								        ( (App)Application.Current ).TrialID = int.Parse( xElement.Value );
 								}
-							    if( s.Element( "result" ) != null )
+							    if( s.Element( @"result" ) != null )
 							    {
-							        var xElement = s.Element( "result" );
+							        var xElement = s.Element( @"result" );
 							        if( xElement != null && int.Parse( xElement.Value ) == 0 )
 									{
 										NavigationService.Navigate( new Uri( "/Pages/TrialExpired.xaml", UriKind.Relative ) );
@@ -143,7 +143,7 @@ namespace Cyclestreets.Pages
 									else
 									{
 										MessageBox.Show( AppResources.TrialWelcome, AppResources.MainPage_OnNavigatedTo_Hello, MessageBoxButton.OK );
-										ApplicationBarMenuItem m = new ApplicationBarMenuItem( "buy full version" );
+										ApplicationBarMenuItem m = new ApplicationBarMenuItem( AppResources.MainPage_OnNavigatedTo_buy_full_version );
 										m.Click += m_Click;
 										ApplicationBar.MenuItems.Add( m );
 										SettingManager.instance.SetBoolValue( @"appIsTrial", true );
@@ -153,7 +153,7 @@ namespace Cyclestreets.Pages
 						}
 						catch( Exception ex )
 						{
-							FlurryWP8SDK.Api.LogError( "Failed to parse login xml", ex );
+							FlurryWP8SDK.Api.LogError( @"Failed to parse login xml", ex );
 						}
 					}
 				} );
@@ -165,10 +165,10 @@ namespace Cyclestreets.Pages
 				{
 					var tc = new TrialConversion
 					{
-						ProductId = "FreeToPaid",
-						ProductName = "Free Trial to Full version",
+						ProductId = @"FreeToPaid",
+						ProductName = @"Free Trial to Full version",
 						CurrentMarket = RegionInfo.CurrentRegion.TwoLetterISORegionName,
-						CommerceEngine = "Custom Engine",
+						CommerceEngine = @"Custom Engine",
 						Currency = RegionInfo.CurrentRegion.ISOCurrencySymbol,
 						Price = 0.99
 					};
@@ -233,8 +233,8 @@ namespace Cyclestreets.Pages
 				{
 					GeoCoordinate center = new GeoCoordinate
 					{
-					    Longitude = float.Parse(NavigationContext.QueryString["longitude"]),
-					    Latitude = float.Parse(NavigationContext.QueryString["latitude"])
+					    Longitude = float.Parse(NavigationContext.QueryString[@"longitude"]),
+					    Latitude = float.Parse(NavigationContext.QueryString[@"latitude"])
 					};
 				    MyMap.Center = center;
 					MyMap.ZoomLevel = 16;
@@ -293,13 +293,13 @@ namespace Cyclestreets.Pages
 				}
 			}
 
-			if( PhoneApplicationService.Current.State.ContainsKey( @"loadedRoute" ) && PhoneApplicationService.Current.State["loadedRoute"] != null )
+			if( PhoneApplicationService.Current.State.ContainsKey( @"loadedRoute" ) && PhoneApplicationService.Current.State[@"loadedRoute"] != null )
 			{
 				NavigationService.Navigate( new Uri( "/pages/DirectionsPage.xaml", UriKind.Relative ) );
 			}
 		}
 
-		private void PoiTapped( object sender, System.Windows.Input.GestureEventArgs e )
+		private void PoiTapped( object sender, GestureEventArgs e )
 		{
 			Pushpin pp = sender as Pushpin;
 		    if (pp == null) return;
@@ -318,13 +318,7 @@ namespace Cyclestreets.Pages
 		}
 
 
-
-		private void geoQ_QueryCompleted( object sender, QueryCompletedEventArgs<IList<MapLocation>> e )
-		{
-
-		}
-
-		private void ApplicationBarIconButton_Directions( object sender, EventArgs e )
+        private void ApplicationBarIconButton_Directions( object sender, EventArgs e )
 		{
 			NavigationService.Navigate( new Uri( "/Pages/DirectionsPage.xaml", UriKind.Relative ) );
 
@@ -381,7 +375,7 @@ namespace Cyclestreets.Pages
 			NavigationService.Navigate( new Uri( "/Pages/LoadRoute.xaml", UriKind.Relative ) );
 		}
 
-		private void MyMap_Tap( object sender, System.Windows.Input.GestureEventArgs e )
+		private void MyMap_Tap( object sender, GestureEventArgs e )
 		{
 		    if (viewingPOI)
 		        return;

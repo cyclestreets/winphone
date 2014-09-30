@@ -88,7 +88,7 @@ namespace CycleStreets.Helpers
 			}
 			catch( Exception ex )
 			{
-				Debug.WriteLine( string.Format( "FeedbackHelper.LoadState - Failed to load state, Exception: {0}", ex.ToString() ) );
+				Debug.WriteLine( string.Format( @"FeedbackHelper.LoadState - Failed to load state, Exception: {0}", ex.ToString() ) );
 			}
 		}
 
@@ -104,7 +104,7 @@ namespace CycleStreets.Helpers
 			}
 			catch( Exception ex )
 			{
-				Debug.WriteLine( string.Format( "FeedbackHelper.StoreState - Failed to store state, Exception: {0}", ex.ToString() ) );
+				Debug.WriteLine( string.Format( @"FeedbackHelper.StoreState - Failed to store state, Exception: {0}", ex.ToString() ) );
 			}
 		}
 
@@ -113,7 +113,7 @@ namespace CycleStreets.Helpers
 		/// </summary>
 		public void Reviewed()
 		{
-			this._reviewed = true;
+			_reviewed = true;
 
 			this.StoreState();
 		}

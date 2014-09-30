@@ -71,7 +71,7 @@ namespace Cyclestreets.CustomClasses
                 if (loc == null || loc.GeoCoordinate == null ) return;
              
                 if (string.IsNullOrWhiteSpace(loc.Information.Address.Street))
-                    LocationName = loc.Information.Address.City + ", " + loc.Information.Address.PostalCode;
+                    LocationName = loc.Information.Address.City + @", " + loc.Information.Address.PostalCode;
                 else
                     LocationName = loc.Information.Address.Street;
 

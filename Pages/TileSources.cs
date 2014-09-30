@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using Microsoft.Phone.Maps.Controls;
 
 namespace Cyclestreets.Pages
@@ -14,16 +15,16 @@ namespace Cyclestreets.Pages
 		public override Uri GetUri( int x, int y, int zoomLevel )
 		{
 			return new Uri( UriFormat.
-				Replace( "{x}", x.ToString() ).
-				Replace( "{y}", y.ToString() ).
-				Replace( "{z}", zoomLevel.ToString() ) );
+				Replace( @"{x}", x.ToString(CultureInfo.InvariantCulture) ).
+				Replace( @"{y}", y.ToString(CultureInfo.InvariantCulture) ).
+				Replace( @"{z}", zoomLevel.ToString(CultureInfo.InvariantCulture) ) );
 		}
 	}
 
 	public class OCMTileSource : MyTileSource
 	{
 		public OCMTileSource()
-			: base( "http://tile.cyclestreets.net/opencyclemap/{z}/{x}/{y}.png" )
+			: base( @"http://tile.cyclestreets.net/opencyclemap/{z}/{x}/{y}.png" )
 		{
 
 		}
@@ -32,7 +33,7 @@ namespace Cyclestreets.Pages
 	public class OSMTileSource : MyTileSource
 	{
 		public OSMTileSource()
-			: base( "http://tile.cyclestreets.net/mapnik/{z}/{x}/{y}.png" )
+			: base( @"http://tile.cyclestreets.net/mapnik/{z}/{x}/{y}.png" )
 		{
 
 		}

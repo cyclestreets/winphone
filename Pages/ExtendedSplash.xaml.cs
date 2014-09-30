@@ -1,4 +1,5 @@
 ﻿using Cyclestreets.Managers;
+using Cyclestreets.Resources;
 using Microsoft.Phone.Shell;
 using System;
 using System.Windows.Navigation;
@@ -14,7 +15,7 @@ namespace Cyclestreets.Pages
             SystemTray.SetIsVisible(this, true);
             SystemTray.SetOpacity(this, 0);
 
-            var prog = new ProgressIndicator { IsVisible = true, IsIndeterminate = true, Text = "Getting location..." };
+            var prog = new ProgressIndicator { IsVisible = true, IsIndeterminate = true, Text = AppResources.GettingLocation };
 
             SystemTray.SetProgressIndicator(this, prog);
         }

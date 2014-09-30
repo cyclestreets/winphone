@@ -97,6 +97,15 @@ namespace Cyclestreets.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to retrieve your location. Please check location services are enabled on this device..
+        /// </summary>
+        public static string CantFindYou {
+            get {
+                return ResourceManager.GetString("CantFindYou", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CO2 avoided.
         /// </summary>
         public static string CO2Avoided {
@@ -115,6 +124,15 @@ namespace Cyclestreets.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not parse location data information from server. Please let us know about this error with what you were typing in the search box to cause this problem..
+        /// </summary>
+        public static string CouldNotParse {
+            get {
+                return ResourceManager.GetString("CouldNotParse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not parse JSON {0} {1}.
         /// </summary>
         public static string CouldNotParseJSON {
@@ -129,6 +147,24 @@ namespace Cyclestreets.Resources {
         public static string Cursor {
             get {
                 return ResourceManager.GetString("Cursor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There was an error while downloading data from the server. Please try again..
+        /// </summary>
+        public static string DataDownloadError {
+            get {
+                return ResourceManager.GetString("DataDownloadError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Day.
+        /// </summary>
+        public static string Day {
+            get {
+                return ResourceManager.GetString("Day", resourceCulture);
             }
         }
         
@@ -205,11 +241,47 @@ namespace Cyclestreets.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Here is a link to the CycleStreets route http://www.cyclestreets.net/journey/{0}/.
+        /// </summary>
+        public static string emailBody {
+            get {
+                return ResourceManager.GetString("emailBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enabled.
         /// </summary>
         public static string Enabled {
             get {
                 return ResourceManager.GetString("Enabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter distance in miles.
+        /// </summary>
+        public static string EnterDistance {
+            get {
+                return ResourceManager.GetString("EnterDistance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter time in minutes.
+        /// </summary>
+        public static string EnterTime {
+            get {
+                return ResourceManager.GetString("EnterTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        public static string Error {
+            get {
+                return ResourceManager.GetString("Error", resourceCulture);
             }
         }
         
@@ -378,11 +450,38 @@ namespace Cyclestreets.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Getting location....
+        /// </summary>
+        public static string GettingLocation {
+            get {
+                return ResourceManager.GetString("GettingLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to GPS Error.
         /// </summary>
         public static string GPS_Error {
             get {
                 return ResourceManager.GetString("GPS_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hour.
+        /// </summary>
+        public static string Hour {
+            get {
+                return ResourceManager.GetString("Hour", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}h {1:D2}m {2:D2}s.
+        /// </summary>
+        public static string hoursMinsSecs {
+            get {
+                return ResourceManager.GetString("hoursMinsSecs", resourceCulture);
             }
         }
         
@@ -441,6 +540,15 @@ namespace Cyclestreets.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Location.
+        /// </summary>
+        public static string Location {
+            get {
+                return ResourceManager.GetString("Location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CycleStreets requires access to your location in order to provide navigation and mapping information. Do you want to allow this?.
         /// </summary>
         public static string LocationConsent {
@@ -459,6 +567,15 @@ namespace Cyclestreets.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You have denied CycleStreets permission to access your location. Press OK to change this or Cancel to cancel..
+        /// </summary>
+        public static string LocationPermsBody {
+            get {
+                return ResourceManager.GetString("LocationPermsBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Disable aerial view.
         /// </summary>
         public static string MainPage_ApplicationBarMenuItem_ToggleAerialView_Disable_aerial_view {
@@ -473,6 +590,15 @@ namespace Cyclestreets.Resources {
         public static string MainPage_ApplicationBarMenuItem_ToggleAerialView_Enable_aerial_view {
             get {
                 return ResourceManager.GetString("MainPage_ApplicationBarMenuItem_ToggleAerialView_Enable_aerial_view", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to buy full version.
+        /// </summary>
+        public static string MainPage_OnNavigatedTo_buy_full_version {
+            get {
+                return ResourceManager.GetString("MainPage_OnNavigatedTo_buy_full_version", resourceCulture);
             }
         }
         
@@ -522,6 +648,24 @@ namespace Cyclestreets.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0}m {1:D2}s:.
+        /// </summary>
+        public static string minsSecs {
+            get {
+                return ResourceManager.GetString("minsSecs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Minute.
+        /// </summary>
+        public static string Minute {
+            get {
+                return ResourceManager.GetString("Minute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to My Cycling Speed.
         /// </summary>
         public static string MyCyclingSpeed {
@@ -540,6 +684,15 @@ namespace Cyclestreets.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No Internet.
+        /// </summary>
+        public static string NoInternetTitle {
+            get {
+                return ResourceManager.GetString("NoInternetTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No results in nearby area.
         /// </summary>
         public static string NoLocalResults {
@@ -554,6 +707,15 @@ namespace Cyclestreets.Resources {
         public static string NoLocationMsg {
             get {
                 return ResourceManager.GetString("NoLocationMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Internet connection available. A connection to the Internet is required to use this app. Check flight mode is not enabled and try again..
+        /// </summary>
+        public static string NoNetConnection {
+            get {
+                return ResourceManager.GetString("NoNetConnection", resourceCulture);
             }
         }
         
@@ -823,11 +985,29 @@ namespace Cyclestreets.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Save file not found..
+        /// </summary>
+        public static string SaveFileNotFound {
+            get {
+                return ResourceManager.GetString("SaveFileNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to save route.
         /// </summary>
         public static string SaveRoute {
             get {
                 return ResourceManager.GetString("SaveRoute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Second.
+        /// </summary>
+        public static string Second {
+            get {
+                return ResourceManager.GetString("Second", resourceCulture);
             }
         }
         
@@ -846,6 +1026,24 @@ namespace Cyclestreets.Resources {
         public static string Settings {
             get {
                 return ResourceManager.GetString("Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CycleStreets Cycle Route.
+        /// </summary>
+        public static string ShareChoice_socialChoice_Tap_CycleStreets_Cycle_Route {
+            get {
+                return ResourceManager.GetString("ShareChoice_socialChoice_Tap_CycleStreets_Cycle_Route", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cycling directions.
+        /// </summary>
+        public static string ShareChoice_socialChoice_Tap_Cycling_directions {
+            get {
+                return ResourceManager.GetString("ShareChoice_socialChoice_Tap_Cycling_directions", resourceCulture);
             }
         }
         
@@ -873,6 +1071,42 @@ namespace Cyclestreets.Resources {
         public static string SignaledJunctions {
             get {
                 return ResourceManager.GetString("SignaledJunctions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Here is a link to the CycleStreets route http://www.cyclestreets.net/journey/{0}/.
+        /// </summary>
+        public static string smsBody {
+            get {
+                return ResourceManager.GetString("smsBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There was an error while downloading the available store items. Please try again. If this problem persists, please contact dave@rwscripts.com.
+        /// </summary>
+        public static string StoreErrorMsg {
+            get {
+                return ResourceManager.GetString("StoreErrorMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to straight on.
+        /// </summary>
+        public static string straightOn {
+            get {
+                return ResourceManager.GetString("straightOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target Time.
+        /// </summary>
+        public static string TargetTime {
+            get {
+                return ResourceManager.GetString("TargetTime", resourceCulture);
             }
         }
         
@@ -1008,6 +1242,20 @@ namespace Cyclestreets.Resources {
         public static string UnknownStreet {
             get {
                 return ResourceManager.GetString("UnknownStreet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server reported an error.
+        ///Action: {0}
+        ///Code {1}
+        ///Message: {2}.
+        ///Please try again later or report to dave@rwscripts.com if it continues. Thanks.
+        ///.
+        /// </summary>
+        public static string Util_ResultContainsErrors_ {
+            get {
+                return ResourceManager.GetString("Util_ResultContainsErrors_", resourceCulture);
             }
         }
         

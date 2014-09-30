@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Cyclestreets.Resources;
-using CycleStreets.Util;
-using Windows.UI.Popups;
+using Cyclestreets.Utils;
 
 namespace Cyclestreets
 {
@@ -94,7 +90,7 @@ namespace Cyclestreets
             }
             catch( System.Exception ex )
             {
-				FlurryWP8SDK.Api.LogError("Failed to read response stream", ex);
+				FlurryWP8SDK.Api.LogError(@"Failed to read response stream", ex);
                 return null;
             }
         }

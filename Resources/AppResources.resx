@@ -459,4 +459,90 @@ Why not give us a 5 star rating to show your appreciation?</value>
   <data name="poiParseError" xml:space="preserve">
     <value>Could not parse point of interest data information from server. Please let us know about this error with what you were looking for to cause this problem.</value>
   </data>
+  <data name="MainPage_OnNavigatedTo_buy_full_version" xml:space="preserve">
+    <value>buy full version</value>
+  </data>
+  <data name="ShareChoice_socialChoice_Tap_CycleStreets_Cycle_Route" xml:space="preserve">
+    <value>CycleStreets Cycle Route</value>
+  </data>
+  <data name="ShareChoice_socialChoice_Tap_Cycling_directions" xml:space="preserve">
+    <value>Cycling directions</value>
+  </data>
+  <data name="smsBody" xml:space="preserve">
+    <value>Here is a link to the CycleStreets route http://www.cyclestreets.net/journey/{0}/</value>
+  </data>
+  <data name="emailBody" xml:space="preserve">
+    <value>Here is a link to the CycleStreets route http://www.cyclestreets.net/journey/{0}/</value>
+  </data>
+  <data name="CouldNotParse" xml:space="preserve">
+    <value>Could not parse location data information from server. Please let us know about this error with what you were typing in the search box to cause this problem.</value>
+  </data>
+  <data name="Util_ResultContainsErrors_" xml:space="preserve">
+    <value>Server reported an error.
+Action: {0}
+Code {1}
+Message: {2}.
+Please try again later or report to dave@rwscripts.com if it continues. Thanks.
+</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="StoreErrorMsg" xml:space="preserve">
+    <value>There was an error while downloading the available store items. Please try again. If this problem persists, please contact dave@rwscripts.com</value>
+  </data>
+  <data name="DataDownloadError" xml:space="preserve">
+    <value>There was an error while downloading data from the server. Please try again.</value>
+  </data>
+  <data name="NoNetConnection" xml:space="preserve">
+    <value>No Internet connection available. A connection to the Internet is required to use this app. Check flight mode is not enabled and try again.</value>
+  </data>
+  <data name="NoInternetTitle" xml:space="preserve">
+    <value>No Internet</value>
+  </data>
+  <data name="LocationPermsBody" xml:space="preserve">
+    <value>You have denied CycleStreets permission to access your location. Press OK to change this or Cancel to cancel.</value>
+  </data>
+  <data name="Location" xml:space="preserve">
+    <value>Location</value>
+  </data>
+  <data name="CantFindYou" xml:space="preserve">
+    <value>Unable to retrieve your location. Please check location services are enabled on this device.</value>
+  </data>
+  <data name="Day" xml:space="preserve">
+    <value>Day</value>
+  </data>
+  <data name="Hour" xml:space="preserve">
+    <value>Hour</value>
+  </data>
+  <data name="Minute" xml:space="preserve">
+    <value>Minute</value>
+  </data>
+  <data name="Second" xml:space="preserve">
+    <value>Second</value>
+  </data>
+  <data name="straightOn" xml:space="preserve">
+    <value>straight on</value>
+  </data>
+  <data name="hoursMinsSecs" xml:space="preserve">
+    <value>{0}h {1:D2}m {2:D2}s</value>
+  </data>
+  <data name="minsSecs" xml:space="preserve">
+    <value>{0}m {1:D2}s:</value>
+  </data>
+  <data name="GettingLocation" xml:space="preserve">
+    <value>Getting location...</value>
+  </data>
+  <data name="TargetTime" xml:space="preserve">
+    <value>Target Time</value>
+  </data>
+  <data name="EnterTime" xml:space="preserve">
+    <value>Enter time in minutes</value>
+  </data>
+  <data name="EnterDistance" xml:space="preserve">
+    <value>Enter distance in miles</value>
+  </data>
+  <data name="SaveFileNotFound" xml:space="preserve">
+    <value>Save file not found.</value>
+  </data>
 </root>

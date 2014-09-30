@@ -55,7 +55,7 @@ namespace Cyclestreets.Pages
             set
             {
                 SetProperty(ref _turn, value);
-                OnPropertyChanged("TurnImage");
+                OnPropertyChanged(@"TurnImage");
             }
         }
 
@@ -74,7 +74,7 @@ namespace Cyclestreets.Pages
         public int Time
         {
             get { return _time; }
-            set { SetProperty(ref _time, value); OnPropertyChanged("TimeString"); }
+            set { SetProperty(ref _time, value); OnPropertyChanged(@"TimeString"); }
         }
 
         public string TimeString
@@ -83,7 +83,7 @@ namespace Cyclestreets.Pages
             {
                 TimeSpan t = TimeSpan.FromSeconds(Time);
 
-                return t.Hours > 0 ? string.Format("{0}h {1:D2}m {2:D2}s", t.Hours, t.Minutes, t.Seconds) : string.Format("{0}m {1:D2}s:", t.Minutes, t.Seconds);
+                return t.Hours > 0 ? string.Format(AppResources.hoursMinsSecs, t.Hours, t.Minutes, t.Seconds) : string.Format(AppResources.minsSecs, t.Minutes, t.Seconds);
             }
         }
         public bool Walking { get; set; }

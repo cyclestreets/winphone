@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cyclestreets.Annotations;
+﻿using Cyclestreets.Annotations;
 using GalaSoft.MvvmLight;
 
 namespace Cyclestreets.ViewModel
@@ -21,6 +16,7 @@ namespace Cyclestreets.ViewModel
                 SmartDispatcher.BeginInvoke(() =>
                 {
                     if (  double.IsNaN(value) )
+// ReSharper disable once RedundantArgumentDefaultValue
                       Set(ref _metresPerSecond, 0);
                     else
                         Set(ref _metresPerSecond, value);
@@ -33,20 +29,9 @@ namespace Cyclestreets.ViewModel
         {
             get
             {
-                if (SettingManager.instance.GetStringValue(@"speed", @"mph") == @"mph")
-                {
-                    return (MetresPerSecond*2.23693629).ToString(@"0.00");
-                }
-                else
-                {
-                    return (MetresPerSecond*3.6).ToString(@"0.00");
-                }
+                return SettingManager.instance.GetStringValue(@"speed", @"mph") == @"mph" ? (MetresPerSecond*2.23693629).ToString(@"0.00") : (MetresPerSecond*3.6).ToString(@"0.00");
                 //return MetresPerSecond.ToString();
             }
-        }
-        public LiveRideViewModel()
-        {
-            
         }
     }
 }

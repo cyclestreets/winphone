@@ -1,4 +1,5 @@
-﻿using MarkedUp;
+﻿using Cyclestreets.Resources;
+using MarkedUp;
 using Microsoft.Phone.Maps.Services;
 using Newtonsoft.Json.Linq;
 using RestSharp;
@@ -67,18 +68,16 @@ namespace Cyclestreets.Utils
 
 
             string searchTermSafe = HttpUtility.UrlEncode(searchTerm);
-            string myLocation = HttpUtility.UrlEncode(centerOfSearch.Latitude + "," + centerOfSearch.Longitude);
+            
+            var client = new RestClient(@"http://www.cyclestreets.net/api/");
 
-
-            var client = new RestClient("http://www.cyclestreets.net/api/");
-
-            var request = new RestRequest("geocoder.json", Method.GET);
-            request.AddParameter("key", App.apiKey);
-            request.AddParameter("n", centerOfSearch.Latitude);
-            request.AddParameter("s", centerOfSearch.Latitude);
-            request.AddParameter("e", centerOfSearch.Longitude);
-            request.AddParameter("w", centerOfSearch.Longitude);
-            request.AddParameter("street", searchTermSafe);
+            var request = new RestRequest(@"geocoder.json", Method.GET);
+            request.AddParameter(@"key", App.apiKey);
+            request.AddParameter(@"n", centerOfSearch.Latitude);
+            request.AddParameter(@"s", centerOfSearch.Latitude);
+            request.AddParameter(@"e", centerOfSearch.Longitude);
+            request.AddParameter(@"w", centerOfSearch.Longitude);
+            request.AddParameter(@"street", searchTermSafe);
             // execute the request
             client.ExecuteAsync(request, delegate(IRestResponse response)
             {
@@ -91,8 +90,8 @@ namespace Cyclestreets.Utils
                 }
                 catch (Exception ex)
                 {
-                    AnalyticClient.Error("Could not parse JSON " + result + " " + ex.Message);
-                    MessageBox.Show("Could not parse location data information from server. Please let us know about this error with what you were typing in the search box to cause this problem.");
+                    AnalyticClient.Error(string.Format(@"Could not parse JSON {0} {1}", result, ex.Message));
+                    MessageBox.Show(AppResources.CouldNotParse);
                 }
 
                 if (o == null) return;

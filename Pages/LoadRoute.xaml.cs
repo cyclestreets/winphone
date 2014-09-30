@@ -1,4 +1,5 @@
 ﻿using Cyclestreets.Managers;
+using Cyclestreets.Resources;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Phone.Controls;
 using Polenter.Serialization;
@@ -9,11 +10,10 @@ using System.IO;
 using System.IO.IsolatedStorage;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Navigation;
 
 namespace Cyclestreets.Pages
 {
-    public partial class LoadRoute : PhoneApplicationPage
+    public partial class LoadRoute
     {
         public LoadRoute()
         {
@@ -36,11 +36,11 @@ namespace Cyclestreets.Pages
             try
             {
 
-                var stream = new IsolatedStorageFileStream(e.AddedItems[0].ToString() + ".route", FileMode.Open, myFile);
+                var stream = new IsolatedStorageFileStream(e.AddedItems[0] + ".route", FileMode.Open, myFile);
 
                 if (!myFile.FileExists(e.AddedItems[0].ToString()))
                 {
-                    MessageBoxResult result = MessageBox.Show("Save file not found.", "Error", MessageBoxButton.OK);
+                    MessageBox.Show(AppResources.SaveFileNotFound, AppResources.Error, MessageBoxButton.OK);
                     return;
                 }
 
@@ -56,8 +56,7 @@ namespace Cyclestreets.Pages
             }
             catch
             {
-                MessageBoxResult result = MessageBox.Show("Save file not found.", "Error", MessageBoxButton.OK);
-                return;
+                MessageBox.Show(AppResources.SaveFileNotFound, AppResources.Error, MessageBoxButton.OK);
             }
 
             

@@ -8,10 +8,10 @@ using System.Windows.Controls;
 using System.Windows.Navigation;
 using System.Xml.Linq;
 using Cyclestreets.Managers;
+using Cyclestreets.Resources;
 using Cyclestreets.Utils;
 using CycleStreets.Util;
 using Microsoft.Phone.Controls;
-using Microsoft.Phone.Shell;
 using Windows.Devices.Geolocation;
 
 namespace Cyclestreets.Pages
@@ -28,7 +28,7 @@ namespace Cyclestreets.Pages
 			progress.DataContext = App.networkStatus;
 			routeType.SelectionChanged += routeType_SelectionChanged;
 
-			AsyncWebRequest _request = new AsyncWebRequest( "http://www.cyclestreets.net/api/poitypes.xml?key=" + App.apiKey + "&icons=32", POIFound );
+			AsyncWebRequest _request = new AsyncWebRequest( string.Format(@"http://www.cyclestreets.net/api/poitypes.xml?key={0}&icons=32", App.apiKey), POIFound );
 			_request.Start();
 
 			App.networkStatus.NetworkIsBusy = true;
@@ -44,15 +44,15 @@ namespace Cyclestreets.Pages
 
 			XDocument xml = XDocument.Parse( str.Trim() );
 
-			var poi = xml.Descendants( "poitype" )
-									.Where( e => (string)e.Parent.Name.LocalName == "poitypes" );
+			var poi = xml.Descendants( @"poitype" )
+									.Where( e => (string)e.Parent.Name.LocalName == @"poitypes" );
 
 			foreach( XElement p in poi )
 			{
 				POIItem item = new POIItem();
-				item.POILabel = p.Element( "name" ).Value;
+				item.POILabel = p.Element( @"name" ).Value;
 				item.POIEnabled = false;
-				item.POIName = p.Element( "key" ).Value;
+				item.POIName = p.Element( @"key" ).Value;
 
 				items.Add( item );
 			}
@@ -62,20 +62,7 @@ namespace Cyclestreets.Pages
 			App.networkStatus.NetworkIsBusy = false;
 		}
 
-		private void RouteFound( byte[] data )
-		{
-			if( data == null )
-				return;
-
-			UTF8Encoding enc = new UTF8Encoding();
-
-			PhoneApplicationService.Current.State[ "loadedRoute" ] = enc.GetString( data, 0, data.Length );
-			NavigationService.Navigate( new Uri( "/Pages/DirectionsPage.xaml?plan=leisure", UriKind.Relative ) );
-
-			App.networkStatus.NetworkIsBusy = false;
-		}
-
-		private void btn_cancel_Click( object sender, RoutedEventArgs e )
+	    private void btn_cancel_Click( object sender, RoutedEventArgs e )
 		{
 			pleaseWait.IsOpen = false;
 			App.networkStatus.NetworkIsBusy = false;
@@ -93,43 +80,38 @@ namespace Cyclestreets.Pages
 				base.OnBackKeyPress( e );
 		}
 
-		private void Panorama_Loaded( object sender, RoutedEventArgs e )
+	    private void findRoute_Click( object sender, EventArgs e )
 		{
-
-		}
-
-		private void findRoute_Click( object sender, EventArgs e )
-		{
-			this.Focus();
+			Focus();
 
 			if( LocationManager.Instance.MyGeoPosition != null )
 			{
                 
                 string extra;
-				if( ( (ListBoxItem)routeType.SelectedItem ).Content.Equals( "Target Time" ) )
+				if( ( (ListBoxItem)routeType.SelectedItem ).Content.Equals( AppResources.TargetTime ) )
 				{
 					int val = 0;
 					int.TryParse( valueEntry.Text, out val );
 
-					extra = "&duration=" + val;
+					extra = @"&duration=" + val;
 				}
 				else
 				{
 					int val = 0;
 					int.TryParse( valueEntry.Text, out val );
 
-					extra = "&distance=" + val;
+					extra = @"&distance=" + val;
 				}
 				string poiNames = "";
 				foreach( POIItem item in items )
 				{
 					if( item.POIEnabled )
-						poiNames += item.POILabel + ",";
+						poiNames += item.POILabel + @",";
 				}
 				poiNames = HttpUtility.UrlEncode( poiNames.TrimEnd( ',' ) );
 
 				if( !string.IsNullOrWhiteSpace( poiNames ) )
-					extra += "&poitypes=" + poiNames;
+					extra += @"&poitypes=" + poiNames;
 
                 NavigationService.Navigate(new Uri("/Pages/RouteOverview.xaml?mode=leisure" + extra, UriKind.Relative));
 			}
@@ -144,13 +126,13 @@ namespace Cyclestreets.Pages
 			if( e.AddedItems.Count > 0 )
 			{
 				string selection = ( (ListBoxItem)e.AddedItems[ 0 ] ).Content.ToString();
-				if( selection.Equals( "Target Time" ) )
+				if( selection.Equals( AppResources.TargetTime ) )
 				{
-					valueDescription.Text = "Enter time in minutes";
+					valueDescription.Text = AppResources.EnterTime;
 				}
 				else
 				{
-					valueDescription.Text = "Enter distance in miles";
+					valueDescription.Text = AppResources.EnterDistance;
 				}
 			}
 		}

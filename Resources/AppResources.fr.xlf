@@ -2,7 +2,7 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
   <file datatype="xml" source-language="en-US" target-language="fr" original="AppResources.resx" tool-id="MultilingualAppToolkit" product-name="Cyclestreets" product-version="2.0.0.0" build-num="0">
     <header>
-      <tool tool-id="MultilingualAppToolkit" tool-name="Multilingual App Toolkit" tool-version="3.0.1200.0" tool-company="Microsoft" />
+      <tool tool-id="MultilingualAppToolkit" tool-name="Multilingual App Toolkit" tool-version="3.1.1085.0" tool-company="Microsoft" />
     </header>
     <body>
       <group id="Resx">
@@ -162,6 +162,124 @@ Pourquoi ne pas nous donner une cote 5 étoiles pour montrer votre appréciation
         <trans-unit id="Resx/poiParseError" translate="yes" xml:space="preserve">
           <source>Could not parse point of interest data information from server. Please let us know about this error with what you were looking for to cause this problem.</source>
           <target state="new">Could not parse point of interest data information from server. Please let us know about this error with what you were looking for to cause this problem.</target>
+        </trans-unit>
+        <trans-unit id="Resx/MainPage_OnNavigatedTo_buy_full_version" translate="yes" xml:space="preserve">
+          <source>buy full version</source>
+          <target state="new">buy full version</target>
+        </trans-unit>
+        <trans-unit id="Resx/emailBody" translate="yes" xml:space="preserve">
+          <source>Here is a link to the CycleStreets route http://www.cyclestreets.net/journey/{0}/</source>
+          <target state="new">Here is a link to the CycleStreets route http://www.cyclestreets.net/journey/{0}/</target>
+        </trans-unit>
+        <trans-unit id="Resx/CouldNotParse" translate="yes" xml:space="preserve">
+          <source>Could not parse location data information from server. Please let us know about this error with what you were typing in the search box to cause this problem.</source>
+          <target state="new">Could not parse location data information from server. Please let us know about this error with what you were typing in the search box to cause this problem.</target>
+        </trans-unit>
+        <trans-unit id="Resx/CantFindYou" translate="yes" xml:space="preserve">
+          <source>Unable to retrieve your location. Please check location services are enabled on this device.</source>
+          <target state="new">Unable to retrieve your location. Please check location services are enabled on this device.</target>
+        </trans-unit>
+        <trans-unit id="Resx/Second" translate="yes" xml:space="preserve">
+          <source>Second</source>
+          <target state="new">Second</target>
+        </trans-unit>
+        <trans-unit id="Resx/straightOn" translate="yes" xml:space="preserve">
+          <source>straight on</source>
+          <target state="new">straight on</target>
+        </trans-unit>
+        <trans-unit id="Resx/EnterDistance" translate="yes" xml:space="preserve">
+          <source>Enter distance in miles</source>
+          <target state="new">Enter distance in miles</target>
+        </trans-unit>
+        <trans-unit id="Resx/SaveFileNotFound" translate="yes" xml:space="preserve">
+          <source>Save file not found.</source>
+          <target state="new">Save file not found.</target>
+        </trans-unit>
+        <trans-unit id="Resx/EnterTime" translate="yes" xml:space="preserve">
+          <source>Enter time in minutes</source>
+          <target state="new">Enter time in minutes</target>
+        </trans-unit>
+        <trans-unit id="Resx/TargetTime" translate="yes" xml:space="preserve">
+          <source>Target Time</source>
+          <target state="new">Target Time</target>
+        </trans-unit>
+        <trans-unit id="Resx/GettingLocation" translate="yes" xml:space="preserve">
+          <source>Getting location...</source>
+          <target state="new">Getting location...</target>
+        </trans-unit>
+        <trans-unit id="Resx/minsSecs" translate="yes" xml:space="preserve">
+          <source>{0}m {1:D2}s:</source>
+          <target state="new">{0}m {1:D2}s:</target>
+        </trans-unit>
+        <trans-unit id="Resx/hoursMinsSecs" translate="yes" xml:space="preserve">
+          <source>{0}h {1:D2}m {2:D2}s</source>
+          <target state="new">{0}h {1:D2}m {2:D2}s</target>
+        </trans-unit>
+        <trans-unit id="Resx/Minute" translate="yes" xml:space="preserve">
+          <source>Minute</source>
+          <target state="new">Minute</target>
+        </trans-unit>
+        <trans-unit id="Resx/Hour" translate="yes" xml:space="preserve">
+          <source>Hour</source>
+          <target state="new">Hour</target>
+        </trans-unit>
+        <trans-unit id="Resx/Day" translate="yes" xml:space="preserve">
+          <source>Day</source>
+          <target state="new">Day</target>
+        </trans-unit>
+        <trans-unit id="Resx/Location" translate="yes" xml:space="preserve">
+          <source>Location</source>
+          <target state="new">Location</target>
+        </trans-unit>
+        <trans-unit id="Resx/LocationPermsBody" translate="yes" xml:space="preserve">
+          <source>You have denied CycleStreets permission to access your location. Press OK to change this or Cancel to cancel.</source>
+          <target state="new">You have denied CycleStreets permission to access your location. Press OK to change this or Cancel to cancel.</target>
+        </trans-unit>
+        <trans-unit id="Resx/NoInternetTitle" translate="yes" xml:space="preserve">
+          <source>No Internet</source>
+          <target state="new">No Internet</target>
+        </trans-unit>
+        <trans-unit id="Resx/NoNetConnection" translate="yes" xml:space="preserve">
+          <source>No Internet connection available. A connection to the Internet is required to use this app. Check flight mode is not enabled and try again.</source>
+          <target state="new">No Internet connection available. A connection to the Internet is required to use this app. Check flight mode is not enabled and try again.</target>
+        </trans-unit>
+        <trans-unit id="Resx/DataDownloadError" translate="yes" xml:space="preserve">
+          <source>There was an error while downloading data from the server. Please try again.</source>
+          <target state="new">There was an error while downloading data from the server. Please try again.</target>
+        </trans-unit>
+        <trans-unit id="Resx/StoreErrorMsg" translate="yes" xml:space="preserve">
+          <source>There was an error while downloading the available store items. Please try again. If this problem persists, please contact dave@rwscripts.com</source>
+          <target state="new">There was an error while downloading the available store items. Please try again. If this problem persists, please contact dave@rwscripts.com</target>
+        </trans-unit>
+        <trans-unit id="Resx/Error" translate="yes" xml:space="preserve">
+          <source>Error</source>
+          <target state="new">Error</target>
+        </trans-unit>
+        <trans-unit id="Resx/Util_ResultContainsErrors_" translate="yes" xml:space="preserve">
+          <source>Server reported an error.
+Action: {0}
+Code {1}
+Message: {2}.
+Please try again later or report to dave@rwscripts.com if it continues. Thanks.
+</source>
+          <target state="new">Server reported an error.
+Action: {0}
+Code {1}
+Message: {2}.
+Please try again later or report to dave@rwscripts.com if it continues. Thanks.
+</target>
+        </trans-unit>
+        <trans-unit id="Resx/smsBody" translate="yes" xml:space="preserve">
+          <source>Here is a link to the CycleStreets route http://www.cyclestreets.net/journey/{0}/</source>
+          <target state="new">Here is a link to the CycleStreets route http://www.cyclestreets.net/journey/{0}/</target>
+        </trans-unit>
+        <trans-unit id="Resx/ShareChoice_socialChoice_Tap_Cycling_directions" translate="yes" xml:space="preserve">
+          <source>Cycling directions</source>
+          <target state="new">Cycling directions</target>
+        </trans-unit>
+        <trans-unit id="Resx/ShareChoice_socialChoice_Tap_CycleStreets_Cycle_Route" translate="yes" xml:space="preserve">
+          <source>CycleStreets Cycle Route</source>
+          <target state="new">CycleStreets Cycle Route</target>
         </trans-unit>
         <trans-unit id="Resx/InvalidLocation" translate="yes" xml:space="preserve">
           <source>Invalid Location</source>

@@ -3,7 +3,6 @@ using Cyclestreets.Objects;
 using Cyclestreets.Pages;
 using Cyclestreets.Resources;
 using Cyclestreets.Utils;
-using CycleStreets.Util;
 using Microsoft.Phone.Maps.Controls;
 using Newtonsoft.Json.Linq;
 using RestSharp;
@@ -34,7 +33,7 @@ namespace Cyclestreets.Managers
         public Dictionary<string, string> RouteCacheForSaving
         {
             get { return _journeyMap; }
-            set { _journeyMap = value; OnPropertyChanged("ReadyToDisplayRoute"); }
+            set { _journeyMap = value; OnPropertyChanged(@"ReadyToDisplayRoute"); }
         }
 
         public double BusyWidth
@@ -62,14 +61,14 @@ namespace Cyclestreets.Managers
         public void AddWaypoint(GeoCoordinate c)
         {
             _waypoints.Push(c);
-            OnPropertyChanged("ReadyToPlanRoute");
+            OnPropertyChanged(@"ReadyToPlanRoute");
 
         }
 
         public void RemoveWaypoint(GeoCoordinate geoCoordinate)
         {
             _waypoints.Remove(geoCoordinate);
-            OnPropertyChanged("ReadyToPlanRoute");
+            OnPropertyChanged(@"ReadyToPlanRoute");
         }
 
         public List<RouteSection> CurrentRoute
@@ -79,8 +78,8 @@ namespace Cyclestreets.Managers
             {
                 SetProperty(ref _cachedRouteData, value);
 
-                OnPropertyChanged("HeightChart");
-                OnPropertyChanged("HorizontalLabelInterval");
+                OnPropertyChanged(@"HeightChart");
+                OnPropertyChanged(@"HorizontalLabelInterval");
             }
         }
 
@@ -95,7 +94,7 @@ namespace Cyclestreets.Managers
                 if (_cachedRouteData != null && value < _cachedRouteData.Count && value >= 0)
                 {
                     _currentStep = value;
-                    OnPropertyChanged("CurrentStepText");
+                    OnPropertyChanged(@"CurrentStepText");
                 }
             }
         }
@@ -190,19 +189,19 @@ namespace Cyclestreets.Managers
             int speed = Util.getSpeedFromString(speedSetting);
             const int useDom = 0; // 0=xml 1=gml
 
-            var client = new RestClient("http://www.cyclestreets.net/api");
-            var request = new RestRequest("journey.json", Method.GET);
-            request.AddParameter("key", App.apiKey);
-            request.AddParameter("useDom", useDom);
-            request.AddParameter("plan", "leisure");
-            request.AddParameter("itinerarypoints", String.Format(@"{0},{1}", LocationManager.Instance.MyGeoPosition.Coordinate.Longitude, LocationManager.Instance.MyGeoPosition.Coordinate.Latitude));
-            request.AddParameter("speed", speed.ToString());
+            var client = new RestClient(@"http://www.cyclestreets.net/api");
+            var request = new RestRequest(@"journey.json", Method.GET);
+            request.AddParameter(@"key", App.apiKey);
+            request.AddParameter(@"useDom", useDom);
+            request.AddParameter(@"plan", @"leisure");
+            request.AddParameter(@"itinerarypoints", String.Format(@"{0},{1}", LocationManager.Instance.MyGeoPosition.Coordinate.Longitude, LocationManager.Instance.MyGeoPosition.Coordinate.Latitude));
+            request.AddParameter(@"speed", speed.ToString());
             if (targetTimeSeconds != -1)
-                request.AddParameter("duration", (targetTimeSeconds * 60).ToString());
+                request.AddParameter(@"duration", (targetTimeSeconds * 60).ToString());
             else
-                request.AddParameter("distance", ((int)((double)targetMiles * 1609.344)).ToString());
+                request.AddParameter(@"distance", ((int)((double)targetMiles * 1609.344)).ToString());
             if (!string.IsNullOrWhiteSpace(poiNames))
-                request.AddParameter("poitypes", poiNames);
+                request.AddParameter(@"poitypes", poiNames);
 
             IsBusy = true;
 
@@ -211,7 +210,7 @@ namespace Cyclestreets.Managers
             {
                 string result = r.Content;
 
-                bool res = ParseRouteData(result, "balanced", true);
+                bool res = ParseRouteData(result, @"balanced", true);
 
                 IsBusy = false;
                 tcs1.SetResult(res);
@@ -239,23 +238,23 @@ namespace Cyclestreets.Managers
             int speed = Util.getSpeedFromString(speedSetting);
             const int useDom = 0; // 0=xml 1=gml
 
-            string itinerarypoints = _waypoints.Where(waypoint => waypoint != null).Aggregate("", (current, waypoint) => current + waypoint.Longitude + "," + waypoint.Latitude + "|");
+            string itinerarypoints = _waypoints.Where(waypoint => waypoint != null).Aggregate("", (current, waypoint) => current + waypoint.Longitude + @"," + waypoint.Latitude + @"|");
             itinerarypoints = itinerarypoints.TrimEnd('|');
 
-            var client = new RestClient("http://www.cyclestreets.net/api");
-            var request = new RestRequest("journey.json", Method.GET);
-            request.AddParameter("key", App.apiKey);
-            request.AddParameter("useDom", useDom);
-            request.AddParameter("plan", routeType);
+            var client = new RestClient(@"http://www.cyclestreets.net/api");
+            var request = new RestRequest(@"journey.json", Method.GET);
+            request.AddParameter(@"key", App.apiKey);
+            request.AddParameter(@"useDom", useDom);
+            request.AddParameter(@"plan", routeType);
             if (!newRoute)
             {
                 //http://www.cyclestreets.net/api/journey.xml?key=registeredapikey&useDom=1&itinerary=345529&plan=fastest
-                request.AddParameter("itinerary", Overview.RouteNumber);
+                request.AddParameter(@"itinerary", Overview.RouteNumber);
             }
             else
             {
-                request.AddParameter("itinerarypoints", itinerarypoints);
-                request.AddParameter("speed", speed);
+                request.AddParameter(@"itinerarypoints", itinerarypoints);
+                request.AddParameter(@"speed", speed);
             }
 
 
@@ -292,7 +291,7 @@ namespace Cyclestreets.Managers
             if (newRoute)
             {
                 _journeyMap.Clear();
-                OnPropertyChanged("ReadyToDisplayRoute");
+                OnPropertyChanged(@"ReadyToDisplayRoute");
             }
 
             if (currentRouteData != null)
@@ -303,13 +302,13 @@ namespace Cyclestreets.Managers
                     if (_currentParsedRoute != null && !_journeyMap.ContainsKey(routeType))
                     {
                         _journeyMap.Add(routeType, currentRouteData);
-                        OnPropertyChanged("ReadyToDisplayRoute");
+                        OnPropertyChanged(@"ReadyToDisplayRoute");
                     }
                 }
                 catch (Exception ex)
                 {
-                    MarkedUp.AnalyticClient.Error("Could not parse JSON " + currentRouteData.Trim() + " " + ex.Message);
-                    MessageBox.Show("Could not parse route data information from server. Please let us know about this error with the route you were trying to plan");
+                    MarkedUp.AnalyticClient.Error(@"Could not parse JSON " + currentRouteData.Trim() + @" " + ex.Message);
+                    MessageBox.Show(AppResources.CouldNotParse);
                 }
             }
 
@@ -336,9 +335,9 @@ namespace Cyclestreets.Managers
             GeoCoordinate endPoint = null;
             foreach (var marker in journeyObject.marker)
             {
-                if (marker["@attributes"].type == "route")
+                if (marker[@"@attributes"].type == @"route")
                 {
-                    var section = marker["@attributes"];
+                    var section = marker[@"@attributes"];
                     //RouteSection sectionObj = new RouteSection();
                     double longitude = double.Parse(section.finish_longitude.ToString());
                     double latitude = double.Parse(section.finish_latitude.ToString());
@@ -360,10 +359,10 @@ namespace Cyclestreets.Managers
 
                     //result.Add(sectionObj);
                 }
-                else if (marker["@attributes"].type == "segment")
+                else if (marker[@"@attributes"].type == @"segment")
                 {
-                    var section = marker["@attributes"];
-                    RouteSection sectionObj = null;
+                    var section = marker[@"@attributes"];
+                    RouteSection sectionObj;
                     sectionObj = result.Count == 0 ? new StartPoint() : new RouteSection();
                     string[] points = section.points.ToString().Split(' ');
                     foreach (string t in points)
@@ -381,7 +380,7 @@ namespace Cyclestreets.Managers
                     convertedItems = Util.ConvertAll(temp, int.Parse);
                     sectionObj.Distances = new List<int>(convertedItems);
                     sectionObj.Walking = int.Parse(section.walk.ToString()) == 1;
-                    sectionObj.Description = section.name.ToString().Equals("lcn?") ? AppResources.UnknownStreet : section.name;
+                    sectionObj.Description = section.name.ToString().Equals(@"lcn?") ? AppResources.UnknownStreet : section.name;
                     sectionObj.Distance = lastDistance;
                     lastDistance = int.Parse(section.distance.ToString());
                     sectionObj.Bearing = double.Parse(section.startBearing.ToString());
@@ -394,7 +393,7 @@ namespace Cyclestreets.Managers
             EndPoint ep = new EndPoint
             {
                 Distance = lastDistance,
-                Turn = "straight on",
+                Turn = AppResources.straightOn,
             };
             ep.Points.Add(endPoint);
             result.Add(ep);
@@ -422,14 +421,12 @@ namespace Cyclestreets.Managers
                 Util.showLocationDialog();
                 return null;
             }
-            else
-            {
-                GeoCoordinate target = new GeoCoordinate(latitude, longitude);
-                _waypoints.Clear();
-                AddWaypoint(GeoUtils.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate));
-                AddWaypoint(target);
-                return FindRoute(routeType, true);
-            }
+            
+            GeoCoordinate target = new GeoCoordinate(latitude, longitude);
+            _waypoints.Clear();
+            AddWaypoint(GeoUtils.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate));
+            AddWaypoint(target);
+            return FindRoute(routeType);
         }
     }
 }

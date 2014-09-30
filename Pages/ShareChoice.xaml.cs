@@ -1,11 +1,13 @@
 ﻿using System;
-using Microsoft.Phone.Controls;
+using Cyclestreets.Annotations;
+using Cyclestreets.Resources;
 using Microsoft.Phone.Shell;
 using Microsoft.Phone.Tasks;
 
 namespace Cyclestreets.Pages
 {
-	public partial class ShareChoice : PhoneApplicationPage
+    [UsedImplicitly]
+    public partial class ShareChoice
 	{
 		public ShareChoice()
 		{
@@ -16,32 +18,32 @@ namespace Cyclestreets.Pages
 		{
 			ShareLinkTask shareLinkTask = new ShareLinkTask();
 
-			shareLinkTask.Title = "CycleStreets Cycle Route";
-			shareLinkTask.LinkUri = new Uri( "http://www.cyclestreets.net/journey/" + (int)PhoneApplicationService.Current.State[ "routeIndex" ] + "/", UriKind.Absolute );
-			shareLinkTask.Message = "Cycling directions";
+			shareLinkTask.Title = AppResources.ShareChoice_socialChoice_Tap_CycleStreets_Cycle_Route;
+			shareLinkTask.LinkUri = new Uri( string.Format(@"http://www.cyclestreets.net/journey/{0}/", (int)PhoneApplicationService.Current.State[ @"routeIndex" ]), UriKind.Absolute );
+			shareLinkTask.Message = AppResources.ShareChoice_socialChoice_Tap_Cycling_directions;
 
 			shareLinkTask.Show();
 
-			FlurryWP8SDK.Api.LogEvent( "SocialShare" );
+			FlurryWP8SDK.Api.LogEvent( @"SocialShare" );
 		}
 
 		private void messagingChoice_Tap( object sender, System.Windows.Input.GestureEventArgs e )
 		{
 			SmsComposeTask smsComposeTask = new SmsComposeTask();
-			smsComposeTask.Body = "Here is a link to the CycleStreets route http://www.cyclestreets.net/journey/" + (int)PhoneApplicationService.Current.State[ "routeIndex" ] + "/";
+			smsComposeTask.Body = string.Format(AppResources.smsBody, (int)PhoneApplicationService.Current.State[ @"routeIndex" ]);
 			smsComposeTask.Show();
 
-			FlurryWP8SDK.Api.LogEvent( "SMSShare" );
+			FlurryWP8SDK.Api.LogEvent( @"SMSShare" );
 		}
 
 		private void emailChoice_Tap( object sender, System.Windows.Input.GestureEventArgs e )
 		{
 			EmailComposeTask emailTask = new EmailComposeTask();
-			emailTask.Subject = "CycleStreets Cycle Route";
-			emailTask.Body = "Here is a link to the CycleStreets route http://www.cyclestreets.net/journey/" + (int)PhoneApplicationService.Current.State[ "routeIndex" ] + "/";
+			emailTask.Subject = AppResources.ShareChoice_socialChoice_Tap_CycleStreets_Cycle_Route;
+			emailTask.Body = string.Format(AppResources.emailBody, (int)PhoneApplicationService.Current.State[ @"routeIndex" ]);
 			emailTask.Show();
 
-			FlurryWP8SDK.Api.LogEvent( "EmailShare" );
+			FlurryWP8SDK.Api.LogEvent( @"EmailShare" );
 		}
 	}
 }

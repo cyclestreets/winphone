@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Device.Location;
 using System.Linq;
 using System.Windows;
-using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -156,7 +155,7 @@ namespace Cyclestreets.Pages
         {
             double dx = p2.X - p1.X;
             double dy = p2.Y - p1.Y;
-            if ((dx == 0) && (dy == 0))
+            if ((Math.Abs(dx) < 0.001) && (Math.Abs(dy) < 0.001))
             {
                 // It's a point not a line segment.
                 closest = p1;

@@ -18,7 +18,7 @@ namespace Cyclestreets
 
 		private void MyMap_ZoomLevelChanged( object sender, MapZoomLevelChangedEventArgs e )
 		{
-			this.Visible = _isVisible;
+			Visible = _isVisible;
 		}
 
 		private Visibility _isVisible = Visibility.Visible;
@@ -29,12 +29,12 @@ namespace Cyclestreets
 				if( MyMap.ZoomLevel > 12 && _isVisible == Visibility.Collapsed )
 				{
 					_isVisible = Visibility.Visible;
-					NotifyPropertyChanged( "Visible" );
+					NotifyPropertyChanged( @"Visible" );
 				}
 				else if( MyMap.ZoomLevel <= 12 && _isVisible == Visibility.Visible )
 				{
 					_isVisible = Visibility.Collapsed;
-					NotifyPropertyChanged( "Visible" );
+					NotifyPropertyChanged( @"Visible" );
 				}
 			}
 			get
