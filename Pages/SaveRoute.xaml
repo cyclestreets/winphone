@@ -34,7 +34,7 @@
 			</Grid>
 			<TextBlock TextWrapping="Wrap" Text="Replace Existing Saved Route:" FontSize="{StaticResource PhoneFontSizeSmall}" Foreground="White"/>
 			<ScrollViewer Height="534">
-				<phone:LongListSelector x:Name="existingSaves" FontSize="{StaticResource PhoneFontSizeLarge}" SelectionChanged="existingSaves_SelectionChanged" Foreground="#DEFFFFFF"/>
+				<phone:LongListSelector x:Name="existingSaves" FontSize="{StaticResource PhoneFontSizeLarge}" SelectionChanged="existingSaves_SelectionChanged" Foreground="#DEFFFFFF" ItemTemplate="{StaticResource FileItem}"/>
 			</ScrollViewer>
 		</StackPanel>
 

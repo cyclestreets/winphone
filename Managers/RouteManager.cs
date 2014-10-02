@@ -227,6 +227,11 @@ namespace Cyclestreets.Managers
             // Clear the cache
             _cachedRouteData = null;
 
+            if (newRoute)
+            {
+                _journeyMap.Clear();
+            }
+
             if ((!newRoute && _journeyMap.ContainsKey(routeType)))
             {
                 tcs1.SetResult(true);

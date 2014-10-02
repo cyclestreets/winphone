@@ -3,8 +3,8 @@ using Cyclestreets.Managers;
 using Cyclestreets.Resources;
 using Cyclestreets.Utils;
 using Cyclestreets.ViewModel;
-using CycleStreets.Util;
 using GalaSoft.MvvmLight.Ioc;
+using Microsoft.Phone.Maps.Controls;
 using Microsoft.Phone.Maps.Services;
 using Microsoft.Phone.Shell;
 using System;
@@ -19,15 +19,15 @@ namespace Cyclestreets.Pages
     public partial class RouteOverview
     {
         DirectionsPageViewModel _viewModel;
-        private bool _mapReady = false;
-        private ApplicationBarIconButton saveButton = null;
+        private bool _mapReady;
+        private ApplicationBarIconButton saveButton;
 
         public RouteOverview()
         {
             InitializeComponent();
 
             saveButton = ApplicationBar.Buttons[3] as ApplicationBarIconButton;
-            saveButton.IsEnabled = false;
+            if (saveButton != null) saveButton.IsEnabled = false;
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -44,7 +44,7 @@ namespace Cyclestreets.Pages
                     case "planroute":
                         {
                             _viewModel.CanChangeRouteType = true;
-                            bool result = await rm.FindRoute(_viewModel.CurrentPlan, true);
+                            bool result = await rm.FindRoute(_viewModel.CurrentPlan);
                             if (!result)
                             {
                                 MarkedUp.AnalyticClient.Error(@"Route Planning Error");
@@ -183,16 +183,16 @@ namespace Cyclestreets.Pages
             }
             else
             {
-                MapUtils.PlotCachedRoute(MyMap, _viewModel.CurrentPlan);
+                MapUtils.PlotCachedRoute(MyMap.Map, _viewModel.CurrentPlan);
                 _viewModel.DisplayMap = true;
                 if (LocationManager.Instance.MyGeoPosition != null)
                 {
-                    MyMap.Pitch = 0;
-                    MyMap.Heading = 0;
+                    MyMap.Map.Pitch = 0;
+                    MyMap.Map.Heading = 0;
                     MyMap.Center = GeoUtils.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
                     MyMap.ZoomLevel = 10;
                 }
-                SmartDispatcher.BeginInvoke(() => MyMap.SetView(rm.GetRouteBounds()));
+                SmartDispatcher.BeginInvoke(() => MyMap.Map.SetView(rm.GetRouteBounds(), MapAnimationKind.None));
             }
 
             saveButton.IsEnabled = true;
@@ -225,9 +225,9 @@ namespace Cyclestreets.Pages
 
                 SmartDispatcher.BeginInvoke(() =>
                 {
-                    MyMap.Pitch = 0;
-                    MyMap.Heading = 0;
-                    MyMap.SetView(loc.GeoCoordinate, 16);
+                    MyMap.Map.Pitch = 0;
+                    MyMap.Map.Heading = 0;
+                    MyMap.Map.SetView(loc.GeoCoordinate, 16);
                 });
             }
             else
@@ -243,29 +243,23 @@ namespace Cyclestreets.Pages
 
         private void routeList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            if (e.AddedItems.Count > 0)
+            if (e.AddedItems.Count <= 0) return;
+            RouteSection rs = e.AddedItems[0] as RouteSection;
+            if (rs == null) return;
+            if (rs is StartPoint)
             {
-                RouteSection rs = e.AddedItems[0] as RouteSection;
-                if (rs != null)
-                {
-                    if (rs is StartPoint)
-                    {
-                        var rm = SimpleIoc.Default.GetInstance<RouteManager>();
-                        MyMap.SetView(rm.GetRouteBounds());
-                        MyMap.Pitch = 0;
-                        MyMap.Heading = 0;
-                    }
-                    else if (rs.Points.Count > 0)
-                    {
-                        MyMap.SetView(rs.Points[0], 20, (rs.Bearing == null) ? 0 : rs.Bearing, 75);
-
-                        MyMap.TileSources.Clear();
-                    }
-                }
+                var rm = SimpleIoc.Default.GetInstance<RouteManager>();
+                MyMap.Map.SetView(rm.GetRouteBounds());
+                MyMap.Map.Pitch = 0;
+                MyMap.Map.Heading = 0;
+            }
+            else if (rs.Points.Count > 0)
+            {
+                MyMap.Map.SetView(rs.Points[0], 20, rs.Bearing ?? 0, 75, MapAnimationKind.Parabolic);
             }
         }
 
-        private void save_Click(object sender, System.EventArgs e)
+        private void save_Click(object sender, EventArgs e)
         {
             NavigationService.Navigate(new Uri("/Pages/SaveRoute.xaml", UriKind.RelativeOrAbsolute));
         }

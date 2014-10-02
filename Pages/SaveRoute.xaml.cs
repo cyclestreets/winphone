@@ -2,12 +2,14 @@
 using Cyclestreets.Resources;
 using GalaSoft.MvvmLight.Ioc;
 using Polenter.Serialization;
-using System.Linq;
+using System;
 using System.IO;
 using System.IO.IsolatedStorage;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using System.Text.RegularExpressions;
+using Windows.Storage;
 
 namespace Cyclestreets.Pages
 {
@@ -38,10 +40,11 @@ namespace Cyclestreets.Pages
             NavigationService.GoBack();
         }
 
-        private void saveRoute(string filename)
+        private async void saveRoute(string filename)
         {
             RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
 
+#if false
             IsolatedStorageFile myFile = IsolatedStorageFile.GetUserStoreForApplication();
             var stream = new IsolatedStorageFileStream(filename, FileMode.Create, myFile);
 
@@ -56,6 +59,19 @@ namespace Cyclestreets.Pages
             //var obj2 = serializer.Deserialize(stream);
 
             stream.Close();
+#else
+            // Get the local folder.
+            StorageFolder local = ApplicationData.Current.LocalFolder;
+            var file = await local.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
+            // Write the data from the textbox.
+            using (var s = await file.OpenStreamForWriteAsync())
+            {
+                var serializer = new SharpSerializer(false);
+
+                // serialize
+                serializer.Serialize(rm.RouteCacheForSaving, s);
+            }
+#endif
 
             MessageBox.Show(AppResources.RouteSaved, AppResources.RouteSavedTitle, MessageBoxButton.OK);
         }
@@ -63,7 +79,7 @@ namespace Cyclestreets.Pages
         private void saveFileName_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             TextBox tb = sender as TextBox;
-            if (tb != null) 
+            if (tb != null)
                 tb.SelectAll();
         }
 
