@@ -44,7 +44,7 @@ namespace Cyclestreets.Pages
                     case "planroute":
                         {
                             _viewModel.CanChangeRouteType = true;
-                            bool result = await rm.FindRoute(_viewModel.CurrentPlan);
+                            bool result = await rm.FindRoute(_viewModel.CurrentPlan, e.NavigationMode == NavigationMode.New);
                             if (!result)
                             {
                                 MarkedUp.AnalyticClient.Error(@"Route Planning Error");

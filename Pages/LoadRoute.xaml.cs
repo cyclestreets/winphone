@@ -72,18 +72,14 @@ namespace Cyclestreets.Pages
                 using (var file = await local.OpenStreamForReadAsync(e.AddedItems[0] + @".route"))
                 {
                     var serializer = new SharpSerializer(false);
-                    file.Seek(0, SeekOrigin.Begin);
-                    using (StreamReader streamReader = new StreamReader(file))
-                    {
-                        Debug.WriteLine(streamReader.ReadToEnd());
-                    }
 
                     file.Seek(0, SeekOrigin.Begin);
                     // deserialize (to check the serialization)
                     var res = serializer.Deserialize(file);
                     rm.RouteCacheForSaving = (Dictionary<string, string>) res;
 
-                    
+                    NavigationService.Navigate(new Uri("/Pages/RouteOverview.xaml?plan=saved", UriKind.Relative));
+                    NavigationService.RemoveBackEntry();
                 }
             }
 #endif

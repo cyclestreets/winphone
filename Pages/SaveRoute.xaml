@@ -6,6 +6,8 @@
     xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+    xmlns:command="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
@@ -13,6 +15,24 @@
     mc:Ignorable="d"
     shell:SystemTray.IsVisible="True">
 
+    <phone:PhoneApplicationPage.Resources>
+        <DataTemplate x:Key="FileItem">
+            <Grid d:DesignWidth="500">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="50"/>
+                </Grid.ColumnDefinitions>
+                <Image Source="/Toolkit.Content/ApplicationBar.Cancel.png" Grid.Column="1">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Tap">
+                            <command:EventToCommand Command="{Binding DeleteFile}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Image>
+                <TextBlock Grid.Column="0" Text="{Binding Name}"></TextBlock>
+            </Grid>
+        </DataTemplate>
+    </phone:PhoneApplicationPage.Resources>
 	<!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Black">
         <Grid.RowDefinitions>

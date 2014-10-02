@@ -1,5 +1,8 @@
-﻿using Cyclestreets.Managers;
+﻿using System.Collections.Generic;
+using System.Windows.Input;
+using Cyclestreets.Managers;
 using Cyclestreets.Resources;
+using Cyclestreets.Utils;
 using GalaSoft.MvvmLight.Ioc;
 using Polenter.Serialization;
 using System;
@@ -13,6 +16,35 @@ using Windows.Storage;
 
 namespace Cyclestreets.Pages
 {
+    class RouteFile
+    {
+        // A delegate type for hooking up change notifications.
+        public delegate void DeletedEventHandler(object sender);
+
+        public event DeletedEventHandler Deleted;
+
+        public string Name { get; set; }
+        public ICommand DeleteFile
+        {
+            get
+            {
+                return new ViewModelCommand(() => DeleteFileWithName(Name));
+            }
+        }
+
+        private async void DeleteFileWithName(string name)
+        {
+            // Get the local folder.
+            StorageFolder local = ApplicationData.Current.LocalFolder;
+            if (local != null)
+            {
+                var file = await local.GetFileAsync(name + @".route");
+                file.DeleteAsync();
+                if (Deleted != null)
+                    Deleted(this);
+            }
+        }
+    }
     public partial class SaveRoute
     {
         public SaveRoute()
@@ -24,11 +56,27 @@ namespace Cyclestreets.Pages
         {
             base.OnNavigatedTo(e);
 
-            string[] names = IsolatedStorageFile.GetUserStoreForApplication().GetFileNames(@"*.route");
-            existingSaves.ItemsSource = names.Select(n => n.Remove(n.Length - 6)).ToList();
+            FindFiles();
         }
 
-        private void saveButton_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        private void FindFiles()
+        {
+            string[] names = IsolatedStorageFile.GetUserStoreForApplication().GetFileNames(@"*.route");
+            List<RouteFile> files = new List<RouteFile>();
+            foreach (var fileObj in names.Select(name => new RouteFile {Name = name.Remove(name.Length-6,6)}))
+            {
+                fileObj.Deleted += FileDeleted;
+                files.Add(fileObj);
+            }
+            existingSaves.ItemsSource = files;
+        }
+
+        private void FileDeleted(object sender)
+        {
+            FindFiles();
+        }
+
+        private void saveButton_Tap(object sender, GestureEventArgs e)
         {
             Regex rgx = new Regex(@"[^a-zA-Z0-9 -]");
             string fileName = rgx.Replace(saveFileName.Text, @"");
@@ -76,7 +124,7 @@ namespace Cyclestreets.Pages
             MessageBox.Show(AppResources.RouteSaved, AppResources.RouteSavedTitle, MessageBoxButton.OK);
         }
 
-        private void saveFileName_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        private void saveFileName_Tap(object sender, GestureEventArgs e)
         {
             TextBox tb = sender as TextBox;
             if (tb != null)

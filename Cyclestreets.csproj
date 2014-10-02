@@ -201,6 +201,7 @@
     <Compile Include="Utils\Stackish.cs" />
     <Compile Include="Utils\Util.cs" />
     <Compile Include="Utils\UtilTime.cs" />
+    <Compile Include="Utils\ViewModelCommand.cs" />
     <Compile Include="Utils\WMSTile.cs" />
     <Compile Include="ViewModel\DirectionsPageViewModel.cs" />
     <Compile Include="ViewModel\LiveRideViewModel.cs" />
@@ -510,6 +511,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="SampleData\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />
