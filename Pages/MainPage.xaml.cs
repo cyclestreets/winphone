@@ -411,5 +411,19 @@ namespace Cyclestreets.Pages
 		    _poiLayer.Add(overlay);
 		}
 
+        private void MyMap_MouseMove(object sender, MouseEventArgs e)
+        {
+            CycleStreetsMap csmap = ((CycleStreetsMap)sender);
+            Map map = ((CycleStreetsMap)sender).Map;
+            csmap.LockToMyLocation = CycleStreetsMap.LocationLock.NoLock;
+        }
+
+        private void MyMap_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            CycleStreetsMap csmap = ((CycleStreetsMap)sender);
+            Map map = ((CycleStreetsMap)sender).Map;
+            csmap.LockToMyLocation = CycleStreetsMap.LocationLock.NoLock;
+        }
+
 	}
 }

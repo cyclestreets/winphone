@@ -19,6 +19,7 @@
     shell:SystemTray.IsVisible="True">
     <phone:PhoneApplicationPage.Resources>
         <Common:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <Common:BooleanToOpacityConverter x:Key="BooleanToOpacityConverter"/>
         <Style x:Key="Start" TargetType="Toolkit:Pushpin">
             <Setter Property="Template">
                 <Setter.Value>
