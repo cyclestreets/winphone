@@ -303,11 +303,14 @@ namespace Cyclestreets.Managers
             {
                 try
                 {
-                    _currentParsedRoute = JObject.Parse(currentRouteData);
-                    if (_currentParsedRoute != null && !_journeyMap.ContainsKey(routeType))
+                    if ( !_journeyMap.ContainsKey(routeType))
                     {
-                        _journeyMap.Add(routeType, currentRouteData);
-                        OnPropertyChanged(@"ReadyToDisplayRoute");
+                        _currentParsedRoute = JObject.Parse(currentRouteData);
+                        if (_currentParsedRoute != null)
+                        {
+                            _journeyMap.Add(routeType, currentRouteData);
+                            OnPropertyChanged(@"ReadyToDisplayRoute");
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -317,7 +320,7 @@ namespace Cyclestreets.Managers
                 }
             }
 
-            if (_currentParsedRoute != null && _currentParsedRoute.marker != null)
+            if (_journeyMap.ContainsKey(routeType))
                 return true;
 
             MessageBox.Show(AppResources.NoRouteFoundTryAnotherSearch, AppResources.NoRoute, MessageBoxButton.OK);

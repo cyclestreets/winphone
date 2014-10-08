@@ -1,20 +1,18 @@
-﻿using System.Diagnostics;
-using Windows.Storage;
+﻿using Windows.Storage;
+using Cyclestreets.Annotations;
 using Cyclestreets.Managers;
-using Cyclestreets.Resources;
 using GalaSoft.MvvmLight.Ioc;
-using Microsoft.Phone.Controls;
 using Polenter.Serialization;
 using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.IsolatedStorage;
-using System.Windows;
 using System.Windows.Controls;
 
 namespace Cyclestreets.Pages
 {
+    [UsedImplicitly]
     public partial class LoadRoute
     {
         public LoadRoute()
@@ -83,8 +81,6 @@ namespace Cyclestreets.Pages
                 }
             }
 #endif
-            
-
         }
     }
 }

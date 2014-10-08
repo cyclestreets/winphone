@@ -1,6 +1,8 @@
 ﻿using System.Linq;
 using System.Windows.Input;
+using Cyclestreets.Managers;
 using Cyclestreets.Resources;
+using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using System;
@@ -44,7 +46,9 @@ namespace Cyclestreets.Pages
 
         private void routeFeedback_Click(object sender, EventArgs e)
         {
-            //NavigationService.Navigate(new Uri("/Pages/Feedback.xaml?routeID=" + DirectionsPage.route.routeIndex, UriKind.Relative));
+            RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
+
+            NavigationService.Navigate(new Uri("/Pages/Feedback.xaml?routeID=" + rm.Overview.RouteNumber , UriKind.Relative));
         }
 
 

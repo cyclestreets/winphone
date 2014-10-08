@@ -185,14 +185,14 @@ namespace Cyclestreets.Pages
             {
                 MapUtils.PlotCachedRoute(MyMap.Map, _viewModel.CurrentPlan);
                 _viewModel.DisplayMap = true;
-                if (LocationManager.Instance.MyGeoPosition != null)
+                /*if (LocationManager.Instance.MyGeoPosition != null)
                 {
                     MyMap.Map.Pitch = 0;
                     MyMap.Map.Heading = 0;
                     MyMap.Center = GeoUtils.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
                     MyMap.ZoomLevel = 10;
-                }
-                SmartDispatcher.BeginInvoke(() => MyMap.Map.SetView(rm.GetRouteBounds(), MapAnimationKind.None));
+                }*/
+                MyMap.Map.SetView(rm.GetRouteBounds(), MapAnimationKind.Linear);
             }
 
             saveButton.IsEnabled = true;

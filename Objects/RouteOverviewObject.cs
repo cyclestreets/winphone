@@ -24,7 +24,12 @@ namespace Cyclestreets.Objects
 
         public string RouteDurationString
         {
-            get { return (RouteDuration / 60).ToString(CultureInfo.InvariantCulture); }
+            get 
+            { 
+                TimeSpan t = TimeSpan.FromSeconds(RouteDuration);
+
+                return t.Hours > 0 ? string.Format(AppResources.hoursMinsSecs, t.Hours, t.Minutes, t.Seconds) : string.Format(AppResources.minsSecs, t.Minutes, t.Seconds);
+            }
         }
 
         public string RouteLengthString

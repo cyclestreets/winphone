@@ -528,7 +528,7 @@ Please try again later or report to dave@rwscripts.com if it continues. Thanks.
     <value>{0}h {1:D2}m {2:D2}s</value>
   </data>
   <data name="minsSecs" xml:space="preserve">
-    <value>{0}m {1:D2}s:</value>
+    <value>{0}m {1:D2}s</value>
   </data>
   <data name="GettingLocation" xml:space="preserve">
     <value>Getting location...</value>

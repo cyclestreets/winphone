@@ -38,7 +38,7 @@ namespace ScoreAlerts.Common
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            double disabledAlpha = 0.0;
+            double disabledAlpha = 0.01;
             if (parameter != null)
                 disabledAlpha = double.Parse(parameter.ToString());
             return (value is bool && !(bool)value) ? disabledAlpha : 1.0;
