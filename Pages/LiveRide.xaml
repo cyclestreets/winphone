@@ -29,11 +29,11 @@
                 <ColumnDefinition Width="33*"/>
                 <ColumnDefinition Width="33*"/>
             </Grid.ColumnDefinitions>
-            <StackPanel DataContext="{Binding LiveRide, Mode=OneWay}">
+            <StackPanel DataContext="{Binding LiveRide, Mode=OneWay}" Grid.Column="1">
                 <TextBlock TextWrapping="Wrap" Text="{Binding Speed, Mode=OneWay}" VerticalAlignment="Top" FontSize="48" FontWeight="Light" HorizontalAlignment="Center"/>
                 <TextBlock TextWrapping="Wrap" Text="mph" HorizontalAlignment="Center" FontWeight="Light"/>
             </StackPanel>
-            <StackPanel x:Name="reroute" Height="100" Width="100" Grid.Column="2" Tap="reroute_Tap">
+            <StackPanel x:Name="reroute" Height="100" Width="100" Grid.Column="2" Tap="reroute_Tap" Visibility="Collapsed">
             	<Image Source="/Cyclestreets;component/Assets/route.png" Width="64" Height="64" HorizontalAlignment="Center"/>
             	<TextBlock TextWrapping="Wrap" Text="reroute" HorizontalAlignment="Center" FontWeight="Light"/>
             </StackPanel>

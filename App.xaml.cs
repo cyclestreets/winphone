@@ -18,6 +18,7 @@ using FlurryWP8SDK;
 using GalaSoft.MvvmLight.Ioc;
 using MarkedUp;
 using Microsoft.Phone.Controls;
+using Microsoft.Phone.Marketplace;
 using Microsoft.Phone.Shell;
 using System.IO.IsolatedStorage;
 
@@ -82,7 +83,11 @@ namespace Cyclestreets
         // set to true when 5 min passed since the app was relaunched 
         bool mustClearPagestack; 
  
-        IsolatedStorageSettings settings = IsolatedStorageSettings.ApplicationSettings; 
+        IsolatedStorageSettings settings = IsolatedStorageSettings.ApplicationSettings;
+
+#if !DEBUG
+        private static LicenseInformation _licenseInfo = new LicenseInformation();
+#endif
 
         /// <summary>
         /// Constructor for the Application object.

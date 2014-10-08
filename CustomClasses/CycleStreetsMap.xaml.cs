@@ -75,6 +75,23 @@ namespace Cyclestreets.CustomClasses
         }
         #endregion
 
+        #region Show My Location Dependency Property
+        public static readonly DependencyProperty ShowMyLocationProperty =
+            DependencyProperty.Register("ShowMyLocation", typeof(bool), typeof(CycleStreetsMap), new PropertyMetadata(true, null));
+
+        public bool ShowMyLocation
+        {
+            get
+            {
+                return (bool)GetValue(ShowMyLocationProperty);
+            }
+            set
+            {
+                SetValue(ShowMyLocationProperty, value);
+            }
+        }
+        #endregion
+
         public GeoCoordinate Center
         {
             get
@@ -187,7 +204,8 @@ namespace Cyclestreets.CustomClasses
             if (LocationManager.Instance.MyGeoPosition == null) return;
             double myAccuracy = LocationManager.Instance.MyGeoPosition.Coordinate.Accuracy;
             GeoCoordinate myCoordinate = GeoUtils.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
-            if (_myLocationOverlay == null)
+            
+            if (_myLocationOverlay == null && ShowMyLocation )
             {
                 Ellipse myCircle = new Ellipse
                 {

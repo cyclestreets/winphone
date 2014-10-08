@@ -112,8 +112,15 @@ namespace Cyclestreets.Pages
                         closest = closestTemp;
                     }
                 }
-
-                DrawMyLocationOnMap(closest);
+                if (closestDist < 10)
+                {
+                    DrawMyLocationOnMap(closest);
+                    MyMap.ShowMyLocation = false;
+                }
+                else
+                {
+                    MyMap.ShowMyLocation = true;
+                }
             });
         }
 
@@ -125,7 +132,7 @@ namespace Cyclestreets.Pages
             {
                 Ellipse myCircle = new Ellipse
                 {
-                    Fill = new SolidColorBrush(Colors.Blue),
+                    Fill = new SolidColorBrush(Colors.Black),
                     Height = 20,
                     Width = 20,
                     Opacity = 30
