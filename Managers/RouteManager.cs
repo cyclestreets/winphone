@@ -71,6 +71,12 @@ namespace Cyclestreets.Managers
             OnPropertyChanged(@"ReadyToPlanRoute");
         }
 
+        public void ClearAllWaypoints()
+        {
+            _waypoints.Clear();
+            OnPropertyChanged(@"ReadyToPlanRoute");
+        }
+
         public List<RouteSection> CurrentRoute
         {
             get { return _cachedRouteData; }

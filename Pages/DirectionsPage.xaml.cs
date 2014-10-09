@@ -117,6 +117,9 @@ namespace Cyclestreets.Pages
             {
                 SetupTutorial();
 
+                RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
+                rm.ClearAllWaypoints();
+
                 if (LocationManager.Instance.MyGeoPosition != null)
                 {
                     MyMap.Center = GeoUtils.ConvertGeocoordinate(LocationManager.Instance.MyGeoPosition.Coordinate);
