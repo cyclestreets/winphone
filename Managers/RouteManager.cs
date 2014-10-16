@@ -335,7 +335,7 @@ namespace Cyclestreets.Managers
 
         internal IEnumerable<RouteSection> GetRouteSections(string routeType)
         {
-            if (!_journeyMap.ContainsKey(routeType))
+            if (_journeyMap == null || !_journeyMap.ContainsKey(routeType))
                 return null;
 
             if (_cachedRouteData != null)

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
-  <file datatype="xml" source-language="en-US" target-language="fr" original="AppResources.resx" tool-id="MultilingualAppToolkit" product-name="Cyclestreets" product-version="2.0.0.1" build-num="0">
+  <file datatype="xml" source-language="en-US" target-language="fr" original="AppResources.resx" tool-id="MultilingualAppToolkit" product-name="Cyclestreets" product-version="2.0.0.2" build-num="0">
     <header>
       <tool tool-id="MultilingualAppToolkit" tool-name="Multilingual App Toolkit" tool-version="3.1.1085.0" tool-company="Microsoft" />
     </header>
@@ -194,6 +194,10 @@ Pourquoi ne pas nous donner une cote 5 étoiles pour montrer votre appréciation
         <trans-unit id="Resx/SaveFileNotFound" translate="yes" xml:space="preserve">
           <source>Save file not found.</source>
           <target state="new">Save file not found.</target>
+        </trans-unit>
+        <trans-unit id="Resx/LoadError" translate="yes" xml:space="preserve">
+          <source>Load Error</source>
+          <target state="new">Load Error</target>
         </trans-unit>
         <trans-unit id="Resx/EnterTime" translate="yes" xml:space="preserve">
           <source>Enter time in minutes</source>

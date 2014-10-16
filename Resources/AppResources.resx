@@ -545,4 +545,7 @@ Please try again later or report to dave@rwscripts.com if it continues. Thanks.
   <data name="SaveFileNotFound" xml:space="preserve">
     <value>Save file not found.</value>
   </data>
+  <data name="LoadError" xml:space="preserve">
+    <value>Load Error</value>
+  </data>
 </root>

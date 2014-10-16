@@ -41,8 +41,16 @@
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Horizontal">
-                                <Image Height="50" Width="50" Source="{Binding SelectedItem.TurnImage, RelativeSource={RelativeSource TemplatedParent}}"/>
-                                <ContentControl ContentTemplate="{TemplateBinding TitleTemplate}" Content="{Binding SelectedItem.Turn, RelativeSource={RelativeSource TemplatedParent}}" HorizontalAlignment="Left" Style="{StaticResource PivotTitleStyle}" Height="31" VerticalAlignment="Center"/>
+                                <Rectangle Height="50" Width="50" >
+                            		<Rectangle.Fill>
+                            			<SolidColorBrush Color="{StaticResource PhoneForegroundColor}"/>
+                            		</Rectangle.Fill>
+									<Rectangle.OpacityMask>
+                						<ImageBrush Stretch="Uniform" ImageSource="{Binding SelectedItem.TurnImage, RelativeSource={RelativeSource TemplatedParent}}"/>
+                					</Rectangle.OpacityMask>
+                            	</Rectangle>
+                            	<!--<Image Height="50" Width="50" Source="{Binding SelectedItem.TurnImage, RelativeSource={RelativeSource TemplatedParent}}"/>-->
+                            	<ContentControl ContentTemplate="{TemplateBinding TitleTemplate}" Content="{Binding SelectedItem.Turn, RelativeSource={RelativeSource TemplatedParent}}" HorizontalAlignment="Left" Style="{StaticResource PivotTitleStyle}" Height="31" VerticalAlignment="Center"/>
                             </StackPanel>
                             <Primitives:PivotHeadersControl x:Name="HeadersListElement" Grid.Row="1"/>
                             <ItemsPresenter x:Name="PivotItemPresenter" Margin="{TemplateBinding Padding}" Grid.Row="2"/>
@@ -142,7 +150,11 @@
                     <ImageBrush Stretch="Uniform" ImageSource="/Cyclestreets;component/Assets/quietest.png"/>
                 </Rectangle.OpacityMask>
             </Rectangle>
-            <Rectangle x:Name="routeTypeDisabledMask" Fill="#BF000000" Stroke="Black" Grid.ColumnSpan="3" Grid.RowSpan="2" Visibility="{Binding CanChangeRouteType, Converter={StaticResource BooleanInvertedToVisibilityConverter}}"/>
+            <Rectangle x:Name="routeTypeDisabledMask" Stroke="Black" Grid.ColumnSpan="3" Grid.RowSpan="2" Visibility="{Binding CanChangeRouteType, Converter={StaticResource BooleanInvertedToVisibilityConverter}}" Opacity="0.595">
+            	<Rectangle.Fill>
+            		<SolidColorBrush Color="{StaticResource PhoneBackgroundColor}"/>
+            	</Rectangle.Fill>
+            </Rectangle>
             <Rectangle x:Name="balancedHighlight" Fill="{StaticResource PhoneAccentBrush}" Height="7" Stroke="Black" VerticalAlignment="Top" Grid.Column="1" Visibility="{Binding CurrentPlan, ConverterParameter=balanced, Converter={StaticResource RouteTypeVisibility}}"/>
             <Rectangle x:Name="shortestHighlight" Fill="{StaticResource PhoneAccentBrush}" Height="7" Stroke="Black" VerticalAlignment="Top" Visibility="{Binding CurrentPlan, ConverterParameter=quietest, Converter={StaticResource RouteTypeVisibility}}"/>
             <Rectangle x:Name="fastestHighlight" Fill="{StaticResource PhoneAccentBrush}" Height="7" Stroke="Black" VerticalAlignment="Top" Grid.Column="2" Visibility="{Binding CurrentPlan, ConverterParameter=fastest, Converter={StaticResource RouteTypeVisibility}}"/>

@@ -232,17 +232,43 @@
                 <CompositeTransform/>
             </Grid.RenderTransform>
             <Border x:Name="myLocationBorder" BorderBrush="#FFACACAC" BorderThickness="0" Margin="0" Tap="myLocationBorder_Tap">
-                <StackPanel x:Name="myLocation" VerticalAlignment="Center" Height="60" HorizontalAlignment="Center" Orientation="Horizontal">
-                    <Image HorizontalAlignment="Left" Margin="5" VerticalAlignment="Center" Source="/Assets/icons/dark/appbar.location.circle.png"/>
-                    <TextBlock HorizontalAlignment="Left" Text="my location" FontWeight="Light" VerticalAlignment="Center"/>
-                </StackPanel>
+                <Grid x:Name="myLocation" Height="60" VerticalAlignment="Center" HorizontalAlignment="Center" >
+                	<Grid.ColumnDefinitions>
+                		<ColumnDefinition Width="60"/>
+                		<ColumnDefinition/>
+                	</Grid.ColumnDefinitions>
+            		<Rectangle Stroke="Black">
+            			<Rectangle.Fill>
+            				<SolidColorBrush Color="{StaticResource PhoneForegroundColor}"/>
+            			</Rectangle.Fill>
+            			<Rectangle.OpacityMask>
+            				<ImageBrush Stretch="Uniform" ImageSource="/Assets/icons/dark/appbar.location.circle.png"/>
+            			</Rectangle.OpacityMask>
+            		</Rectangle>
+            		<TextBlock HorizontalAlignment="Left" Text="my location" FontWeight="Light" VerticalAlignment="Center" Grid.Column="1"/>
+            	</Grid>
             </Border>
             <Border x:Name="planRouteBorder" BorderThickness="0" Margin="0" Grid.Column="1" Tap="planRouteBorder_Tap" BorderBrush="#FFACACAC">
                 <Grid x:Name="planRoute" Grid.Column="1" Margin="0" >
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBlock x:Name="planRouteText" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" FontWeight="Light" Text="plan route" Foreground="White" Opacity="{Binding RouteManagerPtr.ReadyToPlanRoute, ConverterParameter=0.5, Converter={StaticResource BooleanToOpacityConverter}, Mode=OneWay}"/>
-                        <Image x:Name="planRouteImage" HorizontalAlignment="Left" VerticalAlignment="Center" Source="/Assets/icons/dark/appbar.arrow.right.png" Opacity="{Binding RouteManagerPtr.ReadyToPlanRoute, ConverterParameter=0.5, Converter={StaticResource BooleanToOpacityConverter}, Mode=OneWay}"/>
-                    </StackPanel>
+                	<Grid HorizontalAlignment="Center">
+                		<Grid.ColumnDefinitions>
+                			<ColumnDefinition/>
+                			<ColumnDefinition Width="60"/>
+                		</Grid.ColumnDefinitions>
+                		<TextBlock x:Name="planRouteText" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" FontWeight="Light" Text="plan route" Opacity="{Binding RouteManagerPtr.ReadyToPlanRoute, ConverterParameter=0.5, Converter={StaticResource BooleanToOpacityConverter}, Mode=OneWay}">
+                			<TextBlock.Foreground>
+                				<SolidColorBrush Color="{StaticResource PhoneForegroundColor}"/>
+                			</TextBlock.Foreground>
+                		</TextBlock>
+                		<Rectangle Stroke="Black" Stretch="Uniform" Grid.Column="1">
+                			<Rectangle.Fill>
+                				<SolidColorBrush Color="{StaticResource PhoneForegroundColor}"/>
+                			</Rectangle.Fill>
+                			<Rectangle.OpacityMask>
+                				<ImageBrush Stretch="Uniform" ImageSource="/Assets/icons/dark/appbar.arrow.right.png"/>
+                			</Rectangle.OpacityMask>
+                		</Rectangle>
+                	</Grid>
                 </Grid>
             </Border>
         </Grid>
