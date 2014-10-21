@@ -46,8 +46,8 @@
                             			<SolidColorBrush Color="{StaticResource PhoneForegroundColor}"/>
                             		</Rectangle.Fill>
 									<Rectangle.OpacityMask>
-                						<ImageBrush Stretch="Uniform" ImageSource="{Binding SelectedItem.TurnImage, RelativeSource={RelativeSource TemplatedParent}}"/>
-                					</Rectangle.OpacityMask>
+                                        <ImageBrush Stretch="Uniform" ImageSource="{Binding SelectedItem.TurnImage, FallbackValue=/Assets/clear.png, RelativeSource={RelativeSource TemplatedParent}, TargetNullValue=/Assets/clear.png}"/>
+                                    </Rectangle.OpacityMask>
                             	</Rectangle>
                             	<!--<Image Height="50" Width="50" Source="{Binding SelectedItem.TurnImage, RelativeSource={RelativeSource TemplatedParent}}"/>-->
                             	<ContentControl ContentTemplate="{TemplateBinding TitleTemplate}" Content="{Binding SelectedItem.Turn, RelativeSource={RelativeSource TemplatedParent}}" HorizontalAlignment="Left" Style="{StaticResource PivotTitleStyle}" Height="31" VerticalAlignment="Center"/>
@@ -120,7 +120,7 @@
         <customClasses:CycleStreetsMap x:Name="MyMap" Margin="0" Grid.Row="1" Grid.ColumnSpan="2" ZoomLevel="15" Loaded="MyMap_Loaded" Tap="MyMap_Tap" Opacity="{Binding DisplayMap, Converter={StaticResource BooleanToOpacityConverter}}" ShowAccuracyBanner="False" LockToMyLocation="NoLock" />
         <StackPanel Grid.Row="2" Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
             <TextBlock TextWrapping="Wrap" Text="{Binding RouteManagerPtr.Overview.RouteDurationString, Mode=OneWay}" FontSize="60" FontFamily="Segoe WP Light" VerticalAlignment="Bottom"/>
-            <TextBlock TextWrapping="Wrap" Text="mins" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="Segoe WP Light" LineHeight="37" Visibility="{Binding DisplayMap, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            <!--<TextBlock TextWrapping="Wrap" Text="mins" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="Segoe WP Light" LineHeight="37" Visibility="{Binding DisplayMap, Converter={StaticResource BooleanToVisibilityConverter}}"/>-->
         </StackPanel>
         <StackPanel Grid.Row="2" Orientation="Horizontal">
             <TextBlock TextWrapping="Wrap" Text="{Binding RouteManagerPtr.Overview.RouteLengthStringMiles, Mode=OneWay}" FontSize="60" FontFamily="Segoe WP Light" VerticalAlignment="Bottom"/>

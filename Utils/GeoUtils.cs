@@ -82,45 +82,53 @@ namespace Cyclestreets.Utils
             client.ExecuteAsync(request, delegate(IRestResponse response)
             {
                 string result = response.Content;
-                Debug.WriteLine(result);
-                JObject o = null;
-                try
+                if (string.IsNullOrWhiteSpace(result))
                 {
-                    o = JObject.Parse(result);
-                }
-                catch (Exception ex)
-                {
-                    AnalyticClient.Error(string.Format(@"Could not parse JSON {0} {1}", result, ex.Message));
-                    MessageBox.Show(AppResources.CouldNotParse);
-                }
-
-                if (o == null) return;
-                JObject results = (JObject)o[@"results"];
-                JToken resultArray;
-                if (results.TryGetValue(@"result", out resultArray))
-                {
-                    JArray suggestions = resultArray as JArray;
-                    List<string> names = new List<string>();
-                    if (suggestions == null)
-                    {
-                        var suggestion = resultArray as JObject;
-                        if (suggestion == null) return;
-                        names.Add(suggestion[@"name"].ToString());
-                    }
-                    else
-                    {
-                        if (suggestions.Count <= 0) return;
-                        names.AddRange(suggestions.Select(x => x[@"name"].ToString()).ToArray());
-                    }
-
-
-                    tcs1.SetResult(names);
+                    Debug.WriteLine(@"Cyclestreets search produced no results " + searchTerm);
                 }
                 else
                 {
-                    //MarkedUp.AnalyticClient.Error("Could not find place named " + result);
-                    tcs1.SetResult(null);
+                    Debug.WriteLine(result);
+                    JObject o = null;
+                    try
+                    {
+                        o = JObject.Parse(result);
+                    }
+                    catch (Exception ex)
+                    {
+                        AnalyticClient.Error(string.Format(@"Could not parse JSON {0} {1}", result, ex.Message));
+                        MessageBox.Show(AppResources.CouldNotParse);
+                    }
+
+                    if (o == null) return;
+                    JObject results = (JObject)o[@"results"];
+                    JToken resultArray;
+                    if (results.TryGetValue(@"result", out resultArray))
+                    {
+                        JArray suggestions = resultArray as JArray;
+                        List<string> names = new List<string>();
+                        if (suggestions == null)
+                        {
+                            var suggestion = resultArray as JObject;
+                            if (suggestion == null) return;
+                            names.Add(suggestion[@"name"].ToString());
+                        }
+                        else
+                        {
+                            if (suggestions.Count <= 0) return;
+                            names.AddRange(suggestions.Select(x => x[@"name"].ToString()).ToArray());
+                        }
+
+
+                        tcs1.SetResult(names);
+                    }
+                    else
+                    {
+                        //MarkedUp.AnalyticClient.Error("Could not find place named " + result);
+                        tcs1.SetResult(null);
+                    }
                 }
+                
             });
             return t1;
         }

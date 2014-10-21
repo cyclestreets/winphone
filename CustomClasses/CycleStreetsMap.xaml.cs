@@ -146,6 +146,8 @@ namespace Cyclestreets.CustomClasses
             Microsoft.Phone.Maps.MapsSettings.ApplicationContext.ApplicationId = @"823e41bf-889c-4102-863f-11cfee11f652";
             Microsoft.Phone.Maps.MapsSettings.ApplicationContext.AuthenticationToken = @"xrQJghWalYn52fTfnUhWPQ";
 
+            SetMapStyle();
+
             RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
             if (PhoneApplicationService.Current.State.ContainsKey(@"loadedRoute") && PhoneApplicationService.Current.State[@"loadedRoute"] != null)
             {
@@ -157,11 +159,7 @@ namespace Cyclestreets.CustomClasses
             if (newplan == null) return;
             DefaultPlan = newplan;
 
-
-
             PlotRoute();
-
-            SetMapStyle();
         }
 
         private void SetMapStyle()

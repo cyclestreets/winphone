@@ -233,6 +233,7 @@ namespace Cyclestreets
         // the default navigation behavior. 
         void RootFrame_Navigating(object sender, NavigatingCancelEventArgs e)
         {
+            BugSense.BugSenseHandler.Instance.LeaveBreadCrumb(string.Format("Navigating to {0}", e.Uri));
 
             // If the session type is None or New, check the navigation Uri to determine if the 
             // navigation is a deep link or if it points to the app's main page. 
@@ -251,7 +252,6 @@ namespace Cyclestreets
                     sessionType = SessionType.Home;
                 }
             }
-
 
             if (e.NavigationMode == NavigationMode.Reset)
             {

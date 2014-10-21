@@ -227,6 +227,8 @@ namespace Cyclestreets.Managers
 
         public Task<bool> FindRoute(string routeType, bool newRoute = true)
         {
+            BugSense.BugSenseHandler.Instance.LeaveBreadCrumb(string.Format(@"Finding route type {0}. IsNew = {1}", routeType, newRoute));
+
             TaskCompletionSource<bool> tcs1 = new TaskCompletionSource<bool>();
             Task<bool> t1 = tcs1.Task;
 
@@ -352,6 +354,7 @@ namespace Cyclestreets.Managers
                 if (marker[@"@attributes"].type == @"route")
                 {
                     var section = marker[@"@attributes"];
+                    if (section == null) continue;
                     //RouteSection sectionObj = new RouteSection();
                     double longitude = double.Parse(section.finish_longitude.ToString());
                     double latitude = double.Parse(section.finish_latitude.ToString());
@@ -376,8 +379,8 @@ namespace Cyclestreets.Managers
                 else if (marker[@"@attributes"].type == @"segment")
                 {
                     var section = marker[@"@attributes"];
-                    RouteSection sectionObj;
-                    sectionObj = result.Count == 0 ? new StartPoint() : new RouteSection();
+                    if (section == null) continue;
+                    RouteSection sectionObj = result.Count == 0 ? new StartPoint() : new RouteSection();
                     string[] points = section.points.ToString().Split(' ');
                     foreach (string t in points)
                     {

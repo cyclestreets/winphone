@@ -63,8 +63,8 @@ namespace Cyclestreets.Pages
         {
             get
             {
-                if (Turn == null)
-                    return null;
+                if (string.IsNullOrWhiteSpace(Turn))
+                    return new BitmapImage(new Uri("/Assets/clear.png", UriKind.RelativeOrAbsolute));
 
                 string filename = Turn.Replace(' ', '_');
                 return new BitmapImage(new Uri("/Assets/navigation/" + filename + ".png", UriKind.RelativeOrAbsolute));

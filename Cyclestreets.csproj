@@ -312,6 +312,7 @@
     <Content Include="Assets\AppIcon\appstore-icon-512.png" />
     <Content Include="Assets\bike_white.png" />
     <Content Include="Assets\bullet_go.png" />
+    <Content Include="Assets\clear.png" />
     <Content Include="Assets\clock.png" />
     <Content Include="Assets\cyclestreets19586.jpg" />
     <Content Include="Assets\finish_wisp.png" />
@@ -426,6 +427,7 @@
     <EmbeddedResource Include="Resources\AppResources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>AppResources1.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -5,9 +5,8 @@
 	xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:sparrow="clr-namespace:Sparrow.Chart;assembly=Sparrow.Chart.WP8.45"
-	xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
-	xmlns:local="clr-namespace:Cyclestreets.Pages" xmlns:telerikChart="clr-namespace:Telerik.Windows.Controls;assembly=Telerik.Windows.Controls.Chart" xmlns:Charting="clr-namespace:Telerik.Charting;assembly=Telerik.Windows.Controls.Chart" x:Name="phoneApplicationPage"
+    xmlns:telerikChart="clr-namespace:Telerik.Windows.Controls;assembly=Telerik.Windows.Controls.Chart"
+    x:Name="phoneApplicationPage"
 	x:Class="Cyclestreets.Pages.DirectionsResults"
 	mc:Ignorable="d"
 	SupportedOrientations="Portrait"  Orientation="Portrait"
@@ -21,7 +20,7 @@
     </phone:PhoneApplicationPage.ApplicationBar>
 
     <!--LayoutRoot contains the root grid where all other page content is placed-->
-    <Grid x:Name="LayoutRoot" Background="Black">
+    <Grid x:Name="LayoutRoot">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="5"/>
@@ -42,11 +41,11 @@
                         <RowDefinition Height="31*"/>
                         <RowDefinition Height="524*"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Margin="0" TextWrapping="Wrap" Text="Time" VerticalAlignment="Center" FontWeight="Light" Foreground="#DEFFFFFF" Grid.Column="1"/>
+                    <TextBlock Margin="0" TextWrapping="Wrap" Text="Time" VerticalAlignment="Center" FontWeight="Light" Grid.Column="1"/>
                     <TextBlock Margin="0,2.2,0,1.8" TextWrapping="Wrap" Text="Distance" VerticalAlignment="Center" FontWeight="Light"
-                               Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" Foreground="#DEFFFFFF"/>
+                               Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right"/>
                     <ScrollViewer Margin="0" Grid.ColumnSpan="3" Grid.Column="0" Grid.Row="1">
-                        <phone:LongListSelector x:Name="DirectionList" HorizontalContentAlignment="Stretch" Foreground="#DEFFFFFF" ItemsSource="{Binding RouteManagerPtr.CurrentRoute}" DataContext="{Binding}">
+                        <phone:LongListSelector x:Name="DirectionList" HorizontalContentAlignment="Stretch" ItemsSource="{Binding RouteManagerPtr.CurrentRoute}" DataContext="{Binding}">
                             <phone:LongListSelector.ItemTemplate>
                                 <DataTemplate>
                                     <Grid Margin="0" Background="{Binding BGColour}">
@@ -61,7 +60,11 @@
                                             <ColumnDefinition/>
                                             <ColumnDefinition/>
                                         </Grid.ColumnDefinitions>
-                                        <Border BorderBrush="Black" BorderThickness="1" Grid.ColumnSpan="2" Background="#33008B00" Grid.Column="1"/>
+                                        <Border BorderBrush="Black" BorderThickness="1" Grid.ColumnSpan="2" Grid.Column="1" Opacity="0.4">
+                                            <Border.Background>
+                                                <SolidColorBrush Color="{StaticResource PhoneAccentColor}"/>
+                                            </Border.Background>
+                                        </Border>
                                         <TextBlock x:Name="time" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding TimeString, Mode=OneWay}" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="20" FontWeight="SemiBold" FontFamily="Segoe UI" Width="130" Grid.Column="1"/>
                                         <TextBlock x:Name="distance" HorizontalAlignment="Right" TextWrapping="Wrap" Text="{Binding DistanceString}" VerticalAlignment="Center" Margin="0" Grid.Column="2" FontSize="20" FontWeight="SemiBold" FontFamily="Segoe UI" Height="27" Padding="0,0,10,0"/>
                                         <StackPanel Grid.ColumnSpan="2" Grid.Row="1" Grid.Column="1">
@@ -72,7 +75,14 @@
                                             <Image x:Name="type" HorizontalAlignment="Center" VerticalAlignment="Center" Source="/Assets/bike_white.png" Margin="0,0,10,0"/>
                                             <TextBlock x:Name="surface" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding ProvisionName}" VerticalAlignment="Center" Margin="0" FontSize="15"/>
                                         </StackPanel>
-                                        <Image Grid.RowSpan="3" Source="{Binding TurnImage, Mode=OneWay}"/>
+                                        <Rectangle Grid.Row="0" Grid.RowSpan="3" Grid.Column="0">
+                                            <Rectangle.Fill>
+                                                <SolidColorBrush Color="{StaticResource PhoneForegroundColor}"/>
+                                            </Rectangle.Fill>
+                                            <Rectangle.OpacityMask>
+                                                <ImageBrush Stretch="Uniform" ImageSource="{Binding TurnImage, FallbackValue=/Assets/clear.png, Mode=OneWay, TargetNullValue=/Assets/clear.png}"/>
+                                            </Rectangle.OpacityMask>
+                                        </Rectangle>
                                     </Grid>
                                 </DataTemplate>
                             </phone:LongListSelector.ItemTemplate>
@@ -87,7 +97,7 @@
                         <RowDefinition Height="23"/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <TextBlock Margin="0" Grid.Row="1" TextWrapping="Wrap" Text="Elevation Chart. Distance and height in metres." Foreground="#DEFFFFFF" FontWeight="Light" FontSize="15" TextAlignment="Center" Grid.RowSpan="2"/>
+                    <TextBlock Margin="0" Grid.Row="1" TextWrapping="Wrap" Text="Elevation Chart. Distance and height in metres." FontWeight="Light" FontSize="15" TextAlignment="Center" Grid.RowSpan="2"/>
                     <StackPanel Grid.Row="2">
                         <Grid Height="40">
                             <Grid.ColumnDefinitions>
@@ -95,9 +105,9 @@
                                 <ColumnDefinition Width="15*"/>
                                 <ColumnDefinition Width="67*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="Total Time" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#DEFFFFFF"/>
+                            <TextBlock Grid.Column="0" Text="Total Time" VerticalAlignment="Center" HorizontalAlignment="Right" />
                             <Image Grid.Column="1" Source="/Assets/clock.png" Height="25"/>
-                            <TextBlock Grid.Column="2" Text="{Binding RouteManagerPtr.Overview.RouteDurationString, Mode=OneWay}" Foreground="#DEFFFFFF"/>
+                            <TextBlock Grid.Column="2" Text="{Binding RouteManagerPtr.Overview.RouteDurationString, Mode=OneWay}" />
                         </Grid>
                         <Grid Height="40">
                             <Grid.ColumnDefinitions>
@@ -105,9 +115,9 @@
                                 <ColumnDefinition Width="15*"/>
                                 <ColumnDefinition Width="67*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="Route Length" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#DEFFFFFF"/>
+                            <TextBlock Grid.Column="0" Text="Route Length" VerticalAlignment="Center" HorizontalAlignment="Right" />
                             <Image Grid.Column="1" Source="/Assets/bullet_go.png" Height="25"/>
-                            <TextBlock Grid.Column="2" Text="{Binding RouteManagerPtr.Overview.RouteLengthString, Mode=OneWay}" Foreground="#DEFFFFFF"/>
+                            <TextBlock Grid.Column="2" Text="{Binding RouteManagerPtr.Overview.RouteLengthString, Mode=OneWay}" />
                         </Grid>
                         <Grid Height="40">
                             <Grid.ColumnDefinitions>
@@ -115,9 +125,9 @@
                                 <ColumnDefinition Width="15*"/>
                                 <ColumnDefinition Width="67*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="Calories Burnt" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#DEFFFFFF"/>
+                            <TextBlock Grid.Column="0" Text="Calories Burnt" VerticalAlignment="Center" HorizontalAlignment="Right" />
                             <Image Grid.Column="1" Source="/Assets/heart.png" Height="25"/>
-                            <TextBlock Grid.Column="2" Text="{Binding RouteManagerPtr.Overview.calories}" Foreground="#DEFFFFFF"/>
+                            <TextBlock Grid.Column="2" Text="{Binding RouteManagerPtr.Overview.calories}" />
                         </Grid>
                         <Grid Height="40">
                             <Grid.ColumnDefinitions>
@@ -125,9 +135,9 @@
                                 <ColumnDefinition Width="15*"/>
                                 <ColumnDefinition Width="67*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="CO2 Saved (g)" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#DEFFFFFF"/>
+                            <TextBlock Grid.Column="0" Text="CO2 Saved (g)" VerticalAlignment="Center" HorizontalAlignment="Right" />
                             <Image Grid.Column="1" Source="/Assets/world.png" Height="25"/>
-                            <TextBlock Grid.Column="2" Text="{Binding RouteManagerPtr.Overview.GrammesCo2Saved}" Foreground="#DEFFFFFF"/>
+                            <TextBlock Grid.Column="2" Text="{Binding RouteManagerPtr.Overview.GrammesCo2Saved}" />
                         </Grid>
                         <Grid Height="40">
                             <Grid.ColumnDefinitions>
@@ -135,12 +145,12 @@
                                 <ColumnDefinition Width="15*"/>
                                 <ColumnDefinition Width="67*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="Quietness" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#DEFFFFFF"/>
+                            <TextBlock Grid.Column="0" Text="Quietness" VerticalAlignment="Center" HorizontalAlignment="Right" />
                             <Image Grid.Column="1" Source="/Assets/picture.png" Height="25"/>
-                            <TextBlock Grid.Column="2" Text="{Binding RouteManagerPtr.Overview.QuietnessString, Mode=OneWay}" Foreground="#DEFFFFFF"/>
+                            <TextBlock Grid.Column="2" Text="{Binding RouteManagerPtr.Overview.QuietnessString, Mode=OneWay}" />
                         </Grid>
                     </StackPanel>
-                    <telerikChart:RadCartesianChart HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Foreground="#DEFFFFFF" >
+                    <telerikChart:RadCartesianChart HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"  >
                         <telerikChart:RadCartesianChart.Grid>
                             <telerikChart:CartesianChartGrid MajorYLineDashArray="5, 5" MajorLinesVisibility="Y">
                                 <telerikChart:CartesianChartGrid.MajorYLineStyle>
