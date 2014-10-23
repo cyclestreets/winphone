@@ -60,10 +60,19 @@ namespace Cyclestreets.Pages
                 StorageFolder local = ApplicationData.Current.LocalFolder;
                 if (local != null)
                 {
-                    var file = await local.GetFileAsync(name + @".route");
-                    file.DeleteAsync();
-                    if (Deleted != null)
-                        Deleted(this);
+                    try
+                    {
+                        var file = await local.GetFileAsync(name + @".route");
+                        file.DeleteAsync();
+                        if (Deleted != null)
+                            Deleted(this);
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show(string.Format("Failed to delete the route named {0}. If this continues, please contact the developers at info@cyclestreets.net", name), "Error",
+                MessageBoxButton.OK);
+                    }
+                    
                 }
             }
         }

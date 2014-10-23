@@ -1,6 +1,7 @@
 ﻿// Satnav mode
 // Prompt feedback
 
+using System.Windows.Controls;
 using Cyclestreets.Annotations;
 using Cyclestreets.CustomClasses;
 using Cyclestreets.Managers;
@@ -25,6 +26,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Navigation;
+using Telerik.Windows.Controls;
 
 namespace Cyclestreets.Pages
 {
@@ -87,7 +89,7 @@ namespace Cyclestreets.Pages
 
         private async void StartPointOnPopulating(object sender, PopulatingEventArgs populatingEventArgs)
         {
-            List<string> results = await GeoUtils.StartPlaceSearch(populatingEventArgs.Parameter, MyMap.Center);
+            List<string> results = await GeoUtils.StartPlaceSearch(populatingEventArgs.Parameter, MyMap.Center, GeoUtils.PlaceSearchPriority.kHEREThenCycleStreets);
             if (results == null) return;
             AutoCompleteBox acb = sender as AutoCompleteBox;
             if (acb == null) return;
@@ -811,6 +813,13 @@ namespace Cyclestreets.Pages
             {
                 Util.showLocationDialog();
             }
+        }
+
+        private void startPoint_GotFocus(object sender, RoutedEventArgs e)
+        {
+            AutoCompleteBox ab = sender as AutoCompleteBox;
+            var tb = ab.FindChildByType<TextBox>();
+            tb.SelectAll();
         }
     }
 }

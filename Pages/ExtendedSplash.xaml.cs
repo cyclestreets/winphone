@@ -31,7 +31,7 @@ namespace Cyclestreets.Pages
             }
             else
             {
-                NavigationService.Navigate(new Uri(@"/Pages/MainPage.xaml"));
+                NavigationService.Navigate(new Uri(@"/Pages/MainPage.xaml", UriKind.RelativeOrAbsolute));
             }
         }
 

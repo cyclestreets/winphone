@@ -205,7 +205,7 @@
             <Grid.RenderTransform>
                 <CompositeTransform/>
             </Grid.RenderTransform>
-            <toolkit:AutoCompleteBox x:Name="startPoint" MinimumPrefixLength="3" SelectionChanged="startPoint_SelectionChanged" VerticalAlignment="Top" Margin="0" FontSize="20" Height="65" KeyUp="startPoint_KeyUp" FilterMode="None" Populated="startPoint_Populated" IsDropDownOpen="True" Padding="6,0,6,4">
+            <toolkit:AutoCompleteBox x:Name="startPoint" MinimumPrefixLength="3" SelectionChanged="startPoint_SelectionChanged" VerticalAlignment="Top" Margin="0" FontSize="20" Height="65" KeyUp="startPoint_KeyUp" FilterMode="None" Populated="startPoint_Populated" IsDropDownOpen="True" Padding="6,0,6,4" GotFocus="startPoint_GotFocus">
                 <!-- <toolkit:AutoCompleteBox.ItemTemplate>
 					<DataTemplate>
 						<StackPanel>
