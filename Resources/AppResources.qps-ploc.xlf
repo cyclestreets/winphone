@@ -199,6 +199,14 @@ Why not give us a 5 star rating to show your appreciation?</source>
           <source>Load Error</source>
           <target state="new">Load Error</target>
         </trans-unit>
+        <trans-unit id="Resx/TutorialTapToClose" translate="yes" xml:space="preserve">
+          <source>Tap to close.</source>
+          <target state="new">Tap to close.</target>
+        </trans-unit>
+        <trans-unit id="Resx/Reset" translate="yes" xml:space="preserve">
+          <source>Reset</source>
+          <target state="new">Reset</target>
+        </trans-unit>
         <trans-unit id="Resx/EnterTime" translate="yes" xml:space="preserve">
           <source>Enter time in minutes</source>
           <target state="new">Enter time in minutes</target>
@@ -330,8 +338,8 @@ Please try again later or report to dave@rwscripts.com if it continues. Thanks.
           <target state="needs-review-translation" state-qualifier="mt-suggestion">[11D0C][!!_Šãνè_!!]</target>
         </trans-unit>
         <trans-unit translate="yes" id="Resx/TutorialEnabled" xml:space="preserve">
-          <source>Tutorial Enabled</source>
-          <target state="needs-review-translation" state-qualifier="mt-suggestion">[9254F][!!_Τµτóѓįâľ Éиáьľęð_!!!!]</target>
+          <source>Reset Tutorial?</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[9254F][!!_Τµτóѓįâľ Éиáьľęð_!!!!]</target><note from="MultilingualUpdate" priority="2" annotates="source">Please verify the translation’s accuracy as the source string was updated after it was translated.</note>
         </trans-unit>
         <trans-unit translate="yes" id="Resx/PreventSleep" xml:space="preserve">
           <source>Prevent Sleep</source>
@@ -531,16 +539,18 @@ _!!]</target><note from="MultilingualUpdate" priority="2" annotates="source">Ple
           <target state="needs-review-translation" state-qualifier="mt-suggestion">[AAA7E][!!_4. Ỳôµ ĉãи ťáþ âηŷẁĥèѓę òή тћè màр_!!!!!!!!!!]</target>
         </trans-unit>
         <trans-unit translate="yes" id="Resx/Tutorial3" xml:space="preserve">
-          <source>3. Tap this option to select the point on the map directly under the %%amp;quot;+%%amp;quot; cursor. You can drag the map around and pinch zoom to refine the position.</source>
-          <target state="needs-review-translation" state-qualifier="mt-suggestion">[C22EA][!!_3. Τãρ ţħįš ôρťìóή τô śèļèĉτ τнê þôíиτ õи ţнê мâр đìѓéćтłУ µηđêŗ ţнę %%amp;qúóť;+%%amp;qûòт; ćûŗśôř. Ỳòú ćàη ðřâģ тћê мàр âѓôùйð ãиď рíйĉн żõôm тó ѓêƒîйé ţĥę þóšìťìõи._!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]</target>
+          <source>3. Tap this option to select the point on the map directly under the "+" cursor. You can drag the map around and pinch zoom to refine the position...</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[C22EA][!!_3. Τãρ ţħįš ôρťìóή τô śèļèĉτ τнê þôíиτ õи ţнê мâр đìѓéćтłУ µηđêŗ ţнę %%amp;qúóť;+%%amp;qûòт; ćûŗśôř. Ỳòú ćàη ðřâģ тћê мàр âѓôùйð ãиď рíйĉн żõôm тó ѓêƒîйé ţĥę þóšìťìõи._!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]</target><note from="MultilingualUpdate" priority="2" annotates="source">Please verify the translation’s accuracy as the source string was updated after it was translated.</note>
         </trans-unit>
         <trans-unit translate="yes" id="Resx/Tutorial2" xml:space="preserve">
           <source>2. Tap this option to select your current position...</source>
           <target state="needs-review-translation" state-qualifier="mt-suggestion">[3F4BB][!!_2. Ţàρ τнíŝ õρтíõй тõ śéĺęĉţ ýõúŕ čµřŕèйť þòśîťįóη..._!!!!!!!!!!!!!!!!]</target>
         </trans-unit>
         <trans-unit translate="yes" id="Resx/Tutorial1" xml:space="preserve">
-          <source>Tutorial: Tap these boxes to close and continue%%amp;#xA;%%amp;#xA;You can add route markers in four ways. %%amp;#xA;%%amp;#xA;1. You can type in this box...</source>
-          <target state="needs-review-translation" state-qualifier="mt-suggestion">[3D4E1][!!_Τûτóѓìáľ: Ţáр тћèšè Бòхéś ţó ćĺòşę áиð ĉóήţíήúê%%amp;#хÃ;%%amp;#хÂ;Ỳóµ ćâй âďđ řôúţê мáŗкéŗŝ įη ƒòµř ẅãýš. %%amp;#хÀ;%%amp;#хÁ;1. Ϋóù ćáи τўρę îи τђįś Бóх..._!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]</target>
+          <source>Tutorial: You can add route markers in four ways. 
+
+1. You can type in this box...</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[3D4E1][!!_Τûτóѓìáľ: Ţáр тћèšè Бòхéś ţó ćĺòşę áиð ĉóήţíήúê%%amp;#хÃ;%%amp;#хÂ;Ỳóµ ćâй âďđ řôúţê мáŗкéŗŝ įη ƒòµř ẅãýš. %%amp;#хÀ;%%amp;#хÁ;1. Ϋóù ćáи τўρę îи τђįś Бóх..._!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]</target><note from="MultilingualUpdate" priority="2" annotates="source">Please verify the translation’s accuracy as the source string was updated after it was translated.</note>
         </trans-unit>
         <trans-unit translate="yes" id="Resx/Settings" xml:space="preserve">
           <source>Settings</source>

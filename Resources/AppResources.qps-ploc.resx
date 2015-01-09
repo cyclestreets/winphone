@@ -290,12 +290,14 @@ _!!]</value>
   </data>
   <data name="Tutorial3" xml:space="preserve">
     <value>[C22EA][!!_3. Τãρ ţħįš ôρťìóή τô śèļèĉτ τнê þôíиτ õи ţнê мâр đìѓéćтłУ µηđêŗ ţнę &amp;qúóť;+&amp;qûòт; ćûŗśôř. Ỳòú ćàη ðřâģ тћê мàр âѓôùйð ãиď рíйĉн żõôm тó ѓêƒîйé ţĥę þóšìťìõи._!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]</value>
+    <comment></comment>
   </data>
   <data name="Tutorial2" xml:space="preserve">
     <value>[3F4BB][!!_2. Ţàρ τнíŝ õρтíõй тõ śéĺęĉţ ýõúŕ čµřŕèйť þòśîťįóη..._!!!!!!!!!!!!!!!!]</value>
   </data>
   <data name="Tutorial1" xml:space="preserve">
     <value>[3D4E1][!!_Τûτóѓìáľ: Ţáр тћèšè Бòхéś ţó ćĺòşę áиð ĉóήţíήúê&amp;#хÃ;&amp;#хÂ;Ỳóµ ćâй âďđ řôúţê мáŗкéŗŝ įη ƒòµř ẅãýš. &amp;#хÀ;&amp;#хÁ;1. Ϋóù ćáи τўρę îи τђįś Бóх..._!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]</value>
+    <comment></comment>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>[06282][!!_Šêťţîηġş_!!]</value>
@@ -356,6 +358,7 @@ _!!]</value>
   </data>
   <data name="TutorialEnabled" xml:space="preserve">
     <value>[9254F][!!_Τµτóѓįâľ Éиáьľęð_!!!!]</value>
+    <comment></comment>
   </data>
   <data name="PreventSleep" xml:space="preserve">
     <value>[2843D][!!_Þŗêνéηť Šłéêρ_!!]</value>

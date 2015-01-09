@@ -49,14 +49,6 @@
 						<ColumnDefinition Width="179"/>
 						<ColumnDefinition/>
 					</Grid.ColumnDefinitions>
-                    <TextBlock TextWrapping="Wrap" Margin="0" VerticalAlignment="Center" Text="{Binding Path=LocalizedResources.TutorialEnabled, Source={StaticResource LocalizedStrings}}"/>
-					<toolkit:ListPicker x:Name="tutorialEnabled" Margin="0" Grid.Column="1" />
-				</Grid>
-				<Grid>
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="179"/>
-						<ColumnDefinition/>
-					</Grid.ColumnDefinitions>
                     <TextBlock TextWrapping="Wrap" Margin="0" VerticalAlignment="Center" Text="{Binding Path=LocalizedResources.PreventSleep, Source={StaticResource LocalizedStrings}}"/>
 					<toolkit:ListPicker x:Name="preventSleep" Margin="0" Grid.Column="1" />
 				</Grid>
@@ -78,7 +70,15 @@
                     <TextBlock TextWrapping="Wrap" Margin="0" VerticalAlignment="Center" Text="{Binding Path=LocalizedResources.MyCyclingSpeed, Source={StaticResource LocalizedStrings}}"/>
 					<toolkit:ListPicker x:Name="cycleSpeed" Margin="0" Grid.Column="1" SelectionChanged="cycleSpeed_SelectionChanged"/>
 				</Grid>
-				<Button Content="Save" Click="Button_Click"/>
+                <Button Content="Save" Click="Button_Click"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="179"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock TextWrapping="Wrap" Margin="0" VerticalAlignment="Center" Text="{Binding Path=LocalizedResources.TutorialEnabled, Source={StaticResource LocalizedStrings}}"/>
+                    <Button x:Name="resetTutorialButton" Content="{Binding LocalizedResources.Reset, Mode=OneWay, Source={StaticResource LocalizedStrings}}" Click="resetTutorialButton_Click" Grid.Column="1"/>
+                </Grid>
 				<TextBlock TextWrapping="Wrap" Foreground="#FF919191" FontSize="16" Text="Route data: © OpenStreetMap contributors."/>
 				<ScrollViewer>
 					<RichTextBox TextWrapping="Wrap" Foreground="#FF919191" FontSize="16" Width="456">

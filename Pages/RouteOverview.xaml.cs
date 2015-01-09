@@ -255,7 +255,7 @@ namespace Cyclestreets.Pages
             }
             else if (rs.Points.Count > 0)
             {
-                MyMap.Map.SetView(rs.Points[0], 20, rs.Bearing ?? 0, 75, MapAnimationKind.Parabolic);
+                MyMap.Map.SetView(rs.Points[0], 19, rs.Bearing ?? 0, 60, MapAnimationKind.Parabolic);
             }
         }
 

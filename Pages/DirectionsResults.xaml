@@ -107,7 +107,7 @@
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="Total Time" VerticalAlignment="Center" HorizontalAlignment="Right" />
                             <Image Grid.Column="1" Source="/Assets/clock.png" Height="25"/>
-                            <TextBlock Grid.Column="2" Text="{Binding RouteManagerPtr.Overview.RouteDurationString, Mode=OneWay}" />
+                            <TextBlock Grid.Column="2" Text="{Binding RouteManagerPtr.Overview.RouteDurationString, Mode=OneWay}" VerticalAlignment="Center" HorizontalAlignment="Left" />
                         </Grid>
                         <Grid Height="40">
                             <Grid.ColumnDefinitions>
@@ -117,7 +117,7 @@
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="Route Length" VerticalAlignment="Center" HorizontalAlignment="Right" />
                             <Image Grid.Column="1" Source="/Assets/bullet_go.png" Height="25"/>
-                            <TextBlock Grid.Column="2" Text="{Binding RouteManagerPtr.Overview.RouteLengthString, Mode=OneWay}" />
+                            <TextBlock Grid.Column="2" Text="{Binding RouteManagerPtr.Overview.RouteLengthString, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center" />
                         </Grid>
                         <Grid Height="40">
                             <Grid.ColumnDefinitions>
@@ -127,7 +127,7 @@
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="Calories Burnt" VerticalAlignment="Center" HorizontalAlignment="Right" />
                             <Image Grid.Column="1" Source="/Assets/heart.png" Height="25"/>
-                            <TextBlock Grid.Column="2" Text="{Binding RouteManagerPtr.Overview.calories}" />
+                            <TextBlock Grid.Column="2" Text="{Binding RouteManagerPtr.Overview.calories}" HorizontalAlignment="Left" VerticalAlignment="Center" />
                         </Grid>
                         <Grid Height="40">
                             <Grid.ColumnDefinitions>
@@ -137,7 +137,7 @@
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="CO2 Saved (g)" VerticalAlignment="Center" HorizontalAlignment="Right" />
                             <Image Grid.Column="1" Source="/Assets/world.png" Height="25"/>
-                            <TextBlock Grid.Column="2" Text="{Binding RouteManagerPtr.Overview.GrammesCo2Saved}" />
+                            <TextBlock Grid.Column="2" Text="{Binding RouteManagerPtr.Overview.GrammesCo2Saved}" HorizontalAlignment="Left" VerticalAlignment="Center" />
                         </Grid>
                         <Grid Height="40">
                             <Grid.ColumnDefinitions>
@@ -147,7 +147,7 @@
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="Quietness" VerticalAlignment="Center" HorizontalAlignment="Right" />
                             <Image Grid.Column="1" Source="/Assets/picture.png" Height="25"/>
-                            <TextBlock Grid.Column="2" Text="{Binding RouteManagerPtr.Overview.QuietnessString, Mode=OneWay}" />
+                            <TextBlock Grid.Column="2" Text="{Binding RouteManagerPtr.Overview.QuietnessString, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center" />
                         </Grid>
                     </StackPanel>
                     <telerikChart:RadCartesianChart HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"  >

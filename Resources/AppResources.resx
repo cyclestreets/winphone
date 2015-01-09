@@ -222,13 +222,15 @@ Why not give us a 5 star rating to show your appreciation?</value>
     <value>Settings</value>
   </data>
   <data name="Tutorial1" xml:space="preserve">
-    <value>Tutorial: Tap these boxes to close and continue&amp;#xA;&amp;#xA;You can add route markers in four ways. &amp;#xA;&amp;#xA;1. You can type in this box...</value>
+    <value>Tutorial: You can add route markers in four ways. 
+
+1. You can type in this box...</value>
   </data>
   <data name="Tutorial2" xml:space="preserve">
     <value>2. Tap this option to select your current position...</value>
   </data>
   <data name="Tutorial3" xml:space="preserve">
-    <value>3. Tap this option to select the point on the map directly under the &amp;quot;+&amp;quot; cursor. You can drag the map around and pinch zoom to refine the position.</value>
+    <value>3. Tap this option to select the point on the map directly under the "+" cursor. You can drag the map around and pinch zoom to refine the position...</value>
   </data>
   <data name="Tutorial4" xml:space="preserve">
     <value>4. You can tap anywhere on the map</value>
@@ -385,7 +387,7 @@ Why not give us a 5 star rating to show your appreciation?</value>
     <value>Prevent Sleep</value>
   </data>
   <data name="TutorialEnabled" xml:space="preserve">
-    <value>Tutorial Enabled</value>
+    <value>Reset Tutorial?</value>
   </data>
   <data name="DirectionsResults_DirectionsResults_Save" xml:space="preserve">
     <value>Save</value>
@@ -429,22 +431,22 @@ Why not give us a 5 star rating to show your appreciation?</value>
   <data name="Overwrite" xml:space="preserve">
     <value>Overwrite?</value>
   </data>
-    <data name="PoorGPS" xml:space="preserve">
+  <data name="PoorGPS" xml:space="preserve">
     <value>Your GPS accuracy is low. Your current position may not be accurate.</value>
   </data>
-    <data name="PoorGPSTitle" xml:space="preserve">
+  <data name="PoorGPSTitle" xml:space="preserve">
     <value>Poor GPS Signal</value>
   </data>
-    <data name="CouldNotParseJSON" xml:space="preserve">
+  <data name="CouldNotParseJSON" xml:space="preserve">
     <value>Could not parse JSON {0} {1}</value>
   </data>
-    <data name="JSONParseError" xml:space="preserve">
+  <data name="JSONParseError" xml:space="preserve">
     <value>Could not parse route data information from server. Please let us know about this error with the route you were trying to plan</value>
   </data>
-    <data name="InvalidLocation" xml:space="preserve">
+  <data name="InvalidLocation" xml:space="preserve">
     <value>Invalid Location</value>
   </data>
-    <data name="NoLocationMsg" xml:space="preserve">
+  <data name="NoLocationMsg" xml:space="preserve">
     <value>Could not find location. Please try again</value>
   </data>
   <data name="NoLocalResults" xml:space="preserve">
@@ -547,5 +549,11 @@ Please try again later or report to dave@rwscripts.com if it continues. Thanks.
   </data>
   <data name="LoadError" xml:space="preserve">
     <value>Load Error</value>
+  </data>
+  <data name="TutorialTapToClose" xml:space="preserve">
+    <value>Tap to close.</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Reset</value>
   </data>
 </root>

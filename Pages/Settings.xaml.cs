@@ -37,15 +37,7 @@ namespace Cyclestreets.Pages
 			locationEnabled.ItemsSource = DirectionsPage.EnabledDisabled;
 			locationEnabled.SelectedItem = locationEnabledSetting;
 			locationEnabled.SelectionChanged += locationEnabled_SelectionChanged;
-
-			string tutorialEnabledSetting = DirectionsPage.EnabledDisabled[0];
-			if( SettingManager.instance.GetBoolValue( @"tutorialEnabled", true ) == false )
-				tutorialEnabledSetting = DirectionsPage.EnabledDisabled[1];
-
-			tutorialEnabled.ItemsSource = DirectionsPage.EnabledDisabled;
-			tutorialEnabled.SelectedItem = tutorialEnabledSetting;
-			tutorialEnabled.SelectionChanged += tutorialEnabled_SelectionChanged;
-
+            
 			string preventSleepSetting = DirectionsPage.EnabledDisabled[0];
 			if( SettingManager.instance.GetBoolValue( @"PreventSleep", true ) == false )
 				preventSleepSetting = DirectionsPage.EnabledDisabled[1];
@@ -62,29 +54,6 @@ namespace Cyclestreets.Pages
 				bool enabled = e.AddedItems[0].Equals( AppResources.Enabled );
 				SettingManager.instance.SetBoolValue( @"PreventSleep", enabled );
 				PhoneApplicationService.Current.UserIdleDetectionMode = enabled ? IdleDetectionMode.Disabled : IdleDetectionMode.Enabled;
-			}
-		}
-
-		private void tutorialEnabled_SelectionChanged( object sender, SelectionChangedEventArgs e )
-		{
-			if( e.AddedItems.Count > 0 )
-			{
-				bool oldValue = SettingManager.instance.GetBoolValue( @"tutorialEnabled", false );
-				bool enabled = e.AddedItems[0].Equals( AppResources.Enabled );
-				SettingManager.instance.SetBoolValue( @"tutorialEnabled", enabled );
-
-				if( enabled && !oldValue )
-				{
-					SettingManager.instance.SetBoolValue( @"shownTutorial", false );
-					SettingManager.instance.SetBoolValue( @"shownTutorialPin", false );
-					SettingManager.instance.SetBoolValue( @"shownTutorialRouteType", false );
-				}
-				else if( !enabled && oldValue )
-				{
-					SettingManager.instance.SetBoolValue( @"shownTutorial", true );
-					SettingManager.instance.SetBoolValue( @"shownTutorialPin", true );
-					SettingManager.instance.SetBoolValue( @"shownTutorialRouteType", true );
-				}
 			}
 		}
 
@@ -161,5 +130,13 @@ namespace Cyclestreets.Pages
 				SettingManager.instance.SetStringValue( @"mapStyle", (string)e.AddedItems[0] );
 			}
 		}
+
+        private void resetTutorialButton_Click(object sender, RoutedEventArgs e)
+        {
+            SettingManager.instance.SetBoolValue(@"tutorialEnabled", true);
+            SettingManager.instance.SetBoolValue(@"shownTutorial", false);
+            SettingManager.instance.SetBoolValue(@"shownTutorialPin", false);
+            SettingManager.instance.SetBoolValue(@"shownTutorialRouteType", false);
+        }
 	}
 }

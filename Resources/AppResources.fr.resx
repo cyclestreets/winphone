@@ -284,12 +284,14 @@ Pourquoi ne pas nous donner une cote 5 étoiles pour montrer votre appréciation
   </data>
   <data name="Tutorial3" xml:space="preserve">
     <value>3. Appuyez sur cette option pour sélectionner le point sur la carte directement sous le &amp;quot; +&amp;quot ; curseur. Vous pouvez faire glisser la carte autour et pincer le zoom pour affiner la position.</value>
+    <comment></comment>
   </data>
   <data name="Tutorial2" xml:space="preserve">
     <value>2. Appuyez sur cette option pour sélectionner votre position actuelle...</value>
   </data>
   <data name="Tutorial1" xml:space="preserve">
     <value>Tutoriel : Tapez sur ces boîtes pour fermer et continuer&amp;#xA ;&amp;#xA ;Vous pouvez ajouter des marqueurs de l'itinéraire de quatre façons. &amp;#xA ;&amp;#xA; 1. Vous pouvez tapez dans cette zone...</value>
+    <comment></comment>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Paramètres</value>
@@ -350,6 +352,7 @@ Pourquoi ne pas nous donner une cote 5 étoiles pour montrer votre appréciation
   </data>
   <data name="TutorialEnabled" xml:space="preserve">
     <value>Tutoriel activé</value>
+    <comment></comment>
   </data>
   <data name="PreventSleep" xml:space="preserve">
     <value>Empêcher le sommeil</value>
