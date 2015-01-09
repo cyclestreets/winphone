@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Xml.Linq;
 using Cyclestreets.Resources;
+using GalaSoft.MvvmLight.Command;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Info;
 
@@ -19,7 +20,7 @@ namespace Cyclestreets.Utils
 			{
 				observableCollection.Add( item );
 			}
-
+            
 			return observableCollection;
 		}
 	}
@@ -102,7 +103,7 @@ namespace Cyclestreets.Utils
 					    {
 					        int errorCode = Int32.Parse( xElement.Value );
 
-					        //MarkedUp.AnalyticClient.Error( e.Element( "error" ).Value );
+					        //AnalyticClient.Error( e.Element( "error" ).Value );
 
 					        SmartDispatcher.BeginInvoke( () =>
 					        {

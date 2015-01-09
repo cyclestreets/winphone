@@ -9,16 +9,14 @@ using System.Windows.Markup;
 using System.Windows.Navigation;
 using BugSense;
 using BugSense.Core.Model;
-using CrittercismSDK;
 using Cyclestreets.Common;
 using CycleStreets.Helpers;
 using Cyclestreets.Managers;
 using Cyclestreets.Resources;
+using Cyclestreets.Utils;
 using FlurryWP8SDK;
 using GalaSoft.MvvmLight.Ioc;
-using MarkedUp;
 using Microsoft.Phone.Controls;
-using Microsoft.Phone.Marketplace;
 using Microsoft.Phone.Shell;
 using System.IO.IsolatedStorage;
 
@@ -153,7 +151,7 @@ namespace Cyclestreets
             // When debugging, we want to simulate a trial mode experience. The following conditional allows us to set the _isTrial 
             // property to simulate trial mode being on or off. 
 #if DEBUG
-            _isTrial = false;
+            _isTrial = true;
 #else
 			_isTrial = _licenseInfo.IsTrial();
 #endif
@@ -163,7 +161,6 @@ namespace Cyclestreets
         // This code will not execute when the application is reactivated
         private void Application_Launching(object sender, LaunchingEventArgs e)
         {
-            Crittercism.Init(@"52b1be13d0d8f72067000007");
             BugSenseHandler.Instance.InitAndStartSession(new ExceptionManager(Current), RootFrame, @"2d8ae0f1" );
             Api.StartSession(@"JZSMBMX659NW78S35ZPR");
             AnalyticClient.Initialize(@"87c139ca-14a7-41ff-8b3b-095894a52bdf");
@@ -185,7 +182,7 @@ namespace Cyclestreets
         {
             Api.StartSession(@"JZSMBMX659NW78S35ZPR");
             AnalyticClient.Initialize(@"87c139ca-14a7-41ff-8b3b-095894a52bdf");
-            //MarkedUp.AnalyticClient.RegisterRootNavigationFrame( RootFrame );
+            //AnalyticClient.RegisterRootNavigationFrame( RootFrame );
 
             CheckLicense();
 

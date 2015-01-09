@@ -288,7 +288,7 @@ namespace Cyclestreets.CustomClasses
             bool result = await rm.FindRoute(DefaultPlan, false);
             if (!result)
             {
-                MarkedUp.AnalyticClient.Error(@"Route Planning Error");
+                AnalyticClient.Error(@"Route Planning Error");
 
                 MessageBox.Show(
                     AppResources.RouteParseError);

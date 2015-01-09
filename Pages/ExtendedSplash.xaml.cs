@@ -35,11 +35,18 @@ namespace Cyclestreets.Pages
             }
         }
 
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+
+            NavigationService.RemoveBackEntry();
+        }
+
         void Instance_PositionChanged(Windows.Devices.Geolocation.Geolocator sender, Windows.Devices.Geolocation.PositionChangedEventArgs args)
         {
             SmartDispatcher.BeginInvoke(() =>
             {
-                NavigationService.RemoveBackEntry();
+                
                 SmartDispatcher.BeginInvoke(
                     () => NavigationService.Navigate(new Uri(@"/Pages/MainPage.xaml", UriKind.RelativeOrAbsolute)));
                 LocationManager.Instance.PositionChanged -= Instance_PositionChanged;

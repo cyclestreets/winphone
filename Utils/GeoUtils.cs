@@ -1,5 +1,4 @@
 ﻿using Cyclestreets.Resources;
-using MarkedUp;
 using Microsoft.Phone.Maps.Services;
 using Newtonsoft.Json.Linq;
 using RestSharp;
@@ -190,7 +189,7 @@ namespace Cyclestreets.Utils
                         break;
                     }
                 }
-                throw;
+                //throw;
             }
         }
 #endregion
@@ -269,7 +268,7 @@ namespace Cyclestreets.Utils
                             break;
                         }
                 }
-                throw;
+                //throw;
             }
         }
         #endregion

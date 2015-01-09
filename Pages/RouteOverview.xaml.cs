@@ -47,7 +47,7 @@ namespace Cyclestreets.Pages
                             bool result = await rm.FindRoute(_viewModel.CurrentPlan, e.NavigationMode == NavigationMode.New);
                             if (!result)
                             {
-                                MarkedUp.AnalyticClient.Error(@"Route Planning Error");
+                                AnalyticClient.Error(@"Route Planning Error");
 
                                 MessageBox.Show(AppResources.RouteParseError);
                             }
@@ -66,7 +66,7 @@ namespace Cyclestreets.Pages
                                         _viewModel.CurrentPlan);
                             if (!result)
                             {
-                                MarkedUp.AnalyticClient.Error(@"Route Planning Error");
+                                AnalyticClient.Error(@"Route Planning Error");
 
                                 MessageBox.Show(AppResources.RouteParseError);
                             }
@@ -95,7 +95,7 @@ namespace Cyclestreets.Pages
                             bool result = await rm.FindLeisureRoute(duration, distance, poiTypes);
                             if (!result)
                             {
-                                MarkedUp.AnalyticClient.Error(@"Route Planning Error");
+                                AnalyticClient.Error(@"Route Planning Error");
 
                                 MessageBox.Show(AppResources.RouteParseError);
                             }
@@ -176,7 +176,7 @@ namespace Cyclestreets.Pages
 
             if (!result)
             {
-                MarkedUp.AnalyticClient.Error(@"Route Planning Error");
+                AnalyticClient.Error(@"Route Planning Error");
 
                 MessageBox.Show(
                     AppResources.RouteParseError);

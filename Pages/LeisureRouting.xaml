@@ -46,10 +46,8 @@
                         </TextBlock>
 
                         <TextBlock TextWrapping="Wrap" Text="Route Type" FontWeight="Bold"/>
-                        <toolkit:ListPicker x:Name="routeType" Margin="12,0" BorderThickness="3" BorderBrush="#DEFFFFFF">
-                            <toolkit:ListPicker.Background>
-                                <SolidColorBrush Color="{StaticResource PhoneTextBoxColor}"/>
-                            </toolkit:ListPicker.Background>
+
+                        <toolkit:ListPicker x:Name="routeType" Margin="12,0" Background="{StaticResource PhoneBackgroundBrush}" >
                             <ListBoxItem Content="Target Time">
                             </ListBoxItem>
                             <ListBoxItem Content="Target Distance">
@@ -61,8 +59,7 @@
 							<ListBoxItem Content="Target Distance"/>
 						</toolkit:ListPicker> -->
                         <TextBlock x:Name="valueDescription" TextWrapping="Wrap" FontWeight="Bold" Height="35" Text="Enter time in minutes" Padding="0,5,0,0"/>
-                        <TextBox x:Name="valueEntry" Height="72" Padding="2" InputScope="Number" BorderBrush="White">
-                        </TextBox>
+                        <TextBox x:Name="valueEntry" Height="72" Padding="2" InputScope="Number"/>
                     </StackPanel>
                 </Grid>
             </phone:PivotItem>
