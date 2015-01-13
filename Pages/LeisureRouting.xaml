@@ -50,9 +50,9 @@
                             <toolkit:ListPicker.Background>
                                 <SolidColorBrush Color="{StaticResource PhoneTextBoxColor}"/>
                             </toolkit:ListPicker.Background>
-                            <ListBoxItem Content="Target Time">
+                            <ListBoxItem Content="Target Time" Foreground="Black">
                             </ListBoxItem>
-                            <ListBoxItem Content="Target Distance">
+                            <ListBoxItem Content="Target Distance" Foreground="Black">
                             </ListBoxItem>
                         </toolkit:ListPicker>
 

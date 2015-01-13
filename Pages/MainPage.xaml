@@ -67,7 +67,7 @@
 			<!-- <shell:ApplicationBarIconButton x:Name="findAppBar" IconUri="/Assets/icons/dark/appbar.magnify.png" IsEnabled="True" Text="Find"/> -->
 			<shell:ApplicationBarIconButton x:Name="directionsAppBar" IconUri="/Assets/icons/dark/appbar.directions.png" IsEnabled="True" Text="Directions" Click="ApplicationBarIconButton_Directions"/>
 			<shell:ApplicationBarIconButton x:Name="navigateToAppBar" IconUri="/Assets/icons/dark/appbar.location.png" IsEnabled="False" Text="Navigate To" Click="ApplicationBarIconButton_NavigateTo"/>
-			<shell:ApplicationBarIconButton x:Name="leisureRouting" IconUri="/Assets/icons/dark/appbar.map.aerial.png" IsEnabled="True" Text="leisure" Click="leisureRouting_Click"/>
+			<shell:ApplicationBarIconButton x:Name="leisureRouting" IconUri="/Assets/AppBar/appbar.swap.png" IsEnabled="True" Text="leisure" Click="leisureRouting_Click"/>
             <shell:ApplicationBarIconButton x:Name="pointOfInterest" IconUri="/Assets/AppBar/cancel.png" IsEnabled="True" Text="p.o.i." Click="poiList_Click"/>
         </shell:ApplicationBar>
 	</phone:PhoneApplicationPage.ApplicationBar>
@@ -135,6 +135,6 @@
 		</maps:Map>-->
         <CustomClasses:CycleStreetsMap x:Name="MyMap" Tap="MyMap_Tap" LockToMyLocation="LocationAndZoomLock" ShowAccuracyBanner="False" MouseMove="MyMap_MouseMove" MouseLeftButtonDown="MyMap_MouseMove" />
 		<UserControls:FeedbackOverlay/>
-	</Grid>
+    </Grid>
 
 </phone:PhoneApplicationPage>

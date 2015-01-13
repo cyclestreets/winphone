@@ -114,6 +114,7 @@
             </Canvas>
             <TextBlock Grid.Column="1" TextWrapping="Wrap" Text="WARNING: GPS accuracy is low. Your current location and speed may be inaccurate" HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="Segoe WP Light"/>
         </Grid>
+        <TextBlock x:Name="attribution" HorizontalAlignment="Right" TextWrapping="Wrap" VerticalAlignment="Bottom" Margin="0,0,10,0" Foreground="#FFA2A2A2" FontSize="16"/>
 
     </Grid>
 </UserControl>

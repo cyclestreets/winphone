@@ -155,11 +155,29 @@ namespace Cyclestreets.CustomClasses
                 rm.ParseRouteData(routeData, DefaultPlan, false);
             }
 
+            SetAttribution();
+
             var newplan = rm.HasCachedRoute(DefaultPlan);
             if (newplan == null) return;
             DefaultPlan = newplan;
 
             PlotRoute();
+        }
+
+        private void SetAttribution()
+        {
+            switch (SettingManager.instance.GetStringValue(@"mapStyle", MapUtils.MapStyle[0]))
+            {
+                case "OpenStreetMap":
+                    attribution.Text = "© OpenStreetMap contributors, CC-BY-SA";
+                    break;
+                case "OpenCycleMap":
+                    attribution.Text = "© OpenStreetMap contributors, CC-BY-SA; OpenCycleMap";
+                    break;
+                default:
+                    attribution.Text = "";
+                    break;
+            }
         }
 
         private void SetMapStyle()
