@@ -8,7 +8,6 @@ using Cyclestreets.Managers;
 using Cyclestreets.Objects;
 using Cyclestreets.Resources;
 using Cyclestreets.Utils;
-using CycleStreets.Util;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Expression.Interactivity.Core;
 using Microsoft.Phone.Controls;
@@ -54,7 +53,7 @@ namespace Cyclestreets.Pages
 
         GeoCoordinate _current;
 
-        public static ListBoxPair[] RouteType = 
+        public static readonly ListBoxPair[] RouteType = 
 		{ 
 			new ListBoxPair(AppResources.BalancedRoute, @"balanced"),
 			new ListBoxPair(AppResources.FastestRoute, @"fastest"), 
@@ -62,7 +61,7 @@ namespace Cyclestreets.Pages
 		};
 
         [NotNull]
-        public static readonly String[] CycleSpeed = { @"10mph", @"12mph", @"15mph" };
+        public static readonly String[] CycleSpeed = { AppResources.unhurried, AppResources.cruising, AppResources.quick };
         public static readonly String[] EnabledDisabled = { AppResources.Enabled, AppResources.Disabled };
         private MapLayer _wayPointLayer;
 
@@ -246,7 +245,7 @@ namespace Cyclestreets.Pages
                 }
                 catch (Exception ex)
                 {
-                    MarkedUp.AnalyticClient.Error(String.Format(AppResources.CouldNotParseJSON, e.Result, ex.Message));
+                    AnalyticClient.Error(String.Format(AppResources.CouldNotParseJSON, e.Result, ex.Message));
                     MessageBox.Show(AppResources.JSONParseError);
                 }
                 Debug.Assert(o != null, @"o != null");
@@ -417,7 +416,7 @@ namespace Cyclestreets.Pages
                     }
                     catch (Exception ex)
                     {
-                        MarkedUp.AnalyticClient.Error("Could not parse JSON " + currentRouteData.Trim() + " " + ex.Message);
+                        AnalyticClient.Error("Could not parse JSON " + currentRouteData.Trim() + " " + ex.Message);
                         MessageBox.Show("Could not parse route data information from server. Please let us know about this error with the route you were trying to plan");
                     }
                 }
@@ -669,7 +668,7 @@ namespace Cyclestreets.Pages
             }
             catch (Exception e)
             {
-                MarkedUp.AnalyticClient.Error("Could not parse direction results " + e.Message);
+                AnalyticClient.Error("Could not parse direction results " + e.Message);
                 MessageBox.Show(
                     "There was a problem reading the direction data. Please pass this message on to info@cyclestreets.net. " +
                     e.Message);

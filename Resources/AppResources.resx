@@ -556,4 +556,19 @@ Please try again later or report to dave@rwscripts.com if it continues. Thanks.
   <data name="Reset" xml:space="preserve">
     <value>Reset</value>
   </data>
+  <data name="Buy_Now" xml:space="preserve">
+    <value>Buy Now</value>
+  </data>
+  <data name="Continue_Trial" xml:space="preserve">
+    <value>Continue Trial</value>
+  </data>
+  <data name="unhurried" xml:space="preserve">
+    <value>10mph unhurried</value>
+  </data>
+  <data name="cruising" xml:space="preserve">
+    <value>12mph cruising</value>
+  </data>
+  <data name="quick" xml:space="preserve">
+    <value>15mph quick</value>
+  </data>
 </root>

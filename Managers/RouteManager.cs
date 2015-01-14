@@ -190,7 +190,7 @@ namespace Cyclestreets.Managers
             // Clear the cache
             _cachedRouteData = null;
 
-            string speedSetting = SettingManager.instance.GetStringValue(@"cycleSpeed", @"12mph");
+            string speedSetting = SettingManager.instance.GetStringValue(@"cycleSpeed", DirectionsPage.CycleSpeed[1]);
 
             int speed = Util.getSpeedFromString(speedSetting);
             const int useDom = 0; // 0=xml 1=gml
@@ -246,7 +246,7 @@ namespace Cyclestreets.Managers
                 return t1;
             }
 
-            string speedSetting = SettingManager.instance.GetStringValue(@"cycleSpeed", @"12mph");
+            string speedSetting = SettingManager.instance.GetStringValue(@"cycleSpeed", DirectionsPage.CycleSpeed[1]);
 
             int speed = Util.getSpeedFromString(speedSetting);
             const int useDom = 0; // 0=xml 1=gml
@@ -323,7 +323,7 @@ namespace Cyclestreets.Managers
                 }
                 catch (Exception ex)
                 {
-                    MarkedUp.AnalyticClient.Error(@"Could not parse JSON " + currentRouteData.Trim() + @" " + ex.Message);
+                    AnalyticClient.Error(@"Could not parse JSON " + currentRouteData.Trim() + @" " + ex.Message);
                     MessageBox.Show(AppResources.CouldNotParse);
                 }
             }

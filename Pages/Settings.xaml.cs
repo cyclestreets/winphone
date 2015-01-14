@@ -26,7 +26,7 @@ namespace Cyclestreets.Pages
             int idx = Array.FindIndex(DirectionsPage.RouteType, v => v.Value.Equals(defaultRouteTypeSetting));
             defaultRouteType.SelectedIndex = idx == -1 ? 0 : idx;
 
-			string cycleSpeedSetting = SettingManager.instance.GetStringValue( @"cycleSpeed", DirectionsPage.CycleSpeed[0] );
+			string cycleSpeedSetting = SettingManager.instance.GetStringValue( @"cycleSpeed", DirectionsPage.CycleSpeed[1] );
 			cycleSpeed.ItemsSource = DirectionsPage.CycleSpeed;
 			cycleSpeed.SelectedItem = cycleSpeedSetting;
 

@@ -2,20 +2,22 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
   <file datatype="xml" source-language="en-US" target-language="qps-ploc" original="AppResources.resx" tool-id="MultilingualAppToolkit" product-name="Cyclestreets" product-version="2.0.0.4" build-num="0">
     <header>
-      <tool tool-id="MultilingualAppToolkit" tool-name="Multilingual App Toolkit" tool-version="3.1.1085.0" tool-company="Microsoft" />
+      <tool tool-id="MultilingualAppToolkit" tool-name="Multilingual App Toolkit" tool-version="3.0.1200.0" tool-company="Microsoft" />
     </header>
     <body>
       <group id="Resx">
         <trans-unit translate="yes" id="Resx/ResourceFlowDirection" xml:space="preserve">
           <source>LeftToRight</source>
           <target state="translated">LeftToRight</target>
+          <note from="MultilingualBuild" annotates="source" priority="2">Controls the FlowDirection for all elements in the RootFrame. Set to the traditional direction of this resource file's language</note>
           
-        <note from="MultilingualBuild" annotates="source" priority="2">Controls the FlowDirection for all elements in the RootFrame. Set to the traditional direction of this resource file's language</note></trans-unit>
+        </trans-unit>
         <trans-unit translate="yes" id="Resx/ResourceLanguage" xml:space="preserve">
           <source>en-US</source>
           <target state="translated">qps-ploc</target>
+          <note from="MultilingualBuild" annotates="source" priority="2">Controls the Language and ensures that the font for all elements in the RootFrame aligns with the app's language. Set to the language code of this resource file's language.</note>
           
-        <note from="MultilingualBuild" annotates="source" priority="2">Controls the Language and ensures that the font for all elements in the RootFrame aligns with the app's language. Set to the language code of this resource file's language.</note></trans-unit>
+        </trans-unit>
         <trans-unit translate="yes" id="Resx/ApplicationTitle" xml:space="preserve">
           <source>CycleStreets</source>
           <target state="needs-review-translation" state-qualifier="mt-suggestion">[E5EBC][!!_ĈўĉľêŠτŗêêτš_!!]</target>
@@ -105,8 +107,9 @@ Why not give us a 5 star rating to show your appreciation?</source>
         <trans-unit translate="yes" id="Resx/DirectionText" xml:space="preserve">
           <source>{0} at {1} %%amp;#xA;Continue for {2} m</source>
           <target state="needs-review-translation" state-qualifier="mt-suggestion">[55287][!!_{0} ãτ {1} %%amp;#×Á;Ċôηţįиùè ƒôѓ {2} m_!!!!!!!!!!!!]</target>
+          <note from="MultilingualBuild" annotates="source" priority="2">0 = turn 1 = Name 2 == distance</note>
           
-        <note from="MultilingualBuild" annotates="source" priority="2">0 = turn 1 = Name 2 == distance</note></trans-unit>
+        </trans-unit>
         <trans-unit translate="yes" id="Resx/MainPage_ApplicationBarMenuItem_ToggleAerialView_Disable_aerial_view" xml:space="preserve">
           <source>Disable aerial view</source>
           <target state="needs-review-translation" state-qualifier="mt-suggestion">[3B28F][!!_ÐîšâБłê âêŕįáľ νíêẅ_!!!!!!]</target>
@@ -206,6 +209,26 @@ Why not give us a 5 star rating to show your appreciation?</source>
         <trans-unit id="Resx/Reset" translate="yes" xml:space="preserve">
           <source>Reset</source>
           <target state="new">Reset</target>
+        </trans-unit>
+        <trans-unit id="Resx/Continue_Trial" translate="yes" xml:space="preserve">
+          <source>Continue Trial</source>
+          <target state="new">Continue Trial</target>
+        </trans-unit>
+        <trans-unit id="Resx/quick" translate="yes" xml:space="preserve">
+          <source>15mph quick</source>
+          <target state="new">15mph quick</target>
+        </trans-unit>
+        <trans-unit id="Resx/cruising" translate="yes" xml:space="preserve">
+          <source>12mph cruising</source>
+          <target state="new">12mph cruising</target>
+        </trans-unit>
+        <trans-unit id="Resx/unhurried" translate="yes" xml:space="preserve">
+          <source>10mph unhurried</source>
+          <target state="new">10mph unhurried</target>
+        </trans-unit>
+        <trans-unit id="Resx/Buy_Now" translate="yes" xml:space="preserve">
+          <source>Buy Now</source>
+          <target state="new">Buy Now</target>
         </trans-unit>
         <trans-unit id="Resx/EnterTime" translate="yes" xml:space="preserve">
           <source>Enter time in minutes</source>
@@ -339,8 +362,8 @@ Please try again later or report to dave@rwscripts.com if it continues. Thanks.
         </trans-unit>
         <trans-unit translate="yes" id="Resx/TutorialEnabled" xml:space="preserve">
           <source>Reset Tutorial?</source>
-          <target state="needs-review-translation" state-qualifier="mt-suggestion">[9254F][!!_Τµτóѓįâľ Éиáьľęð_!!!!]</target><note from="MultilingualUpdate" priority="2" annotates="source">Please verify the translation’s accuracy as the source string was updated after it was translated.</note>
-        </trans-unit>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[9254F][!!_Τµτóѓįâľ Éиáьľęð_!!!!]</target>
+          <note from="MultilingualUpdate" annotates="source" priority="2">Please verify the translation’s accuracy as the source string was updated after it was translated.</note></trans-unit>
         <trans-unit translate="yes" id="Resx/PreventSleep" xml:space="preserve">
           <source>Prevent Sleep</source>
           <target state="needs-review-translation" state-qualifier="mt-suggestion">[2843D][!!_Þŗêνéηť Šłéêρ_!!]</target>
@@ -428,16 +451,16 @@ Please try again later or report to dave@rwscripts.com if it continues. Thanks.
         <trans-unit translate="yes" id="Resx/MetresShort" xml:space="preserve">
           <source>{0} metres</source>
           <target state="needs-review-translation" state-qualifier="mt-suggestion">[AA64E][!!_м
-_!!]</target><note from="MultilingualUpdate" priority="2" annotates="source">Please verify the translation’s accuracy as the source string was updated after it was translated.</note>
-        </trans-unit>
+_!!]</target>
+          <note from="MultilingualUpdate" annotates="source" priority="2">Please verify the translation’s accuracy as the source string was updated after it was translated.</note></trans-unit>
         <trans-unit translate="yes" id="Resx/CouldNotCalculateRoute" xml:space="preserve">
           <source>Could not calculate route</source>
           <target state="needs-review-translation" state-qualifier="mt-suggestion">[FFC0C][!!_Ĉõµłð йõт čâłćµļãтè ѓõûţé_!!!!!!!!]</target>
         </trans-unit>
         <trans-unit translate="yes" id="Resx/Miles" xml:space="preserve">
           <source>{0} miles</source>
-          <target state="needs-review-translation" state-qualifier="mt-suggestion">[CC25E][!!_ мįľêŝ_!!]</target><note from="MultilingualUpdate" priority="2" annotates="source">Please verify the translation’s accuracy as the source string was updated after it was translated.</note>
-        </trans-unit>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[CC25E][!!_ мįľêŝ_!!]</target>
+          <note from="MultilingualUpdate" annotates="source" priority="2">Please verify the translation’s accuracy as the source string was updated after it was translated.</note></trans-unit>
         <trans-unit translate="yes" id="Resx/Distance" xml:space="preserve">
           <source>Distance</source>
           <target state="needs-review-translation" state-qualifier="mt-suggestion">[FEC2D][!!_Ďìŝťâηċé_!!]</target>
@@ -540,8 +563,8 @@ _!!]</target><note from="MultilingualUpdate" priority="2" annotates="source">Ple
         </trans-unit>
         <trans-unit translate="yes" id="Resx/Tutorial3" xml:space="preserve">
           <source>3. Tap this option to select the point on the map directly under the "+" cursor. You can drag the map around and pinch zoom to refine the position...</source>
-          <target state="needs-review-translation" state-qualifier="mt-suggestion">[C22EA][!!_3. Τãρ ţħįš ôρťìóή τô śèļèĉτ τнê þôíиτ õи ţнê мâр đìѓéćтłУ µηđêŗ ţнę %%amp;qúóť;+%%amp;qûòт; ćûŗśôř. Ỳòú ćàη ðřâģ тћê мàр âѓôùйð ãиď рíйĉн żõôm тó ѓêƒîйé ţĥę þóšìťìõи._!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]</target><note from="MultilingualUpdate" priority="2" annotates="source">Please verify the translation’s accuracy as the source string was updated after it was translated.</note>
-        </trans-unit>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[C22EA][!!_3. Τãρ ţħįš ôρťìóή τô śèļèĉτ τнê þôíиτ õи ţнê мâр đìѓéćтłУ µηđêŗ ţнę %%amp;qúóť;+%%amp;qûòт; ćûŗśôř. Ỳòú ćàη ðřâģ тћê мàр âѓôùйð ãиď рíйĉн żõôm тó ѓêƒîйé ţĥę þóšìťìõи._!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]</target>
+          <note from="MultilingualUpdate" annotates="source" priority="2">Please verify the translation’s accuracy as the source string was updated after it was translated.</note></trans-unit>
         <trans-unit translate="yes" id="Resx/Tutorial2" xml:space="preserve">
           <source>2. Tap this option to select your current position...</source>
           <target state="needs-review-translation" state-qualifier="mt-suggestion">[3F4BB][!!_2. Ţàρ τнíŝ õρтíõй тõ śéĺęĉţ ýõúŕ čµřŕèйť þòśîťįóη..._!!!!!!!!!!!!!!!!]</target>
@@ -550,8 +573,8 @@ _!!]</target><note from="MultilingualUpdate" priority="2" annotates="source">Ple
           <source>Tutorial: You can add route markers in four ways. 
 
 1. You can type in this box...</source>
-          <target state="needs-review-translation" state-qualifier="mt-suggestion">[3D4E1][!!_Τûτóѓìáľ: Ţáр тћèšè Бòхéś ţó ćĺòşę áиð ĉóήţíήúê%%amp;#хÃ;%%amp;#хÂ;Ỳóµ ćâй âďđ řôúţê мáŗкéŗŝ įη ƒòµř ẅãýš. %%amp;#хÀ;%%amp;#хÁ;1. Ϋóù ćáи τўρę îи τђįś Бóх..._!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]</target><note from="MultilingualUpdate" priority="2" annotates="source">Please verify the translation’s accuracy as the source string was updated after it was translated.</note>
-        </trans-unit>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">[3D4E1][!!_Τûτóѓìáľ: Ţáр тћèšè Бòхéś ţó ćĺòşę áиð ĉóήţíήúê%%amp;#хÃ;%%amp;#хÂ;Ỳóµ ćâй âďđ řôúţê мáŗкéŗŝ įη ƒòµř ẅãýš. %%amp;#хÀ;%%amp;#хÁ;1. Ϋóù ćáи τўρę îи τђįś Бóх..._!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]</target>
+          <note from="MultilingualUpdate" annotates="source" priority="2">Please verify the translation’s accuracy as the source string was updated after it was translated.</note></trans-unit>
         <trans-unit translate="yes" id="Resx/Settings" xml:space="preserve">
           <source>Settings</source>
           <target state="needs-review-translation" state-qualifier="mt-suggestion">[06282][!!_Šêťţîηġş_!!]</target>
