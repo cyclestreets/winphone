@@ -1,52 +1,35 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest" xmlns:m3="http://schemas.microsoft.com/appx/2014/manifest" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest">
-
-  <Identity Name="4e3825c7-3c0d-493b-b61a-30d60e5de525"
-            Publisher="CN=Dave"
-            Version="1.0.0.0" />
-
-  <mp:PhoneIdentity PhoneProductId="823e41bf-889c-4102-863f-11cfee11f652" PhonePublisherId="c62b52a7-eb58-47be-bdaf-af581f416bc1"/>
-
+  <Identity Name="CycleStreetsLtd.CycleStreets" Publisher="CN=4D3E5F53-8FF3-4F61-9053-8243C1347451" Version="2.1.0.0" />
+  <mp:PhoneIdentity PhoneProductId="823e41bf-889c-4102-863f-11cfee11f652" PhonePublisherId="c62b52a7-eb58-47be-bdaf-af581f416bc1" />
   <Properties>
     <DisplayName>Cyclestreets</DisplayName>
-    <PublisherDisplayName>Dave</PublisherDisplayName>
-    <Logo>Assets\StoreLogo.png</Logo>
+    <PublisherDisplayName>CycleStreets Ltd</PublisherDisplayName>
+    <Logo>Assets\Tiles\FlipCycleTileSmall.png</Logo>
   </Properties>
-
   <Prerequisites>
     <OSMinVersion>6.3.1</OSMinVersion>
     <OSMaxVersionTested>6.3.1</OSMaxVersionTested>
   </Prerequisites>
-
   <Resources>
-    <Resource Language="x-generate"/>
+    <Resource Language="x-generate" />
   </Resources>
-
   <Applications>
-    <Application Id="x823e41bfy889cy4102y863fy11cfee11f652x"
-        Executable="AGHost.exe"
-        EntryPoint="Pages/ExtendedSplash.xaml">
-      <m3:VisualElements
-          DisplayName="Cyclestreets"
-          Square150x150Logo="Assets\SquareTile150x150.png"
-          Square44x44Logo="Assets\Logo.png"
-          Description="Cyclestreets"
-          ForegroundText="light"
-          BackgroundColor="#464646">
-        <m3:DefaultTile Square71x71Logo="Assets\SquareTile71x71.png"/>
+    <Application Id="x823e41bfy889cy4102y863fy11cfee11f652x" Executable="AGHost.exe" EntryPoint="Pages/ExtendedSplash.xaml">
+      <m3:VisualElements DisplayName="Cyclestreets" Square150x150Logo="Assets\SquareTile150x150.png" Square44x44Logo="Assets\Logo.png" Description="Cyclestreets" ForegroundText="light" BackgroundColor="#464646">
+        <m3:DefaultTile Square71x71Logo="Assets\SquareTile71x71.png">
+        </m3:DefaultTile>
         <m3:SplashScreen Image="Assets\Splashscreen.png" />
       </m3:VisualElements>
       <Extensions>
         <Extension Category="windows.backgroundTasks" EntryPoint="AgHost.BackgroundTask">
           <BackgroundTasks>
-          <Task Type="systemEvent" />
+            <Task Type="systemEvent" />
           </BackgroundTasks>
         </Extension>
       </Extensions>
     </Application>
   </Applications>
-  <Capabilities>
-  </Capabilities>
   <Extensions>
     <Extension Category="windows.activatableClass.inProcessServer">
       <InProcessServer>
@@ -55,4 +38,8 @@
       </InProcessServer>
     </Extension>
   </Extensions>
+  <Capabilities>
+    <Capability Name="internetClientServer" />
+    <DeviceCapability Name="location" />
+  </Capabilities>
 </Package>

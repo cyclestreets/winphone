@@ -311,14 +311,11 @@ namespace Cyclestreets.Managers
             {
                 try
                 {
-                    if ( !_journeyMap.ContainsKey(routeType))
+                    _currentParsedRoute = JObject.Parse(currentRouteData);
+                    if (_currentParsedRoute != null && !_journeyMap.ContainsKey(routeType))
                     {
-                        _currentParsedRoute = JObject.Parse(currentRouteData);
-                        if (_currentParsedRoute != null)
-                        {
-                            _journeyMap.Add(routeType, currentRouteData);
-                            OnPropertyChanged(@"ReadyToDisplayRoute");
-                        }
+                        _journeyMap.Add(routeType, currentRouteData);
+                        OnPropertyChanged(@"ReadyToDisplayRoute");
                     }
                 }
                 catch (Exception ex)
@@ -349,39 +346,39 @@ namespace Cyclestreets.Managers
             dynamic journeyObject = _currentParsedRoute;
             int lastDistance = 0;
             GeoCoordinate endPoint = null;
-            foreach (var marker in journeyObject.marker)
+            foreach (var marker in journeyObject[@"marker"])
             {
-                if (marker[@"@attributes"].type == @"route")
+                if (marker[@"@attributes"][@"type"].ToString() == @"route")
                 {
                     var section = marker[@"@attributes"];
                     if (section == null) continue;
                     //RouteSection sectionObj = new RouteSection();
-                    double longitude = double.Parse(section.finish_longitude.ToString());
-                    double latitude = double.Parse(section.finish_latitude.ToString());
+                    double longitude = double.Parse(section[@"finish_longitude"].ToString());
+                    double latitude = double.Parse(section[@"finish_latitude"].ToString());
                     endPoint = new GeoCoordinate(latitude, longitude);
                     // sectionObj.Points.Add(new GeoCoordinate(latitude, longitude));
                     //sectionObj.Description = "Start " + section.start;
 
                     Overview = new RouteOverviewObject
                     {
-                        Quietness = int.Parse(section.quietness.ToString()),
-                        RouteNumber = int.Parse(section.itinerary.ToString()),
-                        RouteLength = int.Parse(section.length.ToString()),
-                        SignalledJunctions = int.Parse(section.signalledJunctions.ToString()),
-                        SignalledCrossings = int.Parse(section.signalledCrossings.ToString()),
-                        GrammesCo2Saved = int.Parse(section.grammesCO2saved.ToString()),
-                        calories = int.Parse(section.calories.ToString()),
-                        RouteDuration = int.Parse(section.time.ToString())
+                        Quietness = int.Parse(section[@"quietness"].ToString()),
+                        RouteNumber = int.Parse(section[@"itinerary"].ToString()),
+                        RouteLength = int.Parse(section[@"length"].ToString()),
+                        SignalledJunctions = int.Parse(section[@"signalledJunctions"].ToString()),
+                        SignalledCrossings = int.Parse(section[@"signalledCrossings"].ToString()),
+                        GrammesCo2Saved = int.Parse(section[@"grammesCO2saved"].ToString()),
+                        calories = int.Parse(section[@"calories"].ToString()),
+                        RouteDuration = int.Parse(section[@"time"].ToString())
                     };
 
                     //result.Add(sectionObj);
                 }
-                else if (marker[@"@attributes"].type == @"segment")
+                else if (marker[@"@attributes"][@"type"].ToString() == @"segment")
                 {
                     var section = marker[@"@attributes"];
                     if (section == null) continue;
                     RouteSection sectionObj = result.Count == 0 ? new StartPoint() : new RouteSection();
-                    string[] points = section.points.ToString().Split(' ');
+                    string[] points = section[@"points"].ToString().Split(' ');
                     foreach (string t in points)
                     {
                         string[] xy = t.Split(',');
@@ -390,19 +387,19 @@ namespace Cyclestreets.Managers
                         double latitude = double.Parse(xy[1]);
                         sectionObj.Points.Add(new GeoCoordinate(latitude, longitude));
                     }
-                    string[] temp = section.elevations.ToString().Split(',');
+                    string[] temp = section[@"elevations"].ToString().Split(',');
                     int[] convertedItems = Util.ConvertAll(temp, int.Parse);
                     sectionObj.Height = new List<int>(convertedItems);
-                    temp = section.distances.ToString().Split(',');
+                    temp = section[@"distances"].ToString().Split(',');
                     convertedItems = Util.ConvertAll(temp, int.Parse);
                     sectionObj.Distances = new List<int>(convertedItems);
-                    sectionObj.Walking = int.Parse(section.walk.ToString()) == 1;
-                    sectionObj.Description = section.name.ToString().Equals(@"lcn?") ? AppResources.UnknownStreet : section.name;
+                    sectionObj.Walking = int.Parse(section[@"walk"].ToString()) == 1;
+                    sectionObj.Description = section[@"name"].ToString().Equals(@"lcn?") ? AppResources.UnknownStreet : section[@"name"].ToString();
                     sectionObj.Distance = lastDistance;
-                    lastDistance = int.Parse(section.distance.ToString());
-                    sectionObj.Bearing = double.Parse(section.startBearing.ToString());
-                    sectionObj.Time = int.Parse(section.time.ToString());
-                    sectionObj.Turn = section.turn.ToString();
+                    lastDistance = int.Parse(section[@"distance"].ToString());
+                    sectionObj.Bearing = double.Parse(section[@"startBearing"].ToString());
+                    sectionObj.Time = int.Parse(section[@"time"].ToString());
+                    sectionObj.Turn = section[@"turn"].ToString();
                     result.Add(sectionObj);
                 }
             }
