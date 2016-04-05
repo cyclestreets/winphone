@@ -117,14 +117,16 @@
         </StackPanel>
 
         <customClasses:CycleStreetsMap x:Name="MyMap" Margin="0" Grid.Row="1" Grid.ColumnSpan="2" ZoomLevel="15" Loaded="MyMap_Loaded" Tap="MyMap_Tap" Opacity="{Binding DisplayMap, Converter={StaticResource BooleanToOpacityConverter}}" ShowAccuracyBanner="False" LockToMyLocation="NoLock" />
-        <StackPanel Grid.Row="2" Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
-            <TextBlock TextWrapping="Wrap" Text="{Binding RouteManagerPtr.Overview.RouteDurationString, Mode=OneWay}" FontSize="60" FontFamily="Segoe WP Light" VerticalAlignment="Bottom"/>
-            <!--<TextBlock TextWrapping="Wrap" Text="mins" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="Segoe WP Light" LineHeight="37" Visibility="{Binding DisplayMap, Converter={StaticResource BooleanToVisibilityConverter}}"/>-->
-        </StackPanel>
+  
+			<Viewbox StretchDirection="DownOnly" Width="223"  Grid.Row="2" Grid.Column="1">
+				<!--<TextBlock TextWrapping="Wrap" Text="1h 10m 111111111" FontSize="60" FontFamily="Segoe WP Light" VerticalAlignment="Bottom"/>-->
+			<TextBlock TextWrapping="Wrap" Text="{Binding RouteManagerPtr.Overview.RouteDurationString, Mode=OneWay}" FontSize="60" FontFamily="Segoe WP Light" VerticalAlignment="Bottom"/>
+		</Viewbox>
         <StackPanel Grid.Row="2" Orientation="Horizontal">
             <TextBlock TextWrapping="Wrap" Text="{Binding RouteManagerPtr.Overview.RouteLengthStringMiles, Mode=OneWay}" FontSize="60" FontFamily="Segoe WP Light" VerticalAlignment="Bottom"/>
             <TextBlock TextWrapping="Wrap" Text="miles" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="Segoe WP Light" LineHeight="37" Visibility="{Binding DisplayMap, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-        </StackPanel>
+			<ScrollViewer Width="100"/>
+		</StackPanel>
         <Grid Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
