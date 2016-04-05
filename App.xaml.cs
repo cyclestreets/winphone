@@ -17,6 +17,7 @@ using Cyclestreets.Utils;
 using FlurryWP8SDK;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Phone.Controls;
+using Microsoft.Phone.Marketplace;
 using Microsoft.Phone.Shell;
 using System.IO.IsolatedStorage;
 using Microsoft.Phone.Marketplace;

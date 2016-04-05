@@ -1,13 +1,9 @@
-﻿using System.Linq;
-using System.Windows.Input;
-using Cyclestreets.Managers;
+﻿using Cyclestreets.Managers;
 using Cyclestreets.Resources;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using System;
-using System.Collections.ObjectModel;
-using Sparrow.Chart;
 
 namespace Cyclestreets.Pages
 {
