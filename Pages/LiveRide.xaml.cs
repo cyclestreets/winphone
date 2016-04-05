@@ -66,19 +66,19 @@ namespace Cyclestreets.Pages
 
         private void GenerateLineSegments()
         {
-            SmartDispatcher.BeginInvoke(() =>
-            {
-                _routeSegments.Clear();
+            SmartDispatcher.BeginInvoke(async () =>
+			{
+				_routeSegments.Clear();
 
-                var rm = SimpleIoc.Default.GetInstance<RouteManager>();
-                IEnumerable<RouteSection> sections = rm.GetRouteSections(_viewModel.CurrentPlan);
-                foreach (var routeSection in sections.Where(routeSection => routeSection.Points != null))
-                {
-                    _routeSegments.AddRange(
-                        routeSection.Points.Select(p => MyMap.Map.ConvertGeoCoordinateToViewportPoint(p)).ToList());
-                }
-                FindClosestPointOnLine();
-            });
+				var rm = SimpleIoc.Default.GetInstance<RouteManager>();
+				IEnumerable<RouteSection> sections = await rm.GetRouteSections(_viewModel.CurrentPlan);
+				foreach (var routeSection in sections.Where(routeSection => routeSection.Points != null))
+				{
+					_routeSegments.AddRange(
+						routeSection.Points.Select(p => MyMap.Map.ConvertGeoCoordinateToViewportPoint(p)).ToList());
+				}
+				FindClosestPointOnLine();
+			});
         }
 
         private void FindClosestPointOnLine()

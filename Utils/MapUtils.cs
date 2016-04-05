@@ -6,28 +6,31 @@ using Cyclestreets.Pages;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Phone.Maps.Controls;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Cyclestreets.Utils
 {
     static class MapUtils
     {
-        public static string[] MapStyle = { @"OpenStreetMap", @"OpenCycleMap", @"Nokia" };
+        public static string[] MapStyle = { @"OpenStreetMap", @"OpenCycleMap", @"Windows System" };
 
-        public static void PlotCachedRoute(Map myMap, string currentPlan)
+        public static async void PlotCachedRoute(Map myMap, string currentPlan)
         {
             Debug.Assert(myMap != null);
 
             RouteManager rm = SimpleIoc.Default.GetInstance<RouteManager>();
             myMap.MapElements.Clear();
 
-            IEnumerable<RouteSection> sections = rm.GetRouteSections(currentPlan);
-            foreach (var routeSection in sections)
+            IEnumerable<RouteSection> sections = await rm.GetRouteSections(currentPlan);
+			if (sections == null)
+				return;
+
+            foreach (var routeSection in sections.Where(routeSection => routeSection.Points != null))
             {
-                if (routeSection.Points == null)
-                    continue;
                 DrawMapMarker(myMap, routeSection.Points.ToArray(), routeSection.Walking ? Color.FromArgb(255, 0, 0, 0) : Color.FromArgb(255, 127, 0, 255), routeSection.Walking);
             }
             
+			myMap.SetView(rm.GetRouteBounds(), MapAnimationKind.Parabolic);
             //SmartDispatcher.BeginInvoke(() => myMap.SetView(rm.GetRouteBounds()));
         }
 
@@ -41,12 +44,13 @@ namespace Cyclestreets.Utils
                 StrokeDashed = dashed,
                 Path = new GeoCoordinateCollection()
             };
-            foreach (GeoCoordinate t in coordinate)
-            {
-                polygon.Path.Add(t);
-            }
 
-            myMap.MapElements.Add(polygon);
+			foreach (GeoCoordinate t in coordinate)
+			{
+				polygon.Path.Add(t);
+			}
+
+			myMap.MapElements.Add(polygon);
         }
     }
 }

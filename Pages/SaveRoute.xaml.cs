@@ -15,6 +15,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using Windows.Storage;
+using Newtonsoft.Json;
 
 namespace Cyclestreets.Pages
 {
@@ -92,12 +93,17 @@ namespace Cyclestreets.Pages
                     // Read the data.
                     using (var file = await local.OpenStreamForReadAsync(string.Format(@"{0}.route", name)))
                     {
-                        var serializer = new SharpSerializer(false);
+						file.Seek(0, SeekOrigin.Begin);
 
-                        file.Seek(0, SeekOrigin.Begin);
-                        // deserialize (to check the serialization)
-                        var res = serializer.Deserialize(file);
-                        rm.RouteCacheForSaving = (Dictionary<string, string>)res;
+						var byteBuffer = new byte[file.Length];
+						await file.ReadAsync(byteBuffer, 0, byteBuffer.Length);
+
+						char[] chars = new char[byteBuffer.Length / sizeof(char)];
+						System.Buffer.BlockCopy(byteBuffer, 0, chars, 0, byteBuffer.Length);
+						var stringData = new string(chars);
+
+						// deserialize (to check the serialization)
+						rm.RouteCacheForSaving = JsonConvert.DeserializeObject<Dictionary<string, string>>(stringData);
 
                         App.RootFrame.Navigate(new Uri("/Pages/RouteOverview.xaml?plan=saved", UriKind.Relative));
                         App.RootFrame.RemoveBackEntry();
@@ -132,11 +138,13 @@ namespace Cyclestreets.Pages
             // Write the data from the textbox.
             using (var s = await file.OpenStreamForWriteAsync())
             {
-                var serializer = new SharpSerializer(false);
+				var str = JsonConvert.SerializeObject(rm.RouteCacheForSaving, Formatting.Indented);
 
-                // serialize
-                serializer.Serialize(rm.RouteCacheForSaving, s);
-            }
+				byte[] bytes = new byte[str.Length * sizeof(char)];
+				System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
+
+				await s.WriteAsync(bytes, 0, bytes.Length);
+			}
 
             MessageBox.Show(AppResources.RouteSaved, AppResources.RouteSavedTitle, MessageBoxButton.OK);
         }

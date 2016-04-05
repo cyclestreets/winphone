@@ -281,7 +281,7 @@ namespace Cyclestreets.Pages
                 if (PoiResults.Pois != null && PoiResults.Pois.Count > 0)
                 {
                     viewingPOI = true;
-                    pointOfInterest.IconUri = new Uri("/Assets/icons/dark/appbar.location.round.clear.png", UriKind.RelativeOrAbsolute);
+                    pointOfInterest.IconUri = new Uri("/Assets/icons/dark/appbar.location.round.png", UriKind.RelativeOrAbsolute);
 
                     _pinItems.Clear();
                     foreach (POI p in PoiResults.Pois)

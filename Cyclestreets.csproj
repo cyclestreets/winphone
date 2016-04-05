@@ -337,13 +337,11 @@
     <Content Include="Assets\icons\dark\appbar.directions.png" />
     <Content Include="Assets\icons\dark\appbar.information.circle.png" />
     <Content Include="Assets\icons\dark\appbar.location.add.png" />
-    <Content Include="Assets\icons\dark\appbar.location.checkin.png" />
     <Content Include="Assets\icons\dark\appbar.location.circle.png" />
     <Content Include="Assets\icons\dark\appbar.location.delete.png" />
     <Content Include="Assets\icons\dark\appbar.location.foursquare.png" />
     <Content Include="Assets\icons\dark\appbar.location.minus.png" />
     <Content Include="Assets\icons\dark\appbar.location.png" />
-    <Content Include="Assets\icons\dark\appbar.location.round.clear.png" />
     <Content Include="Assets\icons\dark\appbar.location.round.png" />
     <Content Include="Assets\icons\dark\appbar.magnify.png" />
     <Content Include="Assets\icons\dark\appbar.map.aerial.highway.png" />
@@ -454,8 +452,9 @@
     <Reference Include="FeedbackHelper">
       <HintPath>packages\Helpers.FeedbackHelperWP.1.0.2\lib\wp8\FeedbackHelper.dll</HintPath>
     </Reference>
-    <Reference Include="FlurryWP8SDK">
-      <HintPath>Resources\FlurryWP8SDK.dll</HintPath>
+    <Reference Include="FlurryWP8SDK, Version=3.1.1.0, Culture=neutral, PublicKeyToken=d822942b4ec01210, processorArchitecture=MSIL">
+      <HintPath>packages\Flurry.Analytics.2.0.0\lib\wp8\FlurryWP8SDK.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="GalaSoft.MvvmLight, Version=5.0.2.32240, Culture=neutral, PublicKeyToken=e7570ab207bcb616, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -495,28 +494,31 @@
     <Reference Include="Sparrow.Chart.WP8.45">
       <HintPath>packages\Sparrow.Chart.WP8.13.1.0.113\lib\windowsphone8\Sparrow.Chart.WP8.45.dll</HintPath>
     </Reference>
-    <Reference Include="System.Net.Http">
-      <HintPath>packages\Microsoft.Net.Http.2.2.28\lib\sl4-windowsphone71\System.Net.Http.dll</HintPath>
+    <Reference Include="System.Net.Http, Version=1.5.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Net.Http.2.2.29\lib\sl4-windowsphone71\System.Net.Http.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="System.Net.Http.Extensions">
-      <HintPath>packages\Microsoft.Net.Http.2.2.28\lib\sl4-windowsphone71\System.Net.Http.Extensions.dll</HintPath>
+    <Reference Include="System.Net.Http.Extensions, Version=1.5.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Net.Http.2.2.29\lib\sl4-windowsphone71\System.Net.Http.Extensions.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="System.Net.Http.Primitives">
-      <HintPath>packages\Microsoft.Net.Http.2.2.28\lib\sl4-windowsphone71\System.Net.Http.Primitives.dll</HintPath>
+    <Reference Include="System.Net.Http.Primitives, Version=1.5.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Net.Http.2.2.29\lib\sl4-windowsphone71\System.Net.Http.Primitives.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Windows.Interactivity, Version=3.9.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\MvvmLightLibs.5.0.2.0\lib\wp81\System.Windows.Interactivity.dll</HintPath>
     </Reference>
     <Reference Include="Telerik.Windows.Controls.Chart">
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Telerik\UI for Windows Phone 8 Q3 2014\Binaries\WindowsPhone\Telerik.Windows.Controls.Chart.dll</HintPath>
+      <HintPath>lib\RCWP\2015.1.224.3040\Telerik.Windows.Controls.Chart.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Telerik.Windows.Controls.Primitives">
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Telerik\UI for Windows Phone 8 Q3 2014\Binaries\WindowsPhone\Telerik.Windows.Controls.Primitives.dll</HintPath>
+      <HintPath>lib\RCWP\2015.1.224.3040\Telerik.Windows.Controls.Primitives.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Telerik.Windows.Core">
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Telerik\UI for Windows Phone 8 Q3 2014\Binaries\WindowsPhone\Telerik.Windows.Core.dll</HintPath>
+      <HintPath>lib\RCWP\2015.1.224.3040\Telerik.Windows.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>

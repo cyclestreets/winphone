@@ -200,7 +200,7 @@ namespace Cyclestreets.Managers
             request.AddParameter(@"key", App.apiKey);
             request.AddParameter(@"useDom", useDom);
             request.AddParameter(@"plan", @"leisure");
-            request.AddParameter(@"itinerarypoints", String.Format(@"{0},{1}", LocationManager.Instance.MyGeoPosition.Coordinate.Longitude, LocationManager.Instance.MyGeoPosition.Coordinate.Latitude));
+            request.AddParameter(@"itinerarypoints", String.Format(@"{0},{1}", LocationManager.Instance.MyGeoPosition.Coordinate.Point.Position.Longitude, LocationManager.Instance.MyGeoPosition.Coordinate.Point.Position.Latitude));
             request.AddParameter(@"speed", speed.ToString());
             if (targetTimeSeconds != -1)
                 request.AddParameter(@"duration", (targetTimeSeconds * 60).ToString());
@@ -212,15 +212,15 @@ namespace Cyclestreets.Managers
             IsBusy = true;
 
             // execute the request
-            client.ExecuteAsync(request, r =>
-            {
-                string result = r.Content;
+            client.ExecuteAsync(request, async r =>
+			{
+				string result = r.Content;
 
-                bool res = ParseRouteData(result, @"balanced", true);
+				bool res = await ParseRouteData(result, @"balanced", true);
 
-                IsBusy = false;
-                tcs1.SetResult(res);
-            });
+				IsBusy = false;
+				tcs1.SetResult(res);
+			});
 
             return t1;
         }
@@ -274,15 +274,15 @@ namespace Cyclestreets.Managers
             IsBusy = true;
 
             // execute the request
-            client.ExecuteAsync(request, r =>
-            {
-                string result = r.Content;
+            client.ExecuteAsync(request, async r =>
+			{
+				string result = r.Content;
 
-                bool res = ParseRouteData(result, routeType, newRoute);
+				bool res = await ParseRouteData(result, routeType, newRoute);
 
-                IsBusy = false;
-                tcs1.SetResult(res);
-            });
+				IsBusy = false;
+				tcs1.SetResult(res);
+			});
 
             return t1;
         }
@@ -299,7 +299,7 @@ namespace Cyclestreets.Managers
             return LocationRectangle.CreateBoundingRectangle(allPoints.ToArray());
         }
 
-        public bool ParseRouteData(string currentRouteData, string routeType, bool newRoute)
+        public async Task<bool> ParseRouteData(string currentRouteData, string routeType, bool newRoute)
         {
             if (newRoute)
             {
@@ -311,16 +311,13 @@ namespace Cyclestreets.Managers
             {
                 try
                 {
-                    if ( !_journeyMap.ContainsKey(routeType))
-                    {
                         _currentParsedRoute = JObject.Parse(currentRouteData);
-                        if (_currentParsedRoute != null)
+                    if (_currentParsedRoute != null && !_journeyMap.ContainsKey(routeType))
                         {
                             _journeyMap.Add(routeType, currentRouteData);
                             OnPropertyChanged(@"ReadyToDisplayRoute");
                         }
                     }
-                }
                 catch (Exception ex)
                 {
                     AnalyticClient.Error(@"Could not parse JSON " + currentRouteData.Trim() + @" " + ex.Message);
@@ -335,7 +332,7 @@ namespace Cyclestreets.Managers
             return false;
         }
 
-        internal IEnumerable<RouteSection> GetRouteSections(string routeType)
+        internal async Task<IEnumerable<RouteSection>> GetRouteSections(string routeType)
         {
             if (_journeyMap == null || !_journeyMap.ContainsKey(routeType))
                 return null;
@@ -344,44 +341,52 @@ namespace Cyclestreets.Managers
                 return _cachedRouteData;
 
             List<RouteSection> result = new List<RouteSection>();
-            if (!ParseRouteData(_journeyMap[routeType], routeType, false))
+	        bool parseResult = await ParseRouteData(_journeyMap[routeType], routeType, false);
+            if (!parseResult)
                 return null;
-            dynamic journeyObject = _currentParsedRoute;
+            JObject journeyObject = _currentParsedRoute;
             int lastDistance = 0;
             GeoCoordinate endPoint = null;
-            foreach (var marker in journeyObject.marker)
+        if (journeyObject[@"marker"] is JArray)
+        {
+	        foreach (var marker in journeyObject[@"marker"])
             {
-                if (marker[@"@attributes"].type == @"route")
+			        var attributes = marker["@attributes"];
+			        //if (!attributes.Contains("type"))
+			        //    continue;
+
+			        var type = attributes["type"];
+			        if (type.ToString() == @"route")
                 {
                     var section = marker[@"@attributes"];
                     if (section == null) continue;
                     //RouteSection sectionObj = new RouteSection();
-                    double longitude = double.Parse(section.finish_longitude.ToString());
-                    double latitude = double.Parse(section.finish_latitude.ToString());
-                    endPoint = new GeoCoordinate(latitude, longitude);
-                    // sectionObj.Points.Add(new GeoCoordinate(latitude, longitude));
+				        double longitude = section.Value<double>(@"finish_longitude");
+				        double latitude = section.Value<double>(@"finish_latitude");
+				        endPoint = new GeoCoordinate(latitude,longitude);
+				        // sectionObj.Points.Add(new Geocoordinate(latitude, longitude));
                     //sectionObj.Description = "Start " + section.start;
 
                     Overview = new RouteOverviewObject
                     {
-                        Quietness = int.Parse(section.quietness.ToString()),
-                        RouteNumber = int.Parse(section.itinerary.ToString()),
-                        RouteLength = int.Parse(section.length.ToString()),
-                        SignalledJunctions = int.Parse(section.signalledJunctions.ToString()),
-                        SignalledCrossings = int.Parse(section.signalledCrossings.ToString()),
-                        GrammesCo2Saved = int.Parse(section.grammesCO2saved.ToString()),
-                        calories = int.Parse(section.calories.ToString()),
-                        RouteDuration = int.Parse(section.time.ToString())
+					        Quietness = section.Value<int>(@"quietness"),
+					        RouteNumber = section.Value<int>(@"itinerary"),
+					        RouteLength = section.Value<int>(@"length"),
+					        SignalledJunctions = section.Value<int>(@"signalledJunctions"),
+					        SignalledCrossings = section.Value<int>(@"signalledCrossings"),
+					        GrammesCo2Saved = section.Value<int>(@"grammesCO2saved"),
+					        calories = section.Value<int>(@"calories"),
+					        RouteDuration = section.Value<int>(@"time")
                     };
 
                     //result.Add(sectionObj);
                 }
-                else if (marker[@"@attributes"].type == @"segment")
+			        else if (type.ToString() == @"segment")
                 {
                     var section = marker[@"@attributes"];
                     if (section == null) continue;
                     RouteSection sectionObj = result.Count == 0 ? new StartPoint() : new RouteSection();
-                    string[] points = section.points.ToString().Split(' ');
+				        string[] points = section[@"points"].ToString().Split(' ');
                     foreach (string t in points)
                     {
                         string[] xy = t.Split(',');
@@ -390,29 +395,36 @@ namespace Cyclestreets.Managers
                         double latitude = double.Parse(xy[1]);
                         sectionObj.Points.Add(new GeoCoordinate(latitude, longitude));
                     }
-                    string[] temp = section.elevations.ToString().Split(',');
-                    int[] convertedItems = Util.ConvertAll(temp, int.Parse);
+				        string[] temp = section[@"elevations"].ToString().Split(',');
+				        int[] convertedItems = temp.Select(int.Parse).ToArray();
                     sectionObj.Height = new List<int>(convertedItems);
-                    temp = section.distances.ToString().Split(',');
-                    convertedItems = Util.ConvertAll(temp, int.Parse);
+				        temp = section[@"distances"].ToString().Split(',');
+				        convertedItems = temp.Select(int.Parse).ToArray();
                     sectionObj.Distances = new List<int>(convertedItems);
-                    sectionObj.Walking = int.Parse(section.walk.ToString()) == 1;
-                    sectionObj.Description = section.name.ToString().Equals(@"lcn?") ? AppResources.UnknownStreet : section.name;
+				        sectionObj.Walking = int.Parse(section[@"walk"].ToString()) == 1;
+				        sectionObj.Description = section[@"name"].ToString().Equals(@"lcn?")
+					        ? AppResources.UnknownStreet
+					        : section[@"name"].ToString();
                     sectionObj.Distance = lastDistance;
-                    lastDistance = int.Parse(section.distance.ToString());
-                    sectionObj.Bearing = double.Parse(section.startBearing.ToString());
-                    sectionObj.Time = int.Parse(section.time.ToString());
-                    sectionObj.Turn = section.turn.ToString();
+				        lastDistance = int.Parse(section[@"distance"].ToString());
+				        sectionObj.Bearing = double.Parse(section[@"startBearing"].ToString());
+				        sectionObj.Time = int.Parse(section[@"time"].ToString());
+				        sectionObj.Turn = section[@"turn"].ToString();
                     result.Add(sectionObj);
                 }
             }
+	        }
+	        else
+	        {
+				MessageBox.Show(AppResources.RouteParseError, AppResources.Error, MessageBoxButton.OK);
+		        return null;
+	        }
 
             EndPoint ep = new EndPoint
             {
                 Distance = lastDistance,
                 Turn = AppResources.straightOn,
             };
-            ep.Points.Add(endPoint);
             result.Add(ep);
 
             CurrentRoute = result;

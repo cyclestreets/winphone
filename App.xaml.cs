@@ -19,6 +19,7 @@ using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using System.IO.IsolatedStorage;
+using Microsoft.Phone.Marketplace;
 
 #endregion
 
@@ -162,6 +163,7 @@ namespace Cyclestreets
         private void Application_Launching(object sender, LaunchingEventArgs e)
         {
             BugSenseHandler.Instance.InitAndStartSession(new ExceptionManager(Current), RootFrame, @"2d8ae0f1" );
+
             Api.StartSession(@"JZSMBMX659NW78S35ZPR");
             AnalyticClient.Initialize(@"87c139ca-14a7-41ff-8b3b-095894a52bdf");
             AnalyticClient.RegisterRootNavigationFrame(RootFrame);

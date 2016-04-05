@@ -293,9 +293,9 @@ namespace Cyclestreets.Utils
         {
             return new GeoCoordinate
                 (
-                geocoordinate.Latitude,
-                geocoordinate.Longitude,
-                geocoordinate.Altitude ?? Double.NaN,
+                geocoordinate.Point.Position.Latitude,
+                geocoordinate.Point.Position.Longitude,
+                geocoordinate.Point.Position.Altitude,
                 geocoordinate.Accuracy,
                 geocoordinate.Accuracy,
                 /*geocoordinate.AltitudeAccuracy ?? Double.NaN,*/
