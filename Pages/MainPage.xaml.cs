@@ -4,6 +4,7 @@ using Cyclestreets.Managers;
 using Cyclestreets.Objects;
 using Cyclestreets.Resources;
 using Cyclestreets.Utils;
+using CycleStreets.Helpers;
 using Microsoft.Expression.Interactivity.Core;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Maps.Controls;
@@ -317,6 +318,25 @@ namespace Cyclestreets.Pages
                     SettingManager.instance.SetBoolValue(@"LocationConsent", false);
                 }
             }
+
+			if ( Util.IsWindows10() && !StorageHelper.GetSetting<bool>("BETAPrompted", false ) && StorageHelper.GetSetting<int>("LAUNCH_COUNT") > 3 )
+			{
+				MessageBoxResult result =
+					MessageBox.Show("We are testing a Windows 10 version of this app. Would you like to try the new version and help us improve it before release?", "Join the BETA?",
+					MessageBoxButton.OKCancel);
+
+				StorageHelper.StoreSetting("BETAPrompted", true, true );
+
+				if (result == MessageBoxResult.OK)
+				{
+					WebBrowserTask url = new WebBrowserTask { Uri = new Uri("https://www.microsoft.com/store/apps/9nblggh5lj1n") };
+					url.Show();
+				}
+				else
+				{
+					SettingManager.instance.SetBoolValue(@"LocationConsent", false);
+				}
+			}
 
             if (PhoneApplicationService.Current.State.ContainsKey(@"loadedRoute") && PhoneApplicationService.Current.State[@"loadedRoute"] != null)
             {

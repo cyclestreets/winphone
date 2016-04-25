@@ -24,7 +24,7 @@ namespace Cyclestreets.Pages
 	public class OCMTileSource : MyTileSource
 	{
 		public OCMTileSource()
-			: base( @"http://tile.cyclestreets.net/opencyclemap/{z}/{x}/{y}.png" )
+			: base( @"https://tile.cyclestreets.net/opencyclemap/{z}/{x}/{y}.png" )
 		{
 
 		}
@@ -33,7 +33,7 @@ namespace Cyclestreets.Pages
 	public class OSMTileSource : MyTileSource
 	{
 		public OSMTileSource()
-			: base( @"http://tile.cyclestreets.net/mapnik/{z}/{x}/{y}.png" )
+			: base( @"https://tile.cyclestreets.net/mapnik/{z}/{x}/{y}.png" )
 		{
 
 		}
