@@ -28,7 +28,7 @@ namespace Cyclestreets.Pages
 			progress.DataContext = App.networkStatus;
 			routeType.SelectionChanged += routeType_SelectionChanged;
 
-			AsyncWebRequest _request = new AsyncWebRequest( string.Format(@"http://www.cyclestreets.net/api/poitypes.xml?key={0}&icons=32", App.apiKey), POIFound );
+			AsyncWebRequest _request = new AsyncWebRequest( string.Format( @"http://www.cyclestreets.net/api/poitypes.xml?key={0}&icons=32", App.apiKey ), POIFound );
 			_request.Start();
 
 			App.networkStatus.NetworkIsBusy = true;
@@ -62,7 +62,7 @@ namespace Cyclestreets.Pages
 			App.networkStatus.NetworkIsBusy = false;
 		}
 
-	    private void btn_cancel_Click( object sender, RoutedEventArgs e )
+		private void btn_cancel_Click( object sender, RoutedEventArgs e )
 		{
 			pleaseWait.IsOpen = false;
 			App.networkStatus.NetworkIsBusy = false;
@@ -80,27 +80,42 @@ namespace Cyclestreets.Pages
 				base.OnBackKeyPress( e );
 		}
 
-	    private void findRoute_Click( object sender, EventArgs e )
+		private void findRoute_Click( object sender, EventArgs e )
 		{
 			Focus();
 
 			if( LocationManager.Instance.MyGeoPosition != null )
 			{
-                
-                string extra;
+
+				string extra;
 				if( ( (ListBoxItem)routeType.SelectedItem ).Content.Equals( AppResources.TargetTime ) )
 				{
 					int val = 0;
 					int.TryParse( valueEntry.Text, out val );
-
-					extra = @"&duration=" + val;
+					if( val > 0 )
+						extra = @"&duration=" + val;
+					else
+					{
+						MessageBoxResult result =
+						MessageBox.Show( "Invalid duration. Value needs to be greater than zero", "Invalid Data",
+						MessageBoxButton.OK );
+						return;
+					}
 				}
 				else
 				{
 					int val = 0;
 					int.TryParse( valueEntry.Text, out val );
 
-					extra = @"&distance=" + val;
+					if( val > 0 )
+						extra = @"&distance=" + val;
+					else
+					{
+						MessageBoxResult result =
+						MessageBox.Show( "Invalid distance. Value needs to be greater than zero", "Invalid Data",
+						MessageBoxButton.OK );
+						return;
+					}
 				}
 				string poiNames = "";
 				foreach( POIItem item in items )
@@ -113,7 +128,7 @@ namespace Cyclestreets.Pages
 				if( !string.IsNullOrWhiteSpace( poiNames ) )
 					extra += @"&poitypes=" + poiNames;
 
-                NavigationService.Navigate(new Uri("/Pages/RouteOverview.xaml?mode=leisure" + extra, UriKind.Relative));
+				NavigationService.Navigate( new Uri( "/Pages/RouteOverview.xaml?mode=leisure" + extra, UriKind.Relative ) );
 			}
 			else
 			{
@@ -125,7 +140,7 @@ namespace Cyclestreets.Pages
 		{
 			if( e.AddedItems.Count > 0 )
 			{
-				string selection = ( (ListBoxItem)e.AddedItems[ 0 ] ).Content.ToString();
+				string selection = ( (ListBoxItem)e.AddedItems[0] ).Content.ToString();
 				if( selection.Equals( AppResources.TargetTime ) )
 				{
 					valueDescription.Text = AppResources.EnterTime;
